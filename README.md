@@ -1,6 +1,8 @@
 
 # 问卷调查网站
 
+网址：[https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/](https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/)
+
 ## 开发技术栈
 
 - **构建工具**：[Vite](https://cn.vitejs.dev/)
@@ -20,6 +22,10 @@
 
 ## 注意事项
 
+- 克隆：`git clone git@e.coding.net:merrick-frontend/survey/survey.git -b main`
+- 克隆完要 `npm install`
+- 关联远程：`git remote add origin git@e.coding.net:merrick-frontend/survey/survey.git`
+- 推送：`git push -u origin main`
 - 构建打包时注意base=>网站部署
 - vite插件@vitejs/plugin-legacy 打包成旧浏览器兼容
 - 路由要懒加载=>速度(按需载入)
