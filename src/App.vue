@@ -1,7 +1,13 @@
 <script setup>
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
+import { useCounterStore } from './stores/index.js'
 import HelloWorld from './components/HelloWorld.vue'
+const counter = useCounterStore()
+
+//counter.count++
+// 带自动补全 ✨
+//counter.$patch({ count: counter.count + 1 })
+// 或使用 action 代替
+counter.increment()
 </script>
 
 <template>
@@ -14,6 +20,10 @@ import HelloWorld from './components/HelloWorld.vue'
     </a>
   </div>
   <HelloWorld msg="Vite + Vue" />
+  <div>
+    <p>Pinia测试</p>
+    {{ counter.count }}
+  </div>
 </template>
 
 <style scoped>
@@ -22,9 +32,11 @@ import HelloWorld from './components/HelloWorld.vue'
   padding: 1.5em;
   will-change: filter;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #42b883aa);
 }
