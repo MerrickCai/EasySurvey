@@ -1,11 +1,12 @@
 <script setup>
-
+import statistics from '../src/components/statistics.vue'
 </script>
 
 <template>
   <nav>
     <router-link to="/">首页</router-link>
     <router-link to="/login">登录/注册</router-link>
+    <statistics></statistics>
   </nav>
   <router-view></router-view>
 </template>
