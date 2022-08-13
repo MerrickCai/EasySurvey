@@ -14,7 +14,7 @@ const bcgurl = ['../../public/login_cloud.png', '../../public/login_mountain.png
 
 
 </script>
-
+  
 <style lang="less" scoped>
 .background{
       width: 100%;
