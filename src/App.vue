@@ -5,7 +5,10 @@
 <template>
   <nav>
     <router-link to="/">首页</router-link>
+    <router-link to="/pinia">pinia测试</router-link>
     <router-link to="/login">登录/注册</router-link>
+    <router-link to="/5616">404页</router-link>
+
   </nav>
   <router-view></router-view>
 </template>
@@ -20,15 +23,16 @@ nav {
   left: 0;
   padding: 5px;
   width: auto;
+
   a {
     text-decoration: none;
     display: block;
     margin: 5px;
     color: rgb(255, 255, 255);
-    font-size: 3rem;
+    font-size: 1.5rem;
     background-color: rgba(83, 110, 196, 0.8);
     border-radius: 10px;
-    padding:5px;
+    padding: 5px;
   }
 }
 </style>

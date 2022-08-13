@@ -1,5 +1,5 @@
 <script setup>
-import AccountLogin from './AccountLogin.vue';
+import AccountLogin from '../components/AccountLogin.vue';
 const bcgurl = ['/login_cloud.png', '/login_mountain.png'];
 </script>
 
