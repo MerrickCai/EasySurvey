@@ -1,43 +1,27 @@
 <script setup>
-import { useCounterStore } from './stores/index.js'
-import HelloWorld from './components/HelloWorld.vue'
-const counter = useCounterStore()
-
-//counter.count++
-// 带自动补全 ✨
-//counter.$patch({ count: counter.count + 1 })
-// 或使用 action 代替
-counter.increment()
+import { useStore } from './PiniaStores/data.js'
+const datas = useStore()
+datas.value++
+datas.$patch({ value: datas.value + 1 })
+datas.increment()
+datas.decline()
 </script>
 
 <template>
+
   <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+    <p>Pinia状态管理</p>
+    全局变量count {{ datas.value }}
+    <div>
+      <button @click="datas.increment">增加</button>
+    </div>
+    <div>
+      <button @click="datas.decline">减少</button>
+    </div>
   </div>
-  <HelloWorld msg="Vite + Vue" />
-  <div>
-    <p>Pinia测试</p>
-    {{ counter.count }}
-  </div>
+
+
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-}
-
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
 </style>
