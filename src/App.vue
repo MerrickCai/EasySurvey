@@ -1,22 +1,13 @@
 <script setup>
 import { useStore } from './PiniaStores/index.js'
-import  login  from './components/login.vue'
-const datas = useStore()
+import login from './components/login.vue';
+
+  const datas = useStore()
 datas.value++
 datas.increment()
 datas.$patch({ value: datas.value + 1 })
 datas.$reset()
-import { useCounterStore } from './stores/index.js';
-import HelloWorld from './components/HelloWorld.vue';
-import Login from './components/Login.vue';
 
-const counter = useCounterStore()
-
-//counter.count++
-// 带自动补全 ✨
-//counter.$patch({ count: counter.count + 1 })
-// 或使用 action 代替
-counter.increment()
 </script>
 
 <template>
