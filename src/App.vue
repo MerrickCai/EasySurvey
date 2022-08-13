@@ -34,3 +34,4 @@ div {
   font-size: @big;
   margin: 10px;
 }
+</style>
