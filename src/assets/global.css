@@ -1,0 +1,53 @@
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+* {
+  font-family: "Microsoft Yahei";
+}
+/*滚动条样式*/
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 1);
+}
+::-webkit-scrollbar-track {
+  background-color: rgba(255, 255, 255, 1);
+}
+:root {
+  /*页面安全区*/
+  --safe_area: 1280px;
+}
+@media screen and (max-width:1280px) {
+  :root {
+      --safe_area: 100%;
+  }
+}
+/*rem布局*/
+html {
+  /*1rem=10px*/
+  font-size: 10px;
+}
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+#app {
+  display: block;
+  height: auto;
+  max-width: var(--safe_area);
+  margin: 0 auto;
+  overflow: hidden;
+  text-align: center;
+}

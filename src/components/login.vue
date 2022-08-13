@@ -1,20 +1,17 @@
+<script setup>
+import AccountLogin from './AccountLogin.vue';
+const bcgurl = ['/login_cloud.png', '/login_mountain.png'];
+</script>
+
 <template>
     <div class="background">
         <img :src=bcgurl[1] alt=""> 
     </div>
-
     <div class="main">
        <AccountLogin> </AccountLogin>
     </div>
 </template>
 
-<script setup>
-import AccountLogin from './AccountLogin.vue';
-const bcgurl = ['../../public/login_cloud.png', '../../public/login_mountain.png'];
-
-
-</script>
-  
 <style lang="less" scoped>
 .background{
       width: 100%;
@@ -39,5 +36,4 @@ const bcgurl = ['../../public/login_cloud.png', '../../public/login_mountain.png
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
 }
-
 </style>

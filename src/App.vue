@@ -1,37 +1,34 @@
 <script setup>
-import { useStore } from './PiniaStores/index.js'
-import login from './components/login.vue';
-
-  const datas = useStore()
-datas.value++
-datas.increment()
-datas.$patch({ value: datas.value + 1 })
-datas.$reset()
 
 </script>
 
 <template>
-  <div>
-    <p>Pinia状态管理</p>
-    <div>添加状态</div>
-    <div>value：{{ datas.value }}</div>
-    <div>doubleValue：{{ datas.doubleValue }}</div>
-    <div>doublePlusOne：{{ datas.doublePlusOne }}</div>
-    <div>
-      <button @click="datas.$reset()">重置</button>
-      <button @click="datas.decline">减少</button>
-      <button @click="datas.increment">增加</button>
-    </div>
-  </div>
-  <login></login>
+  <nav>
+    <router-link to="/">首页</router-link>
+    <router-link to="/login">登录/注册</router-link>
+  </nav>
+  <router-view></router-view>
 </template>
 
 
 <style lang="less" scoped>
-@big: 20px;
-
-div {
-  font-size: @big;
-  margin: 10px;
+nav {
+  display: flex;
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  padding: 5px;
+  width: auto;
+  a {
+    text-decoration: none;
+    display: block;
+    margin: 5px;
+    color: rgb(255, 255, 255);
+    font-size: 3rem;
+    background-color: rgba(83, 110, 196, 0.8);
+    border-radius: 10px;
+    padding:5px;
+  }
 }
 </style>
