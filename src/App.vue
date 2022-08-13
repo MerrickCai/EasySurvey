@@ -7,8 +7,7 @@
     <router-link to="/">首页</router-link>
     <router-link to="/pinia">pinia测试</router-link>
     <router-link to="/login">登录/注册</router-link>
-    <router-link to="/5616">404页</router-link>
-
+    <router-link :to="`/${Math.random()}`">404页</router-link>
   </nav>
   <router-view></router-view>
 </template>

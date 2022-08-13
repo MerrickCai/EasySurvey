@@ -1,29 +1,29 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
-import home from '../view/home.vue'
-import pinia from '../view/pinia.vue'
-import login from '../view/login.vue'
-import notFound from '../view/notFound.vue'
+const home = () => import('../view/home.vue')
+const pinia = () => import('../view/pinia.vue')
+const login = () => import('../view/login.vue')
+const notFound = () => import('../view/notFound.vue')
 
 const routes = [
     {
         path: '/',
-        name:'home',
+        name: 'home',
         component: home
     },
     {
         path: '/pinia',
-        name:'pinia',
+        name: 'pinia',
         component: pinia
     },
     {
         path: '/login/:account?',
-        name:'login',
+        name: 'login',
         component: login
     },
     {
         path: '/:path(.*)',
-        name:'notFound',
+        name: 'notFound',
         component: notFound
     },
 ]
