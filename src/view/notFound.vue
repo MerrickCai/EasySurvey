@@ -17,3 +17,7 @@ function backhome() {
         <button @click="backhome">回到首页</button>
     </p>
 </template>
+
+<style lang="less" scoped>
+
+</style>

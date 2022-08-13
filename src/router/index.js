@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
+//路由懒加载
 const home = () => import('../view/home.vue')
 const pinia = () => import('../view/pinia.vue')
 const login = () => import('../view/login.vue')
@@ -22,7 +23,7 @@ const routes = [
         component: login
     },
     {
-        path: '/:path(.*)',
+        path: '/:path(.*)', //404页面
         name: 'notFound',
         component: notFound
     },

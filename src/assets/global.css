@@ -1,13 +1,7 @@
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
 * {
   font-family: "Microsoft Yahei";
+  margin: 0;
+  padding: 0;
 }
 
 /*滚动条样式*/
@@ -42,14 +36,6 @@ body {
 html {
   /*1rem=20px*/
   font-size: 20px;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
 }
 
 #app {

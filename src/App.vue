@@ -1,37 +1,24 @@
 <script setup>
-
+import navbar from './components/navbar.vue'
 </script>
 
 <template>
-  <nav>
-    <router-link to="/">首页</router-link>
-    <router-link to="/pinia">pinia测试</router-link>
-    <router-link to="/login">登录/注册</router-link>
-    <router-link :to="`/${Math.random()}`">404页</router-link>
-  </nav>
+  <navbar />
+  <div id="router_wrapper">
   <router-view></router-view>
+  </div>
+
 </template>
 
 
 <style lang="less" scoped>
-nav {
-  display: flex;
-  position: fixed;
-  z-index: 100;
-  top: 0;
-  left: 0;
-  padding: 5px;
-  width: auto;
-
-  a {
-    text-decoration: none;
+#router_wrapper{
     display: block;
-    margin: 5px;
-    color: rgb(255, 255, 255);
-    font-size: 1.5rem;
-    background-color: rgba(83, 110, 196, 0.8);
-    border-radius: 10px;
-    padding: 5px;
-  }
+    margin: 70px auto 0 auto;
+    min-height: 400px;
+    width: var(--safe_area);
+    padding:50px;
+    background-color: rgba(190, 155, 155,0.1);
+    overflow: scroll;
 }
 </style>
