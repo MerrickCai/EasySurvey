@@ -1,11 +1,11 @@
 <template>
-  <ul>
+  <ul class="filesum">
     <li class="creatfile">
       <!-- <div class="creattitle">添加问卷</div>
       <span class="titleshadow"></span> -->
       <div class="file">
         <div class="creatcontent">
-          <span>创建问卷</span>
+          <span class="creatfile">创建问卷</span>
           <span class="plus">
             <el-icon color="white" :size="5 * 5"><Plus /></el-icon>
           </span>
@@ -70,28 +70,37 @@ import { Plus } from "@element-plus/icons-vue";
   clip-path: polygon(80% 0, 100% 0, 100% 100%);
   z-index: 10;
 } */
+
+.filesum {
+  height: 600px;
+  width: 300px;
+  padding: 30px 20px;
+}
 .file {
   position: relative;
 }
 .creatcontent {
   position: relative;
-  width: 21rem;
-  height: 14.8rem;
+  width: 210px;
+  height: 148px;
   border-radius: 0px 4px 4px 4px;
   background: rgba(138, 204, 237, 1);
   clip-path: polygon(30% 0, 35% 13%, 100% 13%, 100% 100%, 0 100%, 0 0);
   text-align: left;
-  text-indent: 1rem;
+  text-indent: 10px;
   color: white;
-  box-shadow: 0.5rem 0.5rem rgba(15, 174, 254);
+  box-shadow: 5px 5px rgba(15, 174, 254);
+  .creatfile {
+    font-size: 12px;
+  }
 }
 
 .shadow {
   position: absolute;
-  top: 0.5rem;
-  left: 0.5rem;
-  width: 21rem;
-  height: 14.8rem;
+  top: 5px;
+  left: 5px;
+  width: 210px;
+  height: 148px;
   border-radius: 0px 4px 4px 4px;
   clip-path: polygon(30% 0, 35% 13%, 100% 13%, 100% 100%, 0 100%, 0 0);
   background-color: rgba(54, 175, 236, 0.3);
@@ -100,12 +109,12 @@ import { Plus } from "@element-plus/icons-vue";
 
 .plus {
   position: absolute;
-  bottom: 4rem;
-  left: 3rem;
+  bottom: 40px;
+  left: 30px;
 }
 .progress {
   position: absolute;
-  bottom: 1rem;
-  right: 3rem;
+  bottom: 10px;
+  right: 30px;
 }
 </style>

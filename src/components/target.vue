@@ -2,11 +2,39 @@
   <div class="target">
     <div class="target-title">数量指标</div>
     <div class="target-con">
-      <span class="sum">总问卷数<span class="number">150</span></span>
-      <span class="useful">有效问卷数<span class="number"></span></span>
-      <span class="plan">计划问卷数300</span>
-      <span class="pay">总支出80.00</span>
-      <span class="reputation">用户平均信誉度<span class="number"></span></span>
+      <span class="sum number">
+        总问卷数 <img src="../../public/sum.png" alt="" />
+        <i>150</i>
+      </span>
+      <span class="useful number"
+        >有效问卷数
+        <img src="../../public/useful.png" alt="" />
+        <i>80</i>
+      </span>
+      <span class="plan number">
+        计划问卷数 <img src="../../public/plan.png" alt="" />
+        <i
+          >300<img
+            class="change"
+            style="display: inline"
+            src="../../public/revise.png"
+            alt=""
+        /></i>
+      </span>
+      <span class="pay number">
+        总支出 <img src="../../public/expend.png" alt="" />
+        <i
+          >100.00<img
+            class="change"
+            style="display: inline"
+            src="../../public/revise.png"
+            alt=""
+        /></i>
+      </span>
+      <span class="reputation number">
+        用户平均信誉度 <img src="../../public/credit.png" alt="" />
+        <i>90%</i>
+      </span>
     </div>
   </div>
 </template>
@@ -16,15 +44,19 @@
 
 <style lang="less" scoped>
 .target {
-  width: 87rem;
-  height: 14rem;
-  background-color: pink;
-  padding: 0 2.4rem;
+  //   position: absolute;
+  //   right: 50px;
+  //   top: 20px;
+  width: 750px;
+  height: 146px;
+  margin-top: 30px;
+  //   background-color: pink;
+  padding: 0 24px;
   box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
   .target-title {
-    height: 4.4rem;
+    height: 44px;
     text-align: left;
-    line-height: 4.4rem;
+    line-height: 44px;
     font-size: 14px;
     font-weight: bold;
   }
@@ -38,12 +70,16 @@
       display: inline-block;
       border: none;
     }
-    .number {
+    i {
       display: block;
-      height: 4.2rem;
+      height: 42px;
       font-size: 36px;
       font-weight: bold;
       color: #000;
+      font-style: normal;
+      .change {
+        cursor: pointer;
+      }
     }
   }
 }
