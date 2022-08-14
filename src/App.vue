@@ -3,22 +3,31 @@ import navbar from './components/navbar.vue'
 </script>
 
 <template>
-  <navbar />
-  <div id="router_wrapper">
-  <router-view></router-view>
-  </div>
-
+  <navbar></navbar>
+  <main>
+    <div>
+      <router-view></router-view>
+    </div>
+  </main>
 </template>
 
 
 <style lang="less" scoped>
-#router_wrapper{
+main {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+
+  div {
     display: block;
-    margin: 70px auto 0 auto;
-    min-height: 400px;
+    margin-top: 60px;
+    height: calc(100vh - 60px);
     width: var(--safe_area);
-    padding:50px;
-    background-color: rgba(190, 155, 155,0.1);
-    overflow: scroll;
+    box-shadow: 0 0 3px 3px rgba(rgba(150,150,150,0.1));
+  }
 }
 </style>
