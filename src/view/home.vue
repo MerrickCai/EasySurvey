@@ -3,7 +3,9 @@
 </script>
 
 <template>
-
+<p>
+    HOME
+</p>
 </template>
 
 <style lang="less" scoped>

@@ -1,22 +1,23 @@
-//全局CSS
+// 全局 CSS
 import './assets/global.css'
 
-// 引入createApp工厂函数
+// Vue 实例
 import { createApp } from 'vue'
 import App from './App.vue'
 const app = createApp(App)
 
-// 引入element-plus库
+// Element Plus
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 app.use(ElementPlus)
 
-//使用Pinia
+// Pinia
 import { createPinia } from 'pinia'
 app.use(createPinia())
 
-// 引入路由
+// 路由
 import router from './router/index.js'
 app.use(router)
 
+// 挂载实例
 app.mount('#app')

@@ -8,6 +8,8 @@ body {
 
 * {
   font-family: "Microsoft Yahei";
+  margin: 0;
+  padding: 0;
 }
 
 li {
@@ -33,34 +35,16 @@ li {
 
 :root {
   /*页面安全区*/
-  --safe_area: 1280px;
+  --safe_area: 1200px;
 }
 
-@media screen and (max-width:1280px) {
+@media screen and (max-width:1200px) {
   :root {
     --safe_area: 100%;
   }
 }
 
-/*rem布局*/
 html {
-  /*1rem=10px*/
-  font-size: 10px;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-#app {
-  display: block;
-  height: auto;
-  max-width: var(--safe_area);
-  margin: 0 auto;
-  overflow: hidden;
-  text-align: center;
+  /*1rem=20px*/
+  font-size: 20px;
 }

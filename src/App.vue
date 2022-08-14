@@ -1,35 +1,35 @@
 <script setup>
-import statistics from '../src/components/statistics.vue'
+import navbar from "./components/navbar.vue";
+import statistics from "../src/components/statistics.vue";
 </script>
 
 <template>
-  <nav>
-    <router-link to="/">首页</router-link>
-    <router-link to="/login">登录/注册</router-link>
-    <statistics></statistics>
-  </nav>
-  <router-view></router-view>
+  <navbar></navbar>
+  <main>
+    <div>
+      <router-view></router-view>
+    </div>
+  </main>
+  <statistics></statistics>
 </template>
 
 
 <style lang="less" scoped>
-nav {
+main {
   display: flex;
-  position: fixed;
-  z-index: 100;
-  top: 0;
-  left: 0;
-  padding: 5px;
-  width: auto;
-  a {
-    text-decoration: none;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+
+  div {
     display: block;
-    margin: 5px;
-    color: rgb(255, 255, 255);
-    font-size: 3rem;
-    background-color: rgba(83, 110, 196, 0.8);
-    border-radius: 10px;
-    padding:5px;
+    margin-top: 60px;
+    height: calc(100vh - 60px);
+    width: var(--safe_area);
+    box-shadow: 0 0 3px 3px rgba(rgba(150, 150, 150, 0.1));
   }
 }
 </style>

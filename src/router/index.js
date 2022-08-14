@@ -1,14 +1,41 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import Pinia from '../components/piniaTest.vue'
-import login from '../components/login.vue'
-import statistics from '../components/statistics.vue'
+import { createRouter, createWebHashHistory } from 'vue-router'
+
+//路由懒加载
+const home = () => import('../view/home.vue')
+const pinia = () => import('../view/pinia.vue')
+const login = () => import('../view/login.vue')
+const notFound = () => import('../view/notFound.vue')
+const statistics = () => import('../components/statistics.vue')
+
 const routes = [
-    { path: '/', component: Pinia },
-    { path: '/login', component: login },
-    { path: '/', component: statistics },
+    {
+        path: '/',
+        name: 'home',
+        component: home
+    },
+    {
+        path: '/pinia',
+        name: 'pinia',
+        component: pinia
+    },
+    {
+        path: '/login/:account?',
+        name: 'login',
+        component: login
+    },
+    {
+        path: '/:path(.*)', //404页面
+        name: 'notFound',
+        component: notFound
+    },
+    {
+        path: '/',
+        name: 'statistics',
+        component: statistics
+    },
 ]
 
 export default createRouter({
-    history: createWebHistory(),
+    history: createWebHashHistory(),
     routes
 })
