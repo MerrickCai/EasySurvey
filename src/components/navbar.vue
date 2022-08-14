@@ -1,29 +1,31 @@
 <script setup>
-// import { useRouter, useRoute } from 'vue-router'
-// const router = useRouter()
-// const route = useRoute()
-// function backhome() {
-//     router.push({
-//         path: '/'
-//     })
-// }
+import { useRouter, useRoute } from 'vue-router'
+const router = useRouter()
+const route = useRoute()
+function backhome() {
+    router.push({
+        path: '/'
+    })
+}
 </script>
 
 <template>
     <nav>
-        <div id="logo">
-            <router-link to="/">问卷易</router-link>
+        <div class="logo">
+            <router-link to="/"><img src="/logo.png" />
+                <div>问卷易</div>
+            </router-link>
         </div>
-        <div>
-            <el-button type="primary" round>
-                <router-link to="/pinia">pinia测试</router-link>
-            </el-button>
-            <el-button type="primary" round>
-                <router-link to="/login">登录/注册</router-link>
-            </el-button>
-            <el-button type="primary" round>
-                <router-link :to="`/${Math.floor(Math.random() * 100)}`">404页</router-link>
-            </el-button>
+        <div class="links">
+            <router-link to="/404">
+                <div>创建问卷</div>
+            </router-link>
+            <router-link to="/pinia"><img src="/navbar_1.png" /></router-link>
+            <router-link to="/statistics">
+                <div>统计数据</div>
+            </router-link>
+            <router-link to="/login"><img src="/navbar_2.png" /></router-link>
+
         </div>
     </nav>
 </template>
@@ -35,36 +37,88 @@ nav {
     flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
-    margin: 0 auto;
-    height: 70px;
+    height: 80px;
     width: var(--safe_area);
     position: fixed;
     z-index: 1000;
     top: 0;
     left: calc((100% - var(--safe_area))/2);
 
-    #logo {
+    >div.logo {
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
         justify-content: center;
         align-items: center;
-        height: auto;
-        width: 30%;
+        height: 60px;
+        width: auto;
 
-        a {
+        >a {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: auto;
+            line-height: 60px;
             color: rgb(0, 0, 0);
             font-size: 1.5rem;
+            text-decoration: none;
+
+            >img {
+                display: block;
+                height: 100%;
+                width: auto;
+                object-fit: contain;
+            }
+
+            >div {
+                display: block;
+                height: 100%;
+                width: auto;
+                object-fit: contain;
+            }
         }
     }
 
-    a {
-        display: inline-block;
-        margin: 5px;
-        padding: 5px;
-        text-decoration: none;
-        color: rgb(0, 0, 0);
-        font-size: 1rem;
+    >div.links {
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: flex-end;
+        align-items: center;
+        height: 60px;
+        width: auto;
+
+        >a {
+            display: block;
+            height: 40px;
+            margin-right: 2rem;
+            width: auto;
+            line-height: 40px;
+            font-size: 1rem;
+            text-decoration: none;
+
+            >img {
+                display: block;
+                height: 100%;
+                width: auto;
+                object-fit: contain;
+            }
+
+            >div {
+                display: block;
+                height: 100%;
+                width: auto;
+                padding: 0 10px;
+                background-color: var(--theme_color);
+                border-radius: 15px;
+                color: rgb(255, 255, 255);
+                font-size: 0.8rem;
+            }
+        }
     }
 }
 </style>

@@ -9,7 +9,7 @@ const AccountLogin = () => import('../components/AccountLogin.vue')
 const WechatLogin = () => import('../components/WechatLogin.vue')
 const register = () => import('../components/register.vue')
 
-
+const statistics = () => import('../components/statistics.vue')
 const routes = [
     {
         path: '/',
@@ -51,11 +51,17 @@ const routes = [
     },
 
     {
+        path: '/statistics',
+        name: 'statistics',
+        component: statistics
+    },
+    {
         path: '/:path(.*)', //404页面
         name: 'notFound',
         component: notFound
     },
 ];
+
 
 export default createRouter({
     history: createWebHashHistory(),
