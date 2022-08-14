@@ -5,6 +5,10 @@ const home = () => import('../view/home.vue')
 const pinia = () => import('../view/pinia.vue')
 const login = () => import('../view/login.vue')
 const notFound = () => import('../view/notFound.vue')
+const AccountLogin = () => import('../components/AccountLogin.vue')
+const WechatLogin = () => import('../components/WechatLogin.vue')
+const register = () => import('../components/register.vue')
+
 
 const routes = [
     {
@@ -18,16 +22,40 @@ const routes = [
         component: pinia
     },
     {
-        path: '/login/:account?',
+        path: '/login',
         name: 'login',
-        component: login
+        component: login,
+        children: [
+            {
+                path: 'AccountLogin',
+                name: 'AccountLogin',
+                component: AccountLogin,
+            },
+            {
+                path: 'WechatLogin',
+                name: 'WechatLogin',
+                component: WechatLogin,
+            },
+            {
+                path: 'register',
+                name: 'register',
+                component: register,
+            },
+            
+            { // 配置默认路由(默认显示的子路由组件)
+                path:"/login", // 路由地址
+                redirect:"/login/AccountLogin" // 重定向
+            }
+
+        ],
     },
+
     {
         path: '/:path(.*)', //404页面
         name: 'notFound',
         component: notFound
     },
-]
+];
 
 export default createRouter({
     history: createWebHashHistory(),
