@@ -3,36 +3,36 @@
     <div class="target-title">数量指标</div>
     <div class="target-con">
       <span class="sum number">
-        总问卷数 <img src="../../public/sum.png" alt="" />
+        总问卷数 <img src="/sum.png" alt="" />
         <i>150</i>
       </span>
       <span class="useful number"
         >有效问卷数
-        <img src="../../public/useful.png" alt="" />
+        <img src="/useful.png" alt="" />
         <i>80</i>
       </span>
       <span class="plan number">
-        计划问卷数 <img src="../../public/plan.png" alt="" />
+        计划问卷数 <img src="/plan.png" alt="" />
         <i
           >300<img
             class="change"
             style="display: inline"
-            src="../../public/revise.png"
+            src="/revise.png"
             alt=""
         /></i>
       </span>
       <span class="pay number">
-        总支出 <img src="../../public/expend.png" alt="" />
+        总支出 <img src="/expend.png" alt="" />
         <i
           >100.00<img
             class="change"
             style="display: inline"
-            src="../../public/revise.png"
+            src="/revise.png"
             alt=""
         /></i>
       </span>
       <span class="reputation number">
-        用户平均信誉度 <img src="../../public/credit.png" alt="" />
+        用户平均信誉度 <img src="/credit.png" alt="" />
         <i>90%</i>
       </span>
     </div>
