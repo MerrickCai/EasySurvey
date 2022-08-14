@@ -24,15 +24,16 @@ const routes = [
         component: login
     },
     {
+        path: '/statistics',
+        name: 'statistics',
+        component: statistics
+    },
+    {
         path: '/:path(.*)', //404页面
         name: 'notFound',
         component: notFound
     },
-    {
-        path: '/',
-        name: 'statistics',
-        component: statistics
-    },
+
 ]
 
 export default createRouter({

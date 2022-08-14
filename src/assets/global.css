@@ -1,41 +1,13 @@
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
 * {
   font-family: "Microsoft Yahei";
   margin: 0;
   padding: 0;
 }
 
-li {
-  list-style: none;
-}
-
-/*滚动条样式*/
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.6);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 1);
-}
-
-::-webkit-scrollbar-track {
-  background-color: rgba(255, 255, 255, 1);
-}
-
 :root {
   /*页面安全区*/
   --safe_area: 1200px;
+  --theme_color: rgb(30, 111, 255)
 }
 
 @media screen and (max-width:1200px) {
@@ -47,4 +19,8 @@ li {
 html {
   /*1rem=20px*/
   font-size: 20px;
+}
+
+li {
+  list-style: none;
 }

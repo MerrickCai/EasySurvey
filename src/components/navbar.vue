@@ -12,13 +12,20 @@ function backhome() {
 <template>
     <nav>
         <div class="logo">
-            <img src="/logo.png" />
-            <router-link to="/">问卷易</router-link>
+            <router-link to="/"><img src="/logo.png" />
+                <div>问卷易</div>
+            </router-link>
         </div>
         <div class="links">
-            <router-link to="/pinia">pinia测试</router-link>
-            <router-link to="/login">登录/注册</router-link>
-            <router-link :to="`/${Math.floor(Math.random() * 100)}`">404页</router-link>
+            <router-link to="/404">
+                <div>创建问卷</div>
+            </router-link>
+            <router-link to="/pinia"><img src="/navbar_1.png" /></router-link>
+            <router-link to="/statistics">
+                <div>统计数据</div>
+            </router-link>
+            <router-link to="/login"><img src="/navbar_2.png" /></router-link>
+
         </div>
     </nav>
 </template>
@@ -30,7 +37,7 @@ nav {
     flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
-    height: 60px;
+    height: 80px;
     width: var(--safe_area);
     position: fixed;
     z-index: 1000;
@@ -43,45 +50,74 @@ nav {
         flex-wrap: nowrap;
         justify-content: center;
         align-items: center;
-        height: 100%;
-        width: 20%;
+        height: 60px;
+        width: auto;
 
-        img {
-            display: block;
-            height: 100%;
-            width: auto;
-            object-fit: contain;
-        }
-
-        a {
-            display: block;
+        >a {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
             height: 100%;
             width: auto;
             line-height: 60px;
             color: rgb(0, 0, 0);
-            font-size: 1.7rem;
+            font-size: 1.5rem;
             text-decoration: none;
+
+            >img {
+                display: block;
+                height: 100%;
+                width: auto;
+                object-fit: contain;
+            }
+
+            >div {
+                display: block;
+                height: 100%;
+                width: auto;
+                object-fit: contain;
+            }
         }
     }
 
     >div.links {
+        flex: 1;
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
         justify-content: flex-end;
         align-items: center;
-        height: 100%;
-        width: 80%;
+        height: 60px;
+        width: auto;
 
-        a {
+        >a {
             display: block;
-            height: 100%;
-            margin-right: 10px;
+            height: 40px;
+            margin-right: 2rem;
             width: auto;
-            line-height: 60px;
-            color: rgb(0, 142, 250);
+            line-height: 40px;
             font-size: 1rem;
             text-decoration: none;
+
+            >img {
+                display: block;
+                height: 100%;
+                width: auto;
+                object-fit: contain;
+            }
+
+            >div {
+                display: block;
+                height: 100%;
+                width: auto;
+                padding: 0 10px;
+                background-color: var(--theme_color);
+                border-radius: 15px;
+                color: rgb(255, 255, 255);
+                font-size: 0.8rem;
+            }
         }
     }
 }

@@ -1,6 +1,5 @@
 <script setup>
-import navbar from "./components/navbar.vue";
-import statistics from "../src/components/statistics.vue";
+import navbar from './components/navbar.vue'
 </script>
 
 <template>
@@ -10,7 +9,6 @@ import statistics from "../src/components/statistics.vue";
       <router-view></router-view>
     </div>
   </main>
-  <statistics></statistics>
 </template>
 
 
@@ -26,8 +24,8 @@ main {
 
   div {
     display: block;
-    margin-top: 60px;
-    height: calc(100vh - 60px);
+    margin-top: 80px;
+    height: calc(100vh - 80px);
     width: var(--safe_area);
     box-shadow: 0 0 3px 3px rgba(rgba(150, 150, 150, 0.1));
   }
