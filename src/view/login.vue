@@ -2,20 +2,23 @@
 import AccountLogin from '../components/AccountLogin.vue';
 import WechatLogin from '../components/WechatLogin.vue';
 import Register from '../components/register.vue';
-
 const bcgurl = ['/login_cloud.png', '/login_mountain.png'];
 function random(){ //随机返回[x,y]的数字
    let x=0
    let y=1
    return Math.floor(Math.random()*(y-x+1))+x
 }
+
+
+
+
 </script>
 
 <template>
    <div class="background">
         <img :src="`${bcgurl[random()]}`" alt=""> 
     </div>
-    <div class="main">
+    <div class="main" >
        <div class="title">
          <router-link to="/login/WechatLogin" active-class="active change"  exact><h2>微信登录</h2></router-link>
          <router-link to="/login/AccountLogin" active-class="active change"  exact><h2>账号登录</h2></router-link>
@@ -28,13 +31,16 @@ function random(){ //随机返回[x,y]的数字
 @rem:0.625px; 
 @a:0.9px;
 .background{
-    width: 1920 * @rem;
-    height: 972* @rem;
+     width: 100%;
+   //  width: 1920 * @rem;
+   //  height: 972* @rem;
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translateX(-50%) translateY(-47%);
+    transform: translateX(-50%) translateY(-50%);
     z-index: -1;
+   user-select: none;
+  -webkit-user-drag: none;
        img{
           width: 100%;
           height: 100%;
