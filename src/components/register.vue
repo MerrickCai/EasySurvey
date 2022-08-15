@@ -9,8 +9,8 @@
           </div>
      </div>
 
-        <input type="checkbox" class="checkbox" name="">
-        <p class="checkbox_detail">我同意<a href="">《用户隐私协议</a>和<a href="">《隐私条款》</a></p>
+        <input type="checkbox" class="checkbox" id="checkbox1" name="">
+        <p class="checkbox_detail">我同意<a href="">《用户隐私协议》</a>和<a href="">《隐私条款》</a></p>
   
         <el-button type="primary" class="sumbit" >创建用户</el-button><br>
         <p class="login">已有账号？<router-link to="/login/AccountLogin">立即登录</router-link></p>
@@ -29,10 +29,6 @@ const dataArr = [
      tips:'请输入手机号'
     },
     {
-     name:'location',
-     tips:'请输入所在地'
-    },
-    {
      name:'password',
      tips:'设置密码（8-20位字母、数字或特殊符号）'
     },]
@@ -49,18 +45,20 @@ function showDetail(item, index) {
 </script>
 
 <style scoped lang='less'>
-@a:0.9px;
+@a:0.8px;
 .wrapper{
-    width: 440*@a;
+    width:500*@a;
     height: 550*@a;
     position: absolute;
     top: -50*@a;
     box-shadow: 0*@a 6*@a 30*@a 0*@a rgba(73, 107, 158, 0.1);
     border-radius: 6*@a;
     background-color: white;
+    user-select: none;
+  -webkit-user-drag: none;
  .innerbox{
         position: absolute;
-        left: 60*@a;
+        left: 80*@a;
         top: 60*@a;
     img.head{
         width: 48*@a;
@@ -70,7 +68,7 @@ function showDetail(item, index) {
         top: 55*@a;
     }
     .upload{
-        width: 74*@a;
+        width: 80*@a;
         height: 22*@a;
         position: absolute;
         left: 86*@a;
@@ -91,35 +89,44 @@ function showDetail(item, index) {
     }
 .inputArr{
     width: 320*@a;
-    height: 212*@a;
+    height: 200*@a;
     position: absolute;
-    top: 128*@a;
+    top: 118*@a;
     left: 0*@a;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     background-color: b;
   .input{
-    width: 320*@a;
-    height: 44*@a;
-    margin-top: 12*@a;
-    text-indent: 8*@a;
+    width: 350*@a;
+    height: 54*@a;
+    margin-top: 6*@a;
+    text-indent: 14*@a;
     border: 1*@a solid rgba(217, 217, 217, 1); 
     border-radius: 5*@a;
     outline:none;
+         &::placeholder{
+          font-size: 12*@a;
+          letter-spacing: 0*@a;
+          line-height: 20*@a;
+          color: rgba(217, 217, 217, 1);
+          text-align: left;
+          vertical-align: top;
+     }
  }
 }
 
 .checkbox{
    position: absolute;
-   left: 71*@a;
-   bottom: 122*@a;
+   left: 93*@a;
+   bottom: 129*@a;
 }
+
 .checkbox_detail{
    position: absolute;
-   left: 92*@a;
-   bottom: 119*@a;
-   font-size: 10*@a;
+   left: 113*@a;
+   bottom: 127.7*@a;
+   font-size: 8*@a;
    font-weight: 400;
    letter-spacing: 0*@a;
    line-height: 20*@a;
@@ -129,10 +136,10 @@ function showDetail(item, index) {
    }
 }
 .sumbit{
-  width: 320*@a;
-  height: 44*@a;
+  width: 350*@a;
+  height: 54*@a;
   position: absolute;
-  left: 60*@a;
+  left: 80*@a;
   bottom: 52*@a;
 }
 
@@ -143,7 +150,7 @@ function showDetail(item, index) {
     line-height: 20*@a;
     position: absolute;
     bottom: 22*@a;
-    left: 174*@a;
+    left: 184*@a;
     color: rgba(217, 217, 217, 1);
     a{
       color: rgba(71, 145, 255, 1);
@@ -151,4 +158,8 @@ function showDetail(item, index) {
 }
 
 }
+
+
+
+
 </style>

@@ -1,20 +1,40 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
-//路由懒加载
-const home = () => import('../view/home.vue')
+//主路由(懒加载=>提高性能)
+const survey = () => import('../view/survey.vue')
 const pinia = () => import('../view/pinia.vue')
 const login = () => import('../view/login.vue')
 const notFound = () => import('../view/notFound.vue')
-const AccountLogin = () => import('../components/AccountLogin.vue')
-const WechatLogin = () => import('../components/WechatLogin.vue')
-const register = () => import('../components/register.vue')
+const statistics = () => import('../view/statistics.vue')
 
-const statistics = () => import('../components/statistics.vue')
+//嵌套路由
+import AccountLogin from '../components/AccountLogin.vue'
+import WechatLogin from '../components/WechatLogin.vue'
+import register from '../components/register.vue'
+import survey1 from '../components/survey1.vue'
+import survey2 from '../components/survey2.vue'
+import survey3 from '../components/survey3.vue'
+
 const routes = [
     {
         path: '/',
-        name: 'home',
-        component: home
+        name: 'survey',
+        redirect: "/survey1",
+        component: survey,
+        children: [
+            {
+                path: 'survey1',
+                component: survey1,
+            },
+            {
+                path: 'survey2',
+                component: survey2,
+            },
+            {
+                path: 'survey3',
+                component: survey3,
+            }
+        ]
     },
     {
         path: '/pinia',
@@ -24,32 +44,23 @@ const routes = [
     {
         path: '/login',
         name: 'login',
+        redirect: "/login/AccountLogin",
         component: login,
         children: [
             {
                 path: 'AccountLogin',
-                name: 'AccountLogin',
                 component: AccountLogin,
             },
             {
                 path: 'WechatLogin',
-                name: 'WechatLogin',
                 component: WechatLogin,
             },
             {
                 path: 'register',
-                name: 'register',
                 component: register,
-            },
-            
-            { // 配置默认路由(默认显示的子路由组件)
-                path:"/login", // 路由地址
-                redirect:"/login/AccountLogin" // 重定向
             }
-
         ],
     },
-
     {
         path: '/statistics',
         name: 'statistics',
@@ -60,8 +71,7 @@ const routes = [
         name: 'notFound',
         component: notFound
     },
-];
-
+]
 
 export default createRouter({
     history: createWebHashHistory(),

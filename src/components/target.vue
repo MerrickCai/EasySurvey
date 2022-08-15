@@ -66,10 +66,7 @@
     align-items: center;
     color: rgba(140, 140, 140, 1);
     font-size: 12px;
-    input {
-      display: inline-block;
-      border: none;
-    }
+
     i {
       display: block;
       height: 42px;

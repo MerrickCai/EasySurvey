@@ -6,28 +6,26 @@ import navbar from './components/navbar.vue'
   <navbar></navbar>
   <main>
     <div>
+      <!--路由容器-->
       <router-view></router-view>
     </div>
   </main>
 </template>
 
-
 <style lang="less" scoped>
+@nav: 70px;
+
 main {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-items: center;
+  display: block;
   height: 100vh;
-  width: 100%;
+  width: var(--safe_area);
+  margin: 0 auto;
+  padding-top: @nav;
 
   div {
     display: block;
-    margin-top: 80px;
-    height: calc(100vh - 80px);
-    width: var(--safe_area);
-    box-shadow: 0 0 3px 3px rgba(rgba(150, 150, 150, 0.1));
+    height: calc(100vh - @nav);
+    width: 100%;
   }
 }
 </style>
