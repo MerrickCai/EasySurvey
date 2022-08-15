@@ -13,25 +13,6 @@ import echart from "./echart.vue";
 </script>
 
 <style lang="less" scoped>
-// .data {
-//   height: 800px;
-//   margin: 0px;
-//   display: inline-grid;
-//   grid-gap: 20px;
-//   grid-template-areas:
-//     "CreateFile"
-//     "target echart";
-//   grid-auto-flow: column;
-//   .CreateFile {
-//     grid-area: CreateFile;
-//   }
-//   .target {
-//     grid-area: target;
-//   }
-//   .echart {
-//     grid-area: echart;
-//   }
-// }
 .data {
   height: 700px;
   margin-top: 0px;
