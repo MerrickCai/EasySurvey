@@ -1,14 +1,14 @@
 <template>
   <ul class="filesum">
     <li class="creatfile">
-      <!-- <div class="creattitle">添加问卷</div>
-      <span class="titleshadow"></span> -->
+      <!-- 使得文件阴影定位 -->
       <div class="file">
         <div class="creatcontent">
           <span class="creatfile">创建问卷</span>
           <span class="plus">
             <el-icon color="white" :size="5 * 5"><Plus /></el-icon>
           </span>
+          <!-- 进度条 -->
           <span class="progress">
             <el-progress
               type="circle"
@@ -18,6 +18,7 @@
             />
           </span>
         </div>
+        <!-- 文件阴影 -->
         <div class="shadow"></div>
       </div>
     </li>
@@ -74,7 +75,7 @@ import { Plus } from "@element-plus/icons-vue";
 .filesum {
   height: 600px;
   width: 300px;
-  padding: 30px 20px;
+  padding: 0px 20px;
 }
 .file {
   position: relative;
@@ -84,8 +85,8 @@ import { Plus } from "@element-plus/icons-vue";
   width: 210px;
   height: 148px;
   border-radius: 0px 4px 4px 4px;
-  background: rgba(138, 204, 237, 1);
-  clip-path: polygon(30% 0, 35% 13%, 100% 13%, 100% 100%, 0 100%, 0 0);
+  // background: rgba(138, 204, 237, 1);
+  clip-path: polygon(35% 0, 40% 13%, 100% 13%, 100% 100%, 0 100%, 0 0);
   text-align: left;
   text-indent: 10px;
   color: white;
@@ -93,6 +94,11 @@ import { Plus } from "@element-plus/icons-vue";
   .creatfile {
     font-size: 12px;
   }
+  background: rgba(221, 237, 255, 0.35);
+
+  // border: 1px solid rgba(0, 0, 0, 1);
+
+  backdrop-filter: blur(45px);
 }
 
 .shadow {
@@ -102,8 +108,13 @@ import { Plus } from "@element-plus/icons-vue";
   width: 210px;
   height: 148px;
   border-radius: 0px 4px 4px 4px;
-  clip-path: polygon(30% 0, 35% 13%, 100% 13%, 100% 100%, 0 100%, 0 0);
-  background-color: rgba(54, 175, 236, 0.3);
+  clip-path: polygon(35% 0, 40% 13%, 100% 13%, 100% 100%, 0 100%, 0 0);
+  // background-color: rgba(54, 175, 236, 0.3);
+  background: linear-gradient(
+    90deg,
+    rgba(30, 111, 255, 1) 0%,
+    rgba(138, 204, 237, 1) 100%
+  );
   z-index: -1;
 }
 

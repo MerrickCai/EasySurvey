@@ -19,21 +19,24 @@ import echart from "./echart.vue";
   display: grid;
   grid-gap: 20px;
   grid-template-columns: 350px 850px; //1fr 2fr
-  grid-template-rows: 200px 500px;
+  grid-template-rows: 175px 500px;
   grid-auto-flow: column;
   grid-auto-flow: column dense;
+  //问卷管理部分
   .fileuse {
     grid-column-start: 1;
     grid-column-end: 3;
     grid-row-start: 1;
     grid-row-end: 2;
   }
+  //数量指标部分
   .target {
     grid-column-start: 2;
     grid-column-end: 3;
     grid-row-start: 1;
     grid-row-end: 2;
   }
+  //echart图表部分
   .echartall {
     grid-column-start: 2;
     grid-column-end: 3;

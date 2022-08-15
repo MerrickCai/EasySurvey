@@ -48,10 +48,10 @@
   //   right: 50px;
   //   top: 20px;
   width: 750px;
-  height: 146px;
-  margin-top: 30px;
+  height: 126px;
+  margin-top: 20px;
   //   background-color: pink;
-  padding: 0 24px;
+  padding: 10px 24px;
   box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
   .target-title {
     height: 44px;
