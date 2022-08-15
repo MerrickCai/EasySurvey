@@ -40,24 +40,22 @@ const background_url=background.geturl()
 </template>
 
 <style lang="less" scoped>
-@rem: 0.625px;
-@a: 0.9px;
-
-.background {
-   display: block;
-   width: 100%;
-   height: 100%;
-   position: fixed;
-   top: 0;
-   left: 0;
-   z-index: -10;
-
-   img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-   }
+@rem:0.625px; 
+@a:0.9px;
+.background{
+    width:100%;
+    height:100%;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-47%);
+    z-index: -1;
+    user-select: none;
+   -webkit-user-drag: none;
+       img{
+          width: 100%;
+          height: 100%;
+      }
 }
 
 .main {
@@ -74,7 +72,8 @@ const background_url=background.geturl()
       position: absolute;
       left: 60*@a;
       top: 60*@a;
-
+     user-select: none;
+    -webkit-user-drag: none;
       h2 {
          box-sizing: border-box;
          font-weight: bold;
@@ -86,7 +85,10 @@ const background_url=background.geturl()
          font-weight: 500;
          position: relative;
          cursor: pointer;
-
+         color:rgba(217, 217, 217, 1);
+         &:hover{
+          color:#000;
+         }
          &::after {
             content: '';
             // width: 40*@a;
@@ -97,12 +99,14 @@ const background_url=background.geturl()
             bottom: -6*@a;
             background-color: blue;
             transition: all .4s linear;
+            border-radius: 5*@a;
          }
       }
    }
 
    .active {
       h2 {
+         color:#000;
          &::after {
             content: '';
             width: 40*@a;

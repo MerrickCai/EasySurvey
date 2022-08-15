@@ -19,5 +19,7 @@ app.use(createPinia())
 import router from './router/index.js'
 app.use(router)
 
+
+
 // 挂载实例
 app.mount('#app')
