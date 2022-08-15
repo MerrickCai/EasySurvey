@@ -5,7 +5,6 @@ import survey3 from './components/survey3.vue';
 
 <template>
   <navbar></navbar>
-  <survey3></survey3>
   <main>
     <div>
       <!--路由容器-->

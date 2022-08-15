@@ -138,5 +138,4 @@ import { useRoute, useRouter } from 'vue-router';
         left: 1096*@a;
     }
 }
-
 </style>

@@ -11,15 +11,15 @@ onBeforeRouteLeave(() => {
 
 //随机背景图
 const background = {
-   url:['/login_cloud.png', '/login_mountain.png'],
+   url: ['/login_cloud.png', '/login_mountain.png'],
    random(x, y) {//随机返回[x,y]的数字
       return Math.floor(Math.random() * (y - x + 1)) + x
    },
-   geturl(){
-      return this.url[this.random(0,1)]
+   geturl() {
+      return this.url[this.random(0, 1)]
    }
 }
-const background_url=background.geturl()
+const background_url = background.geturl()
 </script>
 
 <template>
@@ -40,22 +40,24 @@ const background_url=background.geturl()
 </template>
 
 <style lang="less" scoped>
-@rem:0.625px; 
-@a:0.9px;
-.background{
-    width:100%;
-    height:100%;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translateX(-50%) translateY(-47%);
-    z-index: -1;
-    user-select: none;
+@rem: 0.625px;
+@a: 0.9px;
+
+.background {
+   width: 100%;
+   height: 100%;
+   position: fixed;
+   top:0;
+   left:0;
+   z-index: -1;
+   user-select: none;
    -webkit-user-drag: none;
-       img{
-          width: 100%;
-          height: 100%;
-      }
+
+   img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+   }
 }
 
 .main {
@@ -72,8 +74,9 @@ const background_url=background.geturl()
       position: absolute;
       left: 60*@a;
       top: 60*@a;
-     user-select: none;
-    -webkit-user-drag: none;
+      user-select: none;
+      -webkit-user-drag: none;
+
       h2 {
          box-sizing: border-box;
          font-weight: bold;
@@ -85,10 +88,12 @@ const background_url=background.geturl()
          font-weight: 500;
          position: relative;
          cursor: pointer;
-         color:rgba(217, 217, 217, 1);
-         &:hover{
-          color:#000;
+         color: rgba(217, 217, 217, 1);
+
+         &:hover {
+            color: #000;
          }
+
          &::after {
             content: '';
             // width: 40*@a;
@@ -106,7 +111,8 @@ const background_url=background.geturl()
 
    .active {
       h2 {
-         color:#000;
+         color: #000;
+
          &::after {
             content: '';
             width: 40*@a;
