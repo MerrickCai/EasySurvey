@@ -1,20 +1,22 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
-//路由懒加载
-const home = () => import('../view/home.vue')
+//主路由
+const survey = () => import('../view/survey.vue')
 const pinia = () => import('../view/pinia.vue')
 const login = () => import('../view/login.vue')
 const notFound = () => import('../view/notFound.vue')
+const statistics = () => import('../view/statistics.vue')
+
+//嵌套路由
 const AccountLogin = () => import('../components/AccountLogin.vue')
 const WechatLogin = () => import('../components/WechatLogin.vue')
 const register = () => import('../components/register.vue')
-const statistics = () => import('../components/statistics.vue')
 
 const routes = [
     {
         path: '/',
-        name: 'home',
-        component: home
+        name: 'survey',
+        component: survey
     },
     {
         path: '/pinia',

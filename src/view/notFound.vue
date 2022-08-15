@@ -1,23 +1,53 @@
 <script setup>
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 const router = useRouter()
-const route = useRoute()
-function backhome() {
-    router.push({
-        path:'/'
-    })
+function routerPush(path) {
+    router.push({ path })
 }
 </script>
 
 <template>
-    <p>
-        找不到页面
-    </p>
-    <p>
-        <button @click="backhome">回到首页</button>
-    </p>
+    <div class="wrapper">
+        <p>
+            找不到页面
+        </p>
+        <div button @click="routerPush('/')">返回首页</div>
+    </div>
 </template>
 
 <style lang="less" scoped>
+@themeColor: rgb(30, 111, 255);
+@themeColor_faint: rgba(30, 113, 255, 0.8);
 
+div.wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+
+    p {
+        color: rgb(0, 0, 0);
+        font-size: 1.5rem;
+    }
+
+    div[button] {
+        display: block;
+        height: auto;
+        width: auto;
+        margin-top: 20px;
+        padding: 20px 30px;
+        background-color: @themeColor_faint;
+        border-radius: 50px;
+        color: rgb(255, 255, 255);
+        font-size: 1.5rem;
+        transition: all 0.3s linear 0s;
+
+        &:hover {
+            background-color: @themeColor;
+            cursor: pointer;
+        }
+    }
+}
 </style>

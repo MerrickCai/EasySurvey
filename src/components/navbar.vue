@@ -5,10 +5,12 @@ const route = useRoute()
 function routerPush(path) {
     router.push({ path })
 }
+import { useStore } from '../PiniaStores/index.js'
+const datas = useStore()
 </script>
 
 <template>
-    <nav>
+    <nav v-show="datas.navShow">
         <div logo>
             <div button @click="routerPush('/')">
                 <img src="/logo.png" />

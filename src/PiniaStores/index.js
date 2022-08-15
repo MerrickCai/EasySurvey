@@ -2,9 +2,7 @@ import { defineStore } from 'pinia'
 
 export const useStore = defineStore('main', {
   state: () => ({
-    //响应式数据
-    name: 'cai',
-    value: 5
+    navShow: true //导航栏展示
   }),
   getters: {
     //计算属性
