@@ -4,11 +4,16 @@ import WechatLogin from '../components/WechatLogin.vue';
 import Register from '../components/register.vue';
 
 const bcgurl = ['/login_cloud.png', '/login_mountain.png'];
+function random(){ //随机返回[x,y]的数字
+   let x=0
+   let y=1
+   return Math.floor(Math.random()*(y-x+1))+x
+}
 </script>
 
 <template>
    <div class="background">
-        <img :src=bcgurl[0] alt=""> 
+        <img :src="`${bcgurl[random()]}`" alt=""> 
     </div>
     <div class="main">
        <div class="title">

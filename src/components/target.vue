@@ -3,36 +3,64 @@
     <div class="target-title">数量指标</div>
     <div class="target-con">
       <span class="sum number">
+<<<<<<< HEAD
         总问卷数 <img src="../../sum.png" alt="" />
+=======
+        总问卷数 <img src="/sum.png" alt="" />
+>>>>>>> main
         <i>150</i>
       </span>
       <span class="useful number"
         >有效问卷数
+<<<<<<< HEAD
         <img src="../../useful.png" alt="" />
         <i>80</i>
       </span>
       <span class="plan number">
         计划问卷数 <img src="../../plan.png" alt="" />
+=======
+        <img src="/useful.png" alt="" />
+        <i>80</i>
+      </span>
+      <span class="plan number">
+        计划问卷数 <img src="/plan.png" alt="" />
+>>>>>>> main
         <i
           >300<img
             class="change"
             style="display: inline"
+<<<<<<< HEAD
             src="../../revise.png"
+=======
+            src="/revise.png"
+>>>>>>> main
             alt=""
         /></i>
       </span>
       <span class="pay number">
+<<<<<<< HEAD
         总支出 <img src="../../expend.png" alt="" />
+=======
+        总支出 <img src="/expend.png" alt="" />
+>>>>>>> main
         <i
           >100.00<img
             class="change"
             style="display: inline"
+<<<<<<< HEAD
             src="../../revise.png"
+=======
+            src="/revise.png"
+>>>>>>> main
             alt=""
         /></i>
       </span>
       <span class="reputation number">
+<<<<<<< HEAD
         用户平均信誉度 <img src="../../credit.png" alt="" />
+=======
+        用户平均信誉度 <img src="/credit.png" alt="" />
+>>>>>>> main
         <i>90%</i>
       </span>
     </div>
