@@ -19,5 +19,8 @@ app.use(createPinia())
 import router from './router/index.js'
 app.use(router)
 
+import axios from 'axios';
+app.use(axios);
+
 // 挂载实例
 app.mount('#app')
