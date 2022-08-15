@@ -9,8 +9,8 @@
           </div>
      </div>
 
-        <input type="checkbox" class="checkbox" name="">
-        <p class="checkbox_detail">我同意<a href="">《用户隐私协议</a>和<a href="">《隐私条款》</a></p>
+        <input type="checkbox" class="checkbox" id="checkbox1" name="">
+        <p class="checkbox_detail">我同意<a href="">《用户隐私协议》</a>和<a href="">《隐私条款》</a></p>
   
         <el-button type="primary" class="sumbit" >创建用户</el-button><br>
         <p class="login">已有账号？<router-link to="/login/AccountLogin">立即登录</router-link></p>
@@ -54,9 +54,11 @@ function showDetail(item, index) {
     box-shadow: 0*@a 6*@a 30*@a 0*@a rgba(73, 107, 158, 0.1);
     border-radius: 6*@a;
     background-color: white;
+    user-select: none;
+  -webkit-user-drag: none;
  .innerbox{
         position: absolute;
-        left: 90*@a;
+        left: 80*@a;
         top: 60*@a;
     img.head{
         width: 48*@a;
@@ -66,7 +68,7 @@ function showDetail(item, index) {
         top: 55*@a;
     }
     .upload{
-        width: 74*@a;
+        width: 80*@a;
         height: 22*@a;
         position: absolute;
         left: 86*@a;
@@ -87,35 +89,44 @@ function showDetail(item, index) {
     }
 .inputArr{
     width: 320*@a;
-    height: 190*@a;
+    height: 200*@a;
     position: absolute;
-    top: 128*@a;
+    top: 118*@a;
     left: 0*@a;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     background-color: b;
   .input{
-    width: 320*@a;
-    height: 44*@a;
+    width: 350*@a;
+    height: 54*@a;
     margin-top: 6*@a;
-    text-indent: 8*@a;
+    text-indent: 14*@a;
     border: 1*@a solid rgba(217, 217, 217, 1); 
     border-radius: 5*@a;
     outline:none;
+         &::placeholder{
+          font-size: 12*@a;
+          letter-spacing: 0*@a;
+          line-height: 20*@a;
+          color: rgba(217, 217, 217, 1);
+          text-align: left;
+          vertical-align: top;
+     }
  }
 }
 
 .checkbox{
    position: absolute;
-   left: 90*@a;
-   bottom: 122*@a;
+   left: 93*@a;
+   bottom: 129*@a;
 }
+
 .checkbox_detail{
    position: absolute;
-   left: 109*@a;
-   bottom: 119*@a;
-   font-size: 10*@a;
+   left: 113*@a;
+   bottom: 127.7*@a;
+   font-size: 8*@a;
    font-weight: 400;
    letter-spacing: 0*@a;
    line-height: 20*@a;
@@ -125,10 +136,10 @@ function showDetail(item, index) {
    }
 }
 .sumbit{
-  width: 320*@a;
-  height: 44*@a;
+  width: 350*@a;
+  height: 54*@a;
   position: absolute;
-  left: 90*@a;
+  left: 80*@a;
   bottom: 52*@a;
 }
 
@@ -147,4 +158,8 @@ function showDetail(item, index) {
 }
 
 }
+
+
+
+
 </style>

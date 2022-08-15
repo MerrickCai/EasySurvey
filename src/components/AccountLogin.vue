@@ -33,7 +33,7 @@
 .tips{
       position: absolute;
       left: 94*@rem;
-      top: 240*@rem ;;
+      top: 237*@rem ;;
       font-size: 10*@rem;
       letter-spacing: 0*@rem;
       line-height: 20*@rem;
@@ -47,7 +47,7 @@
      left: 60*@rem;
      width: 320*@rem;
      height: 44  *@rem;
-     text-indent: 8px;
+     text-indent: 17px;
      border: 1px solid rgba(217, 217, 217, 1); 
      border-radius: 5px;
      outline:none;
@@ -83,7 +83,7 @@
      line-height: 20*@rem;
      position: absolute;
      top: 240*@rem;
-     right: 60*@rem;
+     right: 72*@rem;
      color: rgba(71, 145, 255, 1);
 }
 </style>
