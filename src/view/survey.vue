@@ -38,7 +38,7 @@ div#wrapper {
     width: calc(100% - 12px);
     margin: 0 6px;
 
-    div.tag_wrapper {
+    >div.tag_wrapper {
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
@@ -48,19 +48,32 @@ div#wrapper {
         width: 100%;
         padding-left: 10px;
 
-        div {
+        >div {
             display: flex;
             flex-direction: row;
             flex-wrap: nowrap;
             justify-content: center;
-            align-items: flex-end;
+            align-items: center;
             height: 100%;
             width: auto;
             margin-right: 5px;
-            padding: 5px 15px 5px 5px;
+            padding: 10px 30px 5px 30px;
+            position: relative;
             background-color: @themeColor2;
             clip-path: polygon(0 0, 85% 0, 100% 100%, 0% 100%);
-            border-radius: 3px 3px 0 3px;
+            border-radius: 4px 4px 0 4px;
+
+            &::before {
+                content: '';
+                position: absolute;
+                top: 60%;
+                left: 10px;
+                height: 12px;
+                width: 12px;
+                transform: translate(0, -50%);
+                border: solid 1px rgba(0, 0, 0, 1);
+                border-radius: 50%;
+            }
 
             &:hover {
                 cursor: pointer;
@@ -69,8 +82,11 @@ div#wrapper {
             &[active] {
                 background-color: @themeColor1;
 
+                &::before {
+                    border: solid 1px rgba(255, 255, 255, 1);
+                }
+
                 span {
-                    font-size: 0.7rem;
                     color: rgb(255, 255, 255);
                 }
             }
@@ -82,7 +98,7 @@ div#wrapper {
         }
     }
 
-    div.container {
+    >div.container {
         display: block;
         height: calc(100% - @tag_wrapperHeight);
         width: 100%;
