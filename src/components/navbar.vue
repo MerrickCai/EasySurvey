@@ -10,7 +10,7 @@ const datas = useStore()
 </script>
 
 <template>
-    <nav v-show="datas.navShow">
+    <nav>
         <div logo>
             <div button @click="routerPush('/')">
                 <img src="/logo.png" />
@@ -18,10 +18,12 @@ const datas = useStore()
             </div>
         </div>
         <div links>
-            <div button @click="routerPush('/statistics')">统计数据</div>
-            <div img @click="routerPush('/pinia')"><img src="/navbar_1.png" /></div>
-            <div img avatar @click="routerPush('/404')"><img src="/navbar_3.jpg" /></div>
-            <div img @click="routerPush('/login')"><img src="/navbar_2.png" /></div>
+            <template v-if="datas.navShow">
+                <div button @click="routerPush('/statistics')">统计数据</div>
+                <div img @click="routerPush('/pinia')"><img src="/navbar_1.png" /></div>
+                <div img avatar @click="routerPush('/404')"><img src="/navbar_3.jpg" /></div>
+                <div img @click="routerPush('/login')"><img src="/navbar_2.png" /></div>
+            </template>
         </div>
     </nav>
 </template>

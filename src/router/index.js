@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
-//主路由
+//主路由(懒加载=>提高性能)
 const survey = () => import('../view/survey.vue')
 const pinia = () => import('../view/pinia.vue')
 const login = () => import('../view/login.vue')
@@ -8,9 +8,9 @@ const notFound = () => import('../view/notFound.vue')
 const statistics = () => import('../view/statistics.vue')
 
 //嵌套路由
-const AccountLogin = () => import('../components/AccountLogin.vue')
-const WechatLogin = () => import('../components/WechatLogin.vue')
-const register = () => import('../components/register.vue')
+import AccountLogin from '../components/AccountLogin.vue'
+import WechatLogin  from '../components/WechatLogin.vue'
+import register  from '../components/register.vue'
 
 const routes = [
     {
@@ -25,7 +25,8 @@ const routes = [
     },
     {
         path: '/login',
-        name: 'login',
+        name:'login',
+        redirect:"/login/AccountLogin",
         component: login,
         children: [
             {
@@ -42,12 +43,7 @@ const routes = [
                 path: 'register',
                 name: 'register',
                 component: register,
-            },
-            { // 配置默认路由(默认显示的子路由组件)
-                path: "/login", // 路由地址
-                redirect: "/login/AccountLogin" // 重定向
             }
-
         ],
     },
     {
@@ -60,7 +56,7 @@ const routes = [
         name: 'notFound',
         component: notFound
     },
-];
+]
 
 export default createRouter({
     history: createWebHashHistory(),

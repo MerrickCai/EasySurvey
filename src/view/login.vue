@@ -1,22 +1,30 @@
 <script setup>
-const bcgurl = ['/login_cloud.png', '/login_mountain.png'];
-function random(x, y) { //随机返回[x,y]的数字
-   return Math.floor(Math.random() * (y - x + 1)) + x
-}
+//路由守卫=>导航栏隐藏
 import { useStore } from '../PiniaStores/index.js'
 const datas = useStore()
-
-datas.navShow=false
-//路由守卫
+datas.navShow = false
 import { onBeforeRouteLeave } from 'vue-router'
-onBeforeRouteLeave((to, from) => {
+onBeforeRouteLeave(() => {
    datas.navShow = true
 })
+
+
+//随机背景图
+const background = {
+   url:['/login_cloud.png', '/login_mountain.png'],
+   random(x, y) {//随机返回[x,y]的数字
+      return Math.floor(Math.random() * (y - x + 1)) + x
+   },
+   geturl(){
+      return this.url[this.random(0,1)]
+   }
+}
+const background_url=background.geturl()
 </script>
 
 <template>
    <div class="background">
-      <img :src="`${bcgurl[random(0, 1)]}`" alt="背景">
+      <img :src="background_url" alt="背景">
    </div>
    <div class="main">
       <div class="title">
