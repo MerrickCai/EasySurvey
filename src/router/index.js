@@ -8,8 +8,8 @@ const notFound = () => import('../view/notFound.vue')
 const AccountLogin = () => import('../components/AccountLogin.vue')
 const WechatLogin = () => import('../components/WechatLogin.vue')
 const register = () => import('../components/register.vue')
-
 const statistics = () => import('../components/statistics.vue')
+
 const routes = [
     {
         path: '/',
@@ -41,15 +41,13 @@ const routes = [
                 name: 'register',
                 component: register,
             },
-            
             { // 配置默认路由(默认显示的子路由组件)
-                path:"/login", // 路由地址
-                redirect:"/login/AccountLogin" // 重定向
+                path: "/login", // 路由地址
+                redirect: "/login/AccountLogin" // 重定向
             }
 
         ],
     },
-
     {
         path: '/statistics',
         name: 'statistics',
@@ -61,7 +59,6 @@ const routes = [
         component: notFound
     },
 ];
-
 
 export default createRouter({
     history: createWebHashHistory(),
