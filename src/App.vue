@@ -1,5 +1,6 @@
 <script setup>
-import navbar from './components/navbar.vue'
+import navbar from './components/navbar.vue';
+import survey3 from './components/survey3.vue';
 </script>
 
 <template>
