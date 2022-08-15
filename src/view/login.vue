@@ -86,6 +86,9 @@ const background_url=background.geturl()
          position: relative;
          cursor: pointer;
          color:rgba(217, 217, 217, 1);
+         &:hover{
+          color:#000;
+         }
          &::after {
             content: '';
             // width: 40*@a;
