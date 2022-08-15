@@ -64,7 +64,8 @@ onBeforeRouteLeave((to, from) => {
       position: absolute;
       left: 60*@a;
       top: 60*@a;
-
+     user-select: none;
+    -webkit-user-drag: none;
       h2 {
          box-sizing: border-box;
          font-weight: bold;
@@ -76,7 +77,7 @@ onBeforeRouteLeave((to, from) => {
          font-weight: 500;
          position: relative;
          cursor: pointer;
-         color:#000;
+         color:rgba(217, 217, 217, 1);
          &::after {
             content: '';
             // width: 40*@a;
@@ -94,6 +95,7 @@ onBeforeRouteLeave((to, from) => {
 
    .active {
       h2 {
+         color:#000;
          &::after {
             content: '';
             width: 40*@a;

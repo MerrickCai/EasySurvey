@@ -23,6 +23,8 @@
      position: relative;
      box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
      z-index: -1;
+     user-select: none;
+   -webkit-user-drag: none;
 }
 
 .checkbox{
@@ -32,8 +34,8 @@
 }
 .tips{
       position: absolute;
-      left: 94*@rem;
-      top: 237*@rem ;;
+      left: 89*@rem;
+      top: 236*@rem ;;
       font-size: 10*@rem;
       letter-spacing: 0*@rem;
       line-height: 20*@rem;

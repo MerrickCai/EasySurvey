@@ -30,5 +30,7 @@
     width: 440*@a;
     height: 380*@a;
     z-index: -1;
+   user-select: none;
+   -webkit-user-drag: none;
  }
 </style>
