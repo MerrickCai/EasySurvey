@@ -7,7 +7,6 @@ function routerPush(path) {
 </script>
 
 <template>
-    <!--标签-->
     <div id="wrapper">
         <div class="tag_wrapper">
             <div active @click="routerPush('/survey1')">
@@ -20,7 +19,6 @@ function routerPush(path) {
                 <span>贝尔宾团队理论测试</span>
             </div>
         </div>
-        <!--问卷-->
         <div class="container">
             <router-view></router-view>
         </div>
@@ -28,15 +26,15 @@ function routerPush(path) {
 </template>
 
 <style lang="less" scoped>
-@tag_wrapperHeight: 2rem;
+@tag_wrapperHeight: 40px;
 @themeColor1: rgba(30, 111, 255, 1);
 @themeColor2: rgba(235, 245, 255, 1);
 
 div#wrapper {
     display: block;
     height: 100%;
-    width: calc(100% - 12px);
-    margin: 0 6px;
+    width: calc(100% - 14px);
+    margin: 0 7px;
 
     >div.tag_wrapper {
         display: flex;
@@ -57,22 +55,27 @@ div#wrapper {
             height: 100%;
             width: auto;
             margin-right: 5px;
-            padding: 10px 30px 5px 30px;
+            padding: 5px 30px 5px 30px;
             position: relative;
             background-color: @themeColor2;
             clip-path: polygon(0 0, 85% 0, 100% 100%, 0% 100%);
-            border-radius: 4px 4px 0 4px;
+            border-radius: 4px 0 0 0;
 
             &::before {
                 content: '';
                 position: absolute;
-                top: 60%;
+                top: 50%;
                 left: 10px;
                 height: 12px;
                 width: 12px;
                 transform: translate(0, -50%);
                 border: solid 1px rgba(0, 0, 0, 1);
                 border-radius: 50%;
+            }
+
+            span {
+                font-size: 0.7rem;
+                color: rgb(0, 0, 0);
             }
 
             &:hover {
@@ -90,18 +93,22 @@ div#wrapper {
                     color: rgb(255, 255, 255);
                 }
             }
-
-            span {
-                font-size: 0.7rem;
-                color: rgb(0, 0, 0);
-            }
         }
     }
 
     >div.container {
-        display: block;
-        height: calc(100% - @tag_wrapperHeight);
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+        height: calc(100% - @tag_wrapperHeight - 10px);
         width: 100%;
+        position: relative;
+        top:0;
+        left:0;
+        border-radius: 5px;
+        box-shadow: 0px 5px 10px 0 rgba(73, 107, 158, 0.1);
     }
 }
 </style>
