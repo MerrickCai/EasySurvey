@@ -22,12 +22,12 @@ const status = reactive({
 
 <template>
 
-    <!--折角-->
+    <!--折角（一直都在）-->
     <img dog-ear src="/tangible.png" />
     <div class="decoration5"></div>
 
-
-    <template v-if="status.intro">
+    <!--填问卷时隐藏-->
+    <template v-if="status.intro || status.end">
         <div class="decoration1"></div>
         <!--左上-->
         <div class="decoration2"></div>
@@ -36,7 +36,7 @@ const status = reactive({
         <div class="decoration4"></div>
     </template>
 
-
+    <!--问卷介绍-->
     <template v-if="status.intro">
         <div class="survey_intro">
             <p title>{{ intro.title }}</p>
@@ -50,7 +50,7 @@ const status = reactive({
         </div>
     </template>
 
-
+    <!--问卷填写-->
     <template v-if="status.survey">
         <div class="survey">
             <div class="intro_area">
@@ -63,7 +63,7 @@ const status = reactive({
                 </p>
             </div>
             <div class="survey_area">
-                <p v-for="item of new Array(30)">问卷区域</p>
+                <p v-for="item of new Array(30)">问卷区域施工中</p>
             </div>
         </div>
     </template>
@@ -166,11 +166,6 @@ div.survey {
         background-color: rgb(226, 226, 226);
     }
 }
-
-
-
-
-
 
 div.survey_intro {
     display: flex;
