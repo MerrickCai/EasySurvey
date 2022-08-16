@@ -7,7 +7,7 @@
     <h2 class="title">{{survey3.info_title1}}<br>{{survey3.info_title2}}</h2>
     <p class="second-title">{{survey3.info_sec_title}}</p>
     <p class="para">{{survey3.info_para1}}<br><br>{{survey3.info_para2}}<br>{{survey3.info_para3}}</p>
-    <el-button type="primary" class="btn" @click="totop">{{survey3.btn_info}}</el-button>
+    <el-button type="primary" class="btn" @click="toContent">{{survey3.btn_info}}</el-button>
     <div class="circle1"></div>
     <div class="circle2"></div>
     <div class="circle3"></div>
@@ -68,7 +68,7 @@ const survey3 = {
 
 
 let jump = ref(false);
-function totop(){
+function toContent(){
     jump.value = true;
 }
   const top = {
@@ -203,8 +203,7 @@ const questionList = reactive([
     left: -3*@a;
     right: 0;
     top: 0;
-    background-color: rgba(255,255,255,0);
-    // top:-15*@a; 
+    // top:-15*@a;  
     margin:0 auto;
     box-sizing: border-box;
     // background-color: #bfa;
@@ -341,7 +340,7 @@ const questionList = reactive([
     position: absolute;
     top: 200px;
     left: 50px;
-    width: 1100px;
+    width: 1105px;
     height: 400px;
     overflow: auto;
     .main{
@@ -360,6 +359,7 @@ const questionList = reactive([
         width: 740px;
         justify-content: space-between;
         position: relative;
+        left: 5px;
         .score{
             display: inline-block;
             width: 26px;
@@ -384,14 +384,15 @@ const questionList = reactive([
             // background-color: black;
         }
         &::before{
-            content: '';
-            background-color: #1e6fff;
-            width: 3px;
-            height: 24px;
-            position: absolute;
-            left: -5px;
-        }
-
+             content: '';
+             background-color: #1e6fff;
+             width: 3px;
+             height: 24px;
+             position: absolute;
+             left:-5px;
+             top: 0;
+             z-index: 9999;
+          }   
     }
     .questionList{
         margin-left: 45px;
