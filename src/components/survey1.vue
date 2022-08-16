@@ -16,7 +16,6 @@ const intro = {
     <div class="decoration3"></div>
     <div class="decoration4"></div>
     <div class="decoration5"></div>
-    <div class="decoration6"></div>
     <div class="survey_content">
         <p title>{{ intro.title }}</p>
         <p intro>
