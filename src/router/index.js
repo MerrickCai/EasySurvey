@@ -23,14 +23,17 @@ const routes = [
         component: survey,
         children: [
             {
+                name:'survey1',
                 path: 'survey1',
                 component: survey1,
             },
             {
+                name:'survey2',
                 path: 'survey2',
                 component: survey2,
             },
             {
+                name:'survey3',
                 path: 'survey3',
                 component: survey3,
             }
