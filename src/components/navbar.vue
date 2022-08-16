@@ -1,10 +1,12 @@
 <script setup>
-import { useRouter, useRoute } from 'vue-router'
+//路由
+import { useRouter } from 'vue-router'
 const router = useRouter()
-const route = useRoute()
 function routerPush(path) {
     router.push({ path })
 }
+
+//Pinia
 import { useStore } from '../PiniaStores/index.js'
 const datas = useStore()
 </script>
@@ -19,7 +21,7 @@ const datas = useStore()
         </div>
         <div links>
             <template v-if="datas.navShow">
-                <div button @click="routerPush('/statistics')">统计数据</div>
+                <div button @click="routerPush('/statistics')">创建问卷</div>
                 <div img @click="routerPush('/pinia')"><img src="/navbar_1.png" /></div>
                 <div img avatar @click="routerPush('/404')"><img src="/navbar_3.jpg" /></div>
                 <div img @click="routerPush('/login')"><img src="/navbar_2.png" /></div>
@@ -29,10 +31,12 @@ const datas = useStore()
 </template>
 
 <style lang="less" scoped>
-@nav: 70px;
-@navHeight: 50px;
-@themeColor: rgb(30, 111, 255);
-@themeColor_faint: rgba(30, 113, 255, 0.8);
+@nav: 100px;
+@navHeight: 60px;
+@themeColor1: rgb(30, 111, 255);
+@themeColor2: rgba(30, 113, 255, 0.8);
+@themeColor3: rgba(71, 145, 255, 1);
+
 
 nav {
     display: flex;
@@ -81,7 +85,7 @@ nav {
                 height: 100%;
                 width: auto;
                 color: rgb(0, 0, 0);
-                font-size: 1.5rem;
+                font-size: 1.4rem;
                 line-height: @navHeight;
             }
         }
@@ -94,39 +98,37 @@ nav {
         flex-wrap: nowrap;
         justify-content: flex-end;
         align-items: center;
-        height: @navHeight;
+        height: calc(@navHeight - 10px);
         width: auto;
 
         >div[button] {
             display: block;
-            height: 100%;
+            height: 80%;
             width: auto;
             margin-right: 2rem;
-            padding: 0 10px;
-            background-color: @themeColor_faint;
-            border-radius: 20px;
+            padding: 0 15px;
+            background-color: @themeColor3;
+            border-radius: 10px;
             color: rgb(255, 255, 255);
-            font-size: 1rem;
-            line-height: @navHeight;
-            transition: all 0.3s linear 0s;
+            font-size: 0.8rem;
+            line-height: calc((@navHeight - 10px)*0.8);
 
             &:hover {
-                background-color: @themeColor;
                 cursor: pointer;
             }
         }
 
         >div[img] {
             display: block;
-            height: 100%;
+            height: 80%;
             width: auto;
             margin-right: 2rem;
 
             &[avatar] {
                 >img {
                     display: block;
-                    height: @navHeight;
-                    width: @navHeight;
+                    height: calc(@navHeight*0.8);
+                    width: calc(@navHeight*0.8);
                     border-radius: 50%;
                     object-fit: cover;
                 }

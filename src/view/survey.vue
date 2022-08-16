@@ -1,42 +1,35 @@
 <script setup>
-import { useRouter } from 'vue-router'
-const router = useRouter()
-function routerPush(path) {
-    router.push({ path })
-}
 </script>
 
 <template>
-    <!--标签-->
     <div id="wrapper">
         <div class="tag_wrapper">
-            <div active @click="routerPush('/survey1')">
+            <router-link :to="{ path: '/survey1' }" active-class="active">
                 <span>威廉斯创造力倾向表A</span>
-            </div>
-            <div @click="routerPush('/survey2')">
+            </router-link>
+            <router-link :to="{ path: '/survey2' }" active-class="active">
                 <span>威廉斯创造力倾向表B</span>
-            </div>
-            <div @click="routerPush('/survey3')">
+            </router-link>
+            <router-link :to="{ path: '/survey3' }" active-class="active">
                 <span>贝尔宾团队理论测试</span>
-            </div>
+            </router-link>
         </div>
-        <!--问卷-->
         <div class="container">
+            <!--子路由容器-->
             <router-view></router-view>
         </div>
     </div>
 </template>
 
 <style lang="less" scoped>
-@tag_wrapperHeight: 2rem;
+@tag_wrapperHeight: 40px;
 @themeColor1: rgba(30, 111, 255, 1);
 @themeColor2: rgba(235, 245, 255, 1);
-
 div#wrapper {
     display: block;
     height: 100%;
-    width: calc(100% - 12px);
-    margin: 0 6px;
+    width: calc(100% - 14px);
+    margin: 0 7px;
 
     >div.tag_wrapper {
         display: flex;
@@ -48,7 +41,7 @@ div#wrapper {
         width: 100%;
         padding-left: 10px;
 
-        >div {
+        >a {
             display: flex;
             flex-direction: row;
             flex-wrap: nowrap;
@@ -57,16 +50,16 @@ div#wrapper {
             height: 100%;
             width: auto;
             margin-right: 5px;
-            padding: 10px 30px 5px 30px;
+            padding: 5px 30px 5px 30px;
             position: relative;
             background-color: @themeColor2;
-            clip-path: polygon(0 0, 85% 0, 100% 100%, 0% 100%);
-            border-radius: 4px 4px 0 4px;
+            clip-path: polygon(83.5% 1%, 84% 2%, 84.5% 3%, 84.5% 4%, 85% 4%, 100% 100%, 0 100%, 0 0, 83% 0);
+            border-radius: 4px 0 0 0;
 
             &::before {
                 content: '';
                 position: absolute;
-                top: 60%;
+                top: 50%;
                 left: 10px;
                 height: 12px;
                 width: 12px;
@@ -75,11 +68,16 @@ div#wrapper {
                 border-radius: 50%;
             }
 
+            span {
+                font-size: 0.6rem;
+                color: rgba(67, 67, 67, 1);
+            }
+
             &:hover {
                 cursor: pointer;
             }
 
-            &[active] {
+            &.active {
                 background-color: @themeColor1;
 
                 &::before {
@@ -90,18 +88,22 @@ div#wrapper {
                     color: rgb(255, 255, 255);
                 }
             }
-
-            span {
-                font-size: 0.7rem;
-                color: rgb(0, 0, 0);
-            }
         }
     }
 
     >div.container {
-        display: block;
-        height: calc(100% - @tag_wrapperHeight);
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+        height: calc(100% - @tag_wrapperHeight - 10px);
         width: 100%;
+        position: relative;
+        top: 0;
+        left: 0;
+        border-radius: 5px;
+        box-shadow: 0px 5px 10px 0 rgba(73, 107, 158, 0.1);
     }
 }
 </style>

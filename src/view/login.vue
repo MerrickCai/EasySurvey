@@ -11,12 +11,12 @@ onBeforeRouteLeave(() => {
 
 //随机背景图
 const background = {
-   url: ['/login_cloud.png', '/login_mountain.png'],
+   url: ['/login_cloud.png', '/login_mountain.png', 'login_mount.jpg'],
    random(x, y) {//随机返回[x,y]的数字
       return Math.floor(Math.random() * (y - x + 1)) + x
    },
    geturl() {
-      return this.url[this.random(0, 1)]
+      return this.url[this.random(0, this.url.length-1)]
    }
 }
 const background_url = background.geturl()
@@ -47,8 +47,8 @@ const background_url = background.geturl()
    width: 100%;
    height: 100%;
    position: fixed;
-   top:0;
-   left:0;
+   top: 0;
+   left: 0;
    z-index: -1;
    user-select: none;
    -webkit-user-drag: none;
