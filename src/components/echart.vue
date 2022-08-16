@@ -2,12 +2,6 @@
   <div class="echartall">
     <div class="userlist">
       <div class="list_title">用户列表</div>
-      <!-- <ul class="list_content">
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-      </ul> -->
       <el-scrollbar max-height="400px">
         <p v-for="item in count" :key="item" class="scrollbar-demo-item">
           {{ item }}
@@ -275,8 +269,6 @@ onMounted(() => {
 
 <style lang="less" scoped>
 .echartall {
-  width: 800px;
-  height: 500px;
   display: grid;
   grid-gap: 20px;
   grid-template-columns: repeat(15, 50px);
@@ -295,14 +287,6 @@ onMounted(() => {
       font-weight: bold;
       margin-bottom: 16px;
     }
-    // .list_content {
-    //   width: 370px;
-    //   height: 160px;
-    //   > li {
-    //     height: 40px;
-    //     background-color: green;
-    //   }
-    // }
     .el-scrollbar {
       width: 430px;
       height: 160px;
@@ -328,7 +312,7 @@ onMounted(() => {
   }
   .sta_one {
     width: 390px;
-    height: 240px;
+    height: 220px;
     grid-column-start: 1;
     grid-column-end: 7;
     grid-row-start: 2;
@@ -337,18 +321,18 @@ onMounted(() => {
     box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
     .echart_mes {
       width: 390px;
-      height: 240px;
+      height: 220px;
     }
     .myChartpie {
       display: none;
       width: 390px;
-      height: 240px;
+      height: 220px;
     }
   }
 
   .echart_compare {
     width: 390px;
-    height: 240px;
+    height: 220px;
     grid-column-start: 7;
     grid-column-end: 13;
     grid-row-start: 2;
