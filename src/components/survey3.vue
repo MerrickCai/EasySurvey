@@ -13,6 +13,8 @@
     <div class="circle3"></div>
     </div>
 
+
+<!-- 问卷内容部分 -->
     <div class="wrapper" v-if="jump">
        <div class="topbox">
         <h2 class="top_title">{{top.title}}</h2>
@@ -23,19 +25,28 @@
            <p class="top_para">{{top.para3}}</p>
         </div>
        </div>
-       
        <div class="content">
             <div class="main" v-for="item of questionList" :key="item.id">
                 <div class="questiontitle">{{item.questiontitle}}
                    <p class="scoretips">可支配分数
                      <span class="score">{{item.score}}</span>
-                     
                    </p>
                 </div>
                 <div class="questionList" v-for="(elem,index) of item.question" :key="index">
-                    {{elem}}
-                      <div class="slider-demo-block slide">
-                        <!-- <el-slider  :step="10" show-stops  size="small"  placement="right"/> -->
+                    {{elem.detail}}
+                        <div class="slide">
+                            <div class="bar1" @click="elem.value = 0"></div>
+                            <div class="bar2" @click="elem.value = 1"></div>
+                            <div class="bar3" @click="elem.value = 2"></div>
+                            <div class="bar4" @click="elem.value = 3"></div>
+                            <div class="bar5" @click="elem.value = 4"></div>
+                            <div class="bar6" @click="elem.value = 5"></div>
+                            <div class="bar7" @click="elem.value = 6"></div>
+                            <div class="bar8" @click="elem.value = 7"></div>
+                            <div class="bar9" @click="elem.value = 8"></div>
+                            <div class="bar10" @click="elem.value= 9"></div>
+                            <div class="bar11" @click="elem.value=10"></div>
+                        <div class="thumb" :style="{ left: `${-6+(elem.value)*40}px` }"></div>	
                     </div>
                 </div>
             </div>
@@ -44,7 +55,7 @@
 </template>
 
 <script setup>
-import { ref,computed} from 'vue';
+import { ref,computed,reactive} from 'vue';
 const survey3 = {
     info_title1 : '贝尔宾团队角色理论',
     info_title2 :'-团队角色自测问卷',
@@ -68,20 +79,86 @@ function totop(){
     para3:'便是您的团队角色。'
   }
 
-const questionList = [
+const questionList = reactive([
     {
-       id:1,
-       questiontitle: '一、我认为我能为团队做出的贡献是：',
-       question:['A. 我能很快地发现并把握住新的机遇。','B. 我能与各种类型的人一起合作共事。','C. 我生来就爱出主意。','D. 我的能力在于，一旦发现某些对实现集体目标很有价值的人，我就及时把他们推荐出来','E. 我能把事情办成，这主要靠我个人的实力。','F.如果最终能导致有益的结果，我愿面对暂时的冷遇。','G. 我通常能意识到什么是现实的，什么是可能的。','H. 在选择行动方案时，我能不带倾向性，也不带偏见地提出一个合理的方案。'],
-       score:10
+        id: 1,
+        questiontitle: '一、我认为我能为团队做出的贡献是：',
+        question: [
+            {
+                detail: 'A. 我能很快地发现并把握住新的机遇。',
+                value: 0
+            },
+            {
+                detail: 'B. 我能与各种类型的人一起合作共事。',
+                value: 0
+            },
+            {
+                detail: 'C. 我生来就爱出主意。',
+                value: 0
+            },
+            {
+                detail: 'D. 我的能力在于，一旦发现某些对实现集体目标很有价值的人，我就及时把他们推荐出来',
+                value: 0
+            },
+            {
+                detail: 'E. 我能把事情办成，这主要靠我个人的实力。',
+                value: 0
+            },
+            {
+                detail: 'F.如果最终能导致有益的结果，我愿面对暂时的冷遇。',
+                value: 0
+            },
+            {
+                detail: 'G. 我通常能意识到什么是现实的，什么是可能的。',
+                value: 0
+            },
+            {
+                detail: 'H. 在选择行动方案时，我能不带倾向性，也不带偏见地提出一个合理的方案。',
+                value: 0
+            }],
+        score: 10,
+
     },
     {
-       id:2,
-       questiontitle: '一、我认为我能为团队做出的贡献是：',
-       question:['A. 我能很快地发现并把握住新的机遇。','B. 我能与各种类型的人一起合作共事。','C. 我生来就爱出主意。','D. 我的能力在于，一旦发现某些对实现集体目标很有价值的人，我就及时把他们推荐出来','E. 我能把事情办成，这主要靠我个人的实力。','F.如果最终能导致有益的结果，我愿面对暂时的冷遇。','G. 我通常能意识到什么是现实的，什么是可能的。','H. 在选择行动方案时，我能不带倾向性，也不带偏见地提出一个合理的方案。'],
-       score:10
-    }
-]
+        id: 2,
+        questiontitle: '一、我认为我能为团队做出的贡献是：',
+        question: [
+            {
+                detail: 'A. 我能很快地发现并把握住新的机遇。',
+                value: 0
+            },
+            {
+                detail: 'B. 我能与各种类型的人一起合作共事。',
+                value: 0
+            },
+            {
+                detail: 'C. 我生来就爱出主意。',
+                value: 0
+            },
+            {
+                detail: 'D. 我的能力在于，一旦发现某些对实现集体目标很有价值的人，我就及时把他们推荐出来',
+                value: 0
+            },
+            {
+                detail: 'E. 我能把事情办成，这主要靠我个人的实力。',
+                value: 0
+            },
+            {
+                detail: 'F.如果最终能导致有益的结果，我愿面对暂时的冷遇。',
+                value: 0
+            },
+            {
+                detail: 'G. 我通常能意识到什么是现实的，什么是可能的。',
+                value: 0
+            },
+            {
+                detail: 'H. 在选择行动方案时，我能不带倾向性，也不带偏见地提出一个合理的方案。',
+                value: 0
+            }],
+        score: 10,
+
+    },
+]);
 
 </script>
 
@@ -97,7 +174,7 @@ const questionList = [
         vertical-align: middle;
         position: relative;
         &::after{
-            top: '';
+            content: '';
             width: 100%;
             height: 3px;
             background-color: #1e6fff;
@@ -126,11 +203,12 @@ const questionList = [
     left: -3*@a;
     right: 0;
     top: 0;
-    // top:100*@a; 
+    background-color: rgba(255,255,255,0);
+    // top:-15*@a; 
     margin:0 auto;
     box-sizing: border-box;
+    // background-color: #bfa;
     padding: 0;
-    background-color: pink;
     .circle-wrapper{
         width: 490*@a;
         height: 490*@a;
@@ -232,6 +310,8 @@ const questionList = [
     }
 }
 
+
+// 答题内容部分
 .topbox{
     position: absolute;
     left: 40px;
@@ -239,7 +319,7 @@ const questionList = [
     display: flex;
     flex-direction: column;
     .top_title{
-      .public_title();  
+    .public_title();  
       width: 625px;
     }
     .top_sectitle{
@@ -259,12 +339,15 @@ const questionList = [
 
 .content{
     position: absolute;
-    top: 240px;
+    top: 200px;
     left: 50px;
+    width: 1100px;
+    height: 400px;
+    overflow: auto;
     .main{
-        background-color: #bfa;
-        height: 330px;
-         width: 900px;
+        background-color: white;
+        height: 380px;
+         width: 1065px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -314,10 +397,162 @@ const questionList = [
         margin-left: 45px;
         font-size: 14px;
         font-family: '思源黑体';
+        position: relative;
+        // 滑块
+        .slide{
+            width: 400px;
+            height: 8px;
+            background-color:#f5f5f5;
+            position: absolute;
+            right: 0;
+            bottom: 6px;
+        @Width:400px;
+        .barStyle(){
+                position: absolute;
+                z-index: 1;
+                bottom: 0px;
+                width: 3px;
+                height: 11px;
+                border-radius: 4px;
+                background-color: rgba(204, 204, 204, 1);
+                cursor: pointer;
+                &::before {
+                    position: absolute;
+                    top: -15px;
+                    right: 4px;
+                    height: 1px;
+                    width: 1px;
+                    color: #cccccc;
+                    font-size: 8px;
+            }
+        }
+         div.bar1 {
+            left: -2px;
+            .barStyle();
+            &::before {
+                content: '0';
+            }
+            height: 15px;
+        }
+        div.bar2 {
+            left: calc(-2px + (@Width/10)*1);
+            .barStyle();
+            &::before {
+                content: '';
+            }
+        }
+        div.bar3 {
+            left: calc(-2px + (@Width/10)*2);
+             &::before {
+                content: '2';
+            }
+            .barStyle();
+            height: 15px;
+        }
+        div.bar4 {
+            left: calc(-2px + (@Width/10)*3);
+            .barStyle();
+            &::before {
+                content: '';
+            }
+        }
+        div.bar5 {
+            position: absolute;
+            left: calc(-2px + (@Width/10)*4);
+            &::before {
+                content: '4';
+            }
+            .barStyle();
+            height: 15px;
+        }
+
+        div.bar6 {
+            left: calc(-2px + (@Width/10)*5);
+            .barStyle();
+            &::before {
+                content: '';
+            }
+        }
+        div.bar7 {
+            left: calc(-2px + (@Width/10)*6);
+            &::before {
+                content: '6';
+            }
+            .barStyle();
+            height: 15px;
+        }
+        div.bar8 {
+            left: calc(-2px + (@Width/10)*7);
+            .barStyle();
+            &::before {
+                content: '';
+            }
+        }
+        div.bar9 {
+            left: calc(-2px + (@Width/10)*8);
+            &::before{
+                 content: '8';
+            }
+            .barStyle();
+            height: 15px;
+        }
+        div.bar10 {
+            left: calc(-2px + (@Width/10)*9);
+            .barStyle();
+            &::before {
+                content: '';
+            }
+        }        
+        div.bar11 {
+            left: calc(-2px + (@Width/10)*10);
+            .barStyle();
+            &::before{
+                 content: '10';
+                 right: 8px;
+            }
+            height: 15px;
+        }
+         @thumbSize:14px;
+         @themeColor:#1e6fff;
+            div.thumb {
+                position: absolute;
+                z-index: 2;
+                bottom: -2px;
+                left: calc(0px - @thumbSize/2); //thumbSize=24px
+                height: @thumbSize;
+                width: @thumbSize;
+                background-color: @themeColor;
+                border-radius: 5px;
+                transition: all 0.2s linear;
+
+                &::before {
+                    content: '';
+                    position: absolute;
+                    top: calc((@thumbSize - 7px)/2);
+                    left: calc((@thumbSize - 6px)/2);
+                    height: 6px;
+                    width: 1px;
+                    background-color: rgb(255, 255, 255);
+                }
+
+                &::after {
+                    content: '';
+                    position: absolute;
+                    top: calc((@thumbSize - 7px)/2);
+                    left: calc((@thumbSize + 5px)/2);
+                    height:6px;
+                    width: 1px;
+                    background-color: rgb(255, 255, 255);
+                }
+            }
+        }
+
     }
 
 
 }
+
+
 
 
 
