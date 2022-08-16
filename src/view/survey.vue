@@ -1,25 +1,21 @@
 <script setup>
-import { useRouter } from 'vue-router'
-const router = useRouter()
-function routerPush(path) {
-    router.push({ path })
-}
 </script>
 
 <template>
     <div id="wrapper">
         <div class="tag_wrapper">
-            <div active @click="routerPush('/survey1')">
+            <router-link :to="{ path: '/survey1' }" active-class="active">
                 <span>威廉斯创造力倾向表A</span>
-            </div>
-            <div @click="routerPush('/survey2')">
+            </router-link>
+            <router-link :to="{ path: '/survey2' }" active-class="active">
                 <span>威廉斯创造力倾向表B</span>
-            </div>
-            <div @click="routerPush('/survey3')">
+            </router-link>
+            <router-link :to="{ path: '/survey3' }" active-class="active">
                 <span>贝尔宾团队理论测试</span>
-            </div>
+            </router-link>
         </div>
         <div class="container">
+            <!--子路由容器-->
             <router-view></router-view>
         </div>
     </div>
@@ -46,7 +42,7 @@ div#wrapper {
         width: 100%;
         padding-left: 10px;
 
-        >div {
+        >a {
             display: flex;
             flex-direction: row;
             flex-wrap: nowrap;
@@ -82,7 +78,7 @@ div#wrapper {
                 cursor: pointer;
             }
 
-            &[active] {
+            &.active {
                 background-color: @themeColor1;
 
                 &::before {
@@ -105,8 +101,8 @@ div#wrapper {
         height: calc(100% - @tag_wrapperHeight - 10px);
         width: 100%;
         position: relative;
-        top:0;
-        left:0;
+        top: 0;
+        left: 0;
         border-radius: 5px;
         box-shadow: 0px 5px 10px 0 rgba(73, 107, 158, 0.1);
     }

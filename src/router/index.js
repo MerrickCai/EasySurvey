@@ -2,7 +2,6 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 
 //主路由(懒加载=>提高性能)
 const survey = () => import('../view/survey.vue')
-const pinia = () => import('../view/pinia.vue')
 const login = () => import('../view/login.vue')
 const notFound = () => import('../view/notFound.vue')
 const statistics = () => import('../view/statistics.vue')
@@ -38,11 +37,6 @@ const routes = [
                 component: survey3,
             }
         ]
-    },
-    {
-        path: '/pinia',
-        name: 'pinia',
-        component: pinia
     },
     {
         path: '/login',
