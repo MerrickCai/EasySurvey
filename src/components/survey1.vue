@@ -266,7 +266,7 @@ div.survey {
                             position: absolute;
                             top: -1rem;
                             left: 0;
-                            height: 2rem;
+                            height: 2.5rem;
                             width: 4rem;
                             color: rgb(0, 0, 0);
                             font-size: 0.8rem;
@@ -289,7 +289,7 @@ div.survey {
                             position: absolute;
                             top: -1rem;
                             left: -1.5rem;
-                            height: 2rem;
+                            height: 2.5rem;
                             width: 3.2rem;
                             color: rgb(0, 0, 0);
                             font-size: 0.8rem;
@@ -312,7 +312,7 @@ div.survey {
                             position: absolute;
                             top: -1rem;
                             left: -1.5rem;
-                            height: 2rem;
+                            height: 2.5rem;
                             width: 3.2rem;
                             color: rgb(0, 0, 0);
                             font-size: 0.8rem;
@@ -335,7 +335,7 @@ div.survey {
                             position: absolute;
                             top: -1rem;
                             left: -1.5rem;
-                            height: 2rem;
+                            height: 2.5rem;
                             width: 3.2rem;
                             color: rgb(0, 0, 0);
                             font-size: 0.8rem;
@@ -358,7 +358,7 @@ div.survey {
                             position: absolute;
                             top: -1rem;
                             right: 0;
-                            height: 2rem;
+                            height: 2.5rem;
                             width: 3.2rem;
                             color: rgb(0, 0, 0);
                             font-size: 0.8rem;
