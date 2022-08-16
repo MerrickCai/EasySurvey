@@ -1,4 +1,5 @@
 <script setup>
+import { reactive } from 'vue';
 const intro = {
     title: '威廉斯创造力倾向表B',
     intro_title: '问卷介绍：',
@@ -7,31 +8,171 @@ const intro = {
     warn_content: '每一题都要做，不要花太多的时间去想。所有的题目都没有“正确答案”，凭你读每一句子后的第一印象作答。 虽然没有时间限制，但应尽可能地争取以较快的速度完成，愈快愈好。',
     button: '开始答题'
 }
+const status = reactive({
+    intro: true,
+    survey: false,
+    end: false,
+    toSurvey() {
+        this.intro = false
+        this.end = false
+        this.survey = true
+    }
+})
 </script>
 
 <template>
+
+    <!--折角-->
     <img dog-ear src="/tangible.png" />
-    <div class="decoration1"></div>
-    <div class="decoration2"></div>
-    <div class="decoration3"></div>
-    <div class="decoration4"></div>
     <div class="decoration5"></div>
-    <div class="survey_content">
-        <p title>{{ intro.title }}</p>
-        <p intro>
-            <span intro_title>{{ intro.intro_title }}</span>
-            <span intro_content>{{ intro.intro_content }}</span>
-            <span warn_title>{{ intro.warn_title }}</span>
-            <span warn_content>{{ intro.warn_content }}</span>
-        </p>
-        <p button>{{ intro.button }}</p>
-    </div>
+
+
+    <template v-if="status.intro">
+        <div class="decoration1"></div>
+        <!--左上-->
+        <div class="decoration2"></div>
+        <!--右下-->
+        <div class="decoration3"></div>
+        <div class="decoration4"></div>
+    </template>
+
+
+    <template v-if="status.intro">
+        <div class="survey_intro">
+            <p title>{{ intro.title }}</p>
+            <p intro>
+                <span intro_title>{{ intro.intro_title }}</span>
+                <span intro_content>{{ intro.intro_content }}</span>
+                <span warn_title>{{ intro.warn_title }}</span>
+                <span warn_content>{{ intro.warn_content }}</span>
+            </p>
+            <p button @click="status.toSurvey">{{ intro.button }}</p>
+        </div>
+    </template>
+
+
+    <template v-if="status.survey">
+        <div class="survey">
+            <div class="intro_area">
+                <p title>{{ intro.title }}</p>
+                <p intro>
+                    <span intro_title>{{ intro.intro_title }}</span>
+                    <span intro_content>{{ intro.intro_content }}</span>
+                    <span warn_title>{{ intro.warn_title }}</span>
+                    <span warn_content>{{ intro.warn_content }}</span>
+                </p>
+            </div>
+            <div class="survey_area">
+                <p v-for="item of new Array(30)">问卷区域</p>
+            </div>
+        </div>
+    </template>
+
+
 </template>
 
 <style lang="less" scoped>
 @themeColor: rgba(30, 111, 255, 1);
 
-div.survey_content {
+
+
+div.survey {
+    display: block;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+
+    >div.intro_area {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: flex-start;
+        height: auto;
+        width: 100%;
+        padding: 10px 0 0 10px;
+
+        >p[title] {
+            display: block;
+            height: auto;
+            width: auto;
+            margin-bottom: 3px;
+            position: relative;
+            font-size: 1rem;
+            color: rgba(0, 0, 0, 1);
+
+            &::after {
+                content: '';
+                display: block;
+                position: absolute;
+                bottom: -1px;
+                left: 0;
+                height: 3px;
+                width: 100%;
+                background-color: @themeColor;
+                border-radius: 2px;
+            }
+        }
+
+        >p[intro] {
+            display: block;
+            height: auto;
+            width: 80%;
+
+            >span[intro_title] {
+                display: block;
+                height: auto;
+                width: auto;
+                margin-bottom: 2px;
+                font-size: 0.8rem;
+                color: @themeColor;
+            }
+
+            >span[intro_content] {
+                display: block;
+                height: auto;
+                width: auto;
+                margin-bottom: 2px;
+                font-size: 0.7rem;
+                color: rgba(0, 0, 0, 1);
+            }
+
+            >span[warn_title] {
+                display: block;
+                height: auto;
+                width: auto;
+                margin-bottom: 2px;
+                font-size: 0.8rem;
+                color: rgba(0, 0, 0, 1);
+            }
+
+            >span[warn_content] {
+                display: block;
+                height: auto;
+                width: auto;
+                margin-bottom: 2px;
+                font-size: 0.7rem;
+                color: rgba(0, 0, 0, 1);
+            }
+        }
+    }
+
+    >div.survey_area {
+        flex: 1;
+        display: block;
+        height: auto;
+        width: 100%;
+        padding: 20px;
+        background-color: rgb(226, 226, 226);
+    }
+}
+
+
+
+
+
+
+div.survey_intro {
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
