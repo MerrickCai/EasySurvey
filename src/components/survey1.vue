@@ -13,27 +13,27 @@ const intro = reactive({
 const quesList = reactive([
     {
         ques: '在学校里，我喜欢试着对事情或问题作猜测，即使不一定都猜对也无所谓。',
-        value: 1
+        value: 0
     },
     {
         ques: '我喜欢仔细观察我没有看过的东西，以了解详细的情形。',
-        value: 1
+        value: 0
     },
     {
         ques: '我喜欢听变化多端和富有想象力的故事。',
-        value: 1
+        value: 0
     },
     {
         ques: '画图时我喜欢临摹别人的作品。',
-        value: 1
+        value: 0
     },
     {
         ques: '我喜欢利用旧报纸、旧日历及旧罐头等废物来做成各种好玩的东西。',
-        value: 1
+        value: 0
     },
     {
         ques: '我喜欢幻想一些我想知道或想做的事。',
-        value: 1
+        value: 0
     }
 ])
 //问卷状态
@@ -93,13 +93,16 @@ const status = reactive({
                 <div class="ques">
                     <div v-for="(item, index) of quesList">
                         <div><span>{{ index + 1 }}.</span><span>{{ item.ques }}</span></div>
-                        <div>
+                        <div
+                            :style="{ backgroundColor: `${item.value === 0 ? 'rgba(245, 245, 245, 1)' : 'rgb(229,229,229)'}` }">
                             <div class="bar1" @click="item.value = 1"></div>
                             <div class="bar2" @click="item.value = 2"></div>
                             <div class="bar3" @click="item.value = 3"></div>
                             <div class="bar4" @click="item.value = 4"></div>
                             <div class="bar5" @click="item.value = 5"></div>
-                            <div class="thumb" :style="{ left: `${-12+(item.value-1)*150}px` }"></div>
+                            <div class="thumb"
+                                :style="{ left: `${item.value === 0 ? -12 : -12 + (item.value - 1) * 150}px` }">
+                            </div>
                         </div>
                     </div>
                 </div>
