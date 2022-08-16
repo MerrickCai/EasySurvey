@@ -25,7 +25,6 @@
 @tag_wrapperHeight: 40px;
 @themeColor1: rgba(30, 111, 255, 1);
 @themeColor2: rgba(235, 245, 255, 1);
-
 div#wrapper {
     display: block;
     height: 100%;
@@ -54,7 +53,7 @@ div#wrapper {
             padding: 5px 30px 5px 30px;
             position: relative;
             background-color: @themeColor2;
-            clip-path: polygon(0 0, 85% 0, 100% 100%, 0% 100%);
+            clip-path: polygon(83.5% 1%, 84% 2%, 84.5% 3%, 84.5% 4%, 85% 4%, 100% 100%, 0 100%, 0 0, 83% 0);
             border-radius: 4px 0 0 0;
 
             &::before {
@@ -70,8 +69,8 @@ div#wrapper {
             }
 
             span {
-                font-size: 0.7rem;
-                color: rgb(0, 0, 0);
+                font-size: 0.6rem;
+                color: rgba(67, 67, 67, 1);
             }
 
             &:hover {

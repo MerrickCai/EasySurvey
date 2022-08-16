@@ -21,7 +21,7 @@ const datas = useStore()
         </div>
         <div links>
             <template v-if="datas.navShow">
-                <div button @click="routerPush('/statistics')">统计数据</div>
+                <div button @click="routerPush('/statistics')">创建问卷</div>
                 <div img @click="routerPush('/pinia')"><img src="/navbar_1.png" /></div>
                 <div img avatar @click="routerPush('/404')"><img src="/navbar_3.jpg" /></div>
                 <div img @click="routerPush('/login')"><img src="/navbar_2.png" /></div>
@@ -31,8 +31,8 @@ const datas = useStore()
 </template>
 
 <style lang="less" scoped>
-@nav: 60px;
-@navHeight: 50px;
+@nav: 100px;
+@navHeight: 60px;
 @themeColor1: rgb(30, 111, 255);
 @themeColor2: rgba(30, 113, 255, 0.8);
 @themeColor3: rgba(71, 145, 255, 1);
@@ -98,7 +98,7 @@ nav {
         flex-wrap: nowrap;
         justify-content: flex-end;
         align-items: center;
-        height: @navHeight;
+        height: calc(@navHeight - 10px);
         width: auto;
 
         >div[button] {
@@ -111,7 +111,7 @@ nav {
             border-radius: 10px;
             color: rgb(255, 255, 255);
             font-size: 0.8rem;
-            line-height: calc(@navHeight*0.8);
+            line-height: calc((@navHeight - 10px)*0.8);
 
             &:hover {
                 cursor: pointer;

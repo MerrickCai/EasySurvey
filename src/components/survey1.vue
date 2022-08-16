@@ -419,14 +419,14 @@ div.survey_intro {
         width: auto;
         margin-bottom: 30px;
         position: relative;
-        font-size: 2rem;
+        font-size: 1.8rem;
         color: rgba(0, 0, 0, 1);
 
         &::after {
             content: '';
             display: block;
             position: absolute;
-            bottom: -1px;
+            bottom: -2px;
             left: 0;
             height: 4px;
             width: 100%;
@@ -446,7 +446,7 @@ div.survey_intro {
             height: auto;
             width: auto;
             margin-bottom: 10px;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: @themeColor;
         }
 
@@ -455,7 +455,7 @@ div.survey_intro {
             height: auto;
             width: auto;
             margin-bottom: 20px;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             color: rgba(0, 0, 0, 1);
         }
 
@@ -464,16 +464,15 @@ div.survey_intro {
             height: auto;
             width: auto;
             margin-bottom: 10px;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: rgba(0, 0, 0, 1);
-            font-weight: bold;
         }
 
         >span[warn_content] {
             display: block;
             height: auto;
             width: auto;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             color: rgba(0, 0, 0, 1);
         }
     }
@@ -482,10 +481,11 @@ div.survey_intro {
         display: block;
         height: auto;
         width: auto;
-        padding: 20px 60px;
+        padding: 20px 100px;
         background-color: @themeColor;
         color: rgb(255, 255, 255);
         font-size: 0.9rem;
+        border-radius: 5px;
 
         &:hover {
             cursor: pointer;
@@ -526,7 +526,7 @@ div.decoration3 {
     position: absolute;
     z-index: -11;
     bottom: 80px;
-    right: 0;
+    right: -20px;
     border-radius: 50%;
     background-color: rgba(30, 111, 255, 1);
 }
@@ -537,7 +537,7 @@ div.decoration4 {
     width: 170px;
     position: absolute;
     z-index: -12;
-    bottom: 0;
+    bottom: -20px;
     right: 100px;
     border-radius: 50%;
     background-color: rgba(235, 245, 255, 1);

@@ -13,7 +13,7 @@ import navbar from './components/navbar.vue'
 </template>
 
 <style lang="less" scoped>
-@nav: 60px;
+@nav: 100px;
 
 main {
   display: block;
@@ -26,7 +26,7 @@ main {
     display: block;
     height: calc(100vh - @nav);
     width: 100%;
-    overflow: auto;
+    overflow: visible;
   }
 }
 </style>
