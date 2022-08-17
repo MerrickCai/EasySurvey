@@ -35,18 +35,20 @@
                 <div class="questionList" v-for="(elem,index) of item.question" :key="index">
                     {{elem.detail}}
                         <div class="slide">
-                            <div class="bar1" @click="elem.value = 0"></div>
-                            <div class="bar2" @click="elem.value = 1"></div>
-                            <div class="bar3" @click="elem.value = 2"></div>
-                            <div class="bar4" @click="elem.value = 3"></div>
-                            <div class="bar5" @click="elem.value = 4"></div>
-                            <div class="bar6" @click="elem.value = 5"></div>
-                            <div class="bar7" @click="elem.value = 6"></div>
-                            <div class="bar8" @click="elem.value = 7"></div>
-                            <div class="bar9" @click="elem.value = 8"></div>
-                            <div class="bar10" @click="elem.value= 9"></div>
-                            <div class="bar11" @click="elem.value=10"></div>
-                        <div class="thumb" :style="{ left: `${-6+(elem.value)*40}px` }"></div>	
+                            <div class="bar1" @click="distributeScore(elem,item,0)"></div>
+                            <div class="bar2" @click="distributeScore(elem,item,1)"></div>
+                            <div class="bar3" @click="distributeScore(elem,item,2)"></div>
+                            <div class="bar4" @click="distributeScore(elem,item,3)"></div>
+                            <div class="bar5" @click="distributeScore(elem,item,4)"></div>
+                            <div class="bar6" @click="distributeScore(elem,item,5)"></div>
+                            <div class="bar7" @click="distributeScore(elem,item,6)"></div>
+                            <div class="bar8" @click="distributeScore(elem,item,7)"></div>
+                            <div class="bar9" @click="distributeScore(elem,item,8)"></div>
+                            <div class="bar10" @click="distributeScore(elem,item,9)"></div>
+                            <div class="bar11" @click="distributeScore(elem,item,10)"></div>
+                            <div class="thumb" :style="{ left: `${-6+(elem.value)*40}px` }"></div>	
+                            <span class="edit"  v-show="!elem.isEdit" @click="editHandle(elem,index)">{{elem.value}}<img src="/icon-edit.png"></span>
+                            <input class="editinput" type="text" v-show="elem.isEdit" @blur="editHandle2(elem,item,$event)" :value="elem.value" ref="myRef">
                     </div>
                 </div>
             </div>
@@ -55,7 +57,7 @@
 </template>
 
 <script setup>
-import { ref,computed,reactive} from 'vue';
+import { ref,computed,reactive,watch,onMounted,nextTick } from 'vue';
 const survey3 = {
     info_title1 : '贝尔宾团队角色理论',
     info_title2 :'-团队角色自测问卷',
@@ -86,35 +88,43 @@ const questionList = reactive([
         question: [
             {
                 detail: 'A. 我能很快地发现并把握住新的机遇。',
-                value: 0
+                value: 0,
+                isEdit:false
             },
             {
                 detail: 'B. 我能与各种类型的人一起合作共事。',
-                value: 0
+                value: 0,
+                isEdit:false
             },
             {
                 detail: 'C. 我生来就爱出主意。',
-                value: 0
+                value: 0,
+                isEdit:false
             },
             {
                 detail: 'D. 我的能力在于，一旦发现某些对实现集体目标很有价值的人，我就及时把他们推荐出来',
-                value: 0
+                value: 0,
+                isEdit:false
             },
             {
                 detail: 'E. 我能把事情办成，这主要靠我个人的实力。',
-                value: 0
+                value: 0,
+                isEdit:false
             },
             {
                 detail: 'F.如果最终能导致有益的结果，我愿面对暂时的冷遇。',
-                value: 0
+                value: 0,
+                isEdit:false
             },
             {
                 detail: 'G. 我通常能意识到什么是现实的，什么是可能的。',
-                value: 0
+                value: 0,
+                isEdit:false
             },
             {
                 detail: 'H. 在选择行动方案时，我能不带倾向性，也不带偏见地提出一个合理的方案。',
-                value: 0
+                value: 0,
+                isEdit:false
             }],
         score: 10,
 
@@ -159,6 +169,47 @@ const questionList = reactive([
 
     },
 ]);
+// 分配分数
+function distributeScore(elem, item, num){
+     let newValue = num;
+     let oldValue = elem.value
+    if (item.score <= 0) {
+        if (oldValue <= newValue) {
+            return  
+        } 
+    }
+    if(item.score<(newValue-oldValue) ) return
+      elem.value = num;
+      item.score = 10;
+      item.question.forEach(e => {
+      item.score -= e.value;
+    });
+}
+const myRef = ref(null);
+
+// 切换至编辑
+function editHandle(elem, index) {
+    elem.isEdit = true;
+    // 默认获取焦点
+    nextTick(() => {
+      myRef.value[index].focus()
+    });
+
+}
+
+// 编辑状态保存分数
+function editHandle2(elem,item, e) {
+       elem.isEdit = false;
+    if (isNaN(e.target.value) || e.target.value > 10 || e.target.value < 0) {
+        alert('分数仅限定在0~10之间');
+        return
+    } 
+
+distributeScore(elem,item,e.target.value)
+
+}
+onMounted(() => {
+})
 
 </script>
 
@@ -405,10 +456,10 @@ const questionList = reactive([
             height: 8px;
             background-color:#f5f5f5;
             position: absolute;
-            right: 0;
+            right: 30px;
             bottom: 6px;
-        @Width:400px;
-        .barStyle(){
+         @Width:400px;
+         .barStyle(){
                 position: absolute;
                 z-index: 1;
                 bottom: 0px;
@@ -546,15 +597,41 @@ const questionList = reactive([
                     background-color: rgb(255, 255, 255);
                 }
             }
+            .edit{
+                display: inline-block;
+                width: 24px;
+                height: 14px;
+                position: absolute;
+                right: -40px;
+                bottom:0px;
+                cursor: pointer;
+                font-size: 10px;
+                color:rgba(140, 140, 140, 1);
+                display: flex;
+                text-align: left;
+                justify-content: space-between;
+                img{
+                    width: 16px;
+                    height: 16px;
+                }
+            }
+              .editinput{
+                  width: 24px;
+                  height: 16px;
+                  outline: none;
+                  border: #4791ff 1px solid;
+                   text-align: center;
+                  color: rgba(140, 140, 140, 1);;
+                  position: absolute;
+                  right: -42px;
+                  bottom: 0px;      
+                }
         }
 
     }
 
 
 }
-
-
-
 
 
 </style>
