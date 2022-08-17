@@ -1,28 +1,32 @@
 <template>
   <div class="target">
     <div class="target-title">数量指标</div>
+    <!-- 计划内容展示 -->
     <div class="target-con">
       <span class="sum number">
-        总问卷数 <img src="/sum.png" alt="" />
+        总问卷数
+        <img src="/sum.png" alt="" />
         <i>150</i>
       </span>
-      <span class="useful number"
-        >有效问卷数
+      <span class="useful number">
+        有效问卷数
         <img src="/useful.png" alt="" />
         <i>80</i>
       </span>
-      <span class="plan number"
-        >计划问卷数 <img src="/plan.png" alt="" />
+      <span class="plan number">
+        计划问卷数
+        <img src="/plan.png" alt="" />
         <div class="planbox">
-          <i v-show="PlannumShow"
-            >{{ plannum
-            }}<img
+          <i v-show="PlannumShow">
+            {{ plannum }}
+            <img
               class="change"
               style="display: inline"
               src="/revise.png"
               alt=""
-              @click="PlannumShow = false"
-          /></i>
+              @click="ChangePlanShow"
+            />
+          </i>
           <input
             ref="planinput"
             type="text"
@@ -35,29 +39,33 @@
         </div>
       </span>
       <span class="pay number">
-        总支出 <img src="/expend.png" alt="" />
+        总支出
+        <img src="/expend.png" alt="" />
         <div class="planbox">
-          <i v-show="MoneyShow"
-            >{{ Moneynum
-            }}<img
+          <i v-show="MoneyShow">
+            {{ Moneynum }}
+            <img
               class="change"
               style="display: inline"
               src="/revise.png"
               alt=""
-              @click="MoneyShow = false"
-          /></i>
+              @click="ChangeMoneyShow"
+            />
+          </i>
           <input
+            ref="Moneyinput"
             type="text"
+            placeholder="请输入总支出数"
             v-show="!MoneyShow"
             v-model.number="Moneynum"
-            placeholder="请输入总支出数"
             @blur="MoneyShow = true"
             @keyup.enter="MoneyShow = true"
           />
         </div>
       </span>
       <span class="reputation number">
-        用户平均信誉度 <img src="/credit.png" alt="" />
+        用户平均信誉度
+        <img src="/credit.png" alt="" />
         <i>90%</i>
       </span>
     </div>
@@ -65,12 +73,29 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, nextTick } from "vue";
+
+//计划问卷调查数量修改
 let planinput = ref(null); //
 let plannum = ref(300); //计划问卷调查
 let PlannumShow = ref(true); //问卷调查数input框是否显示
+function ChangePlanShow() {
+  PlannumShow.value = false;
+  nextTick(() => {
+    planinput.value.focus();
+  });
+}
+
+//总支出数量修改
+let Moneyinput = ref(null); //
 let Moneynum = ref(100); //总支出调查
 let MoneyShow = ref(true); //总支出input框是否显示
+function ChangeMoneyShow() {
+  MoneyShow.value = false;
+  nextTick(() => {
+    Moneyinput.value.focus();
+  });
+}
 </script>
 
 <style lang="less" scoped>

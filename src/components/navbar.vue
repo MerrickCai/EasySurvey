@@ -85,7 +85,7 @@ nav {
                 height: 100%;
                 width: auto;
                 color: rgb(0, 0, 0);
-                font-size: 1.4rem;
+                font-size: 2.8rem;
                 line-height: @navHeight;
             }
         }
@@ -105,12 +105,12 @@ nav {
             display: block;
             height: 80%;
             width: auto;
-            margin-right: 2rem;
+            margin-right: 4rem;
             padding: 0 15px;
             background-color: @themeColor3;
             border-radius: 10px;
             color: rgb(255, 255, 255);
-            font-size: 0.8rem;
+            font-size: 1.6rem;
             line-height: calc((@navHeight - 10px)*0.8);
 
             &:hover {
@@ -122,7 +122,7 @@ nav {
             display: block;
             height: 80%;
             width: auto;
-            margin-right: 2rem;
+            margin-right: 4rem;
 
             &[avatar] {
                 >img {
