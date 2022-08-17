@@ -148,7 +148,7 @@ div#wrapper {
             height: 150px;
             width: 150px;
             position: absolute;
-            z-index: -10;
+            z-index: 3;
             bottom: 40px;
             right: 50px;
             border-radius: 50%;
@@ -160,7 +160,7 @@ div#wrapper {
             height: 100px;
             width: 100px;
             position: absolute;
-            z-index: -11;
+            z-index: 2;
             bottom: 80px;
             right: -20px;
             border-radius: 50%;
@@ -172,7 +172,7 @@ div#wrapper {
             height: 170px;
             width: 170px;
             position: absolute;
-            z-index: -12;
+            z-index: 1;
             bottom: -20px;
             right: 100px;
             border-radius: 50%;
