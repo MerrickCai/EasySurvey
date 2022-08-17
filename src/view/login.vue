@@ -63,12 +63,13 @@ const background_url = background.geturl()
 .main {
    width: 440* @a;
    height: 380* @a;
-   background-color: #fff;
+   background-color: rgb(255,255,255);
    position: absolute;
    top: 50%;
    left: 50%;
    transform: translateX(-50%) translateY(-50%);
-
+     box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
+     border-radius: 8px;
    .title {
       display: flex;
       position: absolute;
@@ -79,12 +80,11 @@ const background_url = background.geturl()
 
       h2 {
          box-sizing: border-box;
-         font-weight: bold;
+         font-weight: bold !important;
          font-size: 20*@a;
          margin-right: 32*@a;
          letter-spacing: 0*@a;
          line-height: 28*@a;
-         font-family: '思源黑体';
          font-weight: 500;
          position: relative;
          cursor: pointer;
@@ -102,7 +102,7 @@ const background_url = background.geturl()
             position: absolute;
             left: 40*@a;
             bottom: -6*@a;
-            background-color: blue;
+            background-color: rgba(30, 111, 255, 1);
             transition: all .4s linear;
             border-radius: 5*@a;
          }
@@ -121,7 +121,7 @@ const background_url = background.geturl()
             position: absolute;
             left: 20*@a;
             bottom: -6*@a;
-            background-color: blue;
+            background-color: rgba(30, 111, 255, 1);
          }
       }
    }

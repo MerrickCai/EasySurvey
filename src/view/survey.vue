@@ -69,7 +69,7 @@ div#wrapper {
             }
 
             span {
-                font-size: 0.6rem;
+                font-size: 1.2rem;
                 color: rgba(67, 67, 67, 1);
             }
 
