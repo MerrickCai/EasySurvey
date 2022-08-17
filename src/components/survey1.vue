@@ -389,7 +389,6 @@ div.survey_intro {
   align-items: center;
   height: auto;
   width: 100%;
-
   >p[title] {
     display: block;
     height: auto;
