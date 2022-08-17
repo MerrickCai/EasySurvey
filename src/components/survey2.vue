@@ -135,44 +135,55 @@ const questionList = reactive([
         silderSrc :'/blue.png'
     },
     {
-        id: 2,
+        id: 1,
         questiontitle: '一、我认为我能为团队做出的贡献是：',
         question: [
             {
                 detail: 'A. 我能很快地发现并把握住新的机遇。',
-                value: 0
+                value: 0,
+                isEdit: false,
             },
             {
                 detail: 'B. 我能与各种类型的人一起合作共事。',
-                value: 0
+                value: 0,
+                isEdit: false,
             },
             {
                 detail: 'C. 我生来就爱出主意。',
-                value: 0
+                value: 0,
+                isEdit: false,
             },
             {
                 detail: 'D. 我的能力在于，一旦发现某些对实现集体目标很有价值的人，我就及时把他们推荐出来',
-                value: 0
+                value: 0,
+                isEdit: false,
             },
             {
                 detail: 'E. 我能把事情办成，这主要靠我个人的实力。',
-                value: 0
+                value: 0,
+                isEdit: false,
             },
             {
                 detail: 'F.如果最终能导致有益的结果，我愿面对暂时的冷遇。',
-                value: 0
+                value: 0,
+                isEdit: false,
             },
             {
                 detail: 'G. 我通常能意识到什么是现实的，什么是可能的。',
-                value: 0
+                value: 0,
+                isEdit: false,
             },
             {
                 detail: 'H. 在选择行动方案时，我能不带倾向性，也不带偏见地提出一个合理的方案。',
-                value: 0
+                value: 0,
+                isEdit: false,
             }],
         score: 10,
-
-    },  
+     // slider的背景颜色
+        bcg: '#f5f5f5',
+    //滑块的样式
+        silderSrc :'/blue.png'
+    },
 ]);
 
 
