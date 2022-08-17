@@ -131,7 +131,7 @@ div.survey {
         height: auto;
         width: auto;
         position: relative;
-        font-size: 1.5rem;
+        font-size: 3rem;
         color: rgba(0, 0, 0, 1);
 
         &::after {
@@ -165,7 +165,7 @@ div.survey {
                 height: auto;
                 width: auto;
                 margin-bottom: 2px;
-                font-size: 0.8rem;
+                font-size: 1.6rem;
                 color: @themeColor;
             }
 
@@ -174,7 +174,7 @@ div.survey {
                 height: auto;
                 width: auto;
                 margin-bottom: 5px;
-                font-size: 0.7rem;
+                font-size: 1.4rem;
                 color: rgba(0, 0, 0, 1);
             }
 
@@ -183,7 +183,7 @@ div.survey {
                 height: auto;
                 width: auto;
                 margin-bottom: 2px;
-                font-size: 0.8rem;
+                font-size: 1.6rem;
                 color: rgba(0, 0, 0, 1);
                 font-weight: bold;
             }
@@ -192,7 +192,7 @@ div.survey {
                 display: block;
                 height: auto;
                 width: auto;
-                font-size: 0.7rem;
+                font-size: 1.4rem;
                 color: rgba(0, 0, 0, 1);
             }
         }
@@ -229,13 +229,13 @@ div.survey {
                     }
 
                     >span:nth-child(1) {
-                        font-size: 1rem;
+                        font-size: 2rem;
                         color: rgb(0, 0, 0);
                         margin-right: 15px;
                     }
 
                     >span:nth-child(2) {
-                        font-size: 1rem;
+                        font-size: 2rem;
                         color: rgb(0, 0, 0);
                     }
                 }
@@ -267,13 +267,13 @@ div.survey {
                         &::before {
                             content: '完全不符合';
                             position: absolute;
-                            top: -1rem;
+                            top: -2rem;
                             left: 0;
-                            height: 2.5rem;
-                            width: 4rem;
+                            height: 5rem;
+                            width: 8rem;
                             color: rgb(0, 0, 0);
-                            font-size: 0.8rem;
-                            line-height: 0.8rem;
+                            font-size: 1.6rem;
+                            line-height: 1.6rem;
                         }
                     }
 
@@ -290,13 +290,13 @@ div.survey {
                         &::before {
                             content: '不太符合';
                             position: absolute;
-                            top: -1rem;
-                            left: -1.5rem;
-                            height: 2.5rem;
-                            width: 3.2rem;
+                            top: -2rem;
+                            left: -3rem;
+                            height: 5rem;
+                            width: 6.4rem;
                             color: rgb(0, 0, 0);
-                            font-size: 0.8rem;
-                            line-height: 0.8rem;
+                            font-size: 1.6rem;
+                            line-height: 1.6rem;
                         }
                     }
 
@@ -313,13 +313,13 @@ div.survey {
                         &::before {
                             content: '部分符合';
                             position: absolute;
-                            top: -1rem;
-                            left: -1.5rem;
-                            height: 2.5rem;
-                            width: 3.2rem;
+                            top: -2rem;
+                            left: -3rem;
+                            height: 5rem;
+                            width: 6.4rem;
                             color: rgb(0, 0, 0);
-                            font-size: 0.8rem;
-                            line-height: 0.8rem;
+                            font-size: 1.6rem;
+                            line-height: 1.6rem;
                         }
                     }
 
@@ -336,13 +336,13 @@ div.survey {
                         &::before {
                             content: '比较符合';
                             position: absolute;
-                            top: -1rem;
-                            left: -1.5rem;
-                            height: 2.5rem;
-                            width: 3.2rem;
+                            top: -2rem;
+                            left: -3rem;
+                            height: 5rem;
+                            width: 6.4rem;
                             color: rgb(0, 0, 0);
-                            font-size: 0.8rem;
-                            line-height: 0.8rem;
+                            font-size: 1.6rem;
+                            line-height: 1.6rem;
                         }
                     }
 
@@ -359,13 +359,13 @@ div.survey {
                         &::before {
                             content: '完全符合';
                             position: absolute;
-                            top: -1rem;
+                            top: -2rem;
                             right: 0;
-                            height: 2.5rem;
-                            width: 3.2rem;
+                            height: 5rem;
+                            width: 6.4rem;
                             color: rgb(0, 0, 0);
-                            font-size: 0.8rem;
-                            line-height: 0.8rem;
+                            font-size: 1.6rem;
+                            line-height: 1.6rem;
                         }
                     }
 
@@ -422,7 +422,7 @@ div.survey_intro {
         width: auto;
         margin-bottom: 30px;
         position: relative;
-        font-size: 1.8rem;
+        font-size: 3.6rem;
         color: rgba(0, 0, 0, 1);
 
         &::after {
@@ -449,7 +449,7 @@ div.survey_intro {
             height: auto;
             width: auto;
             margin-bottom: 10px;
-            font-size: 0.8rem;
+            font-size: 1.6rem;
             color: @themeColor;
         }
 
@@ -458,7 +458,7 @@ div.survey_intro {
             height: auto;
             width: auto;
             margin-bottom: 20px;
-            font-size: 0.7rem;
+            font-size: 1.4rem;
             color: rgba(0, 0, 0, 1);
         }
 
@@ -467,7 +467,7 @@ div.survey_intro {
             height: auto;
             width: auto;
             margin-bottom: 10px;
-            font-size: 0.8rem;
+            font-size: 1.6rem;
             color: rgba(0, 0, 0, 1);
         }
 
@@ -475,7 +475,7 @@ div.survey_intro {
             display: block;
             height: auto;
             width: auto;
-            font-size: 0.7rem;
+            font-size: 1.4rem;
             color: rgba(0, 0, 0, 1);
         }
     }
@@ -487,7 +487,7 @@ div.survey_intro {
         padding: 20px 100px;
         background-color: @themeColor;
         color: rgb(255, 255, 255);
-        font-size: 0.9rem;
+        font-size: 1.8rem;
         border-radius: 5px;
 
         &:hover {
