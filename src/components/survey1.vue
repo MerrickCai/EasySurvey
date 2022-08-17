@@ -14,11 +14,13 @@ import { useStore } from '../PiniaStores/index.js'
 const datas = useStore()
 
 
-
-function fu(e){
-  console.log(e.target.scrollTop)
+//进度条
+function progress(e) {
+  console.log(`scrollTop: ${e.target.scrollTop}`)
+  console.log(`scrollHeight: ${e.target.scrollHeight}`)
+  console.log(`offsetHeight: ${e.target.offsetHeight}`)
+  console.log(`clientHeight: ${e.target.clientHeight}`)
 }
-
 </script>
 
 <template>
@@ -40,7 +42,7 @@ function fu(e){
   <template v-if="datas.survey.currentSurvey.status.survey">
     <div class="survey">
       <p title>{{ datas.survey.currentSurvey.intro.title }}</p>
-      <div class="survey_area"  @scroll="fu($event)">
+      <div class="survey_area" @scroll="progress($event)">
         <p intro>
           <span intro_title>{{ datas.survey.currentSurvey.intro.intro_title }}</span>
           <span intro_content>{{ datas.survey.currentSurvey.intro.intro_content }}</span>
@@ -389,6 +391,7 @@ div.survey_intro {
   align-items: center;
   height: auto;
   width: 100%;
+
   >p[title] {
     display: block;
     height: auto;
