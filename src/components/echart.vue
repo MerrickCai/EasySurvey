@@ -13,14 +13,28 @@
       <div class="echart_mes" id="echart_mes" ref="echart_mes"></div>
       <div id="myChartpie" class="myChartpie"></div>
     </div>
-    <div class="echart_compare" id="echart_compare"></div>
+    <div
+      class="echart_compare"
+      id="echart_compare"
+      @dragover.prevent
+      @drop.prevent="drop($event)"
+    ></div>
   </div>
 </template>
 
 <script setup>
 import * as echarts from "echarts";
+import draggable from "vuedraggable";
 import { onMounted, ref, reactive } from "vue";
 const count = ref(5);
+
+function drop(event) {
+  console.log(event.target);
+  event.preventDefault();
+  if (event.target.className === "echart_compare") {
+    console.log("完成");
+  }
+}
 
 //第一个echart
 onMounted(() => {
@@ -218,52 +232,6 @@ onMounted(() => {
   //   //自适应大小
   //   myChart.resize();
   // };
-});
-
-//第二个echart
-onMounted(() => {
-  //需要获取到element,所以是onMounted的Hook
-  let echart_compare = echarts.init(document.getElementById("echart_compare"));
-  // 绘制图表
-  echart_compare.setOption({
-    title: { text: "测试" },
-    tooltip: {},
-    toolbox: {
-      feature: {
-        saveAsImage: {},
-        magicType: {
-          type: ["bar", "line"],
-        },
-      },
-    },
-    legend: {
-      data: ["1", "2"],
-    },
-    xAxis: {
-      data: ["A", "B", "C", "D", "E"],
-    },
-    yAxis: {},
-    series: [
-      {
-        name: "1",
-        data: [10, 22, 28, 43, 49],
-        type: "bar",
-        label: {
-          show: true,
-          position: "top",
-        },
-      },
-      {
-        name: "2",
-        data: [5, 4, 3, 5, 10],
-        type: "bar",
-        label: {
-          show: true,
-          position: "top",
-        },
-      },
-    ],
-  });
 });
 </script>
 
