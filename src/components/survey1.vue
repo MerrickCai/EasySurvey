@@ -3,17 +3,21 @@
 import { onBeforeRouteUpdate } from 'vue-router'
 import { useRoute } from 'vue-router'
 const route = useRoute()
+onBeforeRouteUpdate((to) => {
+  const id = to.params.id
+  datas.survey.currentSurvey = datas.survey.survey1[id - 1]
+  console.log(to)
+})
 
 //数据
 import { useStore } from '../PiniaStores/index.js'
 const datas = useStore()
 
 
-onBeforeRouteUpdate((to) => {
-  const id = to.params.id
-  datas.survey.currentSurvey = datas.survey.survey1[id - 1]
-  console.log(to)
-})
+
+function fu(e){
+  console.log(e.target.scrollTop)
+}
 
 </script>
 
@@ -36,7 +40,7 @@ onBeforeRouteUpdate((to) => {
   <template v-if="datas.survey.currentSurvey.status.survey">
     <div class="survey">
       <p title>{{ datas.survey.currentSurvey.intro.title }}</p>
-      <div class="survey_area">
+      <div class="survey_area"  @scroll="fu($event)">
         <p intro>
           <span intro_title>{{ datas.survey.currentSurvey.intro.intro_title }}</span>
           <span intro_content>{{ datas.survey.currentSurvey.intro.intro_content }}</span>
@@ -365,13 +369,13 @@ div.survey {
       display: block;
       height: auto;
       width: auto;
-      margin:30px 0;
+      margin: 30px 0;
       padding: 20px 100px;
       background-color: @themeColor;
       color: rgb(255, 255, 255);
       font-size: 1.8rem;
       border-radius: 5px;
-      align-self:center;
+      align-self: center;
       cursor: pointer;
     }
   }
