@@ -9,7 +9,7 @@ const loginInfo = reactive({
 import axios from 'axios'
 function login(account, pass) {
      axios({
-          url: 'http://q.denglu1.cn:8080/user/login',
+          url: '43.138.219.77:8080/user/login',
           method: 'post',
           data: {
                "phone_number": account,
