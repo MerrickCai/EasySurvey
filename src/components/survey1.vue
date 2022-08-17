@@ -1,4 +1,7 @@
 <script setup>
+import { ref } from 'vue'
+
+
 //路由
 import { onBeforeRouteUpdate } from 'vue-router'
 import { useRoute } from 'vue-router'
@@ -6,20 +9,32 @@ const route = useRoute()
 onBeforeRouteUpdate((to) => {
   const id = to.params.id
   datas.survey.currentSurvey = datas.survey.survey1[id - 1]
-  console.log(to)
 })
+
 
 //数据
 import { useStore } from '../PiniaStores/index.js'
 const datas = useStore()
 
 
-//进度条
-function progress(e) {
-  console.log(`scrollTop: ${e.target.scrollTop}`)
-  console.log(`scrollHeight: ${e.target.scrollHeight}`)
-  console.log(`offsetHeight: ${e.target.offsetHeight}`)
-  console.log(`clientHeight: ${e.target.clientHeight}`)
+//进度条   
+const scrollDistence = ref(0)
+function scrollTo(e) {
+  if (scrollDistence.value === 0) {
+    //此为滚动距离scrollTop最大值（e.currentTarget.offsetHeight == e.currentTarget.clientHeight）
+    scrollDistence.value = e.currentTarget.nextSibling.scrollHeight - e.currentTarget.nextSibling.offsetHeight
+  }
+  //转换(e.offsetY是鼠标点击进度条的位置[0,400]，进度条总长400px)
+  e.currentTarget.nextSibling.scrollTop = (scrollDistence.value) * (e.offsetY / 400)
+  e.currentTarget.lastChild.innerHTML = `${Math.ceil((e.offsetY / 400) * 100)} %`
+}
+function onScroll(e) {
+  if (scrollDistence.value === 0) {
+    scrollDistence.value = e.currentTarget.scrollHeight - e.currentTarget.offsetHeight
+  }
+  //转换
+  e.currentTarget.previousSibling.firstChild.setAttribute('style', `top: ${(400) * (e.currentTarget.scrollTop / scrollDistence.value)}px`);
+  e.currentTarget.previousSibling.lastChild.innerHTML = `${Math.ceil((e.currentTarget.scrollTop / scrollDistence.value) * 100)} %`
 }
 </script>
 
@@ -42,7 +57,12 @@ function progress(e) {
   <template v-if="datas.survey.currentSurvey.status.survey">
     <div class="survey">
       <p title>{{ datas.survey.currentSurvey.intro.title }}</p>
-      <div class="survey_area" @scroll="progress($event)">
+      <div class="scrollbar_shadow"></div>
+      <div class="progress" @click="scrollTo($event)">
+        <div class="thumb"></div>
+        <div class="text">0 %</div>
+      </div>
+      <div class="survey_area" @scroll="onScroll($event)">
         <p intro>
           <span intro_title>{{ datas.survey.currentSurvey.intro.intro_title }}</span>
           <span intro_content>{{ datas.survey.currentSurvey.intro.intro_content }}</span>
@@ -84,6 +104,55 @@ div.survey {
   height: 100%;
   width: 100%;
   padding: 20px 0 0 15px;
+  position: relative;
+
+  >div.scrollbar_shadow {
+    position: absolute;
+    height: 500px;
+    width: 10px;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
+    background-color: rgba(255, 255, 255, 1);
+  }
+
+  >div.progress {
+    >div.thumb {
+      content: '';
+      position: absolute;
+      z-index: 2;
+      height: 12px;
+      width: 12px;
+      top: 0;
+      left: -2px;
+      border-radius: 5px;
+      background-color: rgba(255, 255, 255, 1);
+      cursor: pointer;
+    }
+
+    >div.text {
+      position: absolute;
+      z-index: 1;
+      height: 18px;
+      width: 50px;
+      bottom: -20px;
+      left: -22px;
+      color: @themeColor;
+      text-align: center;
+      font-size: 16px;
+      line-height: 18px;
+    }
+
+    position: absolute;
+    z-index: 1;
+    height: 400px;
+    width: 8px;
+    bottom: 35px;
+    left: calc(615px + 270px);
+    border-radius: 5px;
+    background-color: rgba(204, 204, 204, 1);
+    cursor: pointer;
+  }
 
   >p[title] {
     display: block;
@@ -116,11 +185,12 @@ div.survey {
     height: auto;
     width: 100%;
     overflow: auto;
+    position: relative;
 
     >p[intro] {
       display: block;
       height: auto;
-      width: calc(100% - 150px);
+      width: calc(600px + 250px);
       margin-top: 15px;
 
       >span[intro_title] {
