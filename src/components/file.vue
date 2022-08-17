@@ -24,17 +24,17 @@
 <script setup>
 import { ref, nextTick } from "vue";
 import draggable from "vuedraggable";
-const props = defineProps(["index"]);
+
+const emit = defineEmits(["update:clickrotate"]);
+const props = defineProps(["index", "clickrotate"]);
+
 //点击文件夹阴影旋转
 let style = ref(false);
 let shadow = ref("shadow");
 let shadowclick = ref("shadowclick");
-let clickrotate = ref(null);
 function filerotate(e, index) {
-  console.log(clickrotate == index);
-  clickrotate.value = index;
-  console.log(clickrotate.value);
-  console.log(clickrotate.value == index);
+  //修改父组件传来的clickrotate
+  emit("update:clickrotate", index);
 }
 //拖拽文件
 function startDrag(e) {

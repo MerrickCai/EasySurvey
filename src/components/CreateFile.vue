@@ -1,7 +1,13 @@
 <template>
   <ul class="filesum">
     <el-scrollbar max-height="600px">
-      <file v-for="(item, index) in amount" :key="item" :index="index"></file>
+      <file
+        v-for="(item, index) in amount"
+        :key="item"
+        :index="index"
+        :clickrotate="clickrotate"
+        @update:clickrotate="(n) => (clickrotate = n)"
+      ></file>
       <li class="creatfile">
         <!-- 使得文件阴影定位 -->
         <div class="file">
@@ -32,10 +38,7 @@ import { Plus } from "@element-plus/icons-vue";
 import file from "./file.vue";
 import { onMounted, ref } from "vue";
 const amount = ref(3);
-// let file = ref(null);
-onMounted(() => {
-  // console.log(file);
-});
+let clickrotate = ref(null);
 </script>
 
 <style lang="less" scoped>
