@@ -9,7 +9,7 @@ const loginInfo = reactive({
 import axios from 'axios'
 function login(account, pass) {
      axios({
-          url: 'http://p.dengluyi.cn/user/regist',
+          url: 'http://q.denglu1.cn:8080/user/login',
           method: 'post',
           data: {
                "phone_number": account,
@@ -19,9 +19,7 @@ function login(account, pass) {
           headers: { 'Content-Type': 'application/json' },
      })
           .then(response => {
-               if (response.status === 200 && response.statusText === '登陆成功') {
-                    //success()
-               }
+               console.log(response)
           })
           .catch(error => { console.log(error) })
 }
