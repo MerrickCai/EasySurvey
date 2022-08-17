@@ -1,5 +1,10 @@
-<template>
-  <li class="filenew" @click="filerotate">
+<template >
+  <li
+    class="filenew"
+    @click="filerotate($event, index)"
+    draggable="true"
+    @dragstart="startDrag($event)"
+  >
     <!-- 使得文件阴影定位 -->
     <div class="file">
       <div class="creatcontent">
@@ -11,22 +16,30 @@
         </span>
       </div>
       <!-- 文件阴影 -->
-      <div class="shadow" ref="rotate"></div>
+      <div :class="[clickrotate == index ? shadowclick : '', shadow]"></div>
     </div>
   </li>
 </template>
 
 <script setup>
-import { ref } from "vue";
-let rotate = ref(null);
-function filerotate(e) {
-  rotate.value.style.transformOrigin = "left top";
-
-  rotate.value.style.transform = "rotate(5deg)";
-
-  //   let shadow = document.getElementsByClassName("shadow");
-  //   shadow.tranform.rotate = "30deg";
-  //   console.log(e);
+import { ref, nextTick } from "vue";
+import draggable from "vuedraggable";
+const props = defineProps(["index"]);
+//点击文件夹阴影旋转
+let style = ref(false);
+let shadow = ref("shadow");
+let shadowclick = ref("shadowclick");
+let clickrotate = ref(null);
+function filerotate(e, index) {
+  console.log(clickrotate == index);
+  clickrotate.value = index;
+  console.log(clickrotate.value);
+  console.log(clickrotate.value == index);
+}
+//拖拽文件
+function startDrag(e) {
+  e.dataTransfer.dropEffect = "move";
+  e.dataTransfer.effectAllowed = "move";
 }
 </script>
 
@@ -71,7 +84,6 @@ function filerotate(e) {
     rgba(138, 204, 237, 1) 100%
   );
   z-index: -1;
-  transform: rotate(0deg);
 }
 
 .plus {
@@ -83,5 +95,10 @@ function filerotate(e) {
   position: absolute;
   bottom: 10px;
   right: 30px;
+}
+.shadowclick {
+  background-color: red;
+  transform: rotate(5deg);
+  transform-origin: left top;
 }
 </style>

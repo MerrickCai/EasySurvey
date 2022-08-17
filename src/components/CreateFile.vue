@@ -1,7 +1,7 @@
 <template>
   <ul class="filesum">
     <el-scrollbar max-height="600px">
-      <file v-for="item in amount" :key="item"></file>
+      <file v-for="(item, index) in amount" :key="item" :index="index"></file>
       <li class="creatfile">
         <!-- 使得文件阴影定位 -->
         <div class="file">
@@ -30,13 +30,12 @@
 <script setup>
 import { Plus } from "@element-plus/icons-vue";
 import file from "./file.vue";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 const amount = ref(3);
-
-function scrollLeft() {
-  let bar = document.getElementsByName("el-scrollbar");
-  bar.scrollLeft = "30px";
-}
+// let file = ref(null);
+onMounted(() => {
+  // console.log(file);
+});
 </script>
 
 <style lang="less" scoped>

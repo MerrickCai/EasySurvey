@@ -58,6 +58,7 @@ onBeforeRouteUpdate((to) => {
             </div>
           </div>
         </div>
+        <div class="submitBtn">提交问卷</div>
       </div>
     </div>
   </template>
@@ -101,7 +102,11 @@ div.survey {
 
   >div.survey_area {
     flex: 1;
-    display: block;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
     height: auto;
     width: 100%;
     overflow: auto;
@@ -159,7 +164,7 @@ div.survey {
         display: block;
         height: auto;
         width: 100%;
-        margin-bottom: 20px;
+        margin-bottom: 30px;
 
         >div:nth-child(1) {
           display: block;
@@ -167,7 +172,7 @@ div.survey {
           width: auto;
           position: relative;
           padding-left: 5px;
-          margin-bottom: 60px;
+          margin-bottom: 80px;
 
           &::before {
             content: "";
@@ -354,6 +359,20 @@ div.survey {
           }
         }
       }
+    }
+
+    >div.submitBtn {
+      display: block;
+      height: auto;
+      width: auto;
+      margin:30px 0;
+      padding: 20px 100px;
+      background-color: @themeColor;
+      color: rgb(255, 255, 255);
+      font-size: 1.8rem;
+      border-radius: 5px;
+      align-self:center;
+      cursor: pointer;
     }
   }
 }
