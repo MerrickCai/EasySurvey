@@ -1,22 +1,44 @@
 <script setup>
+//路由信息=>改用survey的哪套信息
+import { useRoute } from 'vue-router'
+const route = useRoute()
+const id = route.params.id
+
+//获取此套问卷信息数据
+import { useStore } from '../PiniaStores/index.js'
+const datas = useStore()
+datas.survey.currentSurvey = datas.survey.survey1[id - 1]
 </script>
 
 <template>
     <div id="wrapper">
         <div class="tag_wrapper">
-            <router-link :to="{ path: '/survey1' }" active-class="active">
+            <router-link :to="{ path: '/survey1/1' }" active-class="active">
                 <span>威廉斯创造力倾向表A</span>
             </router-link>
-            <router-link :to="{ path: '/survey2' }" active-class="active">
+            <router-link :to="{ path: '/survey1/2' }" active-class="active">
                 <span>威廉斯创造力倾向表B</span>
             </router-link>
-            <router-link :to="{ path: '/survey3' }" active-class="active">
+            <router-link :to="{ path: '/survey2/1' }" active-class="active">
                 <span>贝尔宾团队理论测试</span>
             </router-link>
         </div>
         <div class="container">
+            <!--折角（一直都在）-->
+            <img dog-ear src="/tangible.png" />
+            <div class="decoration5"></div>
+            <!--填问卷时隐藏-->
+            <template v-if="datas.survey.currentSurvey.status.intro || datas.survey.currentSurvey.status.end">
+                <div class="decoration1"></div>
+                <!--左上-->
+                <div class="decoration2"></div>
+                <!--右下-->
+                <div class="decoration3"></div>
+                <div class="decoration4"></div>
+            </template>
             <!--子路由容器-->
             <router-view></router-view>
+            <!--子路由容器-->
         </div>
     </div>
 </template>
@@ -25,6 +47,8 @@
 @tag_wrapperHeight: 40px;
 @themeColor1: rgba(30, 111, 255, 1);
 @themeColor2: rgba(235, 245, 255, 1);
+@themeColor: rgba(30, 111, 255, 1);
+
 div#wrapper {
     display: block;
     height: 100%;
@@ -104,6 +128,79 @@ div#wrapper {
         left: 0;
         border-radius: 5px;
         box-shadow: 0px 5px 10px 0 rgba(73, 107, 158, 0.1);
+
+        div.decoration1 {
+            display: block;
+            height: 400px;
+            width: 400px;
+            position: absolute;
+            z-index: -10;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background-color: rgba(235, 245, 255, 1);
+            clip-path: polygon(50% 50%, 100% 50%, 100% 100%, 50% 100%);
+        }
+
+        div.decoration2 {
+            display: block;
+            height: 150px;
+            width: 150px;
+            position: absolute;
+            z-index: -10;
+            bottom: 40px;
+            right: 50px;
+            border-radius: 50%;
+            background-color: rgba(71, 145, 255, 1);
+        }
+
+        div.decoration3 {
+            display: block;
+            height: 100px;
+            width: 100px;
+            position: absolute;
+            z-index: -11;
+            bottom: 80px;
+            right: -20px;
+            border-radius: 50%;
+            background-color: rgba(30, 111, 255, 1);
+        }
+
+        div.decoration4 {
+            display: block;
+            height: 170px;
+            width: 170px;
+            position: absolute;
+            z-index: -12;
+            bottom: -20px;
+            right: 100px;
+            border-radius: 50%;
+            background-color: rgba(235, 245, 255, 1);
+        }
+
+        div.decoration5 {
+            display: block;
+            height: calc(108px + 5px);
+            width: calc(120px + 7px);
+            position: absolute;
+            z-index: 1;
+            top: -5px;
+            right: -7px;
+            background-color: rgb(255, 255, 255, 1);
+        }
+
+        img[dog-ear] {
+            display: block;
+            height: 108px;
+            width: 120px;
+            position: absolute;
+            z-index: 2;
+            top: 0;
+            right: 0;
+            object-fit: contain;
+            transform: scale(1.07);
+        }
     }
 }
 </style>
