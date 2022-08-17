@@ -15,7 +15,7 @@
 
 
 <!-- 问卷内容部分 -->
-    <div class="wrapper" v-if="jump">
+    <div class="wrapper extrachange" v-if="jump">
        <div class="topbox">
         <h2 class="top_title">{{top.title}}</h2>
         <h5 class="top_sectitle">{{top.sec_title}}</h5>
@@ -34,7 +34,8 @@
                 </div>
                 <div class="questionList" v-for="(elem,index) of item.question" :key="index">
                     {{elem.detail}}
-                        <div class="slide">
+                        <div class="slide" :style="{backgroundColor:`${item.bcg}`}">
+                            <div class="Gradient" :style="{ width:`${(elem.value)*40}px` }"></div>
                             <div class="bar1" @click="distributeScore(elem,item,0)"></div>
                             <div class="bar2" @click="distributeScore(elem,item,1)"></div>
                             <div class="bar3" @click="distributeScore(elem,item,2)"></div>
@@ -46,9 +47,9 @@
                             <div class="bar9" @click="distributeScore(elem,item,8)"></div>
                             <div class="bar10" @click="distributeScore(elem,item,9)"></div>
                             <div class="bar11" @click="distributeScore(elem,item,10)"></div>
-                            <div class="thumb" :style="{ left: `${-6+(elem.value)*40}px` }"></div>	
+                            <img class="thumb" :style="{ left: `${-6 + (elem.value) * 40}px`}"  :src="elem.value===0 ? item.silderSrc : '/blue.png' ">	
                             <span class="edit"  v-show="!elem.isEdit" @click="editHandle(elem,index)">{{elem.value}}<img src="/icon-edit.png"></span>
-                            <input class="editinput" type="text" v-show="elem.isEdit" @blur="editHandle2(elem,item,$event)" :value="elem.value" ref="myRef">
+                            <input class="editinput" type="text" v-show="elem.isEdit" @blur="editHandle2(elem,item,$event)"  @keydown.enter="editHandle2(elem,item,$event)"  :value="elem.value" ref="myRef">
                     </div>
                 </div>
             </div>
@@ -67,6 +68,7 @@ const survey3 = {
     info_para3: '况填入您每题的分数，系统会自动计算出每个角色的得分。得分最高的2-3个角色便是您的团队角色。',
     btn_info:'开始问卷'
 }
+
 
 
 let jump = ref(false);
@@ -89,45 +91,48 @@ const questionList = reactive([
             {
                 detail: 'A. 我能很快地发现并把握住新的机遇。',
                 value: 0,
-                isEdit:false
+                isEdit: false,
             },
             {
                 detail: 'B. 我能与各种类型的人一起合作共事。',
                 value: 0,
-                isEdit:false
+                isEdit: false,
             },
             {
                 detail: 'C. 我生来就爱出主意。',
                 value: 0,
-                isEdit:false
+                isEdit: false,
             },
             {
                 detail: 'D. 我的能力在于，一旦发现某些对实现集体目标很有价值的人，我就及时把他们推荐出来',
                 value: 0,
-                isEdit:false
+                isEdit: false,
             },
             {
                 detail: 'E. 我能把事情办成，这主要靠我个人的实力。',
                 value: 0,
-                isEdit:false
+                isEdit: false,
             },
             {
                 detail: 'F.如果最终能导致有益的结果，我愿面对暂时的冷遇。',
                 value: 0,
-                isEdit:false
+                isEdit: false,
             },
             {
                 detail: 'G. 我通常能意识到什么是现实的，什么是可能的。',
                 value: 0,
-                isEdit:false
+                isEdit: false,
             },
             {
                 detail: 'H. 在选择行动方案时，我能不带倾向性，也不带偏见地提出一个合理的方案。',
                 value: 0,
-                isEdit:false
+                isEdit: false,
             }],
         score: 10,
-
+     // slider的背景颜色
+        bcg: '#f5f5f5',
+    //滑块的样式
+        silderSrc :'/blue.png'
     },
     {
         id: 2,
@@ -167,8 +172,10 @@ const questionList = reactive([
             }],
         score: 10,
 
-    },
+    },  
 ]);
+
+
 // 分配分数
 function distributeScore(elem, item, num){
      let newValue = num;
@@ -178,12 +185,26 @@ function distributeScore(elem, item, num){
             return  
         } 
     }
-    if(item.score<(newValue-oldValue) ) return
+    if (item.score < (newValue - oldValue)) return;
+
       elem.value = num;
       item.score = 10;
       item.question.forEach(e => {
-      item.score -= e.value;
-    });
+        item.score -= e.value;
+      });
+    //   按照分数，如果分配完了背景颜色改变
+    if (item.score === 0) {
+        item.bcg = '#e5e5e5';
+        item.silderSrc = '/disable.png';
+    }
+    if (item.score > 0) {
+        item.bcg = '#f5f5f5';
+        item.silderSrc = '/blue.png';
+    }
+    // console.log(elem.value);
+    //  console.log(-6+(elem.value)*40);
+     
+     
 }
 const myRef = ref(null);
 
@@ -204,9 +225,7 @@ function editHandle2(elem,item, e) {
         alert('分数仅限定在0~10之间');
         return
     } 
-
-distributeScore(elem,item,e.target.value)
-
+   distributeScore(elem,item,e.target.value)
 }
 onMounted(() => {
 })
@@ -336,7 +355,7 @@ onMounted(() => {
         border-radius: 50%;
         background-color:rgba(235, 245, 255, 1);
         position:absolute;
-        bottom: 0;
+        bottom: -20*@a;
         right: 94*@a;
     }
     .circle2{
@@ -356,7 +375,7 @@ onMounted(() => {
         background-color:rgba(30, 111, 255, 1);
         position:absolute;
         bottom: 80*@a;
-        right:-5.4px;
+        right:-25.4px;
     }
 }
 
@@ -478,6 +497,15 @@ onMounted(() => {
                     font-size: 8px;
             }
         }
+        .Gradient{
+            width: 0px;
+            height: 8px;
+            background: linear-gradient(90deg, rgba(194, 225, 254, 1) 0%, #78a5f1 100%);
+            position: absolute;
+            left: 0;
+            z-index: 9;
+            pointer-events: none;
+        }
          div.bar1 {
             left: -2px;
             .barStyle();
@@ -566,36 +594,36 @@ onMounted(() => {
         }
          @thumbSize:14px;
          @themeColor:#1e6fff;
-            div.thumb {
+            img.thumb {
                 position: absolute;
-                z-index: 2;
+                // z-index: 2;
                 bottom: -2px;
-                left: calc(0px - @thumbSize/2); //thumbSize=24px
+                // left: calc(0px - @thumbSize/2); //thumbSize=24px
                 height: @thumbSize;
                 width: @thumbSize;
-                background-color: @themeColor;
-                border-radius: 5px;
+                object-fit: cover;
+                // border-radius: 5px;
                 transition: all 0.2s linear;
+                z-index: 10;
+                // &::before {
+                //     content: '';
+                //     position: absolute;
+                //     top: calc((@thumbSize - 7px)/2);
+                //     left: calc((@thumbSize - 6px)/2);
+                //     height: 6px;
+                //     width: 1px;
+                //     background-color: rgb(255, 255, 255);
+                // }
 
-                &::before {
-                    content: '';
-                    position: absolute;
-                    top: calc((@thumbSize - 7px)/2);
-                    left: calc((@thumbSize - 6px)/2);
-                    height: 6px;
-                    width: 1px;
-                    background-color: rgb(255, 255, 255);
-                }
-
-                &::after {
-                    content: '';
-                    position: absolute;
-                    top: calc((@thumbSize - 7px)/2);
-                    left: calc((@thumbSize + 5px)/2);
-                    height:6px;
-                    width: 1px;
-                    background-color: rgb(255, 255, 255);
-                }
+                // &::after {
+                //     content: '';
+                //     position: absolute;
+                //     top: calc((@thumbSize - 7px)/2);
+                //     left: calc((@thumbSize + 5px)/2);
+                //     height:6px;
+                //     width: 1px;
+                //     background-color: rgb(255, 255, 255);
+                // }
             }
             .edit{
                 display: inline-block;
@@ -633,5 +661,8 @@ onMounted(() => {
 
 }
 
+div.extrachange{
+    width: 1210px;
+}
 
 </style>
