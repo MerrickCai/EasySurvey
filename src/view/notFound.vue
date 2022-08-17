@@ -29,7 +29,7 @@ div.wrapper {
 
     p {
         color: rgb(0, 0, 0);
-        font-size: 1.5rem;
+        font-size: 3rem;
     }
 
     div[button] {
@@ -41,7 +41,7 @@ div.wrapper {
         background-color: @themeColor_faint;
         border-radius: 50px;
         color: rgb(255, 255, 255);
-        font-size: 1.5rem;
+        font-size: 3rem;
         transition: all 0.3s linear 0s;
 
         &:hover {

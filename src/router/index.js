@@ -14,25 +14,22 @@ import survey1 from '../components/survey1.vue'
 import survey2 from '../components/survey2.vue'
 import survey3 from '../components/survey3.vue'
 
+//路由数组
 const routes = [
     {
         path: '/',
-        name: 'survey',
-        redirect: "/survey1",
         component: survey,
+        redirect: "/survey1",
         children: [
             {
-                name:'survey1',
                 path: 'survey1',
                 component: survey1,
             },
             {
-                name:'survey2',
                 path: 'survey2',
                 component: survey2,
             },
             {
-                name:'survey3',
                 path: 'survey3',
                 component: survey3,
             }
@@ -40,9 +37,8 @@ const routes = [
     },
     {
         path: '/login',
-        name: 'login',
-        redirect: "/login/AccountLogin",
         component: login,
+        redirect: "/login/AccountLogin",
         children: [
             {
                 path: 'AccountLogin',
@@ -60,12 +56,10 @@ const routes = [
     },
     {
         path: '/statistics',
-        name: 'statistics',
         component: statistics
     },
     {
-        path: '/:path(.*)', //404页面
-        name: 'notFound',
+        path: '/:path(.*)', //匹配不到以上路径：跳转404页面
         component: notFound
     },
 ]
