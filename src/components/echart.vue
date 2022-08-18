@@ -26,6 +26,9 @@
 import * as echarts from "echarts";
 import draggable from "vuedraggable";
 import { onMounted, ref, reactive } from "vue";
+//路由
+import { useRouter } from "vue-router";
+const router = useRouter();
 const count = ref(5);
 
 function drop(event) {

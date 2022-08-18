@@ -12,6 +12,7 @@ const WechatLogin = () => import('../components/WechatLogin.vue')
 const register = () => import('../components/register.vue')
 const survey1 = () => import('../components/survey1.vue')
 const survey2 = () => import('../components/survey2.vue')
+const surveynew = () => import('../components/surveynew.vue')
 
 //路由数组
 const routes = [
@@ -27,6 +28,10 @@ const routes = [
             {
                 path: 'survey2/:id',
                 component: survey2,
+            },
+            {
+                path: 'surveynew',
+                component: surveynew
             }
         ]
     },

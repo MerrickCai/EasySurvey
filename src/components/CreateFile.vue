@@ -1,14 +1,7 @@
 <template>
   <ul class="filesum">
     <el-scrollbar max-height="600px">
-      <file
-        v-for="(item, index) in amount"
-        :key="item"
-        :index="index"
-        :clickrotate="clickrotate"
-        @update:clickrotate="(n) => (clickrotate = n)"
-      ></file>
-      <li class="creatfile">
+      <li class="creatfile" @click="routerPush('/surveynew')">
         <!-- 使得文件阴影定位 -->
         <div class="file">
           <div class="creatcontent">
@@ -30,6 +23,13 @@
           <div class="shadow"></div>
         </div>
       </li>
+      <file
+        v-for="(item, index) in amount"
+        :key="item"
+        :index="index"
+        :clickrotate="clickrotate"
+        @update:clickrotate="(n) => (clickrotate = n)"
+      ></file>
     </el-scrollbar>
   </ul>
 </template>
@@ -37,6 +37,12 @@
 import { Plus } from "@element-plus/icons-vue";
 import file from "./file.vue";
 import { onMounted, ref } from "vue";
+//路由
+import { useRouter } from "vue-router";
+const router = useRouter();
+function routerPush(path) {
+  router.push({ path });
+}
 const amount = ref(3);
 let clickrotate = ref(null);
 </script>
@@ -62,6 +68,7 @@ let clickrotate = ref(null);
 }
 .creatfile {
   padding-left: 20px;
+  cursor: pointer;
   .file {
     position: relative;
   }
