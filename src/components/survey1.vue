@@ -8,6 +8,7 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 onBeforeRouteUpdate((to) => {
   const id = to.params.id
+  
   datas.survey.currentSurvey = datas.survey.survey1[id - 1]
 })
 
@@ -36,6 +37,7 @@ function onScroll(e) {
   e.currentTarget.previousSibling.firstChild.setAttribute('style', `top: ${(400) * (e.currentTarget.scrollTop / scrollDistence.value)}px`);
   e.currentTarget.previousSibling.lastChild.innerHTML = `${Math.ceil((e.currentTarget.scrollTop / scrollDistence.value) * 100)} %`
 }
+
 </script>
 
 <template>
@@ -84,11 +86,22 @@ function onScroll(e) {
             </div>
           </div>
         </div>
-        <div class="submitBtn">提交问卷</div>
+        <div class="submitBtn" @click="datas.survey.currentSurvey.status.toEnd">提交问卷</div>
       </div>
     </div>
   </template>
 
+<!-- 问卷完成部分 -->
+<div class="finish-wrapper" v-if="datas.survey.currentSurvey.status.end">
+     <div class="innerbox">
+        <div class="finish-title">
+           <h2>{{datas.survey.currentSurvey.end.ok}}</h2>
+           <h3>{{datas.survey.currentSurvey.end.title}}</h3>
+           <p>{{datas.survey.currentSurvey.end.detail}}</p>
+        </div>
+      <el-button type="primary" class="finish-submit">{{datas.survey.currentSurvey.end.button}}</el-button>
+     </div>
+</div>
 
 </template>
 
@@ -541,4 +554,84 @@ div.survey_intro {
     }
   }
 }
+
+// 完成问卷页面的样式
+.finish-wrapper{
+    width: 100%;
+    height: 100%;
+    // background-color: pink;
+    .innerbox{
+        width: 400px;
+        height: 380px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+      .finish-title{
+        width: 365px;
+        height: 190px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        text-align: center;
+         h2{
+            font-family: '思源黑体';
+            font-size: 36px;
+            font-weight: 500;
+            letter-spacing: 0px;
+            line-height: 44px;
+            margin-left: -18px;
+            &::after{
+                content: '✔';
+                color:white;
+                font-size: 24px;
+                width:36px;
+                height:36px;
+                background: radial-gradient(104.2% 104.2%, rgba(30, 111, 255, 1) 0%, rgba(170, 203, 255, 1) 100%);
+                border-radius: 50%;
+                position: absolute;
+                margin-left:8px;
+                top: 5px;
+                text-align: center;
+                line-height: 36px;
+            }
+         }
+         h3{
+            font-family: '思源黑体';
+            font-size: 36px;
+            font-weight: 500;
+            letter-spacing: 0px;
+            line-height: 44px;
+            color: rgba(30, 111, 255, 1);
+         }
+         p{
+            font-family: '思源黑体';
+            font-size: 20px;
+            font-weight: 400;
+            letter-spacing: 0px;
+            line-height: 28px;
+            color: rgba(0, 0, 0, 1);
+            text-align: center;
+         }
+      }
+       .finish-submit{
+        width: 180px;
+        height: 45px;
+        background-color: rgba(30, 111, 255, 1);
+        margin-top: 40px;
+        &:hover{
+            background-color: #4791ff;
+        }
+        &:active{
+            background-color: #0f52d9;
+        }
+       }
+    }
+
+}
+
 </style>

@@ -1,8 +1,9 @@
 <template>
-  <div class="wrapper" v-if="!jump">
+<!-- 介绍页 -->
+<div class="wrapper" v-if="jump===1">
      <div class="circle-wrapper">
         <div class="headcircle"></div>
-     </div>
+     </div> -->
     <!-- <img src="/tangible.png" class="pic1">   -->
     <h2 class="title">{{survey3.info_title1}}<br>{{survey3.info_title2}}</h2>
     <p class="second-title">{{survey3.info_sec_title}}</p>
@@ -11,11 +12,11 @@
     <div class="circle1"></div>
     <div class="circle2"></div>
     <div class="circle3"></div>
-    </div>
+ </div>
 
 
 <!-- 问卷内容部分 -->
-    <div class="wrapper extrachange" v-if="jump">
+<div class="wrapper extrachange" v-if="jump===2">
        <div class="topbox">
         <h2 class="top_title">{{top.title}}</h2>
         <h5 class="top_sectitle">{{top.sec_title}}</h5>
@@ -53,13 +54,26 @@
                     </div>
                 </div>
             </div>
-           <el-button type="primary" class="submit">提交问卷</el-button>
+           <el-button type="primary" class="submit" @click="toFinish()">提交问卷</el-button>
        </div>
     </div>
+
+<!-- 问卷完成部分 -->
+<div class="finish-wrapper" v-if="jump===3">
+     <div class="innerbox">
+        <div class="finish-title">
+           <h2>您已完成</h2>
+           <h3>贝尔宾团队角色理论<br>-团队角色自测问卷</h3>
+           <p>感谢您的答题，本次问卷已全部结束</p>
+        </div>
+      <el-button type="primary" class="finish-submit">完成答题</el-button>
+     </div>
+</div>
 </template>
 
 <script setup>
-import { ref,computed,reactive,watch,onMounted,nextTick } from 'vue';
+import { ref, computed, reactive, watch, onMounted, nextTick } from 'vue';
+// 介绍部分的静态数据
 const survey3 = {
     info_title1 : '贝尔宾团队角色理论',
     info_title2 :'-团队角色自测问卷',
@@ -70,20 +84,37 @@ const survey3 = {
     btn_info:'开始问卷'
 }
 
-
-
-let jump = ref(false);
+// 跳转：介绍页==>答题页
+let jump = ref(1);
 function toContent(){
-    jump.value = true;
+    jump.value = 2;
 }
-  const top = {
+
+// 跳转：答题页==>完成页
+function toFinish() {
+    let flag = true;
+    const uncomplete = [];
+    questionList.forEach(item => {
+        if (item.score !== 0) {
+            flag = false;
+            uncomplete.push(item.id);
+        }
+    });
+   console.log(uncomplete);
+   if(!flag) return
+    jump.value = 3;
+}
+
+// 答题部分的静态数据
+ const top = {
     title: '贝尔宾团队角色理论-团队角色自测问卷',
     sec_title: '问卷介绍：',
     para1: '对下列问题的回答，可能在不同程度上描绘了您的行为。每题有8句话，请将10分分配给这8个句子。',
     para2:'分配的原则是：最体现您行为的句子分最高，以此类推。最极端的情况可能是10分全部分配给其中一句话。请根据您的实际情况填入您每题的分数，系统会自动计算出每个角色的得分。得分最高的2-3个角色',
     para3:'便是您的团队角色。'
-  }
-
+}
+  
+// 问卷数据
 const questionList = reactive([
     {
         id: 1,
@@ -489,13 +520,16 @@ function editHandle2(elem,item, e) {
     } 
    distributeScore(elem,item,e.target.value)
 }
-onMounted(() => {
+
+watch({
+
 })
 
 </script>
 
 <style scoped lang='less'>
 @a:1px;
+// 供调用
 .public_title(){
         display: block;
         font-family: '思源黑体';
@@ -515,7 +549,7 @@ onMounted(() => {
             left: 0;
         }
 }
-
+// 供调用
 .public_sectitle(){
         font-family: '思源黑体';
         font-size: 20*@a;
@@ -527,6 +561,7 @@ onMounted(() => {
         vertical-align: middle;
 }
 
+// 介绍页面部分
 .wrapper{
     width: 1180*@a;
     height: 810*@a;
@@ -644,6 +679,7 @@ onMounted(() => {
 
 
 // 答题内容部分
+// 头部的文字解释
 .topbox{
     position: absolute;
     left: 40px;
@@ -669,6 +705,7 @@ onMounted(() => {
     }
 }
 
+// 问卷题目内容部分
 .content{
     position: absolute;
     top: 200px;
@@ -921,7 +958,8 @@ onMounted(() => {
         }
 
     }
-    
+
+// 问卷内容完成提交按钮
     .submit{
         position: absolute;
         left: 0;
@@ -947,8 +985,92 @@ onMounted(() => {
     }
 }
 
+
+// 对最外层wrapper的微调
 div.extrachange{
     width: 1210px;
+}
+
+
+
+
+// 完成问卷页面的样式
+.finish-wrapper{
+    width: 100%;
+    height: 100%;
+    // background-color: pink;
+    .innerbox{
+        width: 400px;
+        height: 380px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+      .finish-title{
+        width: 365px;
+        height: 190px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        text-align: center;
+         h2{
+            font-family: '思源黑体';
+            font-size: 36px;
+            font-weight: 500;
+            letter-spacing: 0px;
+            line-height: 44px;
+            margin-left: -18px;
+            &::after{
+                content: '✔';
+                color:white;
+                font-size: 24px;
+                width:36px;
+                height:36px;
+                background: radial-gradient(104.2% 104.2%, rgba(30, 111, 255, 1) 0%, rgba(170, 203, 255, 1) 100%);
+                border-radius: 50%;
+                position: absolute;
+                margin-left:8px;
+                top: 5px;
+                text-align: center;
+                line-height: 36px;
+            }
+         }
+         h3{
+            font-family: '思源黑体';
+            font-size: 36px;
+            font-weight: 500;
+            letter-spacing: 0px;
+            line-height: 44px;
+            color: rgba(30, 111, 255, 1);
+         }
+         p{
+            font-family: '思源黑体';
+            font-size: 20px;
+            font-weight: 400;
+            letter-spacing: 0px;
+            line-height: 28px;
+            color: rgba(0, 0, 0, 1);
+            text-align: center;
+         }
+      }
+       .finish-submit{
+        width: 180px;
+        height: 45px;
+        background-color: rgba(30, 111, 255, 1);
+        margin-top: 40px;
+        &:hover{
+            background-color: #4791ff;
+        }
+        &:active{
+            background-color: #0f52d9;
+        }
+       }
+    }
+
 }
 
 </style>

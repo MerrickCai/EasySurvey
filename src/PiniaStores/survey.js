@@ -9,6 +9,10 @@ export const survey1 = [
                 this.end = false;
                 this.survey = true;
             },
+            toEnd() {
+                this.end = true;
+                this.survey = false;
+            }
         },
         intro: {
             title: "威廉斯创造力倾向表A",
@@ -221,7 +225,13 @@ export const survey1 = [
                 ques: "无论在家里或在学校，我总是喜欢做许多有趣的事。",
                 value: 0,
             },
-        ]
+        ],
+        end: {
+            ok:'您已完成',
+            title:"威廉斯创造力倾向表A",
+            detail: '感谢您的答题，接下来还有两份问卷点击下方按钮继续答题',
+            button:'继续答题'
+        }
     },
     {
         status: {
@@ -233,6 +243,10 @@ export const survey1 = [
                 this.end = false;
                 this.survey = true;
             },
+            toEnd() {
+                this.end = true;
+                this.survey = false;
+            }
         },
         intro: {
             title: "威廉斯创造力倾向表B",
@@ -445,7 +459,13 @@ export const survey1 = [
                 ques: "无论在家里或在学校，我总是喜欢做许多有趣的事。",
                 value: 0,
             },
-        ]
+        ],
+        end: {
+            ok:'您已完成',
+            title:"威廉斯创造力倾向表B",
+            detail: '感谢您的答题，接下来还有一份问卷点击下方按钮继续答题',
+            button:'继续答题'
+        }
     }
 ]
 
