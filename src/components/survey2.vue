@@ -4,7 +4,7 @@
      <div class="circle-wrapper">
         <div class="headcircle"></div>
      </div> -->
-    <!-- <img src="/tangible.png" class="pic1">   -->
+    <img src="/tangible.png" class="pic1">  
     <h2 class="title">{{survey3.info_title1}}<br>{{survey3.info_title2}}</h2>
     <p class="second-title">{{survey3.info_sec_title}}</p>
     <p class="para">{{survey3.info_para1}}<br><br>{{survey3.info_para2}}<br>{{survey3.info_para3}}</p>
@@ -17,6 +17,7 @@
 
 <!-- 问卷内容部分 -->
 <div class="wrapper extrachange" v-if="jump===2">
+    <img src="/tangible.png" class="pic1">  
        <div class="topbox">
         <h2 class="top_title">{{top.title}}</h2>
         <h5 class="top_sectitle">{{top.sec_title}}</h5>
@@ -26,7 +27,14 @@
            <p class="top_para">{{top.para3}}</p>
         </div>
        </div>
-       <div class="content">
+       <!-- 滚动条 -->
+        <div class="zhedang"></div>
+        <div class="progress" @click="scrollTo($event)">
+            <div class="outer-thumb" ref="thumb"></div>
+            <div class="text" ref="text">0%</div>
+        </div>
+       <div class="content" ref="content" @scroll="onScroll($event)">
+        <!-- 进度条 -->
             <div class="main" v-for="item of questionList" :key="item.id">
                 <div class="questiontitle">{{item.questiontitle}}
                    <p class="scoretips">可支配分数
@@ -521,9 +529,31 @@ function editHandle2(elem,item, e) {
    distributeScore(elem,item,e.target.value)
 }
 
-watch({
+const thumb = ref(null);
+const text = ref(null);
+const content = ref(null);
 
-})
+// 滚动条
+const scrollDistence = ref(0)
+function scrollTo(e) {
+  if (scrollDistence.value === 0) {
+    //此为滚动距离scrollTop最大值（e.currentTarget.offsetHeight == e.currentTarget.clientHeight）
+      scrollDistence.value = content.value.scrollHeight - content.value.offsetHeight;
+  }
+    // 此页面滚动条为300px
+  //转换(e.offsetY是鼠标点击进度条的位置[0,300]，进度条总长300px)
+    content.value.scrollTop = (scrollDistence.value) * (e.offsetY / 300) - 8;
+    text.value.innerHTML = `${Math.ceil((e.offsetY / 300) * 100)} %`;
+}
+function onScroll(e) {
+  if (scrollDistence.value === 0) {
+      scrollDistence.value = content.value.scrollHeight - content.value.offsetHeight;
+  }
+  //转换
+  thumb.value.setAttribute('style', `top: ${(300) * (content.value.scrollTop / scrollDistence.value) - 8}px`);
+  text.value.innerHTML = `${Math.ceil((content.value.scrollTop / scrollDistence.value) * 100)} %`
+}
+
 
 </script>
 
@@ -563,7 +593,7 @@ watch({
 
 // 介绍页面部分
 .wrapper{
-    width: 1180*@a;
+    width: 1190*@a;
     height: 810*@a;
     background-color: #fff;
     position: relative;
@@ -575,7 +605,8 @@ watch({
     box-sizing: border-box;
     // background-color: #bfa;
     padding: 0;
-    box-shadow: 0px 6px 30px -18px rgba(73, 107, 158, 0.1);
+    box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
+    z-index: 10;
     .circle-wrapper{
         width: 490*@a;
         height: 490*@a;
@@ -594,12 +625,15 @@ watch({
         width: 120*@a;
         position: absolute;
         z-index: 2;
-        top: 0;
-        right:-6*@a;
+        top: 0px;
+        right:0*@a;
         object-fit: contain;
         transform: scale(1.07);
-        z-index: 2;
+        z-index: 11000;
         background-color: white;
+        border: none;
+        outline: none;
+        
     }
     .title{
        .public_title();
@@ -705,12 +739,60 @@ watch({
     }
 }
 
+ //  遮挡原来的
+.zhedang{
+        position: absolute;
+        right: 7px;
+        background-color: white;
+        width: 10px;
+        height: 500px;
+        z-index: 10;
+        bottom: 0;
+}
+
+//   滚动条
+ .progress{
+        position: absolute;
+        z-index: 1;
+        height: 300px;
+        width: 8px;
+        bottom: 65px;
+        right:35px;
+        border-radius: 5px;
+        background-color: rgba(204, 204, 204, 1);
+        cursor: pointer;
+            .outer-thumb{
+                content: '';
+                position: absolute;
+                z-index: 2;
+                height: 12px;
+                width: 12px;
+                top: 0;
+                left: -2px;
+                border-radius: 5px;
+                background-color: rgba(255, 255, 255, 1);
+                cursor: pointer;
+          }
+          .text{
+            position: absolute;
+            z-index: 1;
+            height: 18px;
+            width: 50px;
+            bottom: -20px;
+            left: -22px;
+            color: rgba(30, 111, 255, 1);
+            text-align: center;
+            font-size: 16px;
+            line-height: 18px;
+         }
+}
+
 // 问卷题目内容部分
 .content{
     position: absolute;
     top: 200px;
     left: 50px;
-    width: 1105px;
+    width: 1155px;
     height: 350px;
     overflow: auto;
     .main{
@@ -958,7 +1040,7 @@ watch({
         }
 
     }
-
+    
 // 问卷内容完成提交按钮
     .submit{
         position: absolute;

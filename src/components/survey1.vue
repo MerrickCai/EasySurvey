@@ -25,16 +25,17 @@ function scrollTo(e) {
     //此为滚动距离scrollTop最大值（e.currentTarget.offsetHeight == e.currentTarget.clientHeight）
     scrollDistence.value = e.currentTarget.nextSibling.scrollHeight - e.currentTarget.nextSibling.offsetHeight
   }
+    
   //转换(e.offsetY是鼠标点击进度条的位置[0,400]，进度条总长400px)
-  e.currentTarget.nextSibling.scrollTop = (scrollDistence.value) * (e.offsetY / 400)
-  e.currentTarget.lastChild.innerHTML = `${Math.ceil((e.offsetY / 400) * 100)} %`
+  e.currentTarget.nextSibling.scrollTop = (scrollDistence.value) * (e.offsetY / 400) - 8;
+  e.currentTarget.lastChild.innerHTML = `${Math.ceil((e.offsetY / 400) * 100)} %`;
 }
 function onScroll(e) {
   if (scrollDistence.value === 0) {
     scrollDistence.value = e.currentTarget.scrollHeight - e.currentTarget.offsetHeight
   }
   //转换
-  e.currentTarget.previousSibling.firstChild.setAttribute('style', `top: ${(400) * (e.currentTarget.scrollTop / scrollDistence.value)}px`);
+  e.currentTarget.previousSibling.firstChild.setAttribute('style', `top: ${(400) * (e.currentTarget.scrollTop / scrollDistence.value) - 8}px`);
   e.currentTarget.previousSibling.lastChild.innerHTML = `${Math.ceil((e.currentTarget.scrollTop / scrollDistence.value) * 100)} %`
 }
 
