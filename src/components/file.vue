@@ -33,12 +33,7 @@ let style = ref(false);
 let shadow = ref("shadow");
 let shadowclick = ref("shadowclick");
 
-let trry = reactive({});
 function filerotate(e, index) {
-  trry["name"] = {};
-  trry["age"] = 18;
-  trry.name["old"] = 50;
-  console.log(trry);
   //修改父组件传来的clickrotate
   emit("update:clickrotate", index);
 }

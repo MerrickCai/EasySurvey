@@ -5,7 +5,9 @@
       <i class="additem">+</i>
       <i class="delitem">×</i>
     </p>
-    <el-scrollbar max-height="400px"> </el-scrollbar>
+    <el-scrollbar max-height="400px">
+      <p class="questitle">{{}}</p>
+    </el-scrollbar>
   </li>
 </template>
 

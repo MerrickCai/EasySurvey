@@ -1,19 +1,42 @@
 <script setup>
+import { ref } from 'vue'
+
+
 //路由
 import { onBeforeRouteUpdate } from 'vue-router'
 import { useRoute } from 'vue-router'
 const route = useRoute()
+onBeforeRouteUpdate((to) => {
+  const id = to.params.id
+  
+  datas.survey.currentSurvey = datas.survey.survey1[id - 1]
+})
+
 
 //数据
 import { useStore } from '../PiniaStores/index.js'
 const datas = useStore()
 
 
-onBeforeRouteUpdate((to) => {
-  const id = to.params.id
-  datas.survey.currentSurvey = datas.survey.survey1[id - 1]
-  console.log(to)
-})
+//进度条   
+const scrollDistence = ref(0)
+function scrollTo(e) {
+  if (scrollDistence.value === 0) {
+    //此为滚动距离scrollTop最大值（e.currentTarget.offsetHeight == e.currentTarget.clientHeight）
+    scrollDistence.value = e.currentTarget.nextSibling.scrollHeight - e.currentTarget.nextSibling.offsetHeight
+  }
+  //转换(e.offsetY是鼠标点击进度条的位置[0,400]，进度条总长400px)
+  e.currentTarget.nextSibling.scrollTop = (scrollDistence.value) * (e.offsetY / 400)
+  e.currentTarget.lastChild.innerHTML = `${Math.ceil((e.offsetY / 400) * 100)} %`
+}
+function onScroll(e) {
+  if (scrollDistence.value === 0) {
+    scrollDistence.value = e.currentTarget.scrollHeight - e.currentTarget.offsetHeight
+  }
+  //转换
+  e.currentTarget.previousSibling.firstChild.setAttribute('style', `top: ${(400) * (e.currentTarget.scrollTop / scrollDistence.value)}px`);
+  e.currentTarget.previousSibling.lastChild.innerHTML = `${Math.ceil((e.currentTarget.scrollTop / scrollDistence.value) * 100)} %`
+}
 
 </script>
 
@@ -36,7 +59,12 @@ onBeforeRouteUpdate((to) => {
   <template v-if="datas.survey.currentSurvey.status.survey">
     <div class="survey">
       <p title>{{ datas.survey.currentSurvey.intro.title }}</p>
-      <div class="survey_area">
+      <div class="scrollbar_shadow"></div>
+      <div class="progress" @click="scrollTo($event)">
+        <div class="thumb"></div>
+        <div class="text">0 %</div>
+      </div>
+      <div class="survey_area" @scroll="onScroll($event)">
         <p intro>
           <span intro_title>{{ datas.survey.currentSurvey.intro.intro_title }}</span>
           <span intro_content>{{ datas.survey.currentSurvey.intro.intro_content }}</span>
@@ -58,11 +86,22 @@ onBeforeRouteUpdate((to) => {
             </div>
           </div>
         </div>
-        <div class="submitBtn">提交问卷</div>
+        <div class="submitBtn" @click="datas.survey.currentSurvey.status.toEnd">提交问卷</div>
       </div>
     </div>
   </template>
 
+<!-- 问卷完成部分 -->
+<div class="finish-wrapper" v-if="datas.survey.currentSurvey.status.end">
+     <div class="innerbox">
+        <div class="finish-title">
+           <h2>{{datas.survey.currentSurvey.end.ok}}</h2>
+           <h3>{{datas.survey.currentSurvey.end.title}}</h3>
+           <p>{{datas.survey.currentSurvey.end.detail}}</p>
+        </div>
+      <el-button type="primary" class="finish-submit">{{datas.survey.currentSurvey.end.button}}</el-button>
+     </div>
+</div>
 
 </template>
 
@@ -78,6 +117,55 @@ div.survey {
   height: 100%;
   width: 100%;
   padding: 20px 0 0 15px;
+  position: relative;
+
+  >div.scrollbar_shadow {
+    position: absolute;
+    height: 500px;
+    width: 10px;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
+    background-color: rgba(255, 255, 255, 1);
+  }
+
+  >div.progress {
+    >div.thumb {
+      content: '';
+      position: absolute;
+      z-index: 2;
+      height: 12px;
+      width: 12px;
+      top: 0;
+      left: -2px;
+      border-radius: 5px;
+      background-color: rgba(255, 255, 255, 1);
+      cursor: pointer;
+    }
+
+    >div.text {
+      position: absolute;
+      z-index: 1;
+      height: 18px;
+      width: 50px;
+      bottom: -20px;
+      left: -22px;
+      color: @themeColor;
+      text-align: center;
+      font-size: 16px;
+      line-height: 18px;
+    }
+
+    position: absolute;
+    z-index: 1;
+    height: 400px;
+    width: 8px;
+    bottom: 35px;
+    left: calc(615px + 270px);
+    border-radius: 5px;
+    background-color: rgba(204, 204, 204, 1);
+    cursor: pointer;
+  }
 
   >p[title] {
     display: block;
@@ -110,11 +198,12 @@ div.survey {
     height: auto;
     width: 100%;
     overflow: auto;
+    position: relative;
 
     >p[intro] {
       display: block;
       height: auto;
-      width: calc(100% - 150px);
+      width: calc(600px + 250px);
       margin-top: 15px;
 
       >span[intro_title] {
@@ -365,13 +454,13 @@ div.survey {
       display: block;
       height: auto;
       width: auto;
-      margin:30px 0;
+      margin: 30px 0;
       padding: 20px 100px;
       background-color: @themeColor;
       color: rgb(255, 255, 255);
       font-size: 1.8rem;
       border-radius: 5px;
-      align-self:center;
+      align-self: center;
       cursor: pointer;
     }
   }
@@ -385,6 +474,7 @@ div.survey_intro {
   align-items: center;
   height: auto;
   width: 100%;
+
   >p[title] {
     display: block;
     height: auto;
@@ -464,4 +554,84 @@ div.survey_intro {
     }
   }
 }
+
+// 完成问卷页面的样式
+.finish-wrapper{
+    width: 100%;
+    height: 100%;
+    // background-color: pink;
+    .innerbox{
+        width: 400px;
+        height: 380px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+      .finish-title{
+        width: 365px;
+        height: 190px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        text-align: center;
+         h2{
+            font-family: '思源黑体';
+            font-size: 36px;
+            font-weight: 500;
+            letter-spacing: 0px;
+            line-height: 44px;
+            margin-left: -18px;
+            &::after{
+                content: '✔';
+                color:white;
+                font-size: 24px;
+                width:36px;
+                height:36px;
+                background: radial-gradient(104.2% 104.2%, rgba(30, 111, 255, 1) 0%, rgba(170, 203, 255, 1) 100%);
+                border-radius: 50%;
+                position: absolute;
+                margin-left:8px;
+                top: 5px;
+                text-align: center;
+                line-height: 36px;
+            }
+         }
+         h3{
+            font-family: '思源黑体';
+            font-size: 36px;
+            font-weight: 500;
+            letter-spacing: 0px;
+            line-height: 44px;
+            color: rgba(30, 111, 255, 1);
+         }
+         p{
+            font-family: '思源黑体';
+            font-size: 20px;
+            font-weight: 400;
+            letter-spacing: 0px;
+            line-height: 28px;
+            color: rgba(0, 0, 0, 1);
+            text-align: center;
+         }
+      }
+       .finish-submit{
+        width: 180px;
+        height: 45px;
+        background-color: rgba(30, 111, 255, 1);
+        margin-top: 40px;
+        &:hover{
+            background-color: #4791ff;
+        }
+        &:active{
+            background-color: #0f52d9;
+        }
+       }
+    }
+
+}
+
 </style>
