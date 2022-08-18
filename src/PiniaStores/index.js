@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import {survey1} from './survey.js'
+import { survey1 } from './survey.js'
 
 export const useStore = defineStore('main', {
   state: () => ({

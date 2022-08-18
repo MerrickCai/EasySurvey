@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { ref, nextTick } from "vue";
+import { ref, nextTick, reactive } from "vue";
 import draggable from "vuedraggable";
 
 const emit = defineEmits(["update:clickrotate"]);
@@ -32,6 +32,7 @@ const props = defineProps(["index", "clickrotate"]);
 let style = ref(false);
 let shadow = ref("shadow");
 let shadowclick = ref("shadowclick");
+
 function filerotate(e, index) {
   //修改父组件传来的clickrotate
   emit("update:clickrotate", index);
@@ -46,7 +47,7 @@ function startDrag(e) {
 <style lang="less" scoped>
 .filenew {
   position: relative;
-  margin-bottom: 84px;
+  margin-top: 84px;
   padding-left: 20px;
 }
 // .file {
@@ -84,6 +85,19 @@ function startDrag(e) {
     rgba(138, 204, 237, 1) 100%
   );
   z-index: -1;
+  transform-origin: left top;
+}
+
+.shadowclick {
+  animation: rotate 0.35s forwards;
+}
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(5deg);
+  }
 }
 
 .plus {
@@ -95,10 +109,5 @@ function startDrag(e) {
   position: absolute;
   bottom: 10px;
   right: 30px;
-}
-.shadowclick {
-  background-color: red;
-  transform: rotate(5deg);
-  transform-origin: left top;
 }
 </style>
