@@ -28,15 +28,17 @@
         </div>
        </div>
        <!-- 滚动条 -->
-        <div class="zhedang"></div>
+        <div class="zhedang" ></div>
         <div class="progress" @click="scrollTo($event)">
-            <div class="outer-thumb" ref="thumb"></div>
+            <div class="outer-thumb" ref="thumb" >
+                <div class="bluebcg"  :style="{height:`${bluebcg_height}px`}"></div>
+            </div>
             <div class="text" ref="text">0%</div>
         </div>
        <div class="content" ref="content" @scroll="onScroll($event)">
         <!-- 进度条 -->
-            <div class="main" v-for="item of questionList" :key="item.id">
-                <div class="questiontitle">{{item.questiontitle}}
+            <div class="main" v-for="item of questionList" :key="item.id" >
+                <div class="questiontitle"  ref="questiontitle"   :style="{border:`${item.titleBorder}px solid red`}">{{item.questiontitle}}
                    <p class="scoretips">可支配分数
                      <span class="score">{{item.score}}</span>
                    </p>
@@ -59,12 +61,12 @@
                             <img class="thumb" :style="{ left: `${-6 + (elem.value) * 40}px`}"  :src="elem.value===0 ? item.silderSrc : '/blue.png' ">	
                             <span class="edit"  v-show="!elem.isEdit" @click="editHandle(elem,index)">{{elem.value}}<img src="/icon-edit.png"></span>
                             <input class="editinput" type="text" v-show="elem.isEdit" @blur="editHandle2(elem,item,$event)"  @keydown.enter="editHandle2(elem,item,$event)"  :value="elem.value" ref="myRef">
-                    </div>
+                    </div>                          
                 </div>
             </div>
            <el-button type="primary" class="submit" @click="toFinish()">提交问卷</el-button>
        </div>
-    </div>
+    </div>                   
 
 <!-- 问卷完成部分 -->
 <div class="finish-wrapper" v-if="jump===3">
@@ -80,7 +82,7 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive, watch, onMounted, nextTick } from 'vue';
+import { ref, computed, reactive, watch, onMounted, nextTick,onBeforeUnmount,toRef } from 'vue';
 // 介绍部分的静态数据
 const survey3 = {
     info_title1 : '贝尔宾团队角色理论',
@@ -103,15 +105,28 @@ function toFinish() {
     let flag = true;
     const uncomplete = [];
     questionList.forEach(item => {
+        item.titleBorder = 0;
         if (item.score !== 0) {
             flag = false;
-            uncomplete.push(item.id);
+            uncomplete.push(item.id);   
+            item.titleBorder = 1;
         }
     });
-   console.log(uncomplete);
+    console.log(uncomplete);
+    console.log(questiontitle.value[0].offsetTop);
+    
+    let fisrtreturn = uncomplete[0] - 1;
+    if (uncomplete.length) {
+        content.value.scrollTop = questiontitle.value[fisrtreturn].offsetTop;
+    }
+   
    if(!flag) return
     jump.value = 3;
+
 }
+
+const questiontitle = ref(null);
+
 
 // 答题部分的静态数据
  const top = {
@@ -172,7 +187,8 @@ const questionList = reactive([
      // slider的背景颜色
         bcg: '#f5f5f5',
     //滑块的样式
-        silderSrc :'/blue.png'
+        silderSrc: '/blue.png',
+        titleBorder:0
     },
     {
         id: 2,
@@ -222,7 +238,8 @@ const questionList = reactive([
      // slider的背景颜色
         bcg: '#f5f5f5',
     //滑块的样式
-        silderSrc :'/blue.png'
+        silderSrc: '/blue.png',
+        titleBorder:0
     },
     {
         id: 3,
@@ -272,7 +289,9 @@ const questionList = reactive([
      // slider的背景颜色
         bcg: '#f5f5f5',
     //滑块的样式
-        silderSrc :'/blue.png'
+        silderSrc: '/blue.png',
+        titleBorder:0
+        
     },
     {
         id: 4,
@@ -322,7 +341,8 @@ const questionList = reactive([
      // slider的背景颜色
         bcg: '#f5f5f5',
     //滑块的样式
-        silderSrc :'/blue.png'
+        silderSrc: '/blue.png',
+        titleBorder:0
     },
     {
         id: 5,
@@ -372,7 +392,8 @@ const questionList = reactive([
      // slider的背景颜色
         bcg: '#f5f5f5',
     //滑块的样式
-        silderSrc :'/blue.png'
+        silderSrc: '/blue.png',
+        titleBorder:0
     },
     {
         id: 6,
@@ -422,7 +443,8 @@ const questionList = reactive([
      // slider的背景颜色
         bcg: '#f5f5f5',
     //滑块的样式
-        silderSrc :'/blue.png'
+        silderSrc: '/blue.png',
+        titleBorder:0
     },
     {
         id: 7,
@@ -472,7 +494,8 @@ const questionList = reactive([
      // slider的背景颜色
         bcg: '#f5f5f5',
     //滑块的样式
-        silderSrc :'/blue.png'
+        silderSrc: '/blue.png',
+        titleBorder:0
     },
 ]);
 
@@ -532,7 +555,11 @@ function editHandle2(elem,item, e) {
 const thumb = ref(null);
 const text = ref(null);
 const content = ref(null);
-
+// 滚动条的蓝色背景
+// const bluebcg = ref(null);
+let bluebcg_height = ref(0);
+// 中转变量
+let temp;
 // 滚动条
 const scrollDistence = ref(0)
 function scrollTo(e) {
@@ -544,6 +571,7 @@ function scrollTo(e) {
   //转换(e.offsetY是鼠标点击进度条的位置[0,300]，进度条总长300px)
     content.value.scrollTop = (scrollDistence.value) * (e.offsetY / 300) - 8;
     text.value.innerHTML = `${Math.ceil((e.offsetY / 300) * 100)} %`;
+
 }
 function onScroll(e) {
   if (scrollDistence.value === 0) {
@@ -551,8 +579,17 @@ function onScroll(e) {
   }
   //转换
   thumb.value.setAttribute('style', `top: ${(300) * (content.value.scrollTop / scrollDistence.value) - 8}px`);
-  text.value.innerHTML = `${Math.ceil((content.value.scrollTop / scrollDistence.value) * 100)} %`
+    text.value.innerHTML = `${Math.ceil((content.value.scrollTop / scrollDistence.value) * 100)} %`
+    temp = thumb.value.style.top.split("");
+    temp.pop();
+    temp.pop();
+    temp = temp.join("") / 1 + 8;
+    bluebcg_height.value= temp;
 }
+
+// 点击提交后的判断逻辑
+
+
 
 
 </script>
@@ -611,6 +648,7 @@ function onScroll(e) {
         width: 490*@a;
         height: 490*@a;
         overflow: hidden;
+
     }
     .headcircle{
         width: 400*@a;
@@ -772,6 +810,27 @@ function onScroll(e) {
                 border-radius: 5px;
                 background-color: rgba(255, 255, 255, 1);
                 cursor: pointer;
+                // 为了使白色按钮盖过蓝色背景   
+                &::before{
+                    content: '';
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 5px;
+                    position: absolute;
+                    background-color: rgba(255, 255, 255, 1);
+                    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.25);
+                }
+                .bluebcg{
+                    background-color: #4791ff;
+                    width: 8px;
+                    position: absolute;
+                    bottom: 8px;
+                    height: 200px;
+                    left: 2px;
+                    z-index: -99;
+                    border-radius: 5px;
+                    pointer-events: none;
+                }
           }
           .text{
             position: absolute;
