@@ -1,6 +1,15 @@
 <script setup>
 import { reactive } from 'vue';
 
+//获取 Pinia 的用户数据
+import { useStore } from "../PiniaStores/index.js";
+const datas = useStore();
+
+
+import { useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
+const route = useRoute()
+const router = useRouter()
 //登录
 const loginInfo = reactive({
      account: '',
@@ -9,7 +18,7 @@ const loginInfo = reactive({
 import axios from 'axios'
 function login(account, pass) {
      axios({
-          url: 'https://www.denglu1.cn:8080/user/login',
+          url: 'http://q.denglu1.cn:8080/user/login',
           method: 'post',
           data: {
                "phone_number": account,
@@ -17,11 +26,25 @@ function login(account, pass) {
           },
           withCredentials: true,
           headers: { 'Content-Type': 'application/json' },
-     })
-          .then(response => {
-               console.log(response)
-          })
-          .catch(error => { console.log(error) })
+     }).then(response => {
+          console.log(response)
+          //记录用户登录
+          if (response.data.msg === '登陆成功') {
+               datas.user.status = true
+               datas.user.account = account
+               datas.user.password = pass
+               datas.user.token = response.data.token
+               //保存用户信息到localStorage
+               localStorage.setItem('account', account)
+               localStorage.setItem('password', pass)
+               if (route.query.redirect) {
+                    router.push({ path: route.query.redirect })
+               }
+               else {
+                    router.push({ path: '/' })
+               }
+          }
+     }).catch(error => { console.log(error) })
 }
 </script>
 

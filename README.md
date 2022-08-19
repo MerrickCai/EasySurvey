@@ -15,7 +15,7 @@
 - **UI库**：[Element Plus](https://element-plus.gitee.io/zh-CN/)
 - **数据可视化**：[ECharts](https://echarts.apache.org/zh/index.html)
 - **代码托管**：[Coding](https://coding.net/)
-- **网站部署上线**：[Webify](https://webify.cloudbase.net/)
+- **网站部署上线**：[腾讯云](https://cloud.tencent.com/)
 
 ## 开发
 
