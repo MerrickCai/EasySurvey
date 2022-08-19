@@ -20,12 +20,12 @@ const routes = [
     {
         path: '/',
         component: statistics,
-        meta:{requireLogin:true} //是否需要登录
+        meta:{requireLogin:false} //是否需要登录
     },
     {
         path: '/survey',
         component: survey,
-        meta:{requireLogin:true},//是否需要登录 
+        meta:{requireLogin:false},//是否需要登录 
         redirect: "/survey/survey1/1",
         children: [
             {

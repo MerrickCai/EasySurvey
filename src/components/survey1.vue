@@ -8,10 +8,9 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 onBeforeRouteUpdate((to) => {
   const id = to.params.id
-  
   datas.survey.currentSurvey = datas.survey.survey1[id - 1]
+  
 })
-
 
 //数据
 import { useStore } from '../PiniaStores/index.js'
