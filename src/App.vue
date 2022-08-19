@@ -15,7 +15,10 @@ router.beforeEach((to) => { //这个函数会激活两次！！
       return true
     } else {
       datas.navShow = false
-      return { path: '/login' }
+      return {
+        path: '/login',
+        query: { redirect: to.fullPath }
+      }
     }
   } else {
     return true

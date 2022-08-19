@@ -7,6 +7,8 @@ const datas = useStore();
 
 
 import { useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
+const route = useRoute()
 const router = useRouter()
 //登录
 const loginInfo = reactive({
@@ -28,11 +30,11 @@ function login(account, pass) {
           .then(response => {
                console.log(response)
                //记录用户登录
-               if(response.data.msg==='登陆成功')
-               datas.user.status=true
-               datas.user.account=account
-               datas.user.password=pass
-               router.push({path:'/'})
+               if (response.data.msg === '登陆成功')
+                    datas.user.status = true
+               datas.user.account = account
+               datas.user.password = pass
+               router.push({ path: route.query.redirect })
 
           })
           .catch(error => { console.log(error) })
