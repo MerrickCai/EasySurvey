@@ -26,18 +26,25 @@ function login(account, pass) {
           },
           withCredentials: true,
           headers: { 'Content-Type': 'application/json' },
-     })
-          .then(response => {
-               console.log(response)
-               //记录用户登录
-               if (response.data.msg === '登陆成功')
-                    datas.user.status = true
+     }).then(response => {
+          console.log(response)
+          //记录用户登录
+          if (response.data.msg === '登陆成功') {
+               datas.user.status = true
                datas.user.account = account
                datas.user.password = pass
-               router.push({ path: route.query.redirect })
-
-          })
-          .catch(error => { console.log(error) })
+               datas.user.token = response.data.token
+               //保存用户信息到localStorage
+               localStorage.setItem('account', account)
+               localStorage.setItem('password', pass)
+               if (route.query.redirect) {
+                    router.push({ path: route.query.redirect })
+               }
+               else {
+                    router.push({ path: '/' })
+               }
+          }
+     }).catch(error => { console.log(error) })
 }
 </script>
 
