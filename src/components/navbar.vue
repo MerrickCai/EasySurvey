@@ -23,8 +23,8 @@ const datas = useStore()
             <template v-if="datas.navShow">
                 <div button @click="routerPush('/survey')">填问卷(暂时)</div>
                 <div img @click="routerPush('/dev')"><img src="/navbar_1.png" /></div>
-                <div img avatar><img src="/navbar_3.jpg" /></div>
-                <div img @click="routerPush('login')"><img src="/navbar_2.png" /></div>
+                <div img avatar @click="routerPush('/dev')"><img src="/navbar_3.jpg" /></div>
+                <div img @click="routerPush('/login')"><img src="/navbar_2.png" /></div>
             </template>
         </div>
     </nav>
