@@ -6,7 +6,8 @@ import { useStore } from "../PiniaStores/index.js";
 const datas = useStore();
 
 
-
+import { useRouter } from 'vue-router'
+const router = useRouter()
 //登录
 const loginInfo = reactive({
      account: '',
@@ -31,6 +32,8 @@ function login(account, pass) {
                datas.user.status=true
                datas.user.account=account
                datas.user.password=pass
+               router.push({path:'/'})
+
           })
           .catch(error => { console.log(error) })
 }
