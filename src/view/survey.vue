@@ -13,16 +13,16 @@ datas.survey.currentSurvey = datas.survey.survey1[id - 1];
 <template>
   <div id="wrapper">
     <div class="tag_wrapper">
-      <router-link :to="{ path: '/survey1/1' }" active-class="active">
+      <router-link :to="{ path: 'survey/survey1/1' }" active-class="active">
         <span>威廉斯创造力倾向表A</span>
       </router-link>
-      <router-link :to="{ path: '/survey1/2' }" active-class="active">
+      <router-link :to="{ path: 'survey/survey1/2' }" active-class="active">
         <span>威廉斯创造力倾向表B</span>
       </router-link>
-      <router-link :to="{ path: '/survey2/1' }" active-class="active">
+      <router-link :to="{ path: 'survey/survey2/1' }" active-class="active">
         <span>贝尔宾团队理论测试</span>
       </router-link>
-      <router-link :to="{ path: '/surveynew' }">
+      <router-link :to="{ path: 'survey/surveynew' }">
         <span>点击创建新问卷</span>
       </router-link>
     </div>
