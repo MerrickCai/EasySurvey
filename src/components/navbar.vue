@@ -6,7 +6,7 @@ function routerPush(path) {
     router.push({ path })
 }
 
-//Pinia
+//Pinia数据
 import { useStore } from '../PiniaStores/index.js'
 const datas = useStore()
 </script>
@@ -21,17 +21,17 @@ const datas = useStore()
         </div>
         <div links>
             <template v-if="datas.navShow">
-                <div button @click="routerPush('/statistics')">创建问卷</div>
-                <div img @click="routerPush('/pinia')"><img src="/navbar_1.png" /></div>
-                <div img avatar @click="routerPush('/404')"><img src="/navbar_3.jpg" /></div>
-                <div img @click="routerPush('/login')"><img src="/navbar_2.png" /></div>
+                <div button @click="routerPush('/survey')">填问卷(暂时)</div>
+                <div img @click="routerPush('/dev')"><img src="/navbar_1.png" /></div>
+                <div img avatar><img src="/navbar_3.jpg" /></div>
+                <div img @click="routerPush('login')"><img src="/navbar_2.png" /></div>
             </template>
         </div>
     </nav>
 </template>
 
 <style lang="less" scoped>
-@nav: 100px;
+@nav: 80px;
 @navHeight: 60px;
 @themeColor1: rgb(30, 111, 255);
 @themeColor2: rgba(30, 113, 255, 0.8);

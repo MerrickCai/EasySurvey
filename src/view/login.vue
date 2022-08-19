@@ -1,13 +1,14 @@
 <script setup>
-//路由守卫=>导航栏隐藏
+//登录成功后跳转 导航栏显示   施工中
 import { useStore } from '../PiniaStores/index.js'
 const datas = useStore()
 datas.navShow = false
 import { onBeforeRouteLeave } from 'vue-router'
-onBeforeRouteLeave(() => {
-   datas.navShow = true
+onBeforeRouteLeave(() => { //用户登录成功
+   if (datas.user.status) {
+      datas.navShow = true
+   }
 })
-
 
 //随机背景图
 const background = {
@@ -16,7 +17,7 @@ const background = {
       return Math.floor(Math.random() * (y - x + 1)) + x
    },
    geturl() {
-      return this.url[this.random(0, this.url.length-1)]
+      return this.url[this.random(0, this.url.length - 1)]
    }
 }
 const background_url = background.geturl()
@@ -63,13 +64,14 @@ const background_url = background.geturl()
 .main {
    width: 440* @a;
    height: 380* @a;
-   background-color: rgb(255,255,255);
+   background-color: rgb(255, 255, 255);
    position: absolute;
    top: 50%;
    left: 50%;
    transform: translateX(-50%) translateY(-50%);
-     box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
-     border-radius: 8px;
+   box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
+   border-radius: 8px;
+
    .title {
       display: flex;
       position: absolute;

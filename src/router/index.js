@@ -5,6 +5,7 @@ const survey = () => import('../view/survey.vue')
 const login = () => import('../view/login.vue')
 const notFound = () => import('../view/notFound.vue')
 const statistics = () => import('../view/statistics.vue')
+const dev = () => import('../view/dev.vue')
 
 //嵌套路由
 const AccountLogin = () => import('../components/AccountLogin.vue')
@@ -18,8 +19,14 @@ const surveynew = () => import('../components/surveynew.vue')
 const routes = [
     {
         path: '/',
+        component: statistics,
+        meta:{requireLogin:true} //是否需要登录
+    },
+    {
+        path: '/survey',
         component: survey,
-        redirect: "/survey1/1",
+        meta:{requireLogin:true},//是否需要登录 
+        redirect: "/survey/survey1/1",
         children: [
             {
                 path: 'survey1/:id',
@@ -35,6 +42,7 @@ const routes = [
             }
         ]
     },
+
     {
         path: '/login',
         component: login,
@@ -55,12 +63,14 @@ const routes = [
         ],
     },
     {
-        path: '/statistics',
-        component: statistics
+        path: '/dev', //匹配不到以上路径：跳转404页面
+        component: dev,
+        meta:{requireLogin:false} //是否需要登录
     },
     {
         path: '/:path(.*)', //匹配不到以上路径：跳转404页面
-        component: notFound
+        component: notFound,
+        meta:{requireLogin:false} //是否需要登录
     },
 ]
 

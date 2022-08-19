@@ -1,6 +1,12 @@
 <script setup>
 import { reactive } from 'vue';
 
+//获取 Pinia 的用户数据
+import { useStore } from "../PiniaStores/index.js";
+const datas = useStore();
+
+
+
 //登录
 const loginInfo = reactive({
      account: '',
@@ -9,7 +15,7 @@ const loginInfo = reactive({
 import axios from 'axios'
 function login(account, pass) {
      axios({
-          url: 'https://www.denglu1.cn:8080/user/login',
+          url: 'http://q.denglu1.cn:8080/user/login',
           method: 'post',
           data: {
                "phone_number": account,
@@ -20,6 +26,11 @@ function login(account, pass) {
      })
           .then(response => {
                console.log(response)
+               //记录用户登录
+               if(response.data.msg==='登陆成功')
+               datas.user.status=true
+               datas.user.account=account
+               datas.user.password=pass
           })
           .catch(error => { console.log(error) })
 }
