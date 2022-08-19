@@ -2,7 +2,7 @@
 //路由信息=>改用survey的哪套信息
 import { useRoute } from "vue-router";
 const route = useRoute();
-const id = route.params.id;
+const id = 1;
 
 //获取此套问卷信息数据
 import { useStore } from "../PiniaStores/index.js";
@@ -22,7 +22,7 @@ datas.survey.currentSurvey = datas.survey.survey1[id - 1];
       <router-link :to="{ path: '/survey2/1' }" active-class="active">
         <span>贝尔宾团队理论测试</span>
       </router-link>
-      <router-link :to="{ path: '/surveynew' }">
+      <router-link :to="{ path: '/surveynew' }" active-class="active">
         <span>点击创建新问卷</span>
       </router-link>
     </div>

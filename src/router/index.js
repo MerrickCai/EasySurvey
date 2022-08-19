@@ -31,7 +31,7 @@ const routes = [
             },
             {
                 path: 'surveynew',
-                component: surveynew
+                component: surveynew,
             }
         ]
     },
