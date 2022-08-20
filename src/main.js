@@ -11,7 +11,7 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 app.use(ElementPlus)
 
-// Pinia
+// Pinia状态管理
 import { createPinia } from 'pinia'
 app.use(createPinia())
 
@@ -19,5 +19,5 @@ app.use(createPinia())
 import router from './router/index.js'
 app.use(router)
 
-// 挂载实例
+// 挂载 Vue 实例
 app.mount('#app')

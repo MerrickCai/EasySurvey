@@ -1,41 +1,7 @@
 <script setup>
-//登录成功后跳转 导航栏显示   施工中
-import { useStore } from '../PiniaStores/index.js'
-const datas = useStore()
-datas.navShow = false
-import { onBeforeRouteLeave } from 'vue-router'
-onBeforeRouteLeave(() => { //用户登录成功
-   console.log(datas.user.status)
-   if (datas.user.status) {
-      datas.navShow = true
-   }
-})
-import axios from 'axios'
-// 利用localStorage 帮用户登录
-if (localStorage.length == 2) {
-   console.log('已记住密码，本次自动登录')
-   axios({
-      url: 'http://q.denglu1.cn:8080/user/login',
-      method: 'post',
-      data: {
-         "phone_number": localStorage.getItem('account'),
-         "password": localStorage.getItem('password')
-      },
-      withCredentials: true,
-      headers: { 'Content-Type': 'application/json' },
-   })
-      .then(response => {
-         console.log(response)
-         //记录用户本次登录数据到pinia
-         if (response.data.msg === '登陆成功') {
-            datas.user.status = true
-            datas.user.account = localStorage.getItem('account')
-            datas.user.password = localStorage.getItem('password')
-            datas.user.token = response.data.token
-         }
-      })
-      .catch(error => { console.log(error) })
-}
+import AccountLogin from '../components/AccountLogin.vue'
+import WechatLogin from '../components/WechatLogin.vue'
+import register from '../components/register.vue'
 //随机背景图
 const background = {
    url: ['/login_cloud.png', '/login_mountain.png', 'login_mount.jpg'],
@@ -62,7 +28,7 @@ const background_url = background.geturl()
             <h2>账号登录</h2>
          </router-link>
       </div>
-      <router-view></router-view>
+      <AccountLogin></AccountLogin>
    </div>
 </template>
 

@@ -1,31 +1,35 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
-//主路由
-const survey = () => import('../view/survey.vue')
-const login = () => import('../view/login.vue')
-const notFound = () => import('../view/notFound.vue')
+//统计数据页
 const statistics = () => import('../view/statistics.vue')
-const dev = () => import('../view/dev.vue')
 
-//嵌套路由
-const AccountLogin = () => import('../components/AccountLogin.vue')
-const WechatLogin = () => import('../components/WechatLogin.vue')
-const register = () => import('../components/register.vue')
+//登录注册页
+const login = () => import('../view/login.vue')
+
+//填写问卷页+创建问卷页
+const survey = () => import('../view/survey.vue')
 const survey1 = () => import('../components/survey1.vue')
 const survey2 = () => import('../components/survey2.vue')
 const surveynew = () => import('../components/surveynew.vue')
 
-//路由数组
+//404页
+const notFound = () => import('../view/notFound.vue')
+
 const routes = [
     {
         path: '/',
-        component: statistics,
-        meta:{requireLogin:false} //是否需要登录
+        meta: { requireLogin: true },
+        component: statistics
+    },
+    {
+        path: '/login',
+        meta: { requireLogin: false },
+        component: login
     },
     {
         path: '/survey',
+        meta: { requireLogin: true },
         component: survey,
-        meta:{requireLogin:false},//是否需要登录 
         redirect: "/survey/survey1/1",
         children: [
             {
@@ -42,35 +46,10 @@ const routes = [
             }
         ]
     },
-
     {
-        path: '/login',
-        component: login,
-        redirect: "/login/AccountLogin",
-        children: [
-            {
-                path: 'AccountLogin',
-                component: AccountLogin,
-            },
-            {
-                path: 'WechatLogin',
-                component: WechatLogin,
-            },
-            {
-                path: 'register',
-                component: register,
-            }
-        ],
-    },
-    {
-        path: '/dev', //匹配不到以上路径：跳转404页面
-        component: dev,
-        meta:{requireLogin:false} //是否需要登录
-    },
-    {
-        path: '/:path(.*)', //匹配不到以上路径：跳转404页面
-        component: notFound,
-        meta:{requireLogin:false} //是否需要登录
+        path: '/:path(.*)', //匹配不到以上路径=>404页面
+        meta: { requireLogin: false },
+        component: notFound
     },
 ]
 
