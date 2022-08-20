@@ -34,7 +34,11 @@ function login(account, password, remember) {
                localStorage.setItem('account', account)
                localStorage.setItem('password', password)
           }
+          if(route.query.redirect){ //判断用户是否从其他页面过来
           router.push({ path: route.query.redirect })
+          }else{
+               router.push({ path: '/' })
+          }
           return true
      }).catch((error) => {
           console.log('登录失败')
