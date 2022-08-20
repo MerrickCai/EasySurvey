@@ -17,9 +17,9 @@
       <!-- 新建问卷介绍 -->
       <p class="newintro">
         <span class="newintro_title">{{ fileword.intro.intro_title }}</span>
-        <span class="newintro_con" v-show="introshow" @click="changeintroshow">
+        <p class="newintro_con" v-show="introshow" @click="changeintroshow">
           {{ fileword.intro.intro_content }}
-        </span>
+        </p>
 
         <textarea
           cols="30"
@@ -34,18 +34,19 @@
       </p>
     </div>
     <div class="quearea">
+      <div class="questype">
+        <span class="typetitle">请选择问卷类型:</span>
+        <span class="typeall">
+        <router-link to="/surveynew/" active-class="typeclick">单选</router-link>
+        <router-link to="/surveynew/" active-class="typeclick">多选</router-link>
+        <router-link to="/survey/surveynew/matrixlist" active-class="typeclick">矩阵</router-link>
+        <router-link to="/surveynew/" active-class="typeclick">量表</router-link>
+        <router-link to="/surveynew/" active-class="typeclick">文本</router-link>
+        </span>
+      </div>
+      <!-- 题目列表 -->
       <ul>
-        <quesList></quesList>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
+        <router-view :fileword="fileword" :receive="receive" :deleteques="deleteques"></router-view>
       </ul>
     </div>
     <button class="push">发布问卷</button>
@@ -53,8 +54,8 @@
 </template>
 
 <script setup>
-import quesList from "../components/quesList.vue";
-import { nextTick, reactive, ref } from "vue";
+import { nextTick, onMounted, reactive, ref, provide, watch } from "vue";
+import { nanoid } from "nanoid";
 //存储问卷信息内容
 let fileword = reactive({
   status: {
@@ -77,7 +78,15 @@ let fileword = reactive({
       "每一题都要做，不要花太多的时间去想。所有的题目都没有“正确答案”，凭你读每一句子后的第一印象作答。 虽然没有时间限制，但应尽可能地争取以较快的速度完成，愈快愈好。",
     button: "开始答题",
   },
-  quesList: [],
+  quesList: [
+    {
+      id: nanoid(),
+      ques: "请输入题目标题",
+      value: 0,
+      series: 5,
+      font: [],
+    },
+  ],
 });
 
 //问卷标题修改
@@ -89,6 +98,7 @@ function changetitleshow() {
     titlein.value.focus();
   });
 }
+
 //问卷介绍修改
 let introshow = ref(true);
 let introin = ref(null);
@@ -97,6 +107,35 @@ function changeintroshow() {
   nextTick(() => {
     introin.value.focus();
   });
+}
+
+//添加题目滚轮滑到最下方
+let scroll = ref(0);
+function updatescroll() {
+  scroll.value = scroll.value + 1;
+}
+provide("changescroll", {
+  scroll,
+  updatescroll,
+});
+watch(scroll, () => {
+  let div = document.getElementsByClassName("quearea");
+  nextTick(() => {
+    div[0].scrollTop = div[0].scrollHeight;
+  });
+});
+
+//矩阵问卷新增问题
+function receive(quesobj) {
+  fileword.quesList.push(quesobj);
+}
+//矩阵问卷删除问题
+function deleteques(id) {
+  if (confirm("确定删除吗")) {
+    fileword.quesList = fileword.quesList.filter((quesitem) => {
+      return quesitem.id != id;
+    });
+  }
 }
 </script>
 
@@ -112,8 +151,9 @@ function changeintroshow() {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    font-family: "思源黑体";
     font-size: 36px;
-    font-weight: 500;
+    font-weight: 600;
     vertical-align: middle;
     width: fit-content;
     text-align: center;
@@ -145,9 +185,10 @@ function changeintroshow() {
       margin-bottom: 12px;
     }
     .newintro_con {
+      word-wrap: break-word; //超出页面自动换行
       width: 840px;
+      height: 50px;
       overflow: auto;
-      margin: 12px;
     }
     textarea {
       width: 780px;
@@ -157,11 +198,52 @@ function changeintroshow() {
     }
   }
   .quearea {
-    margin-top: 30px;
+    margin-top: 20px;
     height: 300px;
     overflow: auto;
-    > ul > li {
-      height: 50px;
+    .questype {
+      display: flex;
+      .typetitle {
+        position: relative;
+        font-size: 16px;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 1);
+        text-align: left;
+        &::after {
+          content: "";
+          display: block;
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          height: 4px;
+          width: 100%;
+          background-color: #1e6fff;
+          border-radius: 2px;
+        }
+      }
+      .typeall {
+        margin-left: 6px;
+        display: flex;
+        > a {
+          display: block;
+          width: 60px;
+          height: 24px;
+          margin-right: 12px;
+          text-align: center;
+          line-height: 24px;
+          color: rgba(30, 111, 255, 1);
+          font-size: 12px;
+          font-weight: 400;
+          opacity: 1;
+          box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
+        }
+        .typeclick {
+          background: rgba(235, 245, 255, 1);
+        }
+      }
+    }
+    > ul {
+      margin-top: 14px;
     }
   }
   .push {
