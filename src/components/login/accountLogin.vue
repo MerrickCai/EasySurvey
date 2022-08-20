@@ -23,25 +23,27 @@ function login(account, password, remember) {
           headers: { 'Content-Type': 'application/json' },
           data: { "phone_number": account, "password": password }
      }).then((response) => {
-          //写入用户数据
-          datas.user.status = true
-          datas.user.account = account
-          datas.user.password = password
-          datas.user.userId = response.data.userId
-          datas.user.token = response.data.token
-          datas.user.refreshtoken = response.data.refreshtoken
-          if (remember) { //确认用户是否自动登录
-               localStorage.setItem('account', account)
-               localStorage.setItem('password', password)
+          if (response.data.code === 200) { //账号密码正确
+               //写入用户数据
+               datas.user.status = true
+               datas.user.account = account
+               datas.user.password = password
+               datas.user.userId = response.data.userId
+               datas.user.token = response.data.token
+               datas.user.refreshtoken = response.data.refreshtoken
+               if (remember) { //确认用户是否自动登录
+                    localStorage.setItem('account', account)
+                    localStorage.setItem('password', password)
+               }
+               if (route.query.redirect) { //判断用户是否从其他页面过来
+                    router.push({ path: route.query.redirect })
+               } else {
+                    router.push({ path: '/' })
+               }
+          } else { //response.data.code === 401
+               alert('账号密码错误')
           }
-          if (route.query.redirect) { //判断用户是否从其他页面过来
-               router.push({ path: route.query.redirect })
-          } else {
-               router.push({ path: '/' })
-          }
-          return true
-     }).catch((error) => {
-          console.log('登录失败')
+     }).catch((error) => {//登录失败
           console.log(error)
      })
 }
@@ -53,22 +55,19 @@ function login(account, password, remember) {
                <a @click="viewId = 0">微信登录</a>
                <a active @click="viewId = 1">账号登录</a>
           </div>
-
           <div class="typeArea">
                <input type="text" v-model="user.account" placeholder="用户名 / 手机号 / Email" onfocus="this.placeholder=''"
                     onblur="this.placeholder='用户名 / 手机号 / Email'" />
                <input type="password" v-model="user.password" placeholder="请输入登录密码" onfocus="this.placeholder=''"
                     onblur="this.placeholder='请输入登录密码'" />
           </div>
-
           <div class="functionArea">
                <div remember>
                     <input type="checkbox" id="checkbox" v-model="user.remember" />
                     <p><label for="checkbox">下次自动登录</label></p>
                </div>
-               <a>立即注册</a>
+               <a @click="viewId = 2">立即注册</a>
           </div>
-
           <div button @click="login(user.account, user.password, user.remember)">
                <div>登录</div>
           </div>
@@ -82,7 +81,7 @@ div.wrapper {
      justify-content: center;
      align-items: center;
      height: 400px;
-     width: 450px;
+     width: 420px;
 
      >div.selectArea {
           display: flex;
@@ -90,14 +89,14 @@ div.wrapper {
           justify-content: flex-start;
           align-items: flex-end;
           height: 80px;
-          width: 320px;
+          width: 70%;
 
           >a {
                display: block;
                position: relative;
-               font-size: 20px;
+               font-size: 19px;
                font-weight: bold;
-               margin-right: 25px;
+               margin-right: 15px;
                color: rgba(217, 217, 217, 1);
                cursor: pointer;
 
@@ -137,8 +136,8 @@ div.wrapper {
                border-radius: 10px;
                border: solid 1px rgba(217, 217, 217, 1);
                background-color: rgb(255, 255, 255);
-               text-indent: 15px;
-               font-size: 15px;
+               text-indent: 12px;
+               font-size: 13px;
 
                &:nth-child(1) {
                     margin-bottom: 15px;
@@ -237,7 +236,7 @@ div.wrapper {
                flex-direction: column;
                justify-content: center;
                align-items: center;
-               height: 50px;
+               height: 45px;
                background-color: rgba(30, 111, 255, 1);
                border-radius: 10px;
                width: 100%;
