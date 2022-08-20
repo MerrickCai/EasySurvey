@@ -48,7 +48,7 @@ nav {
         height: @navHeight;
         width: auto;
         cursor: pointer;
-        transition: transform 0.4s cubic-bezier(0.075, 0.82, 0.165, 1) 0s;
+        transition: all 0.2s ease-in-out 0s;
 
         &:hover {
             transform: scale(1.1);
