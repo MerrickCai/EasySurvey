@@ -22,7 +22,7 @@ datas.survey.currentSurvey = datas.survey.survey1[id - 1];
       <router-link :to="{ path: '/survey/survey2/1' }" active-class="active">
         <span>贝尔宾团队理论测试</span>
       </router-link>
-      <router-link :to="{ path: '/surveynew' }" active-class="active">
+      <router-link :to="{ path: '/survey/surveynew' }" active-class="active">
         <span>点击创建新问卷</span>
       </router-link>
     </div>

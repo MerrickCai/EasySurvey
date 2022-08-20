@@ -1,5 +1,5 @@
 <template>
-  <li :class="{ disappearques: disappearq == true }">
+  <li>
     <p class="itemnav">
       <span class="type">矩阵</span>
       <i class="sttitle">
@@ -36,7 +36,7 @@
         @click="num = index"
         :style="{ left: `${(600 / (blocknum - 1)) * (index - 1)}px` }"
       >
-        <input type="text" />
+        <input type="text" v-model="quesitem.font[index]" />
       </div>
       <div
         class="thumb"
@@ -49,7 +49,7 @@
       <input
         type="number"
         class="blocknum"
-        v-model.number="blocknum"
+        v-model.number="quesitem.series"
         oninput="if(value>7)value=7;if(value<3)value=3"
         max="7"
         min="3"
@@ -70,11 +70,16 @@ const props = defineProps(["quesitem", "fileword", "receive", "deleteques"]);
 //鼠标滚轮在添加新题目时滑动到底部
 let { scroll, updatescroll } = inject("changescroll");
 //添加问题
-let disappearq = ref(false);
 function addamount() {
-  disappearq.value = true;
-  const quesobj = { id: nanoid(), ques: "请输入题目标题", value: 0 };
+  const quesobj = {
+    id: nanoid(),
+    ques: "请输入题目标题",
+    value: 0,
+    series: 5,
+    font: [],
+  };
   props.receive(quesobj);
+  console.log(props.fileword.quesList);
 }
 //删除问题
 let deletematrix = ref(null);

@@ -39,7 +39,7 @@
         <span class="typeall">
         <router-link to="/surveynew/" active-class="typeclick">单选</router-link>
         <router-link to="/surveynew/" active-class="typeclick">多选</router-link>
-        <router-link to="/surveynew/matrixlist" active-class="typeclick">矩阵</router-link>
+        <router-link to="/survey/surveynew/matrixlist" active-class="typeclick">矩阵</router-link>
         <router-link to="/surveynew/" active-class="typeclick">量表</router-link>
         <router-link to="/surveynew/" active-class="typeclick">文本</router-link>
         </span>
@@ -83,6 +83,8 @@ let fileword = reactive({
       id: nanoid(),
       ques: "请输入题目标题",
       value: 0,
+      series: 5,
+      font: [],
     },
   ],
 });
