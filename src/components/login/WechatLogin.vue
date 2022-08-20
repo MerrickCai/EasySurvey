@@ -1,44 +1,55 @@
 <script setup>
-
+import { inject } from 'vue'
+const viewId = inject('viewId')
 </script>
 
 <template>
    <div class="wrapper">
+      <div class="title">
+         <a @click="viewId = 0">微信登录</a>
+         <a @click="viewId = 1">账号登录</a>
+      </div>
       <img src='/login_icon1.png' />
-      <h2 class="tips">使用微信扫一扫登录</h2>
    </div>
 </template>
 
 <style lang="less" scoped>
+@rem: 0.9px;
 @a: 0.9px;
 
 .wrapper {
-   position: relative;
-   width: 440*@a;
-   height: 380*@a;
-   z-index: -1;
-   >img{
-      display: block;
-      height: 180px;
-      width: 180px;
-      object-fit: contain;
-      position: absolute;
-      top:50%;
-      left: 50%;
-      transform: translate(-50%,-40%);
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   height: 400px;
+   width: 450px;
+
+   .title {
+      display: flex;
+      left: 60*@a;
+      top: 60*@a;
+
+      a {
+         font-weight: bold;
+         font-size: 20*@a;
+         margin-right: 32*@a;
+         line-height: 28*@a;
+         position: relative;
+
+         color: rgba(217, 217, 217, 1);
+         cursor: pointer;
+
+         &:hover {
+            color: #000;
+         }
+      }
    }
-   >.tips {
-      font-size: 14*@a;
-      font-weight: 400;
-      letter-spacing: 0*@a;
-      line-height: 22*@a;
-      color: rgba(0, 0, 0, 1);
-      text-align: left;
-      vertical-align: top;
-      position: absolute;
-      bottom: 32*@a;
-      left: 50%;
-      transform: translateX(-50%);
+
+   >img {
+      display: block;
+      height: 300px;
+      width: 300px;
    }
 }
 </style>

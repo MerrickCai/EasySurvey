@@ -32,7 +32,7 @@ const datas = useStore()
 
 .navbar-enter-active,
 .navbar-leave-active {
-    transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1) 0s;
+    transition: all 0.2s linear 0s;
 }
 
 .navbar-enter-from,
@@ -91,6 +91,7 @@ nav {
         align-items: center;
         height: @navHeight;
         width: auto;
+        overflow: hidden;
 
         >div {
             display: flex;
