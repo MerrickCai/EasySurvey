@@ -20,12 +20,14 @@ const datas = useStore()
             </div>
         </div>
         <div links>
-            <template v-if="datas.navShow">
-                <div button @click="routerPush('/survey')">创建问卷</div>
-                <div img @click="routerPush('/dev')"><img src="/navbar_1.png" /></div>
-                <div img avatar @click="routerPush('/dev')"><img src="/navbar_3.jpg" /></div>
-                <div img @click="routerPush('/login')"><img src="/navbar_2.png" /></div>
-            </template>
+            <Transition name="navbar">
+                <div v-show="datas.navShow">
+                    <div button @click="routerPush('/survey')">创建问卷</div>
+                    <div img @click="routerPush('/dev')"><img src="/navbar_1.png" /></div>
+                    <div img avatar @click="routerPush('/dev')"><img src="/navbar_3.jpg" /></div>
+                    <div img @click="routerPush('/login')"><img src="/navbar_2.png" /></div>
+                </div>
+            </Transition>
         </div>
     </nav>
 </template>
@@ -37,6 +39,19 @@ const datas = useStore()
 @themeColor2: rgba(30, 113, 255, 0.8);
 @themeColor3: rgba(71, 145, 255, 1);
 
+.navbar-enter-active {
+    transition: all 0.2s ease-in-out;
+}
+
+.navbar-leave-active {
+    transition: all 0.2s ease-in-out;
+}
+
+.navbar-enter-from,
+.navbar-leave-to {
+    transform: translateX(10px);
+    opacity: 0;
+}
 
 nav {
     display: flex;
@@ -101,50 +116,62 @@ nav {
         height: calc(@navHeight - 10px);
         width: auto;
 
-        >div[button] {
-            display: block;
-            height: 80%;
+        >div {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: flex-end;
+            align-items: center;
+            height: calc(@navHeight - 10px);
             width: auto;
-            margin-right: 4rem;
-            padding: 0 15px;
-            background-color: @themeColor3;
-            border-radius: 10px;
-            color: rgb(255, 255, 255);
-            font-size: 1.6rem;
-            line-height: calc((@navHeight - 10px)*0.8);
 
-            &:hover {
-                cursor: pointer;
-            }
-        }
+            >div[button] {
+                display: block;
+                height: 80%;
+                width: auto;
+                margin-right: 4rem;
+                padding: 0 15px;
+                background-color: @themeColor3;
+                border-radius: 10px;
+                color: rgb(255, 255, 255);
+                font-size: 1.6rem;
+                line-height: calc((@navHeight - 10px)*0.8);
 
-        >div[img] {
-            display: block;
-            height: 80%;
-            width: auto;
-            margin-right: 4rem;
-
-            &[avatar] {
-                >img {
-                    display: block;
-                    height: calc(@navHeight*0.8);
-                    width: calc(@navHeight*0.8);
-                    border-radius: 50%;
-                    object-fit: cover;
+                &:hover {
+                    cursor: pointer;
                 }
             }
 
-            &:hover {
-                cursor: pointer;
-            }
-
-            >img {
+            >div[img] {
                 display: block;
-                height: 100%;
+                height: 80%;
                 width: auto;
-                object-fit: contain;
+                margin-right: 4rem;
+
+                &[avatar] {
+                    >img {
+                        display: block;
+                        height: calc(@navHeight*0.8);
+                        width: calc(@navHeight*0.8);
+                        border-radius: 50%;
+                        object-fit: cover;
+                    }
+                }
+
+                &:hover {
+                    cursor: pointer;
+                }
+
+                >img {
+                    display: block;
+                    height: 100%;
+                    width: auto;
+                    object-fit: contain;
+                }
             }
         }
+
+
     }
 }
 </style>
