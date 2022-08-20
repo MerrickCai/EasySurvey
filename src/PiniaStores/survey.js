@@ -484,6 +484,15 @@ export const survey2 = [
             {
                 id: 1,
                 questiontitle: '一、我认为我能为团队做出的贡献是：',
+                score: 10,
+                //分配分数的时候要用到staticScore
+                staticScore:10,
+                // slider的背景颜色
+                bcg: '#f5f5f5',
+               //滑块的样式
+                silderSrc: '/blue.png',
+                titleBorder: 0,
+                progressPartbcg: '#ccc',
                 question: [
                     {
                         detail: 'A. 我能很快地发现并把握住新的机遇。',
@@ -525,17 +534,19 @@ export const survey2 = [
                         value: 0,
                         isEdit: false,
                     }],
-                score: 10,
-             // slider的背景颜色
-                bcg: '#f5f5f5',
-            //滑块的样式
-                silderSrc: '/blue.png',
-                titleBorder: 0,
-                progressPartbcg :'#ccc'
             },
             {
                 id: 2,
                 questiontitle: '二、在团队中，我可能有的弱点是：',
+                score: 10,
+             //分配分数的时候要用到staticScore
+                staticScore:10,
+                // slider的背景颜色
+                bcg: '#f5f5f5',
+               //滑块的样式
+                silderSrc: '/blue.png',
+                titleBorder: 0,
+                 progressPartbcg :'#ccc',
                 question: [
                     {
                         detail: 'A.如果会议没有得到很好的组织、控制和主持，我会感到不痛快。',
@@ -577,17 +588,20 @@ export const survey2 = [
                         value: 0,
                         isEdit: false,
                     }],
-                score: 10,
-             // slider的背景颜色
-                bcg: '#f5f5f5',
-            //滑块的样式
-                silderSrc: '/blue.png',
-                titleBorder: 0,
-                progressPartbcg :'#ccc'
+
             },
             {
                 id: 3,
-                    questiontitle: '三、当我与其他人共同进行一项工作时：',
+                questiontitle: '三、当我与其他人共同进行一项工作时：',
+                score: 10,
+                //分配分数的时候要用到staticScore
+                staticScore:10,
+                // slider的背景颜色
+                bcg: '#f5f5f5',
+               //滑块的样式
+                silderSrc: '/blue.png',
+                titleBorder:0,
+                progressPartbcg :'#ccc',
                 question: [
                     {
                         detail: 'A.我有在不施加任何压力的情况下，去影响其他人的能力。',
@@ -629,18 +643,21 @@ export const survey2 = [
                         value: 0,
                         isEdit: false,
                     }],
-                score: 10,
-             // slider的背景颜色
-                bcg: '#f5f5f5',
-            //滑块的样式
-                silderSrc: '/blue.png',
-                titleBorder:0,
-                progressPartbcg :'#ccc'
+
             
             },
             {
                 id: 4,
                 questiontitle: '四、我在工作团队中的特征是：',
+                score: 10,
+                //分配分数的时候要用到staticScore
+                staticScore:10,
+                // slider的背景颜色
+                bcg: '#f5f5f5',
+                //滑块的样式
+                silderSrc: '/blue.png',
+                titleBorder: 0,
+                progressPartbcg :'#ccc',
                 question: [
                     {
                         detail: 'A.我有兴趣更多地了解我的同事。',
@@ -682,18 +699,23 @@ export const survey2 = [
                         value: 0,
                         isEdit: false,
                     }],
-                score: 10,
-             // slider的背景颜色
-                bcg: '#f5f5f5',
-            //滑块的样式
-                silderSrc: '/blue.png',
-                titleBorder: 0,
-                progressPartbcg :'#ccc'
+
                 
             },
             {
                 id: 5,
                 questiontitle: '五、在工作中，我得到满足，因为：',
+                score: 10,
+                //分配分数的时候要用到staticScore
+                staticScore: 10, 
+                //分配分数的时候要用到staticScore
+                staticScore:10,
+                // slider的背景颜色
+                bcg: '#f5f5f5',
+               //滑块的样式
+                silderSrc: '/blue.png',
+                titleBorder: 0,
+                progressPartbcg :'#ccc',
                 question: [
                     {
                         detail: 'A. 我喜欢分析情况，权衡所有可能的选择。',
@@ -735,18 +757,21 @@ export const survey2 = [
                         value: 0,
                         isEdit: false,
                     }],
-                score: 10,
-             // slider的背景颜色
-                bcg: '#f5f5f5',
-            //滑块的样式
-                silderSrc: '/blue.png',
-                titleBorder: 0,
-                progressPartbcg :'#ccc'
+
                 
             },
             {
                 id: 6,
                 questiontitle: '六、如果突然给我一件困难的工作，而且时间有限，人员不熟：',
+                score: 10,
+                //分配分数的时候要用到staticScore
+                staticScore:10,
+                // slider的背景颜色
+                bcg: '#f5f5f5',
+                //滑块的样式
+                silderSrc: '/blue.png',
+                titleBorder: 0,
+                progressPartbcg :'#ccc',
                 question: [
                     {
                         detail: 'A. 在有新方案之前，我宁愿先躲进角落，拟定出一个解脱困境的方案。',
@@ -788,18 +813,21 @@ export const survey2 = [
                         value: 0,
                         isEdit: false,
                     }],
-                score: 10,
-             // slider的背景颜色
-                bcg: '#f5f5f5',
-            //滑块的样式
-                silderSrc: '/blue.png',
-                titleBorder: 0,
-                progressPartbcg :'#ccc'
+
                 
             },
             {
                 id: 7,
                 questiontitle: '七、对于那些在团队工作中或与周围人共事时所遇到的问题：',
+                score: 10,
+                //分配分数的时候要用到staticScore
+                 staticScore:10,
+                // slider的背景颜色
+                bcg: '#f5f5f5',
+               //滑块的样式
+                silderSrc: '/blue.png',
+                titleBorder: 0,
+                progressPartbcg :'#ccc',
                 question: [
                     {
                         detail: 'A. 我很容易对那些阻碍前进的人表现出不耐烦。',
@@ -841,13 +869,6 @@ export const survey2 = [
                         value: 0,
                         isEdit: false,
                     }],
-                score: 10,
-             // slider的背景颜色
-                bcg: '#f5f5f5',
-            //滑块的样式
-                silderSrc: '/blue.png',
-                titleBorder: 0,
-                progressPartbcg :'#ccc'
                 
             },
         ],

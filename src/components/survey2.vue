@@ -42,7 +42,7 @@
 
        <div class="content" ref="content" @scroll="onScroll($event)">
         <!-- 题目 -->
-            <div class="main" v-for="item of survey.questionList" :key="item.id" >
+            <div class="main" v-for="(item,i) of survey.questionList" :key="item.id" >
                 <div class="questiontitle"  ref="questiontitle"   :style="{border:`${item.titleBorder}px solid red`}">{{item.questiontitle}}
                    <p class="scoretips">可支配分数
                      <span class="score">{{item.score}}</span>
@@ -51,18 +51,10 @@
                 <div class="questionList" v-for="(elem,index) of item.question" :key="index">
                     {{elem.detail}}
                         <div class="slide" :style="{backgroundColor:`${item.bcg}`}">
-                            <div class="Gradient" :style="{ width:`${(elem.value)*40}px` }"></div>
-                            <div class="bar1" @click="distributeScore(elem,item,0)"></div>
-                            <div class="bar2" @click="distributeScore(elem,item,1)"></div>
-                            <div class="bar3" @click="distributeScore(elem,item,2)"></div>
-                            <div class="bar4" @click="distributeScore(elem,item,3)"></div>
-                            <div class="bar5" @click="distributeScore(elem,item,4)"></div>
-                            <div class="bar6" @click="distributeScore(elem,item,5)"></div>
-                            <div class="bar7" @click="distributeScore(elem,item,6)"></div>
-                            <div class="bar8" @click="distributeScore(elem,item,7)"></div>
-                            <div class="bar9" @click="distributeScore(elem,item,8)"></div>
-                            <div class="bar10" @click="distributeScore(elem,item,9)"></div>
-                            <div class="bar11" @click="distributeScore(elem,item,10)"></div>
+                             <div class="Gradient" :style="{ width:`${(elem.value)*40}px` }"></div>
+                            <div v-for="(b,j) of barArr[i]" :key="i" :class="j%2===0 ? 'doublebar' :'bar'" @click="distributeScore(elem,item,j)">
+                               <span class="num" v-if="!(j%2)">{{j}}</span>
+                            </div>
                             <img class="thumb" :style="{ left: `${-6 + (elem.value) * 40}px`}"  :src="elem.value===0 ? item.silderSrc : '/blue.png' ">	
                             <span class="edit"  v-show="!elem.isEdit" @click="editHandle(elem,index)">{{elem.value}}<img src="/icon-edit.png"></span>
                             <input class="editinput" type="text" v-show="elem.isEdit" @blur="editHandle2(elem,item,$event)"  @keydown.enter="editHandle2(elem,item,$event)"  :value="elem.value" ref="myRef">
@@ -87,21 +79,25 @@
 </template>
 
 <script setup>
+import { map } from 'lodash';
 import { ref, computed, reactive, watch, onMounted, nextTick, onBeforeUnmount, toRef } from 'vue';
 import { useStore } from '../PiniaStores/index.js'
-
-
-// onMounted(() => {
-//     console.log(datas.survey.survey2[0]);
-// });
+//数据
+const datas = useStore();
 
 const survey = computed(() => {
     return datas.survey.survey2[0];
 });
 
+onMounted(() => {
+    // console.log(datas.survey.survey2[0]);
+    // console.log(barArr);
+    // console.log(survey.value.questionList[0].score);
+    // console.log(progressPartHeight);
+    // console.log(survey.value.questionList.length);
+});
 
-//数据
-const datas = useStore();
+const barArr = new Array(survey.value.questionList.length).fill(0).map((item,index)=>new Array(survey.value.questionList[index].score+1));
 
 
 // 跳转：介绍页==>答题页
@@ -111,20 +107,22 @@ function toContent(){
 }
 
 
+
 // ---分配分数相关的变量和方法---
 // 分配分数
 function distributeScore(elem, item, num){
-     let newValue = num;
-     let oldValue = elem.value
+     let newValue = num/1;
+    let oldValue = elem.value / 1;
+const staticScore = survey.value.questionList[0].score;
     if (item.score <= 0) {
-        if (oldValue <= newValue) {
+        if (oldValue < newValue) {
             return  
         } 
     }
     if (item.score < (newValue - oldValue)) return;
 
       elem.value = num;
-      item.score = 10;
+      item.score = item.staticScore;
       item.question.forEach(e => {
         item.score -= e.value;
       });
@@ -139,8 +137,7 @@ function distributeScore(elem, item, num){
     }
     // console.log(elem.value);
     //  console.log(-6+(elem.value)*40);
-     
-     
+        
 }
 // 切换编辑的input框
 const myRef = ref(null);
@@ -206,7 +203,7 @@ function onScroll(e) {
 // 获取全部questiontitle
 const questiontitle = ref(null);
 // 进度条片段的高度
-const progressPartHeight = 300 / (survey.value.questionList.length);
+const progressPartHeight = 300 / (survey.value.questionList.length);  
 
 
 // 提交按钮  跳转：答题页==>完成页
@@ -233,7 +230,7 @@ function toFinish() {
     if (uncomplete.length) {
         content.value.scrollTop = questiontitle.value[fisrtreturn].offsetTop;
     }
-   console.log(progressPartHeight);
+//    console.log(progressPartHeight);
    
    if(!flag) return
     jump.value = 3;
@@ -583,25 +580,35 @@ function toFinish() {
             position: absolute;
             right: 30px;
             bottom: 6px;
+            display: flex;
+            justify-content: space-between;
          @Width:400px;
          .barStyle(){
-                position: absolute;
-                z-index: 1;
-                bottom: 0px;
-                width: 3px;
+                width: 4px;
                 height: 11px;
-                border-radius: 4px;
+                border-radius: 2px;
                 background-color: rgba(204, 204, 204, 1);
+                transform: translateY(-3px);
                 cursor: pointer;
-                &::before {
-                    position: absolute;
-                    top: -15px;
-                    right: 4px;
-                    height: 1px;
-                    width: 1px;
-                    color: #cccccc;
-                    font-size: 8px;
-            }
+         }
+         .bar{
+            .barStyle();
+        }
+        .num{
+            position: absolute;
+            top: -15px;
+            right: -5px;
+            height: 15px;
+            width: 15px;
+            color: #cccccc;
+            font-size: 8px;
+            text-align: center;
+            display: block;
+        }
+        .doublebar{
+            .barStyle();
+            transform: translateY(-7px);
+            height: 15px;
         }
         .Gradient{
             width: 0px;
@@ -612,92 +619,7 @@ function toFinish() {
             z-index: 9;
             pointer-events: none;
         }
-         div.bar1 {
-            left: -2px;
-            .barStyle();
-            &::before {
-                content: '0';
-            }
-            height: 15px;
-        }
-        div.bar2 {
-            left: calc(-2px + (@Width/10)*1);
-            .barStyle();
-            &::before {
-                content: '';
-            }
-        }
-        div.bar3 {
-            left: calc(-2px + (@Width/10)*2);
-             &::before {
-                content: '2';
-            }
-            .barStyle();
-            height: 15px;
-        }
-        div.bar4 {
-            left: calc(-2px + (@Width/10)*3);
-            .barStyle();
-            &::before {
-                content: '';
-            }
-        }
-        div.bar5 {
-            position: absolute;
-            left: calc(-2px + (@Width/10)*4);
-            &::before {
-                content: '4';
-            }
-            .barStyle();
-            height: 15px;
-        }
 
-        div.bar6 {
-            left: calc(-2px + (@Width/10)*5);
-            .barStyle();
-            &::before {
-                content: '';
-            }
-        }
-        div.bar7 {
-            left: calc(-2px + (@Width/10)*6);
-            &::before {
-                content: '6';
-            }
-            .barStyle();
-            height: 15px;
-        }
-        div.bar8 {
-            left: calc(-2px + (@Width/10)*7);
-            .barStyle();
-            &::before {
-                content: '';
-            }
-        }
-        div.bar9 {
-            left: calc(-2px + (@Width/10)*8);
-            &::before{
-                 content: '8';
-            }
-            .barStyle();
-            height: 15px;
-        }
-        div.bar10 {
-            left: calc(-2px + (@Width/10)*9);
-            .barStyle();
-            &::before {
-                content: '';
-            }
-        }        
-        div.bar11 {
-            left: calc(-2px + (@Width/10)*10);
-            .barStyle();
-            &::before{
-                 content: '10';
-                 right: 8px;
-            }
-            height: 15px;
-        }
          @thumbSize:14px;
          @themeColor:#1e6fff;
             img.thumb {
@@ -711,25 +633,6 @@ function toFinish() {
                 // border-radius: 5px;
                 transition: all 0.2s linear;
                 z-index: 10;
-                // &::before {
-                //     content: '';
-                //     position: absolute;
-                //     top: calc((@thumbSize - 7px)/2);
-                //     left: calc((@thumbSize - 6px)/2);
-                //     height: 6px;
-                //     width: 1px;
-                //     background-color: rgb(255, 255, 255);
-                // }
-
-                // &::after {
-                //     content: '';
-                //     position: absolute;
-                //     top: calc((@thumbSize - 7px)/2);
-                //     left: calc((@thumbSize + 5px)/2);
-                //     height:6px;
-                //     width: 1px;
-                //     background-color: rgb(255, 255, 255);
-                // }
             }
             .edit{
                 display: inline-block;
