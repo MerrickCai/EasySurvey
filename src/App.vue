@@ -60,8 +60,8 @@ router.beforeEach(async (to, from) => {
 </script>
 
 <template>
-  <navbar></navbar>
   <main>
+    <navbar></navbar>
     <div>
       <!--主路由容器-->
       <router-view></router-view>
@@ -71,18 +71,17 @@ router.beforeEach(async (to, from) => {
 </template>
 
 <style lang="less" scoped>
-@nav: 80px;
+@navSpan: 90px;
 
 main {
   display: block;
   height: 100vh;
   width: var(--safe_area);
   margin: 0 auto;
-  padding-top: @nav;
 
   >div {
     display: block;
-    height: calc(100vh - @nav);
+    height: calc(100vh - @navSpan);
     width: 100%;
     overflow: visible;
   }

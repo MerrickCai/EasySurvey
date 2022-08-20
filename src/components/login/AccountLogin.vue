@@ -2,7 +2,7 @@
 import { reactive } from 'vue';
 
 //获取 Pinia 的用户数据
-import { useStore } from "../PiniaStores/index.js";
+import { useStore } from "../../PiniaStores/index.js";
 const datas = useStore();
 
 

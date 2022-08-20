@@ -1,7 +1,17 @@
 <script setup>
-import AccountLogin from '../components/AccountLogin.vue'
-import WechatLogin from '../components/WechatLogin.vue'
-import register from '../components/register.vue'
+import AccountLogin from '../components/login/AccountLogin.vue'
+import WechatLogin from '../components/login/WechatLogin.vue'
+import register from '../components/login/register.vue'
+
+
+import { useStore } from '../PiniaStores/index.js'
+const datas = useStore()
+datas.navShow = false
+import { onBeforeRouteLeave } from 'vue-router'
+onBeforeRouteLeave(() => {
+   datas.navShow = true
+})
+
 //随机背景图
 const background = {
    url: ['/login_cloud.png', '/login_mountain.png', 'login_mount.jpg'],
