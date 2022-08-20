@@ -29,11 +29,10 @@
        <!-- 进度条 -->
         <div class="zhedang" ></div>
         <div class="progress" @click="scrollTo($event)">
-       
-        <div>
+            <div>
         <!-- 进度条分段，使得点击提交按钮后进度条可以分段显示红色背景，多少个题目就分多少段 (外面多个div包裹下面的style的last-child才能生效)-->
             <div class="progress-part" v-for="item of survey.questionList" :key="item.id" :style="{height:`${progressPartHeight}px` , backgroundColor:`${item.progressPartbcg}`}"></div>
-        </div>
+            </div>
             <div class="outer-thumb" ref="thumb" >
                 <div class="bluebcg"  ref="bluebcg" :style="{height:`${bluebcg_height}px`}"></div>
             </div>
@@ -41,21 +40,24 @@
         </div>
 
        <div class="content" ref="content" @scroll="onScroll($event)">
-        <!-- 题目 -->
+        <!-- 题目 -->  
+        <!-- 第一层循环 item, i -->
             <div class="main" v-for="(item,i) of survey.questionList" :key="item.id" >
                 <div class="questiontitle"  ref="questiontitle"   :style="{border:`${item.titleBorder}px solid red`}">{{item.questiontitle}}
                    <p class="scoretips">可支配分数
                      <span class="score">{{item.score}}</span>
                    </p>
                 </div>
+                <!-- 第二层循环 elem,index -->
                 <div class="questionList" v-for="(elem,index) of item.question" :key="index">
                     {{elem.detail}}
-                        <div class="slide" :style="{backgroundColor:`${item.bcg}`}">
-                             <div class="Gradient" :style="{ width:`${(elem.value)*40}px` }"></div>
+                        <div class="slide" :style="{backgroundColor:`${item.bcg}`}">   <!--400为slide的总宽度，根据分数总数来定每次滑块滑多少-->
+                             <div class="Gradient" :style="{ width:`${(elem.value)* (400/(barArr[i].length-1))}px` }"></div>
+                             <!-- 第三层循环 b,j -->
                             <div v-for="(b,j) of barArr[i]" :key="i" :class="j%2===0 ? 'doublebar' :'bar'" @click="distributeScore(elem,item,j)">
                                <span class="num" v-if="!(j%2)">{{j}}</span>
                             </div>
-                            <img class="thumb" :style="{ left: `${-6 + (elem.value) * 40}px`}"  :src="elem.value===0 ? item.silderSrc : '/blue.png' ">	
+                            <img class="thumb" :style="{ left: `${(elem.value) * (400/(barArr[i].length-1))}px`}"  :src="elem.value===0 ? item.silderSrc : '/blue.png' ">	
                             <span class="edit"  v-show="!elem.isEdit" @click="editHandle(elem,index)">{{elem.value}}<img src="/icon-edit.png"></span>
                             <input class="editinput" type="text" v-show="elem.isEdit" @blur="editHandle2(elem,item,$event)"  @keydown.enter="editHandle2(elem,item,$event)"  :value="elem.value" ref="myRef">
                     </div>                          
@@ -91,10 +93,12 @@ const survey = computed(() => {
 
 onMounted(() => {
     // console.log(datas.survey.survey2[0]);
-    // console.log(barArr);
+    console.log(barArr);
     // console.log(survey.value.questionList[0].score);
     // console.log(progressPartHeight);
     // console.log(survey.value.questionList.length);
+    // console.log(400/(barArr[1].length-1));
+    
 });
 
 const barArr = new Array(survey.value.questionList.length).fill(0).map((item,index)=>new Array(survey.value.questionList[index].score+1));
@@ -574,14 +578,17 @@ function toFinish() {
         position: relative;
         // 滑块
         .slide{
-            width: 400px;
+            // 400+4（其中的4为末尾一个bar的宽度，所以总宽度为404。
+            width: 404px;
             height: 8px;
             background-color:#f5f5f5;
+            box-sizing: border-box;
             position: absolute;
             right: 30px;
             bottom: 6px;
             display: flex;
             justify-content: space-between;
+            background-color: pink;
          @Width:400px;
          .barStyle(){
                 width: 4px;
@@ -618,6 +625,7 @@ function toFinish() {
             left: 0;
             z-index: 9;
             pointer-events: none;
+            transition: all 0.2s linear;
         }
 
          @thumbSize:14px;
@@ -630,6 +638,7 @@ function toFinish() {
                 height: @thumbSize;
                 width: @thumbSize;
                 object-fit: cover;
+                transform: translateX(-5px);
                 // border-radius: 5px;
                 transition: all 0.2s linear;
                 z-index: 10;
@@ -698,7 +707,6 @@ function toFinish() {
 div.extrachange{
     width: 1210px;
 }
-
 
 
 

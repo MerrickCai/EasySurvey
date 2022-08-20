@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref ,onMounted} from 'vue'
 
 
 //路由
@@ -16,6 +16,17 @@ onBeforeRouteUpdate((to) => {
 import { useStore } from '../PiniaStores/index.js'
 const datas = useStore()
 
+
+// --- 滚动条部分的变量和方法 ---
+const thumb = ref(null);
+const text = ref(null);
+const content = ref(null);
+// 滚动条蓝色背景
+let bluebcg_height = ref(0);
+// 滚动条的蓝色背景的dom
+const bluebcg = ref(null);
+// 中转变量
+let temp;
 
 //进度条   
 const scrollDistence = ref(0)
@@ -34,10 +45,61 @@ function onScroll(e) {
     scrollDistence.value = e.currentTarget.scrollHeight - e.currentTarget.offsetHeight
   }
   //转换
-  e.currentTarget.previousSibling.firstChild.setAttribute('style', `top: ${(400) * (e.currentTarget.scrollTop / scrollDistence.value) - 8}px`);
-  e.currentTarget.previousSibling.lastChild.innerHTML = `${Math.ceil((e.currentTarget.scrollTop / scrollDistence.value) * 100)} %`
+  thumb.value.setAttribute('style', `top: ${(400) * (e.currentTarget.scrollTop / scrollDistence.value) - 8}px`);
+  text.value.innerHTML = `${Math.ceil((e.currentTarget.scrollTop / scrollDistence.value) * 100)} %`
+    temp = thumb.value.style.top.split("");
+    temp.pop();
+    temp.pop();
+    temp = temp.join("") / 1 + 8;
+    bluebcg_height.value= temp;
 }
 
+// ---提交按钮之后相关的变量和方法---
+// 获取全部questiontitle
+const ques = ref(null);
+// 进度条片段的高度
+const progressPartHeight = 400 / (datas.survey.currentSurvey.quesList.length);  
+
+onMounted(() => {
+//  console.log(barArr[0]);
+  
+ console.log(datas.survey.currentSurvey.quesList[0].font[1]);
+ 
+});
+
+// 提交按钮  跳转：答题页==>完成页
+function toFinish() {
+   console.log(ques.value[0]);
+   
+    let flag = true;
+    // 记录未完成的问卷id
+    const uncomplete = [];
+    // 滚动的蓝色背景失效
+    bluebcg.value.style.display = 'none';
+    datas.survey.currentSurvey.quesList.forEach(item => {
+        item.titleBorder = 0;
+        item.progressPartbcg = '#5a9afa';
+        if (item.value === 0) {
+            flag = false;
+            uncomplete.push(item.id);   
+            item.titleBorder = 1;
+            item.progressPartbcg = 'red';
+        }
+    });
+    
+    // console.log(uncomplete); 
+    // console.log(questiontitle.value[0].offsetTop); 保存对应未完成题目距离顶部的距离
+    
+    let fisrtreturn = uncomplete[0] - 1;
+    if (uncomplete.length) {
+        content.value.scrollTop = ques.value[fisrtreturn].offsetTop;
+    }
+     
+  if (!flag) return;
+  datas.survey.currentSurvey.status.toEnd();
+}
+
+const barArr = new Array(datas.survey.currentSurvey.quesList.length).fill(0).map((item,index)=>new Array(datas.survey.currentSurvey.quesList[index].series).fill(0));
 </script>
 
 <template>
@@ -60,11 +122,19 @@ function onScroll(e) {
     <div class="survey">
       <p title>{{ datas.survey.currentSurvey.intro.title }}</p>
       <div class="scrollbar_shadow"></div>
-      <div class="progress" @click="scrollTo($event)">
-        <div class="thumb"></div>
-        <div class="text">0 %</div>
-      </div>
-      <div class="survey_area" @scroll="onScroll($event)">
+      <!-- 进度条 -->
+        <div class="progress" @click="scrollTo($event)">
+            <div>
+        <!-- 进度条分段，使得点击提交按钮后进度条可以分段显示红色背景，多少个题目就分多少段 (外面多个div包裹下面的style的last-child才能生效)-->
+               <div class="progress-part" v-for="(item,index) of datas.survey.currentSurvey.quesList" :key="item.id" :style="{height:`${progressPartHeight}px` , backgroundColor:`${item.progressPartbcg}`}"></div>
+            </div>
+            <div class="thumb" ref="thumb" >
+                <div class="bluebcg"  ref="bluebcg" :style="{height:`${bluebcg_height}px`}"></div>
+            </div>
+            <div class="text" ref="text">0%</div>
+        </div>
+
+      <div class="survey_area" @scroll="onScroll($event)" ref="content">
         <p intro>
           <span intro_title>{{ datas.survey.currentSurvey.intro.intro_title }}</span>
           <span intro_content>{{ datas.survey.currentSurvey.intro.intro_content }}</span>
@@ -72,21 +142,21 @@ function onScroll(e) {
           <span warn_content>{{ datas.survey.currentSurvey.intro.warn_content }}</span>
         </p>
         <div class="ques">
-          <div v-for="(item, index) of datas.survey.currentSurvey.quesList">
+          <div v-for="(item, index) of datas.survey.currentSurvey.quesList" ref="ques"   :style="{border:`${item.titleBorder}px solid red`}">
             <div>
               <span>{{ index + 1 }}.</span><span>{{ item.ques }}</span>
             </div>
+            <!-- 总宽度为600-->
             <div :style="{ backgroundColor: `${item.value === 0 ? 'rgba(245, 245, 245, 1)' : 'rgb(229,229,229)'}` }">
-              <div class="bar1" @click="item.value = 1"></div>
-              <div class="bar2" @click="item.value = 2"></div>
-              <div class="bar3" @click="item.value = 3"></div>
-              <div class="bar4" @click="item.value = 4"></div>
-              <div class="bar5" @click="item.value = 5"></div>
-              <div class="thumb" :style="{ left: `${item.value === 0 ? -12 : -12 + (item.value - 1) * 150}px` }"></div>
+            <!-- bar -->
+                <div v-for="(b,i) of barArr[index]" class="bar" @click="item.value = i+1">
+                   <div class="font">{{datas.survey.currentSurvey.quesList[index].font[i]}}</div>
+                </div>
+              <div class="thumb" :style="{ left: `${item.value === 0 ? -12 : -12 + (item.value - 1) * 600/(barArr[index].length-1)}px` }"></div>
             </div>
           </div>
         </div>
-        <div class="submitBtn" @click="datas.survey.currentSurvey.status.toEnd">提交问卷</div>
+        <div class="submitBtn" @click="toFinish">提交问卷</div>
       </div>
     </div>
   </template>
@@ -141,7 +211,28 @@ div.survey {
       border-radius: 5px;
       background-color: rgba(255, 255, 255, 1);
       cursor: pointer;
+         &::before{
+            content: '';
+            width: 100%;
+            height: 100%;
+            border-radius: 5px;
+            position: absolute;
+            background-color: rgba(255, 255, 255, 1);
+            box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.25);
+        }
     }
+    // 进度条分段
+        .progress-part{
+           width: 8px;
+           pointer-events: none;
+        //    border-radius: 5px;   
+            &:first-child{
+                 border-radius: 5px 5px 0 0;  
+            }    
+            &:last-child{
+                 border-radius: 0 0 5px 5px;  
+            }
+         }
 
     >div.text {
       position: absolute;
@@ -155,6 +246,17 @@ div.survey {
       font-size: 16px;
       line-height: 18px;
     }
+     .bluebcg{
+          background-color: #4791ff;
+          width: 8px;
+          position: absolute;
+          bottom: 8px;
+          height: 200px;
+          left: 2px;
+          z-index: -9;
+          border-radius: 5px;
+          pointer-events: none;
+      }
 
     position: absolute;
     z-index: 1;
@@ -246,9 +348,8 @@ div.survey {
     >div.ques {
       display: block;
       height: auto;
-      width: 100%;
+      width: 750px;
       margin-top: 50px;
-
       >div {
         display: block;
         height: auto;
@@ -288,133 +389,42 @@ div.survey {
 
         >div:nth-child(2) {
           @Height: 20px;
-          @Width: 600px;
+          @Width: 605px;
           @barWidth: 5px;
           @barHeight: 30px;
           @thumbSize: @Height+4px;
-
+     
           display: block;
           height: @Height;
           width: @Width;
           margin-left: 15px;
           background-color: rgba(245, 245, 245, 1);
           position: relative;
-
-          >div.bar1 {
-            position: absolute;
-            z-index: 1;
-            bottom: 0;
-            left: -2px;
+          display: flex;
+          justify-content: space-between;
+          transform: translateX(45px);
+          >div.bar{
             height: @barHeight;
             width: @barWidth;
             background-color: rgba(204, 204, 204, 1);
             cursor: pointer;
-
-            &::before {
-              content: "完全不符合";
-              position: absolute;
-              top: -2rem;
-              left: 0;
-              height: 5rem;
-              width: 8rem;
-              color: rgb(0, 0, 0);
-              font-size: 1.6rem;
-              line-height: 1.6rem;
-            }
+            transform:translateX(-2px) translateY(-9px);
           }
-
-          >div.bar2 {
-            position: absolute;
-            z-index: 1;
-            bottom: 0;
-            left: calc(-2px + (@Width / 4) * 1);
-            height: @barHeight;
-            width: @barWidth;
-            background-color: rgba(204, 204, 204, 1);
-            cursor: pointer;
-
-            &::before {
-              content: "不太符合";
-              position: absolute;
-              top: -2rem;
-              left: -3rem;
-              height: 5rem;
-              width: 6.4rem;
-              color: rgb(0, 0, 0);
-              font-size: 1.6rem;
-              line-height: 1.6rem;
-            }
+          .font{
+            font-family: '思源黑体';
+            text-align: center;
+             width: 60px;
+             font-size: 12;
+             position: absolute;
+             left: 50%;
+             transform: translateX(-50%);
+             bottom: 36px;
+             font-size: 12px;
+             font-weight: 400;
+             letter-spacing: 0px;
+             color: rgba(0, 0, 0, 1);
+             vertical-align: top;
           }
-
-          >div.bar3 {
-            position: absolute;
-            z-index: 1;
-            bottom: 0;
-            left: calc(-2px + (@Width / 4) * 2);
-            height: @barHeight;
-            width: @barWidth;
-            background-color: rgba(204, 204, 204, 1);
-            cursor: pointer;
-
-            &::before {
-              content: "部分符合";
-              position: absolute;
-              top: -2rem;
-              left: -3rem;
-              height: 5rem;
-              width: 6.4rem;
-              color: rgb(0, 0, 0);
-              font-size: 1.6rem;
-              line-height: 1.6rem;
-            }
-          }
-
-          >div.bar4 {
-            position: absolute;
-            z-index: 1;
-            bottom: 0;
-            left: calc(-2px + (@Width / 4) * 3);
-            height: @barHeight;
-            width: @barWidth;
-            background-color: rgba(204, 204, 204, 1);
-            cursor: pointer;
-
-            &::before {
-              content: "比较符合";
-              position: absolute;
-              top: -2rem;
-              left: -3rem;
-              height: 5rem;
-              width: 6.4rem;
-              color: rgb(0, 0, 0);
-              font-size: 1.6rem;
-              line-height: 1.6rem;
-            }
-          }
-
-          >div.bar5 {
-            position: absolute;
-            z-index: 1;
-            bottom: 0;
-            left: calc(-2px + (@Width / 4) * 4);
-            height: @barHeight;
-            width: @barWidth;
-            background-color: rgba(204, 204, 204, 1);
-            cursor: pointer;
-
-            &::before {
-              content: "完全符合";
-              position: absolute;
-              top: -2rem;
-              right: 0;
-              height: 5rem;
-              width: 6.4rem;
-              color: rgb(0, 0, 0);
-              font-size: 1.6rem;
-              line-height: 1.6rem;
-            }
-          }
-
           >div.thumb {
             position: absolute;
             z-index: 2;
@@ -425,7 +435,7 @@ div.survey {
             background-color: @themeColor;
             border-radius: 5px;
             transition: all 0.2s linear;
-
+         
             &::before {
               content: "";
               position: absolute;
