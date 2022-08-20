@@ -30,17 +30,6 @@ const datas = useStore()
 @navSpan: 90px;
 @navHeight: 60px;
 
-.navbar-enter-active,
-.navbar-leave-active {
-    transition: all 0.2s linear 0s;
-}
-
-.navbar-enter-from,
-.navbar-leave-to {
-    transform: translateX(10px);
-    filter: opacity(0);
-}
-
 nav {
     display: flex;
     flex-direction: row;
@@ -92,6 +81,17 @@ nav {
         height: @navHeight;
         width: auto;
         overflow: hidden;
+
+        >.navbar-enter-active,
+        >.navbar-leave-active {
+            transition: all 0.2s ease-in-out 0s;
+        }
+
+        >.navbar-enter-from,
+        >.navbar-leave-to {
+            transform: translateX(10px);
+            filter: opacity(0);
+        }
 
         >div {
             display: flex;

@@ -74,45 +74,46 @@ const show = ref(true)
 </script>
 
 <template>
-<div>
-     <div class="wrapper" v-show="show">
-          <div class="title">
-               <a @click="viewId = 0">
-                    <h2>微信登录</h2>
-               </a>
-               <a @click="viewId = 1">
-                    <h2>账号登录</h2>
-               </a>
-          </div>
-          <input class="info" type="text" v-model="loginInfo.account" placeholder="用户名 / 手机号 / Email"
-               onfocus="this.placeholder=''" onblur="this.placeholder='用户名 / 手机号 / Email'">
-          <input class="info password" type="password" v-model="loginInfo.pass" placeholder="请输入登录密码"
-               onfocus="this.placeholder=''" onblur="this.placeholder='请输入登录密码'">
-          <input class="checkbox" type="checkbox">
-          <p class="tips">下次自动登录</p>
-          <a @click="show = !show" class="register">立即注册</a>
-          <el-button class="loginbtn" type="primary" @click="login(loginInfo.account, loginInfo.pass)">登录</el-button>
-     </div>
-
-     <div class='register_wrapper' v-show="!show">
-          <div class="innerbox">
-               <h2>用户注册</h2>
-               <img src="/circle.png" class="head" alt="">
-               <el-button type="primary" class="upload">+上传头像</el-button><br>
-               <div class="inputArr">
-                    <input type="text" class='input' v-for="(item, index) of dataArr " :key="index"
-                         :placeholder=mes[index] :name="item.name" @focus="mes[index] = ''"
-                         @blur="showDetail(item, index)">
+     <div>
+          <div class="wrapper" v-show="show">
+               <div class="title">
+                    <a @click="viewId = 0">
+                         <h2>微信登录</h2>
+                    </a>
+                    <a @click="viewId = 1">
+                         <h2>账号登录</h2>
+                    </a>
                </div>
+               <input class="info" type="text" v-model="loginInfo.account" placeholder="用户名 / 手机号 / Email"
+                    onfocus="this.placeholder=''" onblur="this.placeholder='用户名 / 手机号 / Email'">
+               <input class="info password" type="password" v-model="loginInfo.pass" placeholder="请输入登录密码"
+                    onfocus="this.placeholder=''" onblur="this.placeholder='请输入登录密码'">
+               <input class="checkbox" type="checkbox">
+               <p class="tips">下次自动登录</p>
+               <a @click="show = !show" class="register">立即注册</a>
+               <el-button class="loginbtn" type="primary" @click="login(loginInfo.account, loginInfo.pass)">登录
+               </el-button>
           </div>
 
-          <input type="checkbox" class="checkbox" id="checkbox1" name="">
-          <p class="checkbox_detail">我同意<a href="">《用户隐私协议》</a>和<a href="">《隐私条款》</a></p>
+          <div class='register_wrapper' v-show="!show">
+               <div class="innerbox">
+                    <h2>用户注册</h2>
+                    <img src="/circle.png" class="head" alt="">
+                    <el-button type="primary" class="upload">+上传头像</el-button><br>
+                    <div class="inputArr">
+                         <input type="text" class='input' v-for="(item, index) of dataArr " :key="index"
+                              :placeholder=mes[index] :name="item.name" @focus="mes[index] = ''"
+                              @blur="showDetail(item, index)">
+                    </div>
+               </div>
 
-          <el-button type="primary" class="sumbit">创建用户</el-button><br>
-          <p class="login">已有账号？<a @click="show = !show">立即登录</a>
-          </p>
-     </div>
+               <input type="checkbox" class="checkbox" id="checkbox1" name="">
+               <p class="checkbox_detail">我同意<a href="">《用户隐私协议》</a>和<a href="">《隐私条款》</a></p>
+
+               <el-button type="primary" class="sumbit">创建用户</el-button><br>
+               <p class="login">已有账号？<a @click="show = !show">立即登录</a>
+               </p>
+          </div>
      </div>
 </template>
 
@@ -123,140 +124,138 @@ const show = ref(true)
 .wrapper {
      height: 400px;
      width: 450px;
-}
+     position: relative;
 
-.info {
-     position: absolute;
-     top: 100px;
-     left: 60*@rem;
-     width: 320*@rem;
-     height: 44 *@rem;
-     text-indent: 17px;
-     border: 1px solid rgba(217, 217, 217, 1);
-     border-radius: 5px;
-     outline: none;
+     .info {
+          position: absolute;
+          top: 120px;
+          left: 60*@rem;
+          width: 320*@rem;
+          height: 44 *@rem;
+          text-indent: 17px;
+          border: 1px solid rgba(217, 217, 217, 1);
+          border-radius: 5px;
+          outline: none;
 
-     &.password {
-          top: 176*@rem;
+          &.password {
+               top: 196*@rem;
+          }
+
+          &::placeholder {
+               font-size: 12px;
+               letter-spacing: 0px;
+               line-height: 20px;
+               color: rgba(217, 217, 217, 1);
+               text-align: left;
+               vertical-align: top;
+          }
+
      }
 
-     &:first-child {
-          top: 120*@rem;
+     .checkbox {
+          position: absolute;
+          top: 277*@rem;
+          left: 70*@rem;
+          height: 15px;
+          width: 15px;
+          cursor: pointer;
+
+          &::after {
+               content: ' ';
+               display: block;
+               position: absolute;
+               z-index: 5;
+               top: 0;
+               left: 0;
+               width: 13px;
+               height: 13px;
+               padding-left: 1px;
+               font-size: 10px;
+               font-weight: bold;
+               text-align: center;
+               background-color: rgb(255, 255, 255);
+               border: rgba(217, 217, 217, 1) solid 1px;
+          }
+
+          &:checked::after {
+               content: "✓";
+               color: rgba(255, 250, 250, 1);
+               background-color: rgba(30, 111, 255, 1);
+               background-clip: padding-box;
+               border: transparent;
+          }
      }
 
-     &::placeholder {
-          font-size: 12px;
-          letter-spacing: 0px;
-          line-height: 20px;
+     .tips {
+          position: absolute;
+          left: 89*@rem;
+          top: 277*@rem ;
+          font-size: 10*@rem;
+          letter-spacing: 0*@rem;
+          line-height: 20*@rem;
           color: rgba(217, 217, 217, 1);
           text-align: left;
           vertical-align: top;
      }
 
-}
-
-.checkbox {
-     position: absolute;
-     top: 239*@rem;
-     left: 70*@rem;
-     height: 15px;
-     width: 15px;
-     cursor: pointer;
-
-     &::after {
-          content: ' ';
-          display: block;
+     .register {
+          font-size: 10*@rem;
+          letter-spacing: 0*@rem;
+          line-height: 20*@rem;
           position: absolute;
-          z-index: 5;
-          top: 0;
-          left: 0;
-          width: 13px;
-          height: 13px;
-          padding-left: 1px;
-          font-size: 10px;
-          font-weight: bold;
-          text-align: center;
-          background-color: rgb(255, 255, 255);
-          border: rgba(217, 217, 217, 1) solid 1px;
-     }
-
-     &:checked::after {
-          content: "✓";
-          color: rgba(255, 250, 250, 1);
-          background-color: rgba(30, 111, 255, 1);
-          background-clip: padding-box;
-          border: transparent;
-     }
-}
-
-.tips {
-     position: absolute;
-     left: 89*@rem;
-     top: 236*@rem ;
-     font-size: 10*@rem;
-     letter-spacing: 0*@rem;
-     line-height: 20*@rem;
-     color: rgba(217, 217, 217, 1);
-     text-align: left;
-     vertical-align: top;
-}
-
-.loginbtn {
-     width: 320*@rem;
-     height: 44*@rem;
-     position: absolute;
-     bottom: 54*@rem;
-     left: 50%;
-     transform: translateX(-50%);
-}
-
-.register {
-     font-size: 10*@rem;
-     letter-spacing: 0*@rem;
-     line-height: 20*@rem;
-     position: absolute;
-     top: 238*@rem;
-     right: 72*@rem;
-     color: rgba(71, 145, 255, 1);
-     cursor: pointer;
-}
-
-
-.title {
-     display: flex;
-     position: absolute;
-     left: 60*@a;
-     top: 60*@a;
-     user-select: none;
-     -webkit-user-drag: none;
-
-     h2 {
-          box-sizing: border-box;
-          font-weight: bold !important;
-          font-size: 20*@a;
-          margin-right: 32*@a;
-          letter-spacing: 0*@a;
-          line-height: 28*@a;
-          font-weight: 500;
-          position: relative;
+          top: 280*@rem;
+          right: 72*@rem;
+          color: rgba(71, 145, 255, 1);
           cursor: pointer;
-          color: rgba(217, 217, 217, 1);
+     }
 
-          &:hover {
-               color: #000;
-          }
+     .loginbtn {
+          width: 320*@rem;
+          height: 44*@rem;
+          position: absolute;
+          bottom: 60*@rem;
+          left: 50%;
+          transform: translateX(-50%);
+     }
 
-          &::after {
-               content: '';
-               // width: 40*@a;
-               width: 0;
-               height: 4*@a;
-               position: absolute;
-               left: 40*@a;
-               bottom: -6*@a;
-               background-color: rgba(30, 111, 255, 1);
-               transition: all .4s linear;
-               border-radius: 5*@a;
+
+
+     .title {
+          display: flex;
+          position: absolute;
+          left: 60*@a;
+          top: 60*@a;
+          user-select: none;
+          -webkit-user-drag: none;
+
+          h2 {
+               box-sizing: border-box;
+               font-weight: bold !important;
+               font-size: 20*@a;
+               margin-right: 32*@a;
+               letter-spacing: 0*@a;
+               line-height: 28*@a;
+               font-weight: 500;
+               position: relative;
+               cursor: pointer;
+               color: rgba(217, 217, 217, 1);
+
+               &:hover {
+                    color: #000;
+               }
+
+               &::after {
+                    content: '';
+                    // width: 40*@a;
+                    width: 0;
+                    height: 4*@a;
+                    position: absolute;
+                    left: 40*@a;
+                    bottom: -6*@a;
+                    background-color: rgba(30, 111, 255, 1);
+                    transition: all .4s linear;
+                    border-radius: 5*@a;
+               }
           }
      }
 }
@@ -264,6 +263,7 @@ const show = ref(true)
 .register_wrapper {
      height: 500px;
      width: 450px;
+     position: relative;
 
      .innerbox {
           position: absolute;

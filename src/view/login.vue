@@ -31,33 +31,25 @@ const background_url = background.geturl()
 </script>
 
 <template>
-   <!--动态背景-->
-   <Teleport to="#app">
-      <div class="background">
-         <img :src="background_url" alt="登陆注册页背景" />
-      </div>
-   </Teleport>
-   <!--动态组件-->
-   <main>
-      <Transition name="fade" mode="out-in">
-         <KeepAlive>
-            <component :is="currentView"></component>
-         </KeepAlive>
-      </Transition>
-   </main>
+   <div wrapper>
+      <!--动态背景-->
+      <Teleport to="#app">
+         <div class="background">
+            <img :src="background_url" alt="登陆注册页背景" />
+         </div>
+      </Teleport>
+      <main>
+         <!--动态组件-->
+         <Transition name="fade" mode="out-in">
+            <KeepAlive>
+               <component :is="currentView"></component>
+            </KeepAlive>
+         </Transition>
+      </main>
+   </div>
 </template>
 
 <style lang="less" scoped>
-.fade-enter-active,
-.navbar-leave-active {
-   transition: all 0.2s linear 0s;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-   filter: opacity(0);
-}
-
 div.background {
    position: fixed;
    top: 0;
@@ -73,16 +65,34 @@ div.background {
    }
 }
 
-main {
-   display: block;
-   width: auto;
-   height: auto;
-   position: absolute;
-   top: 50%;
-   left: 50%;
-   transform: translate(-50%, -50%);
-   background-color: rgb(255, 255, 255);
-   box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
-   border-radius: 5px;
+div[wrapper] {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   height: 100%;
+   width: 100%;
+
+   >main {
+      display: block;
+      width: auto;
+      height: auto;
+      background-color: rgb(255, 255, 255);
+      box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
+      border-radius: 5px;
+      margin-top:-90px;
+
+      .fade-enter-active,
+      .navbar-leave-active {
+         transition: all 0.2s linear 0s;
+      }
+
+      .fade-enter-from,
+      .fade-leave-to {
+         filter: opacity(0);
+      }
+   }
+
+
 }
 </style>
