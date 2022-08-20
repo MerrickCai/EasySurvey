@@ -2,30 +2,24 @@
 //路由
 import { useRouter } from 'vue-router'
 const router = useRouter()
-function routerPush(path) {
-    router.push({ path })
-}
-
-//Pinia数据
+//顶部导航栏组件的展示（除logo外的控件）
 import { useStore } from '../PiniaStores/index.js'
 const datas = useStore()
 </script>
 
 <template>
     <nav>
-        <div logo>
-            <div button @click="routerPush('/')">
-                <img src="/logo.png" />
-                <div>问卷易</div>
-            </div>
+        <div logo @click="router.push('/')">
+            <img src="/logo.png" />
+            <div>问卷易</div>
         </div>
         <div links>
             <Transition name="navbar">
                 <div v-show="datas.navShow">
-                    <div button @click="routerPush('/survey')">创建问卷</div>
-                    <div img @click="routerPush('/dev')"><img src="/navbar_1.png" /></div>
-                    <div img avatar @click="routerPush('/dev')"><img src="/navbar_3.jpg" /></div>
-                    <div img @click="routerPush('/login')"><img src="/navbar_2.png" /></div>
+                    <div button @click="router.push('/survey')">创建问卷</div>
+                    <div img @click="router.push('/404404')"><img src="/navbar_1.png" /></div>
+                    <div img avatar @click="router.push('/404')"><img src="/navbar_3.jpg" /></div>
+                    <div img @click="router.push('/login')"><img src="/navbar_2.png" /></div>
                 </div>
             </Transition>
         </div>
@@ -33,24 +27,18 @@ const datas = useStore()
 </template>
 
 <style lang="less" scoped>
-@nav: 80px;
+@navSpan: 90px;
 @navHeight: 60px;
-@themeColor1: rgb(30, 111, 255);
-@themeColor2: rgba(30, 113, 255, 0.8);
-@themeColor3: rgba(71, 145, 255, 1);
 
-.navbar-enter-active {
-    transition: all 0.2s ease-in-out;
-}
-
+.navbar-enter-active,
 .navbar-leave-active {
-    transition: all 0.2s ease-in-out;
+    transition: all 0.2s linear 0s;
 }
 
 .navbar-enter-from,
 .navbar-leave-to {
     transform: translateX(10px);
-    opacity: 0;
+    filter: opacity(0);
 }
 
 nav {
@@ -59,12 +47,8 @@ nav {
     flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
-    height: @nav;
+    height: @navSpan;
     width: var(--safe_area);
-    position: fixed;
-    z-index: 10;
-    top: 0;
-    left: calc((100% - var(--safe_area))/2);
 
     >div[logo] {
         display: flex;
@@ -74,35 +58,27 @@ nav {
         align-items: center;
         height: @navHeight;
         width: auto;
+        cursor: pointer;
+        transition: transform 0.4s cubic-bezier(0.075, 0.82, 0.165, 1) 0s;
 
-        >div[button] {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            justify-content: center;
-            align-items: center;
+        &:hover {
+            transform: scale(1.1);
+        }
+
+        >img {
+            display: block;
             height: 100%;
             width: auto;
+            object-fit: contain;
+        }
 
-            &:hover {
-                cursor: pointer;
-            }
-
-            >img {
-                display: block;
-                height: 100%;
-                width: auto;
-                object-fit: contain;
-            }
-
-            >div {
-                display: block;
-                height: 100%;
-                width: auto;
-                color: rgb(0, 0, 0);
-                font-size: 2.8rem;
-                line-height: @navHeight;
-            }
+        >div {
+            display: block;
+            height: 100%;
+            width: auto;
+            color: rgb(0, 0, 0);
+            font-size: 2.8rem;
+            line-height: @navHeight;
         }
     }
 
@@ -113,54 +89,39 @@ nav {
         flex-wrap: nowrap;
         justify-content: flex-end;
         align-items: center;
-        height: calc(@navHeight - 10px);
+        height: @navHeight;
         width: auto;
+        overflow: hidden;
 
         >div {
             display: flex;
             flex-direction: row;
             flex-wrap: nowrap;
-            justify-content: flex-end;
+            justify-content: center;
             align-items: center;
             height: calc(@navHeight - 10px);
             width: auto;
 
             >div[button] {
                 display: block;
-                height: 80%;
+                height: calc(@navHeight - 20px);
                 width: auto;
                 margin-right: 4rem;
                 padding: 0 15px;
-                background-color: @themeColor3;
+                background-color: rgba(71, 145, 255, 1);
                 border-radius: 10px;
                 color: rgb(255, 255, 255);
                 font-size: 1.6rem;
-                line-height: calc((@navHeight - 10px)*0.8);
-
-                &:hover {
-                    cursor: pointer;
-                }
+                line-height: calc(@navHeight - 20px);
+                cursor: pointer;
             }
 
             >div[img] {
                 display: block;
-                height: 80%;
+                height: calc(@navHeight - 20px);
                 width: auto;
                 margin-right: 4rem;
-
-                &[avatar] {
-                    >img {
-                        display: block;
-                        height: calc(@navHeight*0.8);
-                        width: calc(@navHeight*0.8);
-                        border-radius: 50%;
-                        object-fit: cover;
-                    }
-                }
-
-                &:hover {
-                    cursor: pointer;
-                }
+                cursor: pointer;
 
                 >img {
                     display: block;
@@ -168,10 +129,18 @@ nav {
                     width: auto;
                     object-fit: contain;
                 }
+
+                &[avatar] {
+                    >img {
+                        display: block;
+                        height: calc(@navHeight - 20px);
+                        width: calc(@navHeight - 20px);
+                        border-radius: 50%;
+                        object-fit: cover;
+                    }
+                }
             }
         }
-
-
     }
 }
 </style>
