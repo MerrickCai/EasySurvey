@@ -12,7 +12,8 @@ onBeforeRouteLeave(() => {
 import { ref, computed, provide } from 'vue'
 import accountLogin from '../components/login/accountLogin.vue'
 import wechatLogin from '../components/login/wechatLogin.vue'
-const viewList = [wechatLogin, accountLogin]
+import register from '../components/login/register.vue'
+const viewList = [wechatLogin, accountLogin, register]
 const viewId = ref(1)
 const currentView = computed(() => viewList[viewId.value])
 provide('viewId', viewId)
@@ -50,6 +51,8 @@ const background_url = background.geturl()
 </template>
 
 <style lang="less" scoped>
+@navSpan: 90px;
+
 div.background {
    position: fixed;
    top: 0;
@@ -79,12 +82,12 @@ div[wrapper] {
       height: auto;
       background-color: rgb(255, 255, 255);
       box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
-      border-radius: 5px;
-      margin-top:-90px;
+      border-radius: 10px;
+      margin-top: -@navSpan;
 
       .fade-enter-active,
       .navbar-leave-active {
-         transition: all 0.2s linear 0s;
+         transition: all 0.2s ease-in-out 0s;
       }
 
       .fade-enter-from,
@@ -92,7 +95,5 @@ div[wrapper] {
          filter: opacity(0);
       }
    }
-
-
 }
 </style>

@@ -1,413 +1,250 @@
 <script setup>
-
-import { ref, reactive, inject } from 'vue'
-
+//登陆注册页视图切换
+import { reactive, inject } from 'vue'
 const viewId = inject('viewId')
 
-
-//获取 Pinia 的用户数据
-import { useStore } from "../../PiniaStores/index.js";
-const datas = useStore();
-import { useRouter } from 'vue-router'
-import { useRoute } from 'vue-router'
-const route = useRoute()
+//登录逻辑
+const user = reactive({ account: '', password: '', remember: false })
+import { useStore } from "../../PiniaStores/index.js"
+const datas = useStore()
+import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
-//登录
-const loginInfo = reactive({
-     account: '',
-     pass: ''
-})
+const route = useRoute()
 import axios from 'axios'
-function login(account, pass) {
+function login(account, password, remember) {
+     if (datas.user.status === true) { //确认用户是否登录
+          alert('您已经登录')
+          return true
+     }
      axios({
           url: 'https://q.denglu1.cn/user/login',
           method: 'post',
-          data: {
-               "phone_number": account,
-               "password": pass
-          },
           withCredentials: true,
           headers: { 'Content-Type': 'application/json' },
-     }).then(response => {
-          console.log(response)
-          //记录用户登录
-          if (response.data.msg === '登陆成功') {
-               datas.user.status = true
-               datas.user.account = account
-               datas.user.password = pass
-               datas.user.token = response.data.token
-               //保存用户信息到localStorage
+          data: { "phone_number": account, "password": password }
+     }).then((response) => {
+          //写入用户数据
+          datas.user.status = true
+          datas.user.account = account
+          datas.user.password = password
+          datas.user.userId = response.data.userId
+          datas.user.token = response.data.token
+          datas.user.refreshtoken = response.data.refreshtoken
+          if (remember) { //确认用户是否自动登录
                localStorage.setItem('account', account)
-               localStorage.setItem('password', pass)
-               if (route.query.redirect) {
-                    router.push({ path: route.query.redirect })
-               }
-               else {
-                    router.push({ path: '/' })
-               }
+               localStorage.setItem('password', password)
           }
-     }).catch(error => { console.log(error) })
+          if (route.query.redirect) { //判断用户是否从其他页面过来
+               router.push({ path: route.query.redirect })
+          } else {
+               router.push({ path: '/' })
+          }
+          return true
+     }).catch((error) => {
+          console.log('登录失败')
+          console.log(error)
+     })
 }
-
-const dataArr = [
-     {
-          name: 'username',
-          tips: '请输入用户名'
-     },
-     {
-          name: 'phone',
-          tips: '请输入手机号'
-     },
-     {
-          name: 'password',
-          tips: '设置密码（8-20位字母、数字或特殊符号）'
-     },]
-
-let mes = reactive([]);
-dataArr.forEach(item => {
-     mes.push(item.tips)
-});
-function showDetail(item, index) {
-     mes[index] = item.tips;
-}
-const show = ref(true)
 </script>
 
 <template>
-     <div>
-          <div class="wrapper" v-show="show">
-               <div class="title">
-                    <a @click="viewId = 0">
-                         <h2>微信登录</h2>
-                    </a>
-                    <a @click="viewId = 1">
-                         <h2>账号登录</h2>
-                    </a>
-               </div>
-               <input class="info" type="text" v-model="loginInfo.account" placeholder="用户名 / 手机号 / Email"
-                    onfocus="this.placeholder=''" onblur="this.placeholder='用户名 / 手机号 / Email'">
-               <input class="info password" type="password" v-model="loginInfo.pass" placeholder="请输入登录密码"
-                    onfocus="this.placeholder=''" onblur="this.placeholder='请输入登录密码'">
-               <input class="checkbox" type="checkbox">
-               <p class="tips">下次自动登录</p>
-               <a @click="show = !show" class="register">立即注册</a>
-               <el-button class="loginbtn" type="primary" @click="login(loginInfo.account, loginInfo.pass)">登录
-               </el-button>
+     <div class="wrapper">
+          <div class="selectArea">
+               <a @click="viewId = 0">微信登录</a>
+               <a active @click="viewId = 1">账号登录</a>
           </div>
 
-          <div class='register_wrapper' v-show="!show">
-               <div class="innerbox">
-                    <h2>用户注册</h2>
-                    <img src="/circle.png" class="head" alt="">
-                    <el-button type="primary" class="upload">+上传头像</el-button><br>
-                    <div class="inputArr">
-                         <input type="text" class='input' v-for="(item, index) of dataArr " :key="index"
-                              :placeholder=mes[index] :name="item.name" @focus="mes[index] = ''"
-                              @blur="showDetail(item, index)">
-                    </div>
+          <div class="typeArea">
+               <input type="text" v-model="user.account" placeholder="用户名 / 手机号 / Email" onfocus="this.placeholder=''"
+                    onblur="this.placeholder='用户名 / 手机号 / Email'" />
+               <input type="password" v-model="user.password" placeholder="请输入登录密码" onfocus="this.placeholder=''"
+                    onblur="this.placeholder='请输入登录密码'" />
+          </div>
+
+          <div class="functionArea">
+               <div remember>
+                    <input type="checkbox" id="checkbox" v-model="user.remember" />
+                    <p><label for="checkbox">下次自动登录</label></p>
                </div>
+               <a>立即注册</a>
+          </div>
 
-               <input type="checkbox" class="checkbox" id="checkbox1" name="">
-               <p class="checkbox_detail">我同意<a href="">《用户隐私协议》</a>和<a href="">《隐私条款》</a></p>
-
-               <el-button type="primary" class="sumbit">创建用户</el-button><br>
-               <p class="login">已有账号？<a @click="show = !show">立即登录</a>
-               </p>
+          <div button @click="login(user.account, user.password, user.remember)">
+               <div>登录</div>
           </div>
      </div>
 </template>
 
 <style lang="less" scoped>
-@rem: 0.9px;
-@a: 0.9px;
-
-.wrapper {
+div.wrapper {
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+     align-items: center;
      height: 400px;
      width: 450px;
-     position: relative;
 
-     .info {
-          position: absolute;
-          top: 120px;
-          left: 60*@rem;
-          width: 320*@rem;
-          height: 44 *@rem;
-          text-indent: 17px;
-          border: 1px solid rgba(217, 217, 217, 1);
-          border-radius: 5px;
-          outline: none;
-
-          &.password {
-               top: 196*@rem;
-          }
-
-          &::placeholder {
-               font-size: 12px;
-               letter-spacing: 0px;
-               line-height: 20px;
-               color: rgba(217, 217, 217, 1);
-               text-align: left;
-               vertical-align: top;
-          }
-
-     }
-
-     .checkbox {
-          position: absolute;
-          top: 277*@rem;
-          left: 70*@rem;
-          height: 15px;
-          width: 15px;
-          cursor: pointer;
-
-          &::after {
-               content: ' ';
-               display: block;
-               position: absolute;
-               z-index: 5;
-               top: 0;
-               left: 0;
-               width: 13px;
-               height: 13px;
-               padding-left: 1px;
-               font-size: 10px;
-               font-weight: bold;
-               text-align: center;
-               background-color: rgb(255, 255, 255);
-               border: rgba(217, 217, 217, 1) solid 1px;
-          }
-
-          &:checked::after {
-               content: "✓";
-               color: rgba(255, 250, 250, 1);
-               background-color: rgba(30, 111, 255, 1);
-               background-clip: padding-box;
-               border: transparent;
-          }
-     }
-
-     .tips {
-          position: absolute;
-          left: 89*@rem;
-          top: 277*@rem ;
-          font-size: 10*@rem;
-          letter-spacing: 0*@rem;
-          line-height: 20*@rem;
-          color: rgba(217, 217, 217, 1);
-          text-align: left;
-          vertical-align: top;
-     }
-
-     .register {
-          font-size: 10*@rem;
-          letter-spacing: 0*@rem;
-          line-height: 20*@rem;
-          position: absolute;
-          top: 280*@rem;
-          right: 72*@rem;
-          color: rgba(71, 145, 255, 1);
-          cursor: pointer;
-     }
-
-     .loginbtn {
-          width: 320*@rem;
-          height: 44*@rem;
-          position: absolute;
-          bottom: 60*@rem;
-          left: 50%;
-          transform: translateX(-50%);
-     }
-
-
-
-     .title {
+     >div.selectArea {
           display: flex;
-          position: absolute;
-          left: 60*@a;
-          top: 60*@a;
-          user-select: none;
-          -webkit-user-drag: none;
+          flex-direction: row;
+          justify-content: flex-start;
+          align-items: flex-end;
+          height: 80px;
+          width: 320px;
 
-          h2 {
-               box-sizing: border-box;
-               font-weight: bold !important;
-               font-size: 20*@a;
-               margin-right: 32*@a;
-               letter-spacing: 0*@a;
-               line-height: 28*@a;
-               font-weight: 500;
+          >a {
+               display: block;
                position: relative;
-               cursor: pointer;
+               font-size: 20px;
+               font-weight: bold;
+               margin-right: 25px;
                color: rgba(217, 217, 217, 1);
+               cursor: pointer;
 
-               &:hover {
-                    color: #000;
+               &[active] {
+                    color: rgb(0, 0, 0);
+
+                    &::before {
+                         content: '';
+                         position: absolute;
+                         left: 25%;
+                         bottom: -12px;
+                         height: 5px;
+                         width: 50%;
+                         background-color: rgba(30, 111, 255, 1);
+                         border-radius: 10px;
+                    }
                }
 
-               &::after {
-                    content: '';
-                    // width: 40*@a;
-                    width: 0;
-                    height: 4*@a;
-                    position: absolute;
-                    left: 40*@a;
-                    bottom: -6*@a;
-                    background-color: rgba(30, 111, 255, 1);
-                    transition: all .4s linear;
-                    border-radius: 5*@a;
+               &:not([active]):hover {
+                    color: rgb(0, 0, 0);
                }
           }
      }
-}
 
-.register_wrapper {
-     height: 500px;
-     width: 450px;
-     position: relative;
-
-     .innerbox {
-          position: absolute;
-          left: 80*@a;
-          top: 60*@a;
-
-          img.head {
-               width: 48*@a;
-               height: 48*@a;
-               position: absolute;
-               left: 8*@a;
-               top: 55*@a;
-          }
-
-          .upload {
-               width: 80*@a;
-               height: 22*@a;
-               position: absolute;
-               left: 86*@a;
-               top: 71*@a;
-               font-size: 10px;
-               padding: 10px;
-               background-color: rgba(30, 111, 255, 1);
-          }
-
-     }
-
-     p {
-          display: inline;
-     }
-
-     h2 {
-          font-weight: bold;
-          letter-spacing: 0*@a;
-          line-height: 28*@a;
-          font-size: 23px;
-          float: left;
-     }
-
-     .inputArr {
-          width: 320*@a;
-          height: 200*@a;
-          position: absolute;
-          top: 118*@a;
-          left: 0*@a;
+     >div.typeArea {
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
-          background-color: b;
+          justify-content: flex-end;
+          align-items: center;
+          height: 150px;
+          width: 70%;
 
-          .input {
-               width: 350*@a;
-               height: 54*@a;
-               margin-top: 6*@a;
-               text-indent: 14*@a;
-               border: 1*@a solid rgba(217, 217, 217, 1);
-               border-radius: 5*@a;
+          >input {
                outline: none;
+               height: 45px;
+               width: 100%;
+               border-radius: 10px;
+               border: solid 1px rgba(217, 217, 217, 1);
+               background-color: rgb(255, 255, 255);
+               text-indent: 15px;
+               font-size: 15px;
+
+               &:nth-child(1) {
+                    margin-bottom: 15px;
+               }
 
                &::placeholder {
-                    font-size: 12*@a;
-                    letter-spacing: 0*@a;
-                    line-height: 20*@a;
                     color: rgba(217, 217, 217, 1);
-                    text-align: left;
-                    vertical-align: top;
                }
           }
      }
 
-     .checkbox {
-          position: absolute;
-          left: 91*@a;
-          bottom: 129*@a;
-          height: 15px;
-          width: 15px;
-          cursor: pointer;
+     >div.functionArea {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: flex-start;
+          height: 70px;
+          width: 70%;
 
-          &::after {
-               content: ' ';
-               display: block;
-               position: absolute;
-               z-index: 5;
-               top: 0;
-               left: 0;
-               width: 13px;
-               height: 13px;
-               padding-left: 1px;
-               font-size: 10px;
-               font-weight: bold;
-               text-align: center;
-               background-color: rgb(255, 255, 255);
-               border: rgba(217, 217, 217, 1) solid 1px;
+          >div[remember] {
+               display: flex;
+               flex-direction: row;
+               justify-content: center;
+               align-items: center;
+               height: 50px;
+
+               >input {
+                    display: block;
+                    height: 13px;
+                    width: 13px;
+                    cursor: pointer;
+                    position: relative;
+                    margin: 0 10px;
+
+                    &::after {
+                         content: '';
+                         position: absolute;
+                         z-index: 1;
+                         top: 0;
+                         left: 0;
+                         display: block;
+                         width: 13px;
+                         height: 13px;
+                         font-size: 13px;
+                         font-weight: bold;
+                         line-height: 15px;
+                         text-align: center;
+                         background-color: rgb(255, 255, 255);
+                         border: rgba(217, 217, 217, 1) solid 1px;
+                    }
+
+                    &:checked::after {
+                         content: "✓";
+                         width: 15px;
+                         height: 15px;
+                         color: rgba(255, 250, 250, 1);
+                         background-color: rgba(30, 111, 255, 1);
+                         border: none;
+                    }
+               }
+
+               >p {
+                    display: block;
+                    font-size: 13px;
+                    color: rgba(217, 217, 217, 1);
+
+                    >label {
+                         cursor: pointer;
+                    }
+               }
           }
 
-          &:checked::after {
-               content: "✓";
-               color: rgba(255, 250, 250, 1);
-               background-color: rgba(30, 111, 255, 1);
-               background-clip: padding-box;
-               border: transparent;
-          }
-     }
-
-     .checkbox_detail {
-          position: absolute;
-          left: 120*@a;
-          bottom: 127.7*@a;
-          font-size: 10px;
-          font-weight: 400;
-          letter-spacing: 0*@a;
-          line-height: 20*@a;
-          color: rgba(217, 217, 217, 1);
-
-          a {
-               color: rgba(71, 145, 255, 1);
-          }
-     }
-
-     .sumbit {
-          width: 350*@a;
-          height: 54*@a;
-          position: absolute;
-          left: 80*@a;
-          bottom: 52*@a;
-          background-color: rgba(30, 111, 255, 1);
-          border-radius: 10px;
-     }
-
-     .login {
-          font-size: 10*@a;
-          font-weight: 400;
-          letter-spacing: 0*@a;
-          line-height: 20*@a;
-          position: absolute;
-          bottom: 22*@a;
-          left: 184*@a;
-          color: rgba(217, 217, 217, 1);
-
-          a {
+          >a {
+               flex: 1;
+               display: flex;
+               flex-direction: row;
+               justify-content: flex-end;
+               align-items: center;
+               height: 50px;
+               font-size: 13px;
                color: rgba(71, 145, 255, 1);
                cursor: pointer;
           }
      }
 
+     >div[button] {
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          align-items: center;
+          height: 100px;
+          width: 70%;
+
+          >div {
+               display: flex;
+               flex-direction: column;
+               justify-content: center;
+               align-items: center;
+               height: 50px;
+               background-color: rgba(30, 111, 255, 1);
+               border-radius: 10px;
+               width: 100%;
+               color: rgba(255, 255, 255, 1);
+               font-size: 16px;
+               cursor: pointer;
+          }
+     }
 }
 </style>

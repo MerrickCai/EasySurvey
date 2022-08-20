@@ -44,13 +44,16 @@ function onScroll(e) {
   if (scrollDistence.value === 0) {
     scrollDistence.value = e.currentTarget.scrollHeight - e.currentTarget.offsetHeight
   }
+    scrollDistence.value = e.currentTarget.scrollHeight - e.currentTarget.offsetHeight
   //转换
-  thumb.value.setAttribute('style', `top: ${(400) * (e.currentTarget.scrollTop / scrollDistence.value) - 8}px`);
+  thumb.value.setAttribute('style', `top: ${(400) * (e.currentTarget.scrollTop / scrollDistence.value) }px`);
   text.value.innerHTML = `${Math.ceil((e.currentTarget.scrollTop / scrollDistence.value) * 100)} %`
+  console.log(e.currentTarget.scrollTop,scrollDistence.value);
+  
     temp = thumb.value.style.top.split("");
     temp.pop();
     temp.pop();
-    temp = temp.join("") / 1 + 8;
+    temp = temp.join("") / 1 ;
     bluebcg_height.value= temp;
 }
 
@@ -62,9 +65,7 @@ const progressPartHeight = 400 / (datas.survey.currentSurvey.quesList.length);
 
 onMounted(() => {
 //  console.log(barArr[0]);
-  
  console.log(datas.survey.currentSurvey.quesList[0].font[1]);
- 
 });
 
 // 提交按钮  跳转：答题页==>完成页
@@ -209,6 +210,7 @@ div.survey {
       top: 0;
       left: -2px;
       border-radius: 5px;
+      transform: translateY(-10px);
       background-color: rgba(255, 255, 255, 1);
       cursor: pointer;
          &::before{
@@ -301,7 +303,7 @@ div.survey {
     width: 100%;
     overflow: auto;
     position: relative;
-
+    background-color: white;
     >p[intro] {
       display: block;
       height: auto;
@@ -355,7 +357,6 @@ div.survey {
         height: auto;
         width: 100%;
         margin-bottom: 30px;
-
         >div:nth-child(1) {
           display: block;
           height: auto;

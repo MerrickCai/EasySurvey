@@ -42,7 +42,7 @@ div.wrapper {
         border-radius: 50px;
         color: rgb(255, 255, 255);
         font-size: 3rem;
-        transition: all 0.3s linear 0s;
+        transition: all 0.2s ease-in-out 0s;
 
         &:hover {
             background-color: @themeColor;
