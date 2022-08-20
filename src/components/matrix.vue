@@ -1,24 +1,30 @@
 <template>
-  <li>
+  <li :class="{ disappearques: disappearq == true }">
     <p class="itemnav">
       <span class="type">矩阵</span>
       <i class="sttitle">
         创建次级题目
-        <el-switch v-model="value1" />
+        <el-switch v-model="value1" :style="{ cursor: 'not-allowed' }" />
       </i>
-      <i class="additem">+</i>
-      <i class="delitem">×</i>
+      <i class="additem" @click="addamount(), updatescroll()">+</i>
+      <i
+        class="delitem"
+        @click="deleteamount(quesitem.id)"
+        ref="deletematrix"
+        @mousemove="cursorfail"
+        >×</i
+      >
     </p>
     <p class="questitle">
-      <span>01</span>
-      <span class="titlecon" v-show="questitleshow" @click="changeqlshow">{{
-        matrixtitle
-      }}</span>
+      <span>{{ fileword.quesList.indexOf(quesitem) + 1 }}</span>
+      <span class="titlecon" v-show="questitleshow" @click="changeqlshow">
+        {{ quesitem.ques }}
+      </span>
       <input
         type="text"
         ref="questitle"
         v-show="!questitleshow"
-        v-model="matrixtitle"
+        v-model="quesitem.ques"
         @blur="questitleshow = true"
         @keyup.enter="questitleshow = true"
       />
@@ -50,16 +56,41 @@
         @change="num = 0"
       />
       <img src="/tip.png" alt="" />
+      <div class="tip">矩阵范围为3~7 请输入合适数值</div>
     </div>
   </li>
 </template>
 
 <script setup>
-import { ref, nextTick } from "vue";
+import { ref, nextTick, inject } from "vue";
+import { nanoid } from "nanoid";
 
-const emit = defineEmits(["updatesta"]);
-const props = defineProps(["fileword"]);
-console.log(props.fileword);
+const emit = defineEmits(["updateamount"]);
+const props = defineProps(["quesitem", "fileword", "receive", "deleteques"]);
+//鼠标滚轮在添加新题目时滑动到底部
+let { scroll, updatescroll } = inject("changescroll");
+//添加问题
+let disappearq = ref(false);
+function addamount() {
+  disappearq.value = true;
+  const quesobj = { id: nanoid(), ques: "请输入题目标题", value: 0 };
+  props.receive(quesobj);
+}
+//删除问题
+let deletematrix = ref(null);
+function cursorfail() {
+  if (props.fileword.quesList.length == 1) {
+    deletematrix.value.style.cursor = "not-allowed";
+  }
+  if (props.fileword.quesList.length != 1) {
+    deletematrix.value.style.cursor = "pointer";
+  }
+}
+function deleteamount(id) {
+  if (props.fileword.quesList.length != 1) {
+    props.deleteques(id);
+  }
+}
 
 //级数样式
 let blocknum = ref(5);
@@ -77,12 +108,29 @@ function changeqlshow() {
     questitle.value.focus();
   });
 }
+
+//动画
+let disappear = ref(false);
 </script>
 
 <style lang="less" scoped>
+// .disappearques {
+//   animation: disappear 0.5s forwards;
+// }
+// @keyframes disappear {
+//   0% {
+//     opacity: 1;
+//     transform: scale(1);
+//   }
+//   100% {
+//     opacity: 0.7;
+//     transform: scale(0.8);
+//   }
+// }
 li {
   height: 200px;
-  box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.25);
+  // box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.25);
+
   .itemnav {
     display: flex;
     align-items: center;
@@ -126,7 +174,7 @@ li {
     }
   }
   .questitle {
-    margin: 5px 0 5px 39px;
+    margin: 5px 40px 5px 39px;
     font-size: 16px;
     font-weight: 500;
     border: 1px solid transparent;
@@ -246,7 +294,35 @@ li {
     img {
       position: absolute;
       bottom: 10px;
-      left: 750px;
+      left: 748px;
+      &:hover + .tip {
+        display: block;
+      }
+    }
+    .tip {
+      display: none;
+      position: absolute;
+      bottom: 43px;
+      left: 660px;
+      width: 98px;
+      height: 50px;
+      padding-top: 10px;
+      text-align: center;
+      background: rgba(255, 255, 255, 1);
+      box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.15);
+      font-size: 12px;
+      font-weight: 400;
+      word-wrap: break-word; //超出页面自动换行
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: -15px;
+        right: 2px;
+        border-bottom: 20px solid transparent;
+        border-right: 17px solid rgba(255, 255, 255, 1);
+        border-top: 3px solid transparent;
+        border-left: 7px solid transparent;
+      }
     }
   }
 }

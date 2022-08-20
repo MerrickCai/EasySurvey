@@ -39,14 +39,14 @@
         <span class="typeall">
         <router-link to="/surveynew/" active-class="typeclick">单选</router-link>
         <router-link to="/surveynew/" active-class="typeclick">多选</router-link>
-        <router-link to="/surveynew/" active-class="typeclick">矩阵</router-link>
+        <router-link to="/surveynew/matrixlist" active-class="typeclick">矩阵</router-link>
         <router-link to="/surveynew/" active-class="typeclick">量表</router-link>
         <router-link to="/surveynew/" active-class="typeclick">文本</router-link>
         </span>
       </div>
       <!-- 题目列表 -->
       <ul>
-        <router-view :fileword="fileword"></router-view>
+        <router-view :fileword="fileword" :receive="receive" :deleteques="deleteques"></router-view>
       </ul>
     </div>
     <button class="push">发布问卷</button>
@@ -54,7 +54,8 @@
 </template>
 
 <script setup>
-import { nextTick, reactive, ref } from "vue";
+import { nextTick, onMounted, reactive, ref, provide, watch } from "vue";
+import { nanoid } from "nanoid";
 //存储问卷信息内容
 let fileword = reactive({
   status: {
@@ -77,7 +78,13 @@ let fileword = reactive({
       "每一题都要做，不要花太多的时间去想。所有的题目都没有“正确答案”，凭你读每一句子后的第一印象作答。 虽然没有时间限制，但应尽可能地争取以较快的速度完成，愈快愈好。",
     button: "开始答题",
   },
-  quesList: [],
+  quesList: [
+    {
+      id: nanoid(),
+      ques: "请输入题目标题",
+      value: 0,
+    },
+  ],
 });
 
 //问卷标题修改
@@ -89,6 +96,7 @@ function changetitleshow() {
     titlein.value.focus();
   });
 }
+
 //问卷介绍修改
 let introshow = ref(true);
 let introin = ref(null);
@@ -99,7 +107,34 @@ function changeintroshow() {
   });
 }
 
-let type = ref(1);
+//添加题目滚轮滑到最下方
+let scroll = ref(0);
+function updatescroll() {
+  scroll.value = scroll.value + 1;
+}
+provide("changescroll", {
+  scroll,
+  updatescroll,
+});
+watch(scroll, () => {
+  let div = document.getElementsByClassName("quearea");
+  nextTick(() => {
+    div[0].scrollTop = div[0].scrollHeight;
+  });
+});
+
+//矩阵问卷新增问题
+function receive(quesobj) {
+  fileword.quesList.push(quesobj);
+}
+//矩阵问卷删除问题
+function deleteques(id) {
+  if (confirm("确定删除吗")) {
+    fileword.quesList = fileword.quesList.filter((quesitem) => {
+      return quesitem.id != id;
+    });
+  }
+}
 </script>
 
 <style lang="less" scoped>
