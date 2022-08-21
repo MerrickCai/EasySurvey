@@ -2,22 +2,18 @@
 //登陆注册页视图切换
 import { reactive, inject } from 'vue'
 const viewId = inject('viewId')
-
 //注册逻辑
 const user = reactive({ account: '', password: '', agree: false })
 import { useStore } from "../../PiniaStores/index.js"
 const datas = useStore()
-import { useRouter, useRoute } from 'vue-router'
-const router = useRouter()
-const route = useRoute()
 import axios from 'axios'
 //表单验证
 function validate(account, password) {
-    if (!/^1[0-9]{10}$/.test(account)) {
+    if (!/^1[0-9]{10}$/.test(account)) { //1开头，11位数字
         alert('请输入正确的手机号')
         return false
     }
-    if (!/^[0-9a-zA-Z_!.]{8,20}$/.test(password)) {
+    if (!/^[0-9a-zA-Z_!.]{8,20}$/.test(password)) { //8-20位字母数字+特殊字符（_!.）
         alert('请输入正确的密码')
         return false
     }
@@ -58,7 +54,8 @@ async function register(account, password, agree) {
         } else { //response.data.code === 400=>重复注册
             alert('请勿重复注册')
         }
-    }).catch((error) => {//登录失败
+    }).catch((error) => {//注册失败
+        alert('由于网络问题注册失败')
         console.log(error)
     })
 }

@@ -1,7 +1,8 @@
 <script setup>
-//顶部导航栏组件的展示（除logo外的控件）
 import { useStore } from '../PiniaStores/index.js'
 const datas = useStore()
+
+//顶部导航栏组件的展示
 datas.navShow = false
 import { onBeforeRouteLeave } from 'vue-router'
 onBeforeRouteLeave(() => {

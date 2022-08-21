@@ -13,11 +13,7 @@ const survey2 = () => import('../components/survey2.vue')
 const survey3 = () => import('../components/survey3.vue')
 const survey4 = () => import('../components/survey4.vue')
 const survey5 = () => import('../components/survey5.vue')
-
-
-
 const surveynew = () => import('../components/surveynew.vue')
-
 
 //404页
 const notFound = () => import('../view/notFound.vue')

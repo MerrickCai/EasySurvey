@@ -7,17 +7,14 @@ const viewId = inject('viewId')
 const user = reactive({ account: '', password: '', remember: false })
 import { useStore } from "../../PiniaStores/index.js"
 const datas = useStore()
-import { useRouter, useRoute } from 'vue-router'
-const router = useRouter()
-const route = useRoute()
 import axios from 'axios'
 //表单验证
 function validate(account, password) {
-     if (!/^1[0-9]{10}$/.test(account)) {
+     if (!/^1[0-9]{10}$/.test(account)) { //1开头，11位数字
           alert('请输入正确的手机号')
           return false
      }
-     if (!/^[0-9a-zA-Z_!.]{8,20}$/.test(password)) {
+     if (!/^[0-9a-zA-Z_!.]{8,20}$/.test(password)) { //8-20位字母数字+特殊字符（_!.）
           alert('请输入正确的密码')
           return false
      }
@@ -53,9 +50,10 @@ async function login(account, password, remember) {
                //跳转填写地区和年龄弹窗
                viewId.value = 3
           } else { //response.data.code === 401
-               alert('账号密码错误')
+               alert('账号密码错误，请重新输入')
           }
      }).catch((error) => {//登录失败
+          alert('由于网络问题登录失败')
           console.log(error)
      })
 }
