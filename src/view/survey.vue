@@ -1,9 +1,12 @@
 <script setup>
-//获取此套问卷信息数据
+
+//通过url的questionId获取问卷类型和数据
+// 假设处理完得到id=1 （类型1）=>
 const id = 1
 import { useStore } from "../PiniaStores/index.js"
 const datas = useStore()
 datas.survey.currentSurvey = datas.survey.survey1[id - 1]
+
 </script>
 
 <template>
