@@ -24,7 +24,7 @@ div.wrapper {
    justify-content: center;
    align-items: center;
    height: 400px;
-   width: 450px;
+   width: 420px;
 
    >div.selectArea {
       display: flex;
@@ -32,14 +32,14 @@ div.wrapper {
       justify-content: flex-start;
       align-items: flex-end;
       height: 80px;
-      width: 320px;
+      width: 70%;
 
       >a {
          display: block;
          position: relative;
-         font-size: 20px;
+         font-size: 19px;
          font-weight: bold;
-         margin-right: 25px;
+         margin-right: 15px;
          color: rgba(217, 217, 217, 1);
          cursor: pointer;
 
