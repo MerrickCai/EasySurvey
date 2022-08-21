@@ -1162,13 +1162,8 @@ export const survey1 = [
 export const survey2 = [
     {
         intro: {
-            info_title : '贝尔宾团队角色理论\n-团队角色自测问卷',
+            info_title : '贝尔宾团队角色理论-团队角色自测问卷',
             info_para: '对下列问题的回答，可能在不同程度上描绘了您的行为。每题有8句话，请将10分分配给这8个句子。\n\n分配的原则是：最体现您行为的句子分最高，以此类推。最极端的情况可能是10分全部分配给其中一句话。请根据您的实际情况填入您每题的分数，系统会自动计算出每个角色的得分。得分最高的2-3个角色便是您的团队角色。',
-        },
-        questionIntro :{
-            title: '贝尔宾团队角色理论-团队角色自测问卷',
-            sec_title: '问卷介绍：',
-            para: '对下列问题的回答，可能在不同程度上描绘了您的行为。每题有8句话，请将10分分配给这8个句子。分配的原则是：最体现您行为的句子分最高，以此类推。最极端的情况可能是10分全部分配给其中一句话。请根据您的实际情况填入您每题的分数，系统会自动计算出每个角色的得分。得分最高的2-3个角色便是您的团队角色。',
         },
         questionList:[
             {
@@ -1570,4 +1565,65 @@ export const survey2 = [
     }
 
 
+]
+
+export const survey3 = [
+    {
+        intro: {
+            info_title : '单选按钮survey3',
+            info_para: '单选按钮页面TEST',
+        },
+        questionList: [
+            {
+                id: 1,
+                questiontitle: '一、我认为我能为团队做出的贡献是：',
+                value:0,
+                titleBorder:0,
+                progressPartbcg: '#ccc',
+                option:['aaAAAhaha','BBB','CCC']
+            },
+            {
+                id: 2,
+                questiontitle: '二、我认为我能为团队做出的贡献是：',
+                value:0,
+                titleBorder:0,
+                progressPartbcg: '#ccc',
+                option:['AAA','BBB','CCC']
+                
+            },
+            {
+                id: 3,
+                questiontitle: '三、我认为我能为团队做出的贡献是：',
+                value:0,
+                titleBorder:0,
+                progressPartbcg: '#ccc',
+                option:['AAA','BBB','CCC']
+                
+            },
+            {
+                id: 4,
+                questiontitle: '四、我认为我能为团队做出的贡献是：',
+                value:0,
+                titleBorder:0,
+                progressPartbcg: '#ccc',
+                option:['AAA','BBB','CCC']
+                
+            },
+            {
+                id: 5,
+                questiontitle: '五、我认为我能为团队做出的贡献是：',
+                value:0,
+                titleBorder:0,
+                progressPartbcg: '#ccc',
+                option:['AAA','BBB','CCC']
+                
+            },
+
+        ],
+        end :{
+            finish: '您已完成',
+            para: '感谢您的答题，本次问卷已全部结束',
+            button:'完成答题'
+        }
+    }
 ]

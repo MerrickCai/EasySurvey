@@ -10,6 +10,8 @@ const login = () => import('../view/login.vue')
 const survey = () => import('../view/survey.vue')
 const survey1 = () => import('../components/survey1.vue')
 const survey2 = () => import('../components/survey2.vue')
+const survey3 = () => import('../components/survey3.vue')
+
 const surveynew = () => import('../components/surveynew.vue')
 const matrixlist = () => import('../components/matrixlist.vue')
 
@@ -40,6 +42,10 @@ const routes = [
             {
                 path: 'survey2/:id',
                 component: survey2,
+            },
+            {
+                path: 'survey3/:id',
+                component: survey3,
             },
             {
                 path: 'surveynew',
