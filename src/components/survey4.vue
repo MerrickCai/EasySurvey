@@ -1,19 +1,12 @@
 <template>
+
 <!-- 介绍页 -->
 <div class="wrapper" v-if="jump===1">
-     <div class="circle-wrapper">
-        <div class="headcircle"></div>
-     </div>
-    <img src="/tangible.png" class="pic1">  
     <h2 class="title">{{ survey.intro.info_title }}</h2>
     <p class="second-title">问卷介绍：</p>
     <p class="para">{{survey.intro.info_para}}</p>
     <el-button type="primary" class="btn" @click="toContent">开始问卷</el-button>
-    <div class="circle1"></div>
-    <div class="circle2"></div>
-    <div class="circle3"></div>
  </div>
-
 
 <!-- 问卷内容部分 -->
 <div class="wrapper extrachange" v-if="jump===2">
@@ -42,30 +35,19 @@
        <div class="content" ref="content" @scroll="onScroll($event)">
         <!-- 题目 -->  
         <!-- 第一层循环 item, i -->
-            <div class="main" v-for="(item,i) of survey.questionList" :key="item.id" :style="{height:`${37.5*item.question.length}px`}">
-                <div class="questiontitle"  ref="questiontitle"   :style="{border:`${item.titleBorder}px solid red`}">{{item.questiontitle}}
-                   <p class="scoretips">可支配分数
-                     <span class="score">{{item.score}}</span>
-                   </p>
+            <div  class="main" v-for="(item,i) of survey.questionList" :key="item.id" :style="{height:`${37.5*item.option.length}px`}" >
+                 <div class="questiontitle"  ref="questiontitle"   :style="{border:`${item.titleBorder}px solid red`}">{{item.questiontitle}}
                 </div>
                 <!-- 第二层循环 elem,index -->
-                <div class="questionList" v-for="(elem,index) of item.question" :key="index">
-                    {{elem.detail}}
-                        <div class="slide" :style="{backgroundColor:`${item.bcg}`}">   <!--400为slide的总宽度，根据分数总数来定每次滑块滑多少-->
-                             <div class="Gradient" :style="{ width:`${(elem.value)* (400/(barArr[i].length-1))}px` }"></div>
-                             <!-- 第三层循环 b,j -->
-                            <div v-for="(b,j) of barArr[i]" :key="i" :class="j%2===0 ? 'doublebar' :'bar'" @click="distributeScore(elem,item,j)">
-                               <span class="num" v-if="!(j%2)">{{j}}</span>
-                            </div>
-                            <img class="thumb" :style="{ left: `${(elem.value) * (400/(barArr[i].length-1))}px`}"  :src="elem.value===0 ? item.silderSrc : '/blue.png' ">	
-                            <span class="edit"  v-show="!elem.isEdit" @click="editHandle(elem,index)">{{elem.value}}<img src="/icon-edit.png"></span>
-                            <input class="editinput" type="text" v-show="elem.isEdit" @blur="editHandle2(elem,item,$event)"  @keydown.enter="editHandle2(elem,item,$event)"  :value="elem.value" ref="myRef">
-                    </div>                          
-                </div>
+                   <div class="ques" v-for="(elem,index) of item.option" :key="index">
+                       <input class="input" type="checkbox" :name="item.id" :value="elem"  @click="seleted(item,i,$event)" ref="input">
+                       <p>{{elem}}</p>
+                   </div>
             </div>
            <el-button type="primary" class="submit" @click="toFinish()">提交问卷</el-button>
        </div>
-</div>                   
+</div>    
+
 
 <!-- 问卷完成部分 -->
 <div class="finish-wrapper" v-if="jump===3">
@@ -81,28 +63,13 @@
 </template>
 
 <script setup>
-import { map } from 'lodash';
-import { ref, computed, reactive, watch, onMounted, nextTick, onBeforeUnmount, toRef } from 'vue';
+import { ref, reactive, toRefs, onBeforeMount, onMounted, watchEffect, computed } from 'vue';
 import { useStore } from '../PiniaStores/index.js'
-//数据
 const datas = useStore();
 
 const survey = computed(() => {
-    return datas.survey.survey2[0];
+    return datas.survey.survey4[0];
 });
-
-onMounted(() => {
-    // console.log(datas.survey.survey2[0]);
-    console.log(barArr);
-    // console.log(survey.value.questionList[0].score);
-    // console.log(progressPartHeight);
-    // console.log(survey.value.questionList.length);
-    // console.log(400/(barArr[1].length-1));
-    
-});
-
-const barArr = new Array(survey.value.questionList.length).fill(0).map((item,index)=>new Array(survey.value.questionList[index].score+1));
-
 
 // 跳转：介绍页==>答题页
 let jump = ref(1);
@@ -110,60 +77,6 @@ function toContent(){
     jump.value = 2;
 }
 
-
-
-// ---分配分数相关的变量和方法---
-// 分配分数
-function distributeScore(elem, item, num){
-     let newValue = num/1;
-    let oldValue = elem.value / 1;
-const staticScore = survey.value.questionList[0].score;
-    if (item.score <= 0) {
-        if (oldValue < newValue) {
-            return  
-        } 
-    }
-    if (item.score < (newValue - oldValue)) return;
-
-      elem.value = num;
-      item.score = item.staticScore;
-      item.question.forEach(e => {
-        item.score -= e.value;
-      });
-    //   按照分数，如果分配完了背景颜色改变
-    if (item.score === 0) {
-        item.bcg = '#e5e5e5';
-        item.silderSrc = '/disable.png';
-    }
-    if (item.score > 0) {
-        item.bcg = '#f5f5f5';
-        item.silderSrc = '/blue.png';
-    }
-    // console.log(elem.value);
-    //  console.log(-6+(elem.value)*40);
-        
-}
-// 切换编辑的input框
-const myRef = ref(null);
-
-// 切换至编辑
-function editHandle(elem, index) {
-    elem.isEdit = true;
-    // 默认获取焦点
-    nextTick(() => {
-      myRef.value[index].focus()
-    });
-
-}
-// 编辑状态保存分数
-function editHandle2(elem,item, e) {
-       elem.isEdit = false;
-    if (isNaN(e.target.value) || e.target.value > 10 || e.target.value < 0) {
-        alert('分数仅限定在0~10之间');
-        return
-    } 
-   distributeScore(elem,item,e.target.value)
-}
 
 
 // --- 滚动条部分的变量和方法 ---
@@ -176,7 +89,8 @@ let bluebcg_height = ref(0);
 // 中转变量
 let temp;
 // 滚动条
-const scrollDistence = ref(0)
+const scrollDistence = ref(0);
+
 function scrollTo(e) {
   if (scrollDistence.value === 0) {
     //此为滚动距离scrollTop最大值（e.currentTarget.offsetHeight == e.currentTarget.clientHeight）
@@ -203,15 +117,44 @@ function onScroll(e) {
 }
 
 
+
+// 存储选中的多选按钮的value方法 
+const input = ref(null)
+function seleted(item, i, e) {
+    // 思路是获取每个题目下的input框的dom的数据，然后forEach，如果seleted属性为true就push就item.value保存下来，这个item.value保存的就是用户选了那些。
+    // 这里的难点是如果获取每个题目下的全部input框的dom组成的数组
+    // console.log(input.value);  这里获取了整个页面的input的dom数组，所以接下来要找出所对应题目的input的dom
+    let start = 0;
+    for (let j=0; j<i; j++){
+        start += item.option.length;
+    }
+// start变量是用来找到起点的
+    // console.log(start,start + item.option.length);
+    //这个数组保存的就是目前点击的checkbox对应题目的全部input的dom
+    const Oneques_input = input.value.slice(start, start + item.option.length);
+
+    survey.value.questionList[i].value = [];
+    Oneques_input.forEach(elem => {
+        // input的dom的checked属性保存了是否被选中 
+        // console.log(elem.checked);
+        if (elem.checked) {
+          survey.value.questionList[i].value.push(elem.value);
+         }
+     })
+    console.log(survey.value.questionList[i].value);
+   
+}
+
+
 // ---提交按钮之后相关的变量和方法---
 // 获取全部questiontitle
 const questiontitle = ref(null);
 // 进度条片段的高度
 const progressPartHeight = 300 / (survey.value.questionList.length);  
 
-
 // 提交按钮  跳转：答题页==>完成页
 function toFinish() {
+
     let flag = true;
     // 记录未完成的问卷id
     const uncomplete = [];
@@ -220,7 +163,7 @@ function toFinish() {
     survey.value.questionList.forEach(item => {
         item.titleBorder = 0;
         item.progressPartbcg = '#5a9afa';
-        if (item.score !== 0) {
+        if (item.value.length=== 0) {
             flag = false;
             uncomplete.push(item.id);   
             item.titleBorder = 1;
@@ -242,7 +185,9 @@ function toFinish() {
 
 </script>
 
+
 <style scoped lang='less'>
+
 @a:1px;
 // 供调用
 .public_title(){
@@ -276,13 +221,12 @@ function toFinish() {
         vertical-align: middle;
 }
 
-// 介绍页面部分
-.wrapper{
+.public_wrapper(){
     width: 1190*@a;
     height: 810*@a;
     background-color: #fff;
     position: relative;
-    left: -3*@a;
+    left: -0*@a;
     right: 0;
     top: 0;
     // top:-15*@a;  
@@ -292,19 +236,12 @@ function toFinish() {
     padding: 0;
     box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
     z-index: 10;
-    .circle-wrapper{
-        width: 490*@a;
-        height: 490*@a;
-        overflow: hidden;
+}
 
-    }
-    .headcircle{
-        width: 400*@a;
-        height: 400*@a;
-        border-radius: 50%;
-        transform: translateX(-50%) translateY(-50%);
-        background-color:rgba(235, 245, 255, 1);;
-    }
+// 介绍页面部分
+.wrapper{
+     .public_wrapper();
+     z-index: -20;  
     .pic1{
         display: block;
         height: 108*@a;
@@ -370,36 +307,9 @@ function toFinish() {
         vertical-align: top;
         border-radius: 6*@a;
     }
-    .circle1{
-        width: 170*@a;
-        height: 170*@a;
-        border-radius: 50%;
-        background-color:rgba(235, 245, 255, 1);
-        position:absolute;
-        bottom: -20*@a;
-        right: 94*@a;
-    }
-    .circle2{
-        width: 150*@a;
-        height: 150*@a;
-        border-radius: 50%;
-        background-color:rgba(71, 145, 255, 1);
-        position:absolute;
-        bottom: 40*@a;
-        right: 44*@a;
-        z-index: 2;
-    }
-    .circle3{
-        width: 100*@a;
-        height: 100*@a;
-        border-radius: 50%;
-        background-color:rgba(30, 111, 255, 1);
-        position:absolute;
-        bottom: 80*@a;
-        right:-25.4px;
-    }
-}
 
+
+}
 
 // 答题内容部分
 // 头部的文字解释
@@ -428,6 +338,170 @@ function toFinish() {
         }
     }
 }
+
+
+
+// 问卷题目内容部分
+.content{
+    position: absolute;
+    top: 220px;
+    left: 50px;
+    width: 1155px;
+    height: 350px;
+    overflow: auto;
+    .main{
+        background-color: white;
+        height: 300px;
+         width: 1065px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        .ques{
+            display: flex;
+        }
+        .input{
+            display: block;
+            width: 16px;
+            height: 16px;
+            margin-right: 5px;
+        }
+    }
+    .questiontitle{
+        font-size: 16px;
+        font-family: '思源黑体';
+        display: flex;
+        width: 740px;
+        justify-content: space-between;
+        position: relative;
+        left: 5px;
+        &::before{
+             content: '';
+             background-color: #1e6fff;
+             width: 3px;
+             height: 24px;
+             position: absolute;
+             left:-5px;
+             top: 0;
+             z-index: 9999;
+          }   
+    }
+    .questionList{
+        margin-left: 45px;
+        font-size: 14px;
+        font-family: '思源黑体';
+        position: relative;
+        // 滑块      
+    }
+    
+// 问卷内容完成提交按钮
+    .submit{
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        width: 180px;
+        height: 40px;
+        background-color: rgba(30, 111, 255, 1);
+        margin-top: 40px;
+        &:hover{
+            background-color: #4791ff;
+        }
+        &:active{
+            background-color: #0f52d9;
+        }
+    }
+}
+
+
+
+
+// 对最外层wrapper的微调
+div.extrachange{
+    width: 1210px;
+    z-index: 10;
+}
+
+
+// 完成问卷页面的样式
+.finish-wrapper{
+    width: 100%;
+    height: 100%;
+    // background-color: pink;
+    .innerbox{
+        width: 400px;
+        height: 380px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+      .finish-title{
+        width: 365px;
+        height: 190px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        text-align: center;
+         h2{
+            font-family: '思源黑体';
+            font-size: 36px;
+            font-weight: 500;
+            letter-spacing: 0px;
+            line-height: 44px;
+            margin-left: -18px;
+            &::after{
+                content: '✔';
+                color:white;
+                font-size: 24px;
+                width:36px;
+                height:36px;
+                background: radial-gradient(104.2% 104.2%, rgba(30, 111, 255, 1) 0%, rgba(170, 203, 255, 1) 100%);
+                border-radius: 50%;
+                position: absolute;
+                margin-left:8px;
+                top: 5px;
+                text-align: center;
+                line-height: 36px;
+            }
+         }
+         h3{
+            font-family: '思源黑体';
+            font-size: 36px;
+            font-weight: 500;
+            letter-spacing: 0px;
+            line-height: 44px;
+            color: rgba(30, 111, 255, 1);
+         }
+         p{
+            font-family: '思源黑体';
+            font-size: 20px;
+            font-weight: 400;
+            letter-spacing: 0px;
+            line-height: 28px;
+            color: rgba(0, 0, 0, 1);
+            text-align: center;
+         }
+      }
+       .finish-submit{
+        width: 180px;
+        height: 45px;
+        background-color: rgba(30, 111, 255, 1);
+        margin-top: 40px;
+        &:hover{
+            background-color: #4791ff;
+        }
+        &:active{
+            background-color: #0f52d9;
+        }
+       }
+    }
+
+}
+
 
  //  遮挡原来的
 .zhedang{
@@ -510,283 +584,4 @@ function toFinish() {
             }
          }
 }
-
-// 问卷题目内容部分
-.content{
-    position: absolute;
-    top: 220px;
-    left: 50px;
-    width: 1155px;
-    height: 350px;
-    overflow: auto;
-    .main{
-        background-color: white;
-        height: 300px;
-         width: 1065px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        margin-bottom: 20px;
-    }
-    .questiontitle{
-        font-size: 16px;
-        font-family: '思源黑体';
-        display: flex;
-        width: 740px;
-        justify-content: space-between;
-        position: relative;
-        left: 5px;
-        .score{
-            display: inline-block;
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            background-color: #447eff;
-            color: white;
-            text-align: center;
-            line-height: 24px;  
-            font-size: 12px;
-            padding-right: 1px ;
-            position: absolute;
-            top: 0px;
-            margin-left: 3px;
-         }
-        .scoretips{
-            font-family: '思源黑体';
-            text-align: center;
-            // transform: translateY(5px);
-            height: 26px;
-            line-height: 26px;
-            transform: translateX(-35px);
-            // background-color: black;
-        }
-        &::before{
-             content: '';
-             background-color: #1e6fff;
-             width: 3px;
-             height: 24px;
-             position: absolute;
-             left:-5px;
-             top: 0;
-             z-index: 9999;
-          }   
-    }
-    .questionList{
-        margin-left: 45px;
-        font-size: 14px;
-        font-family: '思源黑体';
-        position: relative;
-        // 滑块
-        .slide{
-            // 400+4（其中的4为末尾一个bar的宽度，所以总宽度为404。
-            width: 404px;
-            height: 8px;
-            background-color:#f5f5f5;
-            box-sizing: border-box;
-            position: absolute;
-            right: 30px;
-            bottom: 6px;
-            display: flex;
-            justify-content: space-between;
-            background-color: pink;
-         @Width:400px;
-         .barStyle(){
-                width: 4px;
-                height: 11px;
-                border-radius: 2px;
-                background-color: rgba(204, 204, 204, 1);
-                transform: translateY(-3px);
-                cursor: pointer;
-         }
-         .bar{
-            .barStyle();
-        }
-        .num{
-            position: absolute;
-            top: -15px;
-            right: -5px;
-            height: 15px;
-            width: 15px;
-            color: #cccccc;
-            font-size: 8px;
-            text-align: center;
-            display: block;
-        }
-        .doublebar{
-            .barStyle();
-            transform: translateY(-7px);
-            height: 15px;
-        }
-        .Gradient{
-            width: 0px;
-            height: 8px;
-            background: linear-gradient(90deg, rgba(194, 225, 254, 1) 0%, #78a5f1 100%);
-            position: absolute;
-            left: 0;
-            z-index: 9;
-            pointer-events: none;
-            transition: all 0.2s linear;
-        }
-
-         @thumbSize:14px;
-         @themeColor:#1e6fff;
-            img.thumb {
-                position: absolute;
-                // z-index: 2;
-                bottom: -2px;
-                // left: calc(0px - @thumbSize/2); //thumbSize=24px
-                height: @thumbSize;
-                width: @thumbSize;
-                object-fit: cover;
-                transform: translateX(-5px);
-                // border-radius: 5px;
-                transition: all 0.2s linear;
-                z-index: 10;
-            }
-            .edit{
-                display: inline-block;
-                width: 24px;
-                height: 14px;
-                position: absolute;
-                right: -40px;
-                bottom:0px;
-                cursor: pointer;
-                font-size: 10px;
-                color:rgba(140, 140, 140, 1);
-                display: flex;
-                text-align: left;
-                justify-content: space-between;
-                img{
-                    width: 16px;
-                    height: 16px;
-                }
-            }
-              .editinput{
-                  width: 24px;
-                  height: 16px;
-                  outline: none;
-                  border: #4791ff 1px solid;
-                   text-align: center;
-                  color: rgba(140, 140, 140, 1);;
-                  position: absolute;
-                  right: -42px;
-                  bottom: 0px;      
-                }
-        }
-
-    }
-    
-// 问卷内容完成提交按钮
-    .submit{
-        position: absolute;
-        left: 0;
-        right: 0;
-        margin: 0 auto;
-        width: 180px;
-        height: 40px;
-        background-color: rgba(30, 111, 255, 1);
-        margin-top: 40px;
-        &:hover{
-            background-color: #4791ff;
-        }
-        &:active{
-            background-color: #0f52d9;
-        }
-        // &:focus
-        // &:active{
-        //     background-color: green;
-        // }
-        // &.is-active{
-        //     background-color: #bfa;
-        // }
-    }
-}
-
-
-// 对最外层wrapper的微调
-div.extrachange{
-    width: 1210px;
-}
-
-
-
-// 完成问卷页面的样式
-.finish-wrapper{
-    width: 100%;
-    height: 100%;
-    // background-color: pink;
-    .innerbox{
-        width: 400px;
-        height: 380px;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translateX(-50%) translateY(-50%);
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-      .finish-title{
-        width: 365px;
-        height: 190px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        text-align: center;
-         h2{
-            font-family: '思源黑体';
-            font-size: 36px;
-            font-weight: 500;
-            letter-spacing: 0px;
-            line-height: 44px;
-            margin-left: -18px;
-            &::after{
-                content: '✔';
-                color:white;
-                font-size: 24px;
-                width:36px;
-                height:36px;
-                background: radial-gradient(104.2% 104.2%, rgba(30, 111, 255, 1) 0%, rgba(170, 203, 255, 1) 100%);
-                border-radius: 50%;
-                position: absolute;
-                margin-left:8px;
-                top: 5px;
-                text-align: center;
-                line-height: 36px;
-            }
-         }
-         h3{
-            font-family: '思源黑体';
-            font-size: 36px;
-            font-weight: 500;
-            letter-spacing: 0px;
-            line-height: 44px;
-            color: rgba(30, 111, 255, 1);
-         }
-         p{
-            font-family: '思源黑体';
-            font-size: 20px;
-            font-weight: 400;
-            letter-spacing: 0px;
-            line-height: 28px;
-            color: rgba(0, 0, 0, 1);
-            text-align: center;
-         }
-      }
-       .finish-submit{
-        width: 180px;
-        height: 45px;
-        background-color: rgba(30, 111, 255, 1);
-        margin-top: 40px;
-        &:hover{
-            background-color: #4791ff;
-        }
-        &:active{
-            background-color: #0f52d9;
-        }
-       }
-    }
-
-}
-
 </style>

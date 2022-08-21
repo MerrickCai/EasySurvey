@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-import { survey1, survey2 } from './survey.js'
+import { survey1, survey2 ,survey3 , survey4 , survey5} from './survey.js'
 
 export const useStore = defineStore('main', {
   state: () => ({
@@ -23,6 +23,9 @@ export const useStore = defineStore('main', {
       currentSurvey: 0,
       survey1,
       survey2,
+      survey3,
+      survey4,
+      survey5
     }
   }),
   getters: {
