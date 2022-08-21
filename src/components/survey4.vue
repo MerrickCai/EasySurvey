@@ -35,14 +35,14 @@
        <div class="content" ref="content" @scroll="onScroll($event)">
         <!-- 题目 -->  
         <!-- 第一层循环 item, i -->
-            <div class="main" v-for="(item,i) of survey.questionList" :key="item.id" :style="{height:`${37.5*item.option.length}px`}" >
+            <div  class="main" v-for="(item,i) of survey.questionList" :key="item.id" :style="{height:`${37.5*item.option.length}px`}" >
                  <div class="questiontitle"  ref="questiontitle"   :style="{border:`${item.titleBorder}px solid red`}">{{item.questiontitle}}
                 </div>
                 <!-- 第二层循环 elem,index -->
-                  <div class="ques" v-for="(elem,index) of item.option" :key="index">
-                       <input type="radio" class="input" :name="item.id" :value="elem"  @click="seleted(i,$event)">
+                   <div class="ques" v-for="(elem,index) of item.option" :key="index">
+                       <input class="input" type="checkbox" :name="item.id" :value="elem"  @click="seleted(item,i,$event)" ref="input">
                        <p>{{elem}}</p>
-                </div>
+                   </div>
             </div>
            <el-button type="primary" class="submit" @click="toFinish()">提交问卷</el-button>
        </div>
@@ -68,7 +68,7 @@ import { useStore } from '../PiniaStores/index.js'
 const datas = useStore();
 
 const survey = computed(() => {
-    return datas.survey.survey3[0];
+    return datas.survey.survey4[0];
 });
 
 // 跳转：介绍页==>答题页
@@ -116,9 +116,33 @@ function onScroll(e) {
     bluebcg_height.value= temp;
 }
 
-// 选择单选按钮的方法
-function seleted(i, e) {
-   survey.value.questionList[i].value = e.target.value;
+
+
+// 存储选中的多选按钮的value方法 
+const input = ref(null)
+function seleted(item, i, e) {
+    // 思路是获取每个题目下的input框的dom的数据，然后forEach，如果seleted属性为true就push就item.value保存下来，这个item.value保存的就是用户选了那些。
+    // 这里的难点是如果获取每个题目下的全部input框的dom组成的数组
+    // console.log(input.value);  这里获取了整个页面的input的dom数组，所以接下来要找出所对应题目的input的dom
+    let start = 0;
+    for (let j=0; j<i; j++){
+        start += item.option.length;
+    }
+// start变量是用来找到起点的
+    // console.log(start,start + item.option.length);
+    //这个数组保存的就是目前点击的checkbox对应题目的全部input的dom
+    const Oneques_input = input.value.slice(start, start + item.option.length);
+
+    survey.value.questionList[i].value = [];
+    Oneques_input.forEach(elem => {
+        // input的dom的checked属性保存了是否被选中 
+        // console.log(elem.checked);
+        if (elem.checked) {
+          survey.value.questionList[i].value.push(elem.value);
+         }
+     })
+    console.log(survey.value.questionList[i].value);
+   
 }
 
 
@@ -139,7 +163,7 @@ function toFinish() {
     survey.value.questionList.forEach(item => {
         item.titleBorder = 0;
         item.progressPartbcg = '#5a9afa';
-        if (item.value=== 0) {
+        if (item.value.length=== 0) {
             flag = false;
             uncomplete.push(item.id);   
             item.titleBorder = 1;
