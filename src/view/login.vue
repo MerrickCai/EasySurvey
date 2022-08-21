@@ -13,7 +13,8 @@ import { ref, computed, provide } from 'vue'
 import accountLogin from '../components/login/accountLogin.vue'
 import wechatLogin from '../components/login/wechatLogin.vue'
 import register from '../components/login/register.vue'
-const viewList = [wechatLogin, accountLogin, register]
+import infor from '../components/login/infor.vue'
+const viewList = [wechatLogin, accountLogin, register, infor]
 const viewId = ref(1)
 const currentView = computed(() => viewList[viewId.value])
 provide('viewId', viewId)

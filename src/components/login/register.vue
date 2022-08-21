@@ -11,7 +11,22 @@ import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
 import axios from 'axios'
-function register(account, password, agree) {
+//表单验证
+function validate(account, password) {
+    if (!/^1[0-9]{10}$/.test(account)) {
+        alert('请输入正确的手机号')
+        return false
+    }
+    if (!/^[0-9a-zA-Z_!.]{8,20}$/.test(password)) {
+        alert('请输入正确的密码')
+        return false
+    }
+    return true
+}
+async function register(account, password, agree) {
+    if (!validate(account, password)) { //表单验证
+        return false
+    }
     if (agree === false) { //确认用户是否同意《用户隐私协议》
         alert('请点击同意《用户隐私协议》按钮')
         return true
@@ -20,7 +35,7 @@ function register(account, password, agree) {
         alert('您已经登录')
         return true
     }
-    axios({
+    await axios({
         url: 'https://q.denglu1.cn/user/regist',
         method: 'post',
         withCredentials: true,
@@ -38,11 +53,13 @@ function register(account, password, agree) {
             //默认记住账号密码到本地
             localStorage.setItem('account', account)
             localStorage.setItem('password', password)
-            if (route.query.redirect) { //判断用户是否从其他页面过来
-                router.push({ path: route.query.redirect })
-            } else {
-                router.push({ path: '/' })
-            }
+            //跳转填写地区和年龄弹窗
+            viewId.value = 3
+            // if (route.query.redirect) { //判断用户是否从其他页面过来
+            //     router.push({ path: route.query.redirect })
+            // } else {
+            //     router.push({ path: '/' })
+            // }
         } else { //response.data.code === 400=>重复注册
             alert('请勿重复注册')
         }
