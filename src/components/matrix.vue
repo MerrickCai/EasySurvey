@@ -79,7 +79,6 @@ function addamount() {
     font: [],
   };
   props.receive(quesobj);
-  console.log(props.fileword.quesList);
 }
 //删除问题
 let deletematrix = ref(null);
@@ -104,7 +103,6 @@ let num = ref(0);
 //次级题目
 const value1 = ref(true);
 //题目标题
-let matrixtitle = ref("请输入题目标题");
 let questitle = ref(null);
 let questitleshow = ref(true);
 function changeqlshow() {

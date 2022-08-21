@@ -11,7 +11,7 @@ const survey = () => import('../view/survey.vue')
 const survey1 = () => import('../components/survey1.vue')
 const survey2 = () => import('../components/survey2.vue')
 const surveynew = () => import('../components/surveynew.vue')
-const matrixlist = () => import('../components/matrixlist.vue')
+
 
 //404页
 const notFound = () => import('../view/notFound.vue')
@@ -44,12 +44,6 @@ const routes = [
             {
                 path: 'surveynew',
                 component: surveynew,
-                children: [
-                    {
-                        path: 'matrixlist',
-                        component: matrixlist
-                    }
-                ]
             }
         ]
     },
