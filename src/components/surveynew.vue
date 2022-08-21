@@ -47,7 +47,7 @@
       <!-- 题目列表 -->
       <ul>
         <keep-alive>
-        <component :is="typeview" :fileword="fileword" :receive="receive" :deleteques="deleteques" :scalefile="scalefile" :sreceive="sreceive" :sdeleteques="sdeleteques"></component>               
+        <component :is="typeview" :fileword="fileword" :receive="receive" :deleteques="deleteques" :scalefile="scalefile" :sreceive="sreceive" :sdeleteques="sdeleteques" :radiofile="radiofile" :rreceive="rreceive" :rdeleteques="rdeleteques"></component>               
         </keep-alive>
       </ul>
     </div>
@@ -200,6 +200,29 @@ function sdeleteques(id) {
     });
   }
 }
+
+//存储单选问卷信息内容
+let radiofile = reactive({
+  questionList: [
+    {
+      id: nanoid(),
+      questiontitle: "请输入题目标题",
+      option: ["选项", "选项"],
+    },
+  ],
+});
+//单选问卷新增问题
+function rreceive(quesobj) {
+  radiofile.questionList.push(quesobj);
+}
+//单选问卷删除问题
+function rdeleteques(id) {
+  if (confirm("确定删除吗")) {
+    radiofile.questionList = radiofile.questionList.filter((quesitem) => {
+      return quesitem.id != id;
+    });
+  }
+}
 </script>
 
 <style lang="less" scoped>
@@ -213,7 +236,10 @@ function sdeleteques(id) {
     position: relative;
     left: 50%;
     top: 50%;
+    width: 400px;
+    height: 50px;
     transform: translate(-50%, -50%);
+    word-wrap: break-word;
     font-family: "思源黑体";
     font-size: 36px;
     font-weight: 600;

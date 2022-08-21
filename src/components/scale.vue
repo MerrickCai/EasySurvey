@@ -267,6 +267,7 @@ li {
     }
   }
   .questitle {
+    display: flex;
     margin: 5px 40px 5px 39px;
     font-size: 16px;
     font-weight: 500;
