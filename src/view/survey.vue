@@ -1,55 +1,52 @@
 <script setup>
-
-//通过url的questionId获取问卷类型和数据
-// 假设处理完得到id=1 （类型1）=>
-const id = 1
+// import axios from 'axios'
+// axios({
+//   url: `https://q.denglu1.cn/user/fillQuestionnaire/${3}`,
+//   method: 'get',
+//   withCredentials: true,
+//   headers: { 'Content-Type': 'application/json' },
+//   headers: { 'token': datas.user.token }
+// }).then((response) => {
+//   console.log(response)
+// }).catch((error) => {
+//   console.log(error)
+// })
+//假设经过上面操作，currentSurvey获取成功
 import { useStore } from "../PiniaStores/index.js"
 const datas = useStore()
-datas.survey.currentSurvey = datas.survey.survey1[id - 1]
+datas.survey.currentSurvey = datas.survey.survey1[1] //获取了1类型的第二套卷
 
+//动态组件=>暂时过渡
+import { ref, computed, provide } from 'vue'
+import survey1 from '../components/surveyTemplate/survey1.vue'
+import survey2 from '../components/surveyTemplate/survey2.vue'
+import survey3 from '../components/surveyTemplate/survey3.vue'
+import survey4 from '../components/surveyTemplate/survey4.vue'
+import survey5 from '../components/surveyTemplate/survey5.vue'
+const viewList = [survey1, survey2, survey3, survey4, survey5]
+const viewId = ref(0)
+const currentView = computed(() => viewList[viewId.value])
+provide('viewId', viewId)
 </script>
 
 <template>
   <div id="wrapper">
     <div class="tag_wrapper">
-      <router-link :to="{ path: '/survey/survey1/1' }" active-class="active">
-        <span>威廉斯创造力倾向表A</span>
-      </router-link>
-      <router-link :to="{ path: '/survey/survey1/2' }" active-class="active">
-        <span>威廉斯创造力倾向表B</span>
-      </router-link>
-      <router-link :to="{ path: '/survey/survey2/1' }" active-class="active">
-        <span>贝尔宾团队理论测试</span>
-      </router-link>
-      <router-link :to="{ path: '/survey/survey3/1' }" active-class="active">
-        <span>survey3单选</span>
-      </router-link>
-      <router-link :to="{ path: '/survey/survey4/1' }" active-class="active">
-        <span>survey4多选</span>
-      </router-link>
-      <router-link :to="{ path: '/survey/survey5/1' }" active-class="active">
-        <span>survey5文本</span>
-      </router-link>
+      <a @click="viewId=0"><span>威廉斯创造力倾向表模板</span></a>
+      <a @click="viewId=1"><span>贝尔宾模板</span></a>
+      <a @click="viewId=2"><span>单选模板</span></a>
+      <a @click="viewId=3"><span>多选模板</span></a>
+      <a @click="viewId=4"><span>文本模板</span></a>
     </div>
     <div class="container">
-      <!--折角（一直都在）-->
       <img dog-ear src="/tangible.png" />
       <div class="decoration5"></div>
-      <!--填问卷时隐藏-->
-      <template v-if="
-        datas.survey.currentSurvey.status.intro ||
-        datas.survey.currentSurvey.status.end
-      ">
-        <div class="decoration1"></div>
-        <!--左上-->
-        <div class="decoration2"></div>
-        <!--右下-->
-        <div class="decoration3"></div>
-        <div class="decoration4"></div>
-      </template>
-      <!--子路由容器-->
-      <router-view></router-view>
-      <!--子路由容器-->
+      <div class="decoration1"></div>
+      <div class="decoration2"></div>
+      <div class="decoration3"></div>
+      <div class="decoration4"></div>
+      <!--动态组件-->
+      <component :is="currentView"></component>
     </div>
   </div>
 </template>

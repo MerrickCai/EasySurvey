@@ -13,7 +13,7 @@ onBeforeRouteUpdate((to) => {
 })
 
 //数据
-import { useStore } from '../PiniaStores/index.js'
+import { useStore } from '../../PiniaStores/index.js'
 const datas = useStore()
 
 

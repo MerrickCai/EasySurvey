@@ -35,13 +35,16 @@
        <div class="content" ref="content" @scroll="onScroll($event)">
         <!-- 题目 -->  
         <!-- 第一层循环 item, i -->
-            <div class="main" v-for="(item,i) of survey.questionList" :key="item.id" :style="{height:`${60}px`}" >
+            <div class="main" v-for="(item,i) of survey.questionList" :key="item.id" :style="{height:`${37.5*item.option.length}px`}" >
                  <div class="questiontitle"  ref="questiontitle"   :style="{border:`${item.titleBorder}px solid red`}">{{item.questiontitle}}
                 </div>
-                <input type="text" class="inputtext" placeholder="请输入" @blur="getValue(item,$event)">
+                <!-- 第二层循环 elem,index -->
+                  <div class="ques" v-for="(elem,index) of item.option" :key="index">
+                       <input type="radio" class="input" :name="item.id" :value="elem"  @click="seleted(i,$event)">
+                       <p>{{elem}}</p>
+                </div>
             </div>
-          <el-button type="primary" class="submit" @click="toFinish()"  :style="{top:`${(survey.questionList.length===1 || survey.questionList.length===2) ? 250 : survey.questionList.length*85}px`}">提交问卷</el-button>
-
+           <el-button type="primary" class="submit" @click="toFinish()">提交问卷</el-button>
        </div>
 </div>    
 
@@ -61,11 +64,11 @@
 
 <script setup>
 import { ref, reactive, toRefs, onBeforeMount, onMounted, watchEffect, computed } from 'vue';
-import { useStore } from '../PiniaStores/index.js'
+import { useStore } from '../../PiniaStores/index.js'
 const datas = useStore();
 
 const survey = computed(() => {
-    return datas.survey.survey5 [0];
+    return datas.survey.survey3[0];
 });
 
 // 跳转：介绍页==>答题页
@@ -113,17 +116,10 @@ function onScroll(e) {
     bluebcg_height.value= temp;
 }
 
-// 存储数据
-function getValue(item,e){
-    console.log(item);    
-    item.value = e.target.value;
-    if (!item.value.length) {
-        item.value = 0;
-    }
-    // console.log(item.value);
-    
+// 选择单选按钮的方法
+function seleted(i, e) {
+   survey.value.questionList[i].value = e.target.value;
 }
-
 
 
 // ---提交按钮之后相关的变量和方法---
@@ -336,28 +332,22 @@ function toFinish() {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        margin-bottom: 50px;
+        margin-bottom: 20px;
         .ques{
             display: flex;
         }
-        .inputtext{
-            width: 500px;
-            height: 50px;
-            border: 1px solid rgba(217, 217, 217, 1);   
-            text-indent: 10px;
-            outline: none;
-            transform: translateX(5px) translateY(10px);
-            &::placeholder {
-                color: rgba(217, 217, 217, 1);
-            }
+        .input{
+            display: block;
+            width: 16px;
+            height: 16px;
+            margin-right: 5px;
         }
-
     }
     .questiontitle{
         font-size: 16px;
         font-family: '思源黑体';
         display: flex;
-        width: 600px;
+        width: 740px;
         justify-content: space-between;
         position: relative;
         left: 5px;

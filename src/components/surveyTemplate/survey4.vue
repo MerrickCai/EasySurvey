@@ -64,7 +64,7 @@
 
 <script setup>
 import { ref, reactive, toRefs, onBeforeMount, onMounted, watchEffect, computed } from 'vue';
-import { useStore } from '../PiniaStores/index.js'
+import { useStore } from '../../PiniaStores/index.js'
 const datas = useStore();
 
 const survey = computed(() => {

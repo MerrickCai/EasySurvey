@@ -83,13 +83,11 @@
 <script setup>
 import { map } from 'lodash';
 import { ref, computed, reactive, watch, onMounted, nextTick, onBeforeUnmount, toRef } from 'vue';
-import { useStore } from '../PiniaStores/index.js'
+import { useStore } from '../../PiniaStores/index.js'
 //数据
 const datas = useStore();
 
-const survey = computed(() => {
-    return datas.survey.survey2[0];
-});
+const survey = computed(() => datas.survey.survey2[0])
 
 onMounted(() => {
     // console.log(datas.survey.survey2[0]);
