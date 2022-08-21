@@ -85,7 +85,7 @@ function toFinish() {
   }
 
   if (!flag) return;
-  status = true
+  status.value = true
   datas.survey.currentSurvey.status.toEnd();
 }
 
