@@ -26,7 +26,13 @@ datas.survey.currentSurvey = datas.survey.survey1[id - 1];
         <span>点击创建新问卷</span>
       </router-link>
       <router-link :to="{ path: '/survey/survey3/1' }" active-class="active">
-        <span>survey3Test</span>
+        <span>survey3单选</span>
+      </router-link>
+      <router-link :to="{ path: '/survey/survey4/1' }" active-class="active">
+        <span>survey4多选</span>
+      </router-link>
+      <router-link :to="{ path: '/survey/survey5/1' }" active-class="active">
+        <span>survey5文本</span>
       </router-link>
     </div>
     <div class="container">
