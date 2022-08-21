@@ -2,16 +2,12 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 
 //统计数据页
 const statistics = () => import('../view/statistics.vue')
-
 //登录注册页
 const login = () => import('../view/login.vue')
-
 //创建问卷页
 const surveynew = () => import('../view/surveynew.vue')
-
 //填写问卷页
 const survey = () => import('../view/survey.vue')
-
 //404页
 const notFound = () => import('../view/notFound.vue')
 

@@ -1,21 +1,10 @@
 <script setup>
-import { ref ,onMounted} from 'vue'
-
-
-//路由
-import { onBeforeRouteUpdate } from 'vue-router'
-import { useRoute } from 'vue-router'
-const route = useRoute()
-onBeforeRouteUpdate((to) => {
-  const id = to.params.id
-  datas.survey.currentSurvey = datas.survey.survey1[id - 1]
-  
-})
+import { ref, onMounted, inject } from 'vue'
+const status = inject('status')
 
 //数据
 import { useStore } from '../../PiniaStores/index.js'
 const datas = useStore()
-
 
 // --- 滚动条部分的变量和方法 ---
 const thumb = ref(null);
@@ -35,7 +24,7 @@ function scrollTo(e) {
     //此为滚动距离scrollTop最大值（e.currentTarget.offsetHeight == e.currentTarget.clientHeight）
     scrollDistence.value = e.currentTarget.nextSibling.scrollHeight - e.currentTarget.nextSibling.offsetHeight
   }
-    
+
   //转换(e.offsetY是鼠标点击进度条的位置[0,400]，进度条总长400px)
   e.currentTarget.nextSibling.scrollTop = (scrollDistence.value) * (e.offsetY / 400) - 8;
   e.currentTarget.lastChild.innerHTML = `${Math.ceil((e.offsetY / 400) * 100)} %`;
@@ -44,140 +33,162 @@ function onScroll(e) {
   if (scrollDistence.value === 0) {
     scrollDistence.value = e.currentTarget.scrollHeight - e.currentTarget.offsetHeight
   }
-    scrollDistence.value = e.currentTarget.scrollHeight - e.currentTarget.offsetHeight
+  scrollDistence.value = e.currentTarget.scrollHeight - e.currentTarget.offsetHeight
   //转换
-  thumb.value.setAttribute('style', `top: ${(400) * (e.currentTarget.scrollTop / scrollDistence.value) }px`);
+  thumb.value.setAttribute('style', `top: ${(400) * (e.currentTarget.scrollTop / scrollDistence.value)}px`);
   text.value.innerHTML = `${Math.ceil((e.currentTarget.scrollTop / scrollDistence.value) * 100)} %`
-  console.log(e.currentTarget.scrollTop,scrollDistence.value);
-  
-    temp = thumb.value.style.top.split("");
-    temp.pop();
-    temp.pop();
-    temp = temp.join("") / 1 ;
-    bluebcg_height.value= temp;
+  console.log(e.currentTarget.scrollTop, scrollDistence.value);
+
+  temp = thumb.value.style.top.split("");
+  temp.pop();
+  temp.pop();
+  temp = temp.join("") / 1;
+  bluebcg_height.value = temp;
 }
 
 // ---提交按钮之后相关的变量和方法---
 // 获取全部questiontitle
 const ques = ref(null);
 // 进度条片段的高度
-const progressPartHeight = 400 / (datas.survey.currentSurvey.quesList.length);  
+const progressPartHeight = 400 / (datas.survey.currentSurvey.quesList.length);
 
 onMounted(() => {
-//  console.log(barArr[0]);
- console.log(datas.survey.currentSurvey.quesList[0].font[1]);
+  //  console.log(barArr[0]);
+  console.log(datas.survey.currentSurvey.quesList[0].font[1]);
 });
 
 // 提交按钮  跳转：答题页==>完成页
 function toFinish() {
-   console.log(ques.value[0]);
-   
-    let flag = true;
-    // 记录未完成的问卷id
-    const uncomplete = [];
-    // 滚动的蓝色背景失效
-    bluebcg.value.style.display = 'none';
-    datas.survey.currentSurvey.quesList.forEach(item => {
-        item.titleBorder = 0;
-        item.progressPartbcg = '#5a9afa';
-        if (item.value === 0) {
-            flag = false;
-            uncomplete.push(item.id);   
-            item.titleBorder = 1;
-            item.progressPartbcg = 'red';
-        }
-    });
-    
-    // console.log(uncomplete); 
-    // console.log(questiontitle.value[0].offsetTop); 保存对应未完成题目距离顶部的距离
-    
-    let fisrtreturn = uncomplete[0] - 1;
-    if (uncomplete.length) {
-        content.value.scrollTop = ques.value[fisrtreturn].offsetTop;
+  console.log(ques.value[0]);
+
+  let flag = true;
+  // 记录未完成的问卷id
+  const uncomplete = [];
+  // 滚动的蓝色背景失效
+  bluebcg.value.style.display = 'none';
+  datas.survey.currentSurvey.quesList.forEach(item => {
+    item.titleBorder = 0;
+    item.progressPartbcg = '#5a9afa';
+    if (item.value === 0) {
+      flag = false;
+      uncomplete.push(item.id);
+      item.titleBorder = 1;
+      item.progressPartbcg = 'red';
     }
-     
+  });
+
+  // console.log(uncomplete); 
+  // console.log(questiontitle.value[0].offsetTop); 保存对应未完成题目距离顶部的距离
+  let fisrtreturn = uncomplete[0] - 1;
+  if (uncomplete.length) {
+    content.value.scrollTop = ques.value[fisrtreturn].offsetTop;
+  }
+
   if (!flag) return;
+  status = true
   datas.survey.currentSurvey.status.toEnd();
 }
 
-const barArr = new Array(datas.survey.currentSurvey.quesList.length).fill(0).map((item,index)=>new Array(datas.survey.currentSurvey.quesList[index].series).fill(0));
+const barArr = new Array(datas.survey.currentSurvey.quesList.length).fill(0).map((item, index) => new Array(datas.survey.currentSurvey.quesList[index].series).fill(0));
 </script>
 
 <template>
-  <!--问卷介绍-->
-  <template v-if="datas.survey.currentSurvey.status.intro">
-    <div class="survey_intro">
-      <p title>{{ datas.survey.currentSurvey.intro.title }}</p>
-      <p intro>
-        <span intro_title>{{ datas.survey.currentSurvey.intro.intro_title }}</span>
-        <span intro_content>{{ datas.survey.currentSurvey.intro.intro_content }}</span>
-        <span warn_title>{{ datas.survey.currentSurvey.intro.warn_title }}</span>
-        <span warn_content>{{ datas.survey.currentSurvey.intro.warn_content }}</span>
-      </p>
-      <p button @click="datas.survey.currentSurvey.status.toSurvey">{{ datas.survey.currentSurvey.intro.button }}</p>
-    </div>
-  </template>
-
-  <!--问卷填写-->
-  <template v-if="datas.survey.currentSurvey.status.survey">
-    <div class="survey">
-      <p title>{{ datas.survey.currentSurvey.intro.title }}</p>
-      <div class="scrollbar_shadow"></div>
-      <!-- 进度条 -->
-        <div class="progress" @click="scrollTo($event)">
-            <div>
-        <!-- 进度条分段，使得点击提交按钮后进度条可以分段显示红色背景，多少个题目就分多少段 (外面多个div包裹下面的style的last-child才能生效)-->
-               <div class="progress-part" v-for="(item,index) of datas.survey.currentSurvey.quesList" :key="item.id" :style="{height:`${progressPartHeight}px` , backgroundColor:`${item.progressPartbcg}`}"></div>
-            </div>
-            <div class="thumb" ref="thumb" >
-                <div class="bluebcg"  ref="bluebcg" :style="{height:`${bluebcg_height}px`}"></div>
-            </div>
-            <div class="text" ref="text">0%</div>
-        </div>
-
-      <div class="survey_area" @scroll="onScroll($event)" ref="content">
+  <div wrapper>
+    <!--问卷介绍-->
+    <template v-if="datas.survey.currentSurvey.status.intro">
+      <div class="survey_intro">
+        <p title>{{ datas.survey.currentSurvey.intro.title }}</p>
         <p intro>
           <span intro_title>{{ datas.survey.currentSurvey.intro.intro_title }}</span>
           <span intro_content>{{ datas.survey.currentSurvey.intro.intro_content }}</span>
           <span warn_title>{{ datas.survey.currentSurvey.intro.warn_title }}</span>
           <span warn_content>{{ datas.survey.currentSurvey.intro.warn_content }}</span>
         </p>
-        <div class="ques">
-          <div v-for="(item, index) of datas.survey.currentSurvey.quesList" ref="ques"   :style="{border:`${item.titleBorder}px solid red`}">
-            <div>
-              <span>{{ index + 1 }}.</span><span>{{ item.ques }}</span>
-            </div>
-            <!-- 总宽度为600-->
-            <div :style="{ backgroundColor: `${item.value === 0 ? 'rgba(245, 245, 245, 1)' : 'rgb(229,229,229)'}` }">
-            <!-- bar -->
-                <div v-for="(b,i) of barArr[index]" class="bar" @click="item.value = i+1">
-                   <div class="font">{{datas.survey.currentSurvey.quesList[index].font[i]}}</div>
+        <p button @click="() => { datas.survey.currentSurvey.status.toSurvey(); status = true }">{{
+            datas.survey.currentSurvey.intro.button
+        }}</p>
+      </div>
+    </template>
+
+    <!--问卷填写-->
+    <template v-if="datas.survey.currentSurvey.status.survey">
+      <div class="survey">
+        <p title>{{ datas.survey.currentSurvey.intro.title }}</p>
+        <div class="scrollbar_shadow"></div>
+        <!-- 进度条 -->
+        <div class="progress" @click="scrollTo($event)">
+          <div>
+            <!-- 进度条分段，使得点击提交按钮后进度条可以分段显示红色背景，多少个题目就分多少段 (外面多个div包裹下面的style的last-child才能生效)-->
+            <div class="progress-part" v-for="(item, index) of datas.survey.currentSurvey.quesList" :key="item.id"
+              :style="{ height: `${progressPartHeight}px`, backgroundColor: `${item.progressPartbcg}` }"></div>
+          </div>
+          <div class="thumb" ref="thumb">
+            <div class="bluebcg" ref="bluebcg" :style="{ height: `${bluebcg_height}px` }"></div>
+          </div>
+          <div class="text" ref="text">0%</div>
+        </div>
+
+        <div class="survey_area" @scroll="onScroll($event)" ref="content">
+          <p intro>
+            <span intro_title>{{ datas.survey.currentSurvey.intro.intro_title }}</span>
+            <span intro_content>{{ datas.survey.currentSurvey.intro.intro_content }}</span>
+            <span warn_title>{{ datas.survey.currentSurvey.intro.warn_title }}</span>
+            <span warn_content>{{ datas.survey.currentSurvey.intro.warn_content }}</span>
+          </p>
+          <div class="ques">
+            <div v-for="(item, index) of datas.survey.currentSurvey.quesList" ref="ques"
+              :style="{ border: `${item.titleBorder}px solid red` }">
+              <div>
+                <span>{{ index + 1 }}.</span><span>{{ item.ques }}</span>
+              </div>
+              <!-- 总宽度为600-->
+              <div :style="{ backgroundColor: `${item.value === 0 ? 'rgba(245, 245, 245, 1)' : 'rgb(229,229,229)'}` }">
+                <!-- bar -->
+                <div v-for="(b, i) of barArr[index]" class="bar" @click="item.value = i + 1">
+                  <div class="font">{{ datas.survey.currentSurvey.quesList[index].font[i] }}</div>
                 </div>
-              <div class="thumb" :style="{ left: `${item.value === 0 ? -12 : -12 + (item.value - 1) * 600/(barArr[index].length-1)}px` }"></div>
+                <div class="thumb"
+                  :style="{ left: `${item.value === 0 ? -12 : -12 + (item.value - 1) * 600 / (barArr[index].length - 1)}px` }">
+                </div>
+              </div>
             </div>
           </div>
+          <div class="submitBtn" @click="toFinish">提交问卷</div>
         </div>
-        <div class="submitBtn" @click="toFinish">提交问卷</div>
+      </div>
+
+    </template>
+
+    <!-- 问卷完成部分 -->
+    <div class="finish-wrapper" v-if="datas.survey.currentSurvey.status.end">
+      <div class="innerbox">
+        <div class="finish-title">
+          <h2>{{ datas.survey.currentSurvey.end.ok }}</h2>
+          <h3>{{ datas.survey.currentSurvey.end.title }}</h3>
+          <p>{{ datas.survey.currentSurvey.end.detail }}</p>
+        </div>
+        <el-button type="primary" class="finish-submit">{{ datas.survey.currentSurvey.end.button }}</el-button>
       </div>
     </div>
-  </template>
-
-<!-- 问卷完成部分 -->
-<div class="finish-wrapper" v-if="datas.survey.currentSurvey.status.end">
-     <div class="innerbox">
-        <div class="finish-title">
-           <h2>{{datas.survey.currentSurvey.end.ok}}</h2>
-           <h3>{{datas.survey.currentSurvey.end.title}}</h3>
-           <p>{{datas.survey.currentSurvey.end.detail}}</p>
-        </div>
-      <el-button type="primary" class="finish-submit">{{datas.survey.currentSurvey.end.button}}</el-button>
-     </div>
-</div>
-
+  </div>
 </template>
 
 <style lang="less" scoped>
 @themeColor: rgba(30, 111, 255, 1);
+
+div[wrapper]{
+  display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    position: relative;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
 
 div.survey {
   display: flex;
@@ -213,28 +224,32 @@ div.survey {
       transform: translateY(-10px);
       background-color: rgba(255, 255, 255, 1);
       cursor: pointer;
-         &::before{
-            content: '';
-            width: 100%;
-            height: 100%;
-            border-radius: 5px;
-            position: absolute;
-            background-color: rgba(255, 255, 255, 1);
-            box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.25);
-        }
+
+      &::before {
+        content: '';
+        width: 100%;
+        height: 100%;
+        border-radius: 5px;
+        position: absolute;
+        background-color: rgba(255, 255, 255, 1);
+        box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.25);
+      }
     }
+
     // 进度条分段
-        .progress-part{
-           width: 8px;
-           pointer-events: none;
-        //    border-radius: 5px;   
-            &:first-child{
-                 border-radius: 5px 5px 0 0;  
-            }    
-            &:last-child{
-                 border-radius: 0 0 5px 5px;  
-            }
-         }
+    .progress-part {
+      width: 8px;
+      pointer-events: none;
+
+      //    border-radius: 5px;   
+      &:first-child {
+        border-radius: 5px 5px 0 0;
+      }
+
+      &:last-child {
+        border-radius: 0 0 5px 5px;
+      }
+    }
 
     >div.text {
       position: absolute;
@@ -248,17 +263,18 @@ div.survey {
       font-size: 16px;
       line-height: 18px;
     }
-     .bluebcg{
-          background-color: #4791ff;
-          width: 8px;
-          position: absolute;
-          bottom: 8px;
-          height: 200px;
-          left: 2px;
-          z-index: -9;
-          border-radius: 5px;
-          pointer-events: none;
-      }
+
+    .bluebcg {
+      background-color: #4791ff;
+      width: 8px;
+      position: absolute;
+      bottom: 8px;
+      height: 200px;
+      left: 2px;
+      z-index: -9;
+      border-radius: 5px;
+      pointer-events: none;
+    }
 
     position: absolute;
     z-index: 1;
@@ -304,6 +320,7 @@ div.survey {
     overflow: auto;
     position: relative;
     background-color: white;
+
     >p[intro] {
       display: block;
       height: auto;
@@ -352,11 +369,13 @@ div.survey {
       height: auto;
       width: 750px;
       margin-top: 50px;
+
       >div {
         display: block;
         height: auto;
         width: 100%;
         margin-bottom: 30px;
+
         >div:nth-child(1) {
           display: block;
           height: auto;
@@ -394,7 +413,7 @@ div.survey {
           @barWidth: 5px;
           @barHeight: 30px;
           @thumbSize: @Height+4px;
-     
+
           display: block;
           height: @Height;
           width: @Width;
@@ -404,28 +423,31 @@ div.survey {
           display: flex;
           justify-content: space-between;
           transform: translateX(45px);
-          >div.bar{
+
+          >div.bar {
             height: @barHeight;
             width: @barWidth;
             background-color: rgba(204, 204, 204, 1);
             cursor: pointer;
-            transform:translateX(-2px) translateY(-9px);
+            transform: translateX(-2px) translateY(-9px);
           }
-          .font{
+
+          .font {
             font-family: '思源黑体';
             text-align: center;
-             width: 60px;
-             font-size: 12;
-             position: absolute;
-             left: 50%;
-             transform: translateX(-50%);
-             bottom: 36px;
-             font-size: 12px;
-             font-weight: 400;
-             letter-spacing: 0px;
-             color: rgba(0, 0, 0, 1);
-             vertical-align: top;
+            width: 60px;
+            font-size: 12;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 36px;
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 0px;
+            color: rgba(0, 0, 0, 1);
+            vertical-align: top;
           }
+
           >div.thumb {
             position: absolute;
             z-index: 2;
@@ -436,7 +458,7 @@ div.survey {
             background-color: @themeColor;
             border-radius: 5px;
             transition: all 0.2s linear;
-         
+
             &::before {
               content: "";
               position: absolute;
@@ -567,82 +589,90 @@ div.survey_intro {
 }
 
 // 完成问卷页面的样式
-.finish-wrapper{
-    width: 100%;
-    height: 100%;
-    // background-color: pink;
-    .innerbox{
-        width: 400px;
-        height: 380px;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translateX(-50%) translateY(-50%);
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-      .finish-title{
-        width: 365px;
-        height: 190px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        text-align: center;
-         h2{
-            font-family: '思源黑体';
-            font-size: 36px;
-            font-weight: 500;
-            letter-spacing: 0px;
-            line-height: 44px;
-            margin-left: -18px;
-            &::after{
-                content: '✔';
-                color:white;
-                font-size: 24px;
-                width:36px;
-                height:36px;
-                background: radial-gradient(104.2% 104.2%, rgba(30, 111, 255, 1) 0%, rgba(170, 203, 255, 1) 100%);
-                border-radius: 50%;
-                position: absolute;
-                margin-left:8px;
-                top: 5px;
-                text-align: center;
-                line-height: 36px;
-            }
-         }
-         h3{
-            font-family: '思源黑体';
-            font-size: 36px;
-            font-weight: 500;
-            letter-spacing: 0px;
-            line-height: 44px;
-            color: rgba(30, 111, 255, 1);
-         }
-         p{
-            font-family: '思源黑体';
-            font-size: 20px;
-            font-weight: 400;
-            letter-spacing: 0px;
-            line-height: 28px;
-            color: rgba(0, 0, 0, 1);
-            text-align: center;
-         }
+.finish-wrapper {
+  width: 100%;
+  height: 100%;
+
+  // background-color: pink;
+  .innerbox {
+    width: 400px;
+    height: 380px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    .finish-title {
+      width: 365px;
+      height: 190px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+
+      h2 {
+        font-family: '思源黑体';
+        font-size: 36px;
+        font-weight: 500;
+        letter-spacing: 0px;
+        line-height: 44px;
+        margin-left: -18px;
+
+        &::after {
+          content: '✔';
+          color: white;
+          font-size: 24px;
+          width: 36px;
+          height: 36px;
+          background: radial-gradient(104.2% 104.2%, rgba(30, 111, 255, 1) 0%, rgba(170, 203, 255, 1) 100%);
+          border-radius: 50%;
+          position: absolute;
+          margin-left: 8px;
+          top: 5px;
+          text-align: center;
+          line-height: 36px;
+        }
       }
-       .finish-submit{
-        width: 180px;
-        height: 45px;
-        background-color: rgba(30, 111, 255, 1);
-        margin-top: 40px;
-        &:hover{
-            background-color: #4791ff;
-        }
-        &:active{
-            background-color: #0f52d9;
-        }
-       }
+
+      h3 {
+        font-family: '思源黑体';
+        font-size: 36px;
+        font-weight: 500;
+        letter-spacing: 0px;
+        line-height: 44px;
+        color: rgba(30, 111, 255, 1);
+      }
+
+      p {
+        font-family: '思源黑体';
+        font-size: 20px;
+        font-weight: 400;
+        letter-spacing: 0px;
+        line-height: 28px;
+        color: rgba(0, 0, 0, 1);
+        text-align: center;
+      }
     }
 
-}
+    .finish-submit {
+      width: 180px;
+      height: 45px;
+      background-color: rgba(30, 111, 255, 1);
+      margin-top: 40px;
 
+      &:hover {
+        background-color: #4791ff;
+      }
+
+      &:active {
+        background-color: #0f52d9;
+      }
+    }
+  }
+
+}
 </style>

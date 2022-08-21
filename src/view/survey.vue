@@ -11,53 +11,55 @@
 // }).catch((error) => {
 //   console.log(error)
 // })
+
 //假设经过上面操作，currentSurvey获取成功
+import { provide, ref, computed } from 'vue'
 import { useStore } from "../PiniaStores/index.js"
 const datas = useStore()
 datas.survey.currentSurvey = datas.survey.survey1[1] //获取了1类型的第二套卷
-
-//动态组件=>暂时过渡
-import { ref, computed, provide } from 'vue'
+const viewId = ref(0) //加载类型1的问卷
+//动态组件
 import survey1 from '../components/surveyTemplate/survey1.vue'
 import survey2 from '../components/surveyTemplate/survey2.vue'
 import survey3 from '../components/surveyTemplate/survey3.vue'
 import survey4 from '../components/surveyTemplate/survey4.vue'
 import survey5 from '../components/surveyTemplate/survey5.vue'
-const viewList = [survey1, survey2, survey3, survey4, survey5]
-const viewId = ref(0)
-const currentView = computed(() => viewList[viewId.value])
-provide('viewId', viewId)
+const surveyList = [survey1, survey2, survey3, survey4, survey5]
+const currentView = computed(() => surveyList[viewId.value])
+//问卷填写的状态（问卷介绍，填写问卷，填写结束）
+const status = ref(false)
+provide('status', status)
 </script>
 
 <template>
-  <div id="wrapper">
+  <div class="wrapper">
     <div class="tag_wrapper">
-      <a @click="viewId=0"><span>威廉斯创造力倾向表模板</span></a>
-      <a @click="viewId=1"><span>贝尔宾模板</span></a>
-      <a @click="viewId=2"><span>单选模板</span></a>
-      <a @click="viewId=3"><span>多选模板</span></a>
-      <a @click="viewId=4"><span>文本模板</span></a>
+      <a @click="viewId = 0"><span>威廉斯创造力倾向表模板</span></a>
+      <a @click="viewId = 1"><span>贝尔宾模板</span></a>
+      <a @click="viewId = 2"><span>单选模板</span></a>
+      <a @click="viewId = 3"><span>多选模板</span></a>
+      <a @click="viewId = 4"><span>文本模板</span></a>
     </div>
     <div class="container">
       <img dog-ear src="/tangible.png" />
       <div class="decoration5"></div>
-      <div class="decoration1"></div>
-      <div class="decoration2"></div>
-      <div class="decoration3"></div>
-      <div class="decoration4"></div>
+      <div class="decoration1" v-show="!status"></div>
+      <div class="decoration2" v-show="!status"></div>
+      <div class="decoration3" v-show="!status"></div>
+      <div class="decoration4" v-show="!status"></div>
       <!--动态组件-->
-      <component :is="currentView"></component>
+      <Transition name="fade" mode="out-in">
+        <KeepAlive>
+          <component :is="currentView"></component>
+        </KeepAlive>
+      </Transition>
+      <!--动态组件-->
     </div>
   </div>
 </template>
 
 <style lang="less" scoped>
-@tag_wrapperHeight: 40px;
-@themeColor1: rgba(30, 111, 255, 1);
-@themeColor2: rgba(235, 245, 255, 1);
-@themeColor: rgba(30, 111, 255, 1);
-
-div#wrapper {
+div.wrapper {
   display: block;
   height: 100%;
   width: calc(100% - 14px);
@@ -69,7 +71,7 @@ div#wrapper {
     flex-wrap: nowrap;
     justify-content: flex-start;
     align-items: center;
-    height: @tag_wrapperHeight;
+    height: 40px;
     width: 100%;
     padding-left: 10px;
 
@@ -84,7 +86,7 @@ div#wrapper {
       margin-right: 5px;
       padding: 5px 30px 5px 30px;
       position: relative;
-      background-color: @themeColor2;
+      background-color: rgba(235, 245, 255, 1);
       clip-path: polygon(83.5% 1%,
           84% 2%,
           84.5% 3%,
@@ -118,7 +120,7 @@ div#wrapper {
       }
 
       &.active {
-        background-color: @themeColor1;
+        background-color: rgba(30, 111, 255, 1);
 
         &::before {
           border: solid 1px rgba(255, 255, 255, 1);
@@ -137,7 +139,7 @@ div#wrapper {
     flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
-    height: calc(100% - @tag_wrapperHeight - 10px);
+    height: calc(100% - 40px - 10px);
     width: 100%;
     position: relative;
     top: 0;
@@ -217,6 +219,17 @@ div#wrapper {
       right: 0;
       object-fit: contain;
       transform: scale(1.07);
+    }
+
+
+    .fade-enter-active,
+    .navbar-leave-active {
+      transition: all 0.2s ease-in-out 0s;
+    }
+
+    .fade-enter-from,
+    .fade-leave-to {
+      filter: opacity(0);
     }
   }
 }
