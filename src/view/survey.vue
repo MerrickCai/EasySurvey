@@ -1,13 +1,9 @@
 <script setup>
-//路由信息=>改用survey的哪套信息
-import { useRoute } from "vue-router";
-const route = useRoute();
-const id = 1;
-
 //获取此套问卷信息数据
-import { useStore } from "../PiniaStores/index.js";
-const datas = useStore();
-datas.survey.currentSurvey = datas.survey.survey1[id - 1];
+const id = 1
+import { useStore } from "../PiniaStores/index.js"
+const datas = useStore()
+datas.survey.currentSurvey = datas.survey.survey1[id - 1]
 </script>
 
 <template>
@@ -21,9 +17,6 @@ datas.survey.currentSurvey = datas.survey.survey1[id - 1];
       </router-link>
       <router-link :to="{ path: '/survey/survey2/1' }" active-class="active">
         <span>贝尔宾团队理论测试</span>
-      </router-link>
-      <router-link :to="{ path: '/survey/surveynew' }" active-class="active">
-        <span>点击创建新问卷</span>
       </router-link>
       <router-link :to="{ path: '/survey/survey3/1' }" active-class="active">
         <span>survey3单选</span>
@@ -40,12 +33,10 @@ datas.survey.currentSurvey = datas.survey.survey1[id - 1];
       <img dog-ear src="/tangible.png" />
       <div class="decoration5"></div>
       <!--填问卷时隐藏-->
-      <template
-        v-if="
-          datas.survey.currentSurvey.status.intro ||
-          datas.survey.currentSurvey.status.end
-        "
-      >
+      <template v-if="
+        datas.survey.currentSurvey.status.intro ||
+        datas.survey.currentSurvey.status.end
+      ">
         <div class="decoration1"></div>
         <!--左上-->
         <div class="decoration2"></div>
@@ -72,7 +63,7 @@ div#wrapper {
   width: calc(100% - 14px);
   margin: 0 7px;
 
-  > div.tag_wrapper {
+  >div.tag_wrapper {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -82,7 +73,7 @@ div#wrapper {
     width: 100%;
     padding-left: 10px;
 
-    > a {
+    >a {
       display: flex;
       flex-direction: row;
       flex-wrap: nowrap;
@@ -94,17 +85,15 @@ div#wrapper {
       padding: 5px 30px 5px 30px;
       position: relative;
       background-color: @themeColor2;
-      clip-path: polygon(
-        83.5% 1%,
-        84% 2%,
-        84.5% 3%,
-        84.5% 4%,
-        85% 4%,
-        100% 100%,
-        0 100%,
-        0 0,
-        83% 0
-      );
+      clip-path: polygon(83.5% 1%,
+          84% 2%,
+          84.5% 3%,
+          84.5% 4%,
+          85% 4%,
+          100% 100%,
+          0 100%,
+          0 0,
+          83% 0);
       border-radius: 4px 0 0 0;
 
       &::before {
@@ -142,7 +131,7 @@ div#wrapper {
     }
   }
 
-  > div.container {
+  >div.container {
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -156,6 +145,7 @@ div#wrapper {
     border-radius: 5px;
     box-shadow: 0px 5px 10px 0 rgba(73, 107, 158, 0.1);
     z-index: 0;
+
     div.decoration1 {
       display: block;
       height: 400px;
