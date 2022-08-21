@@ -47,19 +47,14 @@ async function register(account, password, agree) {
             datas.user.status = true
             datas.user.account = account
             datas.user.password = password
-            datas.user.userId = response.data.userId
-            datas.user.token = response.data.token
-            datas.user.refreshtoken = response.data.refreshtoken
+            datas.user.userId = response.data.data.userId
+            datas.user.token = response.data.data.token
+            datas.user.refreshtoken = response.data.data.refreshtoken
             //默认记住账号密码到本地
             localStorage.setItem('account', account)
             localStorage.setItem('password', password)
             //跳转填写地区和年龄弹窗
             viewId.value = 3
-            // if (route.query.redirect) { //判断用户是否从其他页面过来
-            //     router.push({ path: route.query.redirect })
-            // } else {
-            //     router.push({ path: '/' })
-            // }
         } else { //response.data.code === 400=>重复注册
             alert('请勿重复注册')
         }
@@ -79,10 +74,8 @@ async function register(account, password, agree) {
             </div>
         </div>
         <div class="typeArea">
-            <input type="text" v-model="user.account" placeholder="请输入用户名 / 手机号 / Email" onfocus="this.placeholder=''"
-                onblur="this.placeholder='请输入用户名 / 手机号 / Email'" />
-            <input type="password" v-model="user.password" placeholder="设置密码（8-20位字母、数字或特殊符号）"
-                onfocus="this.placeholder=''" onblur="this.placeholder='设置密码（8-20位字母、数字或特殊符号）'" />
+            <input type="text" v-model="user.account" placeholder="请输入用户名 / 手机号 / Email" />
+            <input type="password" v-model="user.password" placeholder="设置密码（8-20位字母、数字或特殊符号）" />
         </div>
         <div class="functionArea">
             <input type="checkbox" v-model="user.agree" />
@@ -159,6 +152,7 @@ async function register(account, password, agree) {
         align-items: center;
         height: 110px;
         width: 70%;
+        color: rgba(30, 111, 255, 1);
 
         >input {
             outline: none;

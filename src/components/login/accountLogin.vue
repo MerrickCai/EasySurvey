@@ -43,20 +43,15 @@ async function login(account, password, remember) {
                datas.user.status = true
                datas.user.account = account
                datas.user.password = password
-               datas.user.userId = response.data.userId
-               datas.user.token = response.data.token
-               datas.user.refreshtoken = response.data.refreshtoken
+               datas.user.userId = response.data.data.userId
+               datas.user.token = response.data.data.token
+               datas.user.refreshtoken = response.data.data.refreshtoken
                if (remember) { //确认用户是否自动登录
                     localStorage.setItem('account', account)
                     localStorage.setItem('password', password)
                }
                //跳转填写地区和年龄弹窗
                viewId.value = 3
-               // if (route.query.redirect) { //判断用户是否从其他页面过来
-               //      router.push({ path: route.query.redirect })
-               // } else {
-               //      router.push({ path: '/' })
-               // }
           } else { //response.data.code === 401
                alert('账号密码错误')
           }
@@ -73,10 +68,8 @@ async function login(account, password, remember) {
                <a active @click="viewId = 1">账号登录</a>
           </div>
           <div class="typeArea">
-               <input type="text" v-model="user.account" placeholder="用户名 / 手机号 / Email" onfocus="this.placeholder=''"
-                    onblur="this.placeholder='用户名 / 手机号 / Email'" />
-               <input type="password" v-model="user.password" placeholder="请输入登录密码" onfocus="this.placeholder=''"
-                    onblur="this.placeholder='请输入登录密码'" />
+               <input type="text" v-model="user.account" placeholder="用户名 / 手机号 / Email" />
+               <input type="password" v-model="user.password" placeholder="请输入登录密码" />
           </div>
           <div class="functionArea">
                <div remember>
@@ -155,6 +148,7 @@ div.wrapper {
                background-color: rgb(255, 255, 255);
                text-indent: 12px;
                font-size: 13px;
+               color: rgba(30, 111, 255, 1);
 
                &:nth-child(1) {
                     margin-bottom: 15px;
