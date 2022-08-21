@@ -16,7 +16,7 @@
       >
     </p>
     <p class="questitle">
-      <span>{{ radiofile.questionList.indexOf(quesitem) + 1 }}</span>
+      <span>{{ textfile.questionList.indexOf(quesitem) + 1 }}</span>
       <span class="titlecon" v-show="questitleshow" @click="changeqlshow">
         {{ quesitem.questiontitle }}
       </span>
@@ -36,7 +36,7 @@
 <script setup>
 import { ref, nextTick, inject } from "vue";
 import { nanoid } from "nanoid";
-const props = defineProps(["quesitem", "radiofile", "rreceive", "rdeleteques"]);
+const props = defineProps(["quesitem", "textfile", "treceive", "tdeleteques"]);
 //鼠标滚轮在添加新题目时滑动到底部
 let { scroll, updatescroll } = inject("changescroll");
 //添加问题
@@ -46,21 +46,21 @@ function addamount() {
     questiontitle: "请输入题目标题",
     option: ["选项", "选项"],
   };
-  props.rreceive(quesobj);
+  props.treceive(quesobj);
 }
 //删除问题
 let deletematrix = ref(null);
 function cursorfail() {
-  if (props.radiofile.questionList.length == 1) {
+  if (props.textfile.questionList.length == 1) {
     deletematrix.value.style.cursor = "not-allowed";
   }
-  if (props.radiofile.questionList.length != 1) {
+  if (props.textfile.questionList.length != 1) {
     deletematrix.value.style.cursor = "pointer";
   }
 }
 function deleteamount(id) {
-  if (props.radiofile.questionList.length != 1) {
-    props.rdeleteques(id);
+  if (props.textfile.questionList.length != 1) {
+    props.tdeleteques(id);
   }
 }
 //次级题目

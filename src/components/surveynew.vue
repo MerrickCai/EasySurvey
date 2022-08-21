@@ -47,7 +47,7 @@
       <!-- 题目列表 -->
       <ul>
         <keep-alive>
-        <component :is="typeview" :fileword="fileword" :receive="receive" :deleteques="deleteques" :scalefile="scalefile" :sreceive="sreceive" :sdeleteques="sdeleteques" :radiofile="radiofile" :rreceive="rreceive" :rdeleteques="rdeleteques"></component>               
+        <component :is="typeview" :fileword="fileword" :receive="receive" :deleteques="deleteques" :scalefile="scalefile" :sreceive="sreceive" :sdeleteques="sdeleteques" :radiofile="radiofile" :rreceive="rreceive" :rdeleteques="rdeleteques" :checkboxfile="checkboxfile" :creceive="creceive" :cdeleteques="cdeleteques" :textfile="textfile" :treceive="treceive" :tdeleteques="tdeleteques"></component>               
         </keep-alive>
       </ul>
     </div>
@@ -219,6 +219,51 @@ function rreceive(quesobj) {
 function rdeleteques(id) {
   if (confirm("确定删除吗")) {
     radiofile.questionList = radiofile.questionList.filter((quesitem) => {
+      return quesitem.id != id;
+    });
+  }
+}
+
+//存储多选问卷信息内容
+let checkboxfile = reactive({
+  questionList: [
+    {
+      id: nanoid(),
+      questiontitle: "请输入题目标题",
+      option: ["选项", "选项"],
+    },
+  ],
+});
+//多选问卷新增问题
+function creceive(quesobj) {
+  checkboxfile.questionList.push(quesobj);
+}
+//多选问卷删除问题
+function cdeleteques(id) {
+  if (confirm("确定删除吗")) {
+    checkboxfile.questionList = checkboxfile.questionList.filter((quesitem) => {
+      return quesitem.id != id;
+    });
+  }
+}
+
+//存储文本问卷信息内容
+let textfile = reactive({
+  questionList: [
+    {
+      id: nanoid(),
+      questiontitle: "请输入题目标题",
+    },
+  ],
+});
+//文本问卷新增问题
+function treceive(quesobj) {
+  textfile.questionList.push(quesobj);
+}
+//文本问卷删除问题
+function tdeleteques(id) {
+  if (confirm("确定删除吗")) {
+    textfile.questionList = textfile.questionList.filter((quesitem) => {
       return quesitem.id != id;
     });
   }

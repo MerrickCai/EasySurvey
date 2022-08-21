@@ -1,13 +1,13 @@
 <template>
-  <div class="radioall">
-    <transition-group name="radioques">
+  <div class="textall">
+    <transition-group name="textques">
       <textques
-        v-for="(item, index) in radiofile.questionList"
+        v-for="(item, index) in textfile.questionList"
         :key="item.id"
         :quesitem="item"
-        :radiofile="radiofile"
-        :rreceive="rreceive"
-        :rdeleteques="rdeleteques"
+        :textfile="textfile"
+        :treceive="treceive"
+        :tdeleteques="tdeleteques"
       ></textques>
     </transition-group>
   </div>
@@ -15,22 +15,22 @@
 
 <script setup>
 import textques from "./textques.vue";
-const props = defineProps(["radiofile", "rreceive", "rdeleteques"]);
+const props = defineProps(["textfile", "treceive", "tdeleteques"]);
 </script>
 
 <style lang="less" scoped>
-.radioques-enter-active,
-.radioques-leave-active {
+.textques-enter-active,
+.textques-leave-active {
   transition: all 0.5s ease;
 }
-.radioques-enter-from,
-.radioques-leave-to {
+.textques-enter-from,
+.textques-leave-to {
   opacity: 0;
-  transform: radio(0) translateY(30px);
+  transform: text(0) translateY(30px);
 }
-.radioques-enter-to,
-.radioques-leave-from {
+.textques-enter-to,
+.textques-leave-from {
   opacity: 1;
-  transform: radio(1);
+  transform: text(1);
 }
 </style>

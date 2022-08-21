@@ -1,13 +1,13 @@
 <template>
-  <div class="radioall">
-    <transition-group name="radioques">
+  <div class="checkboxall">
+    <transition-group name="checkboxques">
       <checkbox
-        v-for="(item, index) in radiofile.questionList"
+        v-for="(item, index) in checkboxfile.questionList"
         :key="item.id"
         :quesitem="item"
-        :radiofile="radiofile"
-        :rreceive="rreceive"
-        :rdeleteques="rdeleteques"
+        :checkboxfile="checkboxfile"
+        :creceive="creceive"
+        :cdeleteques="cdeleteques"
       ></checkbox>
     </transition-group>
   </div>
@@ -16,22 +16,22 @@
 <script setup>
 import checkbox from "./checkbox.vue";
 
-const props = defineProps(["radiofile", "rreceive", "rdeleteques"]);
+const props = defineProps(["checkboxfile", "creceive", "cdeleteques"]);
 </script>
 
 <style lang="less" scoped>
-.radioques-enter-active,
-.radioques-leave-active {
+.checkboxques-enter-active,
+.checkboxques-leave-active {
   transition: all 0.5s ease;
 }
-.radioques-enter-from,
-.radioques-leave-to {
+.checkboxques-enter-from,
+.checkboxques-leave-to {
   opacity: 0;
-  transform: radio(0) translateY(30px);
+  transform: checkbox(0) translateY(30px);
 }
-.radioques-enter-to,
-.radioques-leave-from {
+.checkboxques-enter-to,
+.checkboxques-leave-from {
   opacity: 1;
-  transform: radio(1);
+  transform: checkbox(1);
 }
 </style>
