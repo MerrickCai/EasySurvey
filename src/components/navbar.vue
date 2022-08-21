@@ -1,8 +1,6 @@
 <script setup>
-//路由
 import { useRouter } from 'vue-router'
 const router = useRouter()
-//顶部导航栏组件的展示（除logo外的控件）
 import { useStore } from '../PiniaStores/index.js'
 const datas = useStore()
 </script>

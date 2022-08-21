@@ -18,7 +18,7 @@ import { useStore } from "../../PiniaStores/index.js"
 const datas = useStore()
 //表单验证
 function validate(age) {
-    if (!/^[0-9]{1,3}$/.test(age)) {
+    if (!/^[0-9]{1,3}$/.test(age)) { //1-3位数字
         alert('请输入正确的年龄')
         return false
     }
@@ -46,20 +46,19 @@ async function upLoad(area, age) {
         data: {
             id: datas.user.userId,
             age: age,
-            province: area[0],
+            province: area[0], //area是数组，目前只上传省
         }
     }).then((response) => {
-        console.log(response)
         //写入用户数据
         datas.user.age = age
         datas.user.area = area[0]
-        console.log(datas.user)
         if (route.query.redirect) { //判断用户是否从其他页面过来
             router.push({ path: route.query.redirect })
         } else {
             router.push({ path: '/' })
         }
     }).catch((error) => {//上传失败
+        alert('由于网络问题上传失败')
         console.log(error)
     })
 }

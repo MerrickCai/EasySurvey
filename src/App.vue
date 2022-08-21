@@ -1,8 +1,6 @@
 <script setup>
-//顶部导航栏组件
 import navbar from './components/navbar.vue'
-
-//全局前置守卫
+//全局前置守卫（帮助用户自动登录）
 import { useRouter } from 'vue-router'
 import { useStore } from "./PiniaStores/index.js"
 import axios from 'axios'
@@ -36,13 +34,12 @@ router.beforeEach(async (to, from) => {
       datas.user.status = true
       datas.user.account = localStorage.getItem('account')
       datas.user.password = localStorage.getItem('password')
-      datas.user.userId = response.data.userId
-      datas.user.token = response.data.token
-      datas.user.refreshtoken = response.data.refreshtoken
+      datas.user.userId = response.data.data.userId
+      datas.user.token = response.data.data.token
+      datas.user.refreshtoken = response.data.data.refreshtoken
       return true
     } catch (error) {
       console.log('用户选择记住密码，本次为自动登录，但是登录失败')
-      // 跳转登录注册页面
       datas.navShow = false
       return {
         path: '/login',
