@@ -2,10 +2,7 @@
   <li>
     <p class="itemnav">
       <span class="type">矩阵</span>
-      <i class="sttitle">
-        创建次级题目
-        <el-switch v-model="value1" :style="{ cursor: 'not-allowed' }" />
-      </i>
+
       <i class="additem" @click="addamount(), updatescroll()">+</i>
       <i
         class="delitem"
@@ -55,7 +52,31 @@
         min="3"
         @change="num = 0"
       />
-      <img src="/tip.png" alt="" />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        width="14"
+        height="14"
+        viewBox="0 0 14 14"
+        fill="none"
+      >
+        <defs><rect id="path_0" x="0" y="0" width="14" height="14" /></defs>
+        <g opacity="1" transform="translate(0 0)  rotate(0 7 7)">
+          <mask id="bg-mask-0" fill="white">
+            <use xlink:href="#path_0"></use>
+          </mask>
+          <g mask="url(#bg-mask-0)">
+            <path
+              id="分组 1"
+              fill-rule="evenodd"
+              style="fill: #1e6fff"
+              transform="translate(0 0)  rotate(0 7 7)"
+              opacity="1"
+              d="M0 7C0 10.87 3.13 14 7 14C10.87 14 14 10.87 14 7C14 3.14 10.86 0 7 0C3.13 0 0 3.13 0 7Z M12.8367 6.99667C12.8367 3.77667 10.2167 1.16667 6.99667 1.16667C3.77667 1.16667 1.16667 3.77667 1.16667 6.99667C1.16667 10.2167 3.77667 12.8367 6.99667 12.8367C10.2167 12.8367 12.8367 10.2167 12.8367 6.99667Z M6.99667 4.19167C7.64667 4.19167 8.16667 4.71167 8.16667 5.35167C8.16667 6.00167 7.64667 6.52167 6.99667 6.52167C6.67667 6.52167 6.41667 6.78167 6.41667 7.10167L6.41667 8.63167C6.41667 8.95167 6.67667 9.21167 6.99667 9.21167C7.32667 9.21167 7.58667 8.95167 7.58667 8.63167L7.58667 7.61167C8.71667 7.31167 9.45667 6.22167 9.30667 5.06167C9.15667 3.90167 8.17667 3.02167 6.99667 3.02167C5.71667 3.02167 4.66667 4.07167 4.66667 5.35167C4.66667 5.68167 4.92667 5.94167 5.24667 5.94167C5.57667 5.94167 5.83667 5.68167 5.83667 5.35167C5.83667 4.71167 6.35667 4.19167 6.99667 4.19167Z M6.70667 10.9425C6.88667 11.0425 7.10667 11.0425 7.29667 10.9425C7.47667 10.8325 7.58667 10.6425 7.58667 10.4325C7.58667 10.1125 7.32667 9.8525 6.99667 9.8525C6.67667 9.8525 6.41667 10.1125 6.41667 10.4325C6.41667 10.6425 6.52667 10.8325 6.70667 10.9425Z "
+            />
+          </g>
+        </g>
+      </svg>
       <div class="tip">矩阵范围为3~7 请输入合适数值</div>
     </div>
   </li>
@@ -152,12 +173,6 @@ li {
     }
     i {
       font-style: normal;
-    }
-    .sttitle {
-      margin-top: 5px;
-      font-size: 12px;
-      font-weight: 400;
-      color: rgba(30, 111, 255, 1);
     }
     .additem {
       cursor: pointer;
@@ -295,7 +310,7 @@ li {
       left: 670px;
       bottom: 10px;
     }
-    img {
+    svg {
       position: absolute;
       bottom: 10px;
       left: 748px;

@@ -2,10 +2,6 @@
   <li>
     <p class="itemnav">
       <span class="type">多选</span>
-      <i class="sttitle">
-        创建次级题目
-        <el-switch v-model="value1" :style="{ cursor: 'not-allowed' }" />
-      </i>
       <i class="additem" @click="addamount(), updatescroll()">+</i>
       <i
         class="delitem"
@@ -165,12 +161,6 @@ li {
     }
     i {
       font-style: normal;
-    }
-    .sttitle {
-      margin-top: 5px;
-      font-size: 12px;
-      font-weight: 400;
-      color: rgba(30, 111, 255, 1);
     }
     .additem {
       cursor: pointer;
