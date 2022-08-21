@@ -1,7 +1,7 @@
 <template>
   <li>
     <p class="itemnav">
-      <span class="type">单选</span>
+      <span class="type">文本</span>
       <i class="sttitle">
         创建次级题目
         <el-switch v-model="value1" :style="{ cursor: 'not-allowed' }" />
@@ -15,6 +15,21 @@
         >×</i
       >
     </p>
+    <p class="questitle">
+      <span>{{ radiofile.questionList.indexOf(quesitem) + 1 }}</span>
+      <span class="titlecon" v-show="questitleshow" @click="changeqlshow">
+        {{ quesitem.questiontitle }}
+      </span>
+      <input
+        type="text"
+        ref="questitle"
+        v-show="!questitleshow"
+        v-model="quesitem.questiontitle"
+        @blur="questitleshow = true"
+        @keyup.enter="questitleshow = true"
+      />
+    </p>
+    <p class="quesarea"></p>
   </li>
 </template>
 
@@ -50,11 +65,51 @@ function deleteamount(id) {
 }
 //次级题目
 const value1 = ref(true);
+//题目标题
+let questitle = ref(null);
+let questitleshow = ref(true);
+function changeqlshow() {
+  questitleshow.value = false;
+  nextTick(() => {
+    questitle.value.focus();
+  });
+}
+//选项题目标题
+let optiontitle = ref([]);
+let optionshow = ref([]);
+
+function optionsshow(index) {
+  optionshow.value[index] = true;
+  nextTick(() => {
+    optiontitle.value[index - 1].focus();
+  });
+}
+//添加选项
+let xuanze = ref("");
+function addaoption() {
+  props.quesitem.option.push(xuanze.value);
+}
+//删除选项
+// let deleteo = ref(null);
+// function opcursorfail() {
+//   if (props.quesitem.option.length == 1) {
+//     deleteo.value.style.cursor = "not-allowed";
+//   }
+//   if (props.quesitem.option.length != 1) {
+//     deleteo.value.style.cursor = "pointer";
+//   }
+// }
+function deleoption(id) {
+  if (props.quesitem.option.length != 1) {
+    props.quesitem.option.splice(id - 1, 1);
+  }
+  console.log(props.quesitem.option.length);
+}
 </script>
 
 <style lang="less" scoped>
 li {
-  height: 200px;
+  height: 100px;
   // box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.25);
 
   .itemnav {
@@ -98,6 +153,40 @@ li {
       font-weight: 400;
       color: rgba(30, 111, 255, 1);
     }
+  }
+  .questitle {
+    display: flex;
+    margin: 5px 40px 5px 34px;
+    font-size: 16px;
+    font-weight: 500;
+    border: 1px solid transparent;
+    color: rgba(0, 0, 0, 1);
+    word-wrap: break-word; //超出页面自动换行
+    &:hover {
+      border: 1px dashed rgba(30, 111, 255, 1);
+    }
+    .titlecon {
+      width: 200px;
+      height: 20px;
+      margin-left: 5px;
+    }
+    input[type="text"] {
+      /* 清除原有input样式 */
+      -web-kit-appearance: none;
+      -moz-appearance: none;
+      outline: 0;
+      /* 设置我们要的样式 */
+      width: 700px;
+      height: 20px;
+      opacity: 1;
+      text-align: left;
+    }
+  }
+  .quesarea {
+    width: 700px;
+    height: 30px;
+    margin-left: 34px;
+    border: 1px solid rgba(217, 217, 217, 1);
   }
 }
 </style>
