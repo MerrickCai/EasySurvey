@@ -11,12 +11,27 @@ import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
 import axios from 'axios'
-function login(account, password, remember) {
+//表单验证
+function validate(account, password) {
+     if (!/^1[0-9]{10}$/.test(account)) {
+          alert('请输入正确的手机号')
+          return false
+     }
+     if (!/^[0-9a-zA-Z_!.]{8,20}$/.test(password)) {
+          alert('请输入正确的密码')
+          return false
+     }
+     return true
+}
+async function login(account, password, remember) {
+     if (!validate(account, password)) { //表单验证
+          return false
+     }
      if (datas.user.status === true) { //确认用户是否登录
           alert('您已经登录')
           return true
      }
-     axios({
+     await axios({
           url: 'https://q.denglu1.cn/user/login',
           method: 'post',
           withCredentials: true,
