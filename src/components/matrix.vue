@@ -31,10 +31,10 @@
     </p>
     <div class="block" style="backgroundcolor: rgb(229, 229, 229)">
       <div
-        v-for="index in blocknum"
+        v-for="index in quesitem.series"
         class="bar1"
         @click="num = index"
-        :style="{ left: `${(600 / (blocknum - 1)) * (index - 1)}px` }"
+        :style="{ left: `${(600 / (quesitem.series - 1)) * (index - 1)}px` }"
       >
         <input type="text" v-model="quesitem.font[index]" />
       </div>
