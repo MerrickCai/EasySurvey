@@ -274,5 +274,4 @@ li {
     }
   }
 }
->>>>>>> 653e90322ae9090e58b7633c6923f58886e65fb1:src/components/surveynew/checkbox.vue
 </style>
