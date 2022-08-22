@@ -12,22 +12,22 @@
     <div class="newword">
       <!-- 新建问卷标题 -->
       <p class="newtitle" v-show="titleshow" @click="changetitleshow">
-        {{ fileword.intro.title }}
+        {{ filetitle.info_title }}
       </p>
       <input
         type="text"
         ref="titlein"
         class="titlein"
         v-show="!titleshow"
-        v-model="fileword.intro.title"
+        v-model="filetitle.info_title"
         @keyup.enter="titleshow = true"
         @blur="titleshow = true"
       />
       <!-- 新建问卷介绍 -->
       <p class="newintro">
-        <span class="newintro_title">{{ fileword.intro.intro_title }}</span>
+        <span class="newintro_title">问卷介绍:</span>
         <p class="newintro_con" v-show="introshow" @click="changeintroshow">
-          {{ fileword.intro.intro_content }}
+          {{ filetitle.info_para }}
         </p>
 
         <textarea
@@ -36,7 +36,7 @@
           ref="introin"
           class="introin"
           v-show="!introshow"
-          v-model="fileword.intro.intro_content"
+          v-model="filetitle.info_para"
           @keyup.enter="introshow = true"
           @blur="introshow = true"
         ></textarea>
@@ -60,7 +60,14 @@
         </keep-alive>
       </ul>
     </div>
-    <button class="push">发布问卷</button>
+    <button class="push" @click="pushfile($event)">发布问卷</button>
+    <div class="mask" :style="{display:show}">
+    <div class="sharefile">
+      <span class="shareword">分享问卷</span>
+      <span class="close" @click="disappear($event)">×</span>
+      <span class="sharequick">快分享以上二维码或点击复制<a>链接</a>填答问卷吧！</span>
+    </div>
+    </div>
   </div>
     </div>
 </template>
@@ -81,6 +88,9 @@ import checkboxlist from "../components/surveynew/checkboxlist.vue";
 import matrixlist from "../components/surveynew/matrixlist.vue";
 import scalelist from "../components/surveynew/scalelist.vue";
 import textlist from "../components/surveynew/textlist.vue";
+import { useStore } from "../PiniaStores/index.js";
+//数据
+const datas = useStore();
 //动态组件视图
 let type = ref(1);
 let typelist = [radiolist, checkboxlist, matrixlist, scalelist, textlist];
@@ -100,6 +110,12 @@ watch(scroll, () => {
     div[0].scrollTop = div[0].scrollHeight;
   });
 });
+//问卷标题介绍
+let filetitle = reactive({
+  info_title: "请输入问卷标题",
+  info_para:
+    "为了使问卷调查结果更加清晰，准确，请输入关于问卷的简短介绍以及注意事项，方便填写问卷的人更清晰的认识问卷，字数少于500字",
+});
 //存储矩阵问卷信息内容
 let fileword = reactive({
   status: {
@@ -111,16 +127,6 @@ let fileword = reactive({
       this.end = false;
       this.survey = true;
     },
-  },
-  intro: {
-    title: "请输入问卷标题",
-    intro_title: "问卷介绍：",
-    intro_content:
-      "为了使问卷调查结果更加清晰,准确,请输入关于问卷的简短介绍以及注意事项,方便填写问卷的人更清晰的认识问卷,字数少于500字",
-    warn_title: "注意：",
-    warn_content:
-      "每一题都要做，不要花太多的时间去想。所有的题目都没有“正确答案”，凭你读每一句子后的第一印象作答。 虽然没有时间限制，但应尽可能地争取以较快的速度完成，愈快愈好。",
-    button: "开始答题",
   },
   quesList: [
     {
@@ -166,10 +172,6 @@ function deleteques(id) {
 
 //存储量表问卷信息内容
 let scalefile = reactive({
-  intro: {
-    info_title: "",
-    info_para: "",
-  },
   questionIntro: {
     title: "",
     sec_title: "问卷介绍：",
@@ -278,6 +280,37 @@ function tdeleteques(id) {
       return quesitem.id != id;
     });
   }
+}
+//发布问卷
+let show = ref("none");
+function pushfile() {
+  if (type.value == 1) {
+    radiofile["intro"] = filetitle;
+    console.log(radiofile);
+    datas.survey.survey3.push(radiofile);
+    console.log(datas.survey.survey3);
+  }
+  if (type.value == 2) {
+    checkboxfile["intro"] = filetitle;
+    datas.survey.survey4.push(checkboxfile);
+  }
+  if (type.value == 3) {
+    fileword["intro"] = filetitle;
+    datas.survey.survey1.push(fileword);
+  }
+  if (type.value == 4) {
+    scalefile["intro"] = filetitle;
+    datas.survey.survey2.push(scalefile);
+  }
+  if (type.value == 5) {
+    textfile["intro"] = filetitle;
+    datas.survey.survey5.push(textfile);
+  }
+  show.value = "block";
+}
+//遮罩
+function disappear() {
+  show.value = "none";
 }
 </script>
 
@@ -493,6 +526,72 @@ div.wrapper {
       font-weight: 500;
       color: rgba(255, 255, 255, 1);
       border-radius: 2px;
+    }
+  }
+  .mask {
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  .sharefile {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 3;
+    transform: translate(-50%, -50%);
+    width: 440px;
+    height: 380px;
+    opacity: 1;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
+    .shareword {
+      position: absolute;
+      left: 40px;
+      top: 40px;
+      width: 82px;
+      height: 32px;
+      opacity: 1;
+      /** 文本1 */
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: 0px;
+      line-height: 28px;
+      color: rgba(0, 0, 0, 1);
+      text-align: left;
+      vertical-align: top;
+    }
+    .close {
+      cursor: pointer;
+      position: absolute;
+      right: 49px;
+      top: 35px;
+      width: 10px;
+      height: 10px;
+      opacity: 1;
+      color: rgba(30, 111, 255, 1);
+      font-size: 25px;
+    }
+    .sharequick {
+      position: absolute;
+      left: 83px;
+      bottom: 54px;
+      width: 300px;
+      height: 24px;
+      opacity: 1;
+      /** 文本1 */
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0px;
+      line-height: 22px;
+      color: rgba(0, 0, 0, 1);
+      /** 文本2 */
+      font-size: 14px;
+      font-weight: 400;
     }
   }
 
