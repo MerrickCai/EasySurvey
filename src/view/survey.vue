@@ -1,4 +1,5 @@
 <script setup>
+
 // import axios from 'axios'
 // axios({
 //   url: `https://q.denglu1.cn/user/fillQuestionnaire/${3}`,
@@ -13,11 +14,12 @@
 // })
 
 //假设经过上面操作，currentSurvey获取成功
-import { provide, ref, computed } from 'vue'
+import { provide, ref, computed, reactive } from 'vue'
 import { useStore } from "../PiniaStores/index.js"
 const datas = useStore()
 datas.survey.currentSurvey = datas.survey.survey1[1] //获取了1类型的第二套卷
 const viewId = ref(0) //加载类型1的问卷
+
 //动态组件
 import survey1 from '../components/surveyTemplate/survey1.vue'
 import survey2 from '../components/surveyTemplate/survey2.vue'
@@ -26,9 +28,15 @@ import survey4 from '../components/surveyTemplate/survey4.vue'
 import survey5 from '../components/surveyTemplate/survey5.vue'
 const surveyList = [survey1, survey2, survey3, survey4, survey5]
 const currentView = computed(() => surveyList[viewId.value])
+
 //问卷填写的状态（问卷介绍，填写问卷，填写结束）
-const status = ref(false)
+const status = reactive({
+  begin: true,
+  ongoing: false,
+  end: false
+})
 provide('status', status)
+
 </script>
 
 <template>
@@ -43,10 +51,10 @@ provide('status', status)
     <div class="container">
       <img dog-ear src="/tangible.png" />
       <div class="decoration5"></div>
-      <div class="decoration1" v-show="!status"></div>
-      <div class="decoration2" v-show="!status"></div>
-      <div class="decoration3" v-show="!status"></div>
-      <div class="decoration4" v-show="!status"></div>
+      <div class="decoration1" v-show="status.begin || status.end"></div>
+      <div class="decoration2" v-show="status.begin || status.end"></div>
+      <div class="decoration3" v-show="status.begin || status.end"></div>
+      <div class="decoration4" v-show="status.begin || status.end"></div>
       <!--动态组件-->
       <Transition name="fade" mode="out-in">
         <KeepAlive>
