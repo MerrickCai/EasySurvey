@@ -7,9 +7,24 @@
 </template>
 
 <script setup>
-import CreateFile from "../components/CreateFile.vue";
-import target from "../components/target.vue";
-import echart from "../components/echart.vue";
+import CreateFile from "../components/statistics/CreateFile.vue";
+import target from "../components/statistics/target.vue";
+import echart from "../components/statistics/echart.vue";
+import axios from 'axios'
+//以下是获取某个用户的全部问卷的大致信息
+// import { useStore } from "../PiniaStores/index.js"
+// const datas = useStore()
+// axios({
+//   url: `https://q.denglu1.cn/user/questionnaire/${datas.user.userId}`,
+//   method: 'get',
+//   withCredentials: true,
+//   headers: { 'Content-Type': 'application/json' },
+//   headers: { 'token': datas.user.token }
+// }).then((response) => {
+//   console.log(response)
+// }).catch((error) => {
+//   console.log(error)
+// })
 </script>
 
 <style lang="less" scoped>

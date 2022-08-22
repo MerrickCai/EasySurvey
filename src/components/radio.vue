@@ -123,7 +123,6 @@ function deleoption(id) {
   if (props.quesitem.option.length != 1) {
     props.quesitem.option.splice(id - 1, 1);
   }
-  console.log(props.quesitem.option.length);
 }
 </script>
 

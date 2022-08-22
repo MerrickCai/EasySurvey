@@ -2,19 +2,12 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 
 //统计数据页
 const statistics = () => import('../view/statistics.vue')
-
 //登录注册页
 const login = () => import('../view/login.vue')
-
-//填写问卷页+创建问卷页
+//创建问卷页
+const surveynew = () => import('../view/surveynew.vue')
+//填写问卷页
 const survey = () => import('../view/survey.vue')
-const survey1 = () => import('../components/survey1.vue')
-const survey2 = () => import('../components/survey2.vue')
-const survey3 = () => import('../components/survey3.vue')
-const survey4 = () => import('../components/survey4.vue')
-const survey5 = () => import('../components/survey5.vue')
-const surveynew = () => import('../components/surveynew.vue')
-
 //404页
 const notFound = () => import('../view/notFound.vue')
 
@@ -30,36 +23,14 @@ const routes = [
         component: login
     },
     {
+        path: '/surveynew',
+        meta: { requireLogin: true },
+        component: surveynew
+    },
+    {
         path: '/survey',
         meta: { requireLogin: true },
-        component: survey,
-        redirect: "/survey/survey1/1",
-        children: [
-            {
-                path: 'survey1/:id',
-                component: survey1,
-            },
-            {
-                path: 'survey2/:id',
-                component: survey2,
-            },
-            {
-                path: 'survey3/:id',
-                component: survey3,
-            },
-            {
-                path: 'survey4/:id',
-                component: survey4,
-            },
-            {
-                path: 'survey5/:id',
-                component: survey5,
-            },
-            {
-                path: 'surveynew',
-                component: surveynew,
-            }
-        ]
+        component: survey
     },
     {
         path: '/:path(.*)', //匹配不到以上路径=>404页面

@@ -1,5 +1,5 @@
 <script setup>
-import navbar from './components/navbar.vue'
+import navbar from './view/navbar.vue'
 //全局前置守卫（帮助用户自动登录）
 import { useRouter } from 'vue-router'
 import { useStore } from "./PiniaStores/index.js"

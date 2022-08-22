@@ -1,3 +1,4 @@
+<<<<<<< HEAD:src/components/scale.vue
 <template>
   <li>
     <p class="itemnav">
