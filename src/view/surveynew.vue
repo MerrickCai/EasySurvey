@@ -289,6 +289,15 @@ function pushfile() {
     console.log(radiofile);
     datas.survey.survey3.push(radiofile);
     console.log(datas.survey.survey3);
+    radiofile = {
+      questionList: [
+        {
+          id: nanoid(),
+          questiontitle: "请输入题目标题",
+          option: ["选项", "选项"],
+        },
+      ],
+    };
   }
   if (type.value == 2) {
     checkboxfile["intro"] = filetitle;

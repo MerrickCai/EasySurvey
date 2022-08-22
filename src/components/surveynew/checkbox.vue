@@ -49,14 +49,7 @@
     </p>
     <p class="addoption">
       <i class="additem" @click="addaoption()">+</i>
-      <input
-        type="text"
-        name=""
-        id=""
-        placeholder="添加选项"
-        @keyup.enter="addaoption()"
-        v-model="xuanze"
-      />
+      <span>添加选项</span>
     </p>
   </li>
 </template>
@@ -118,7 +111,7 @@ function optionsshow(index) {
   });
 }
 //添加选项
-let xuanze = ref("");
+let xuanze = ref("选项");
 function addaoption() {
   props.quesitem.option.push(xuanze.value);
 }
@@ -255,22 +248,16 @@ li {
       color: rgba(30, 111, 255, 1);
       font-style: normal;
     }
-    input[type="text"] {
-      /* 清除原有input样式 */
-      -web-kit-appearance: none;
-      -moz-appearance: none;
-      outline: none;
-      /* 设置我们要的样式 */
+    span {
+      position: absolute;
+      cursor: default;
+      top: 8px;
+      left: 77px;
       width: 500px;
       height: 20px;
       opacity: 1;
       text-align: left;
       border-width: 0;
-    }
-    input {
-      position: absolute;
-      top: 8px;
-      left: 77px;
     }
   }
 }
