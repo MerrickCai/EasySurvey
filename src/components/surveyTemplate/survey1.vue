@@ -163,11 +163,11 @@ const barArr = new Array(datas.survey.survey[0].quesList.length).fill(0).map((it
     <div class="finish-wrapper" v-if="status.end">
       <div class="innerbox">
         <div class="finish-title">
-          <h2>{{ datas.survey.currentSurvey.end.ok }}</h2>
-          <h3>{{ datas.survey.currentSurvey.end.title }}</h3>
-          <p>{{ datas.survey.currentSurvey.end.detail }}</p>
+          <h2>您已完成</h2>
+          <h3>{{ datas.survey.currentSurvey.intro.title }}</h3>
+          <p>感谢您的答题，本次问卷已全部结束</p>
         </div>
-        <el-button type="primary" class="finish-submit">{{ datas.survey.currentSurvey.end.button }}</el-button>
+        <el-button type="primary" class="finish-submit">完成答题</el-button>
       </div>
     </div>
 

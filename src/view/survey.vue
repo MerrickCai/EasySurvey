@@ -24,7 +24,7 @@ axios({
 }).then((response) => {
   console.log(response)
   //假设获取到的问卷类型是2
-  viewId.value = 2
+  viewId.value = 1
 }).catch((error) => {
   console.log(error)
 })

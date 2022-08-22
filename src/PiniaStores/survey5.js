@@ -20,10 +20,6 @@ export default [
                 progressPartbcg: '#ccc',
             },
         ],
-        end: {
-            finish: '您已完成',
-            para: '感谢您的答题，本次问卷已全部结束',
-            button: '完成答题'
-        }
+
     }
 ]

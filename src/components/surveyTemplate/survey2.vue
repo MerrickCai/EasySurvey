@@ -83,11 +83,11 @@
         <div class="finish-wrapper" v-if="status.end">
             <div class="innerbox">
                 <div class="finish-title">
-                    <h2>{{ survey.end.finish }}</h2>
+                    <h2>您已完成</h2>
                     <h3>{{ survey.intro.info_title }}</h3>
-                    <p>{{ survey.end.para }}</p>
+                    <p>感谢您的答题，本次问卷已全部结束</p>
                 </div>
-                <el-button type="primary" class="finish-submit">{{ survey.end.button }}</el-button>
+                <el-button type="primary" class="finish-submit">完成答题</el-button>
             </div>
         </div>
 
