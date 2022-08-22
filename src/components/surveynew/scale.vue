@@ -109,14 +109,14 @@ function addamount() {
 
 //删除主问题
 let deletematrix = ref(null);
-// function cursorfail() {
-//   if (props.scalefile.questionList.length == 1) {
-//     deletematrix.value.style.cursor = "not-allowed";
-//   }
-//   if (props.scalefile.questionList.length != 1) {
-//     deletematrix.value.style.cursor = "pointer";
-//   }
-// }
+function cursorfail() {
+  if (props.scalefile.questionList.length == 1) {
+    deletematrix.value.style.cursor = "not-allowed";
+  }
+  if (props.scalefile.questionList.length != 1) {
+    deletematrix.value.style.cursor = "pointer";
+  }
+}
 function deleteamount(id) {
   if (props.scalefile.questionList.length != 1) {
     props.sdeleteques(id);
@@ -154,7 +154,15 @@ function addsectitle(i) {
   props.quesitem.question.push(secques);
 }
 //删除次级题目
-let deletesec = ref(null);
+// let deletesec = ref(null);
+// function cursorfailrd() {
+//   if (props.quesitem.question.length == 1) {
+//     deletesec.value.style.cursor = "not-allowed";
+//   }
+//   if (props.quesitem.question.length != 1) {
+//     deletesec.value.style.cursor = "pointer";
+//   }
+// }
 function deleterd(i) {
   console.log(i);
   if (props.quesitem.question.length != 1) {
