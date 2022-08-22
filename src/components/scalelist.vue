@@ -4,6 +4,7 @@
       <scale
         v-for="(item, index) in scalefile.questionList"
         :key="item.id"
+        :it="index"
         :quesitem="item"
         :scalefile="scalefile"
         :sreceive="sreceive"

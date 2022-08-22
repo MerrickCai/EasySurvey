@@ -47,9 +47,8 @@
         type="number"
         class="blocknum"
         v-model.number="quesitem.series"
-        oninput="if(value>7)value=7;if(value<3)value=3"
-        max="7"
-        min="3"
+        @blur="bnchange()"
+        @keyup.enter="bnchange()"
         @change="num = 0"
       />
       <svg
@@ -135,6 +134,14 @@ function changeqlshow() {
 
 //动画
 let disappear = ref(false);
+
+//级别个数判断
+function bnchange() {
+  if (props.quesitem.series < 3 || props.quesitem.series > 7) {
+    alert("级别选择个数为3-7个");
+    props.quesitem.series = 5;
+  }
+}
 </script>
 
 <style lang="less" scoped>
@@ -309,6 +316,10 @@ li {
       position: absolute;
       left: 670px;
       bottom: 10px;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
     }
     svg {
       position: absolute;

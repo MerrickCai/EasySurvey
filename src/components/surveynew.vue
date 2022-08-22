@@ -169,16 +169,22 @@ let scalefile = reactive({
     {
       id: nanoid(),
       questiontitle: "请输入题目标题",
-      score: 10,
+      score: 60,
       //分配分数的时候要用到staticScore
-      staticScore: 10,
+      staticScore: 60,
       // slider的背景颜色
       bcg: "#f5f5f5",
       //滑块的样式
       silderSrc: "/blue.png",
       titleBorder: 0,
       progressPartbcg: "#ccc",
+      secscore: 20,
       question: [
+        {
+          detail: "请输入次级题目标题",
+          value: 0,
+          isEdit: false,
+        },
         {
           detail: "请输入次级题目标题",
           value: 0,

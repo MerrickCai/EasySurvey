@@ -48,14 +48,7 @@
     </p>
     <p class="addoption">
       <i class="additem" @click="addaoption()">+</i>
-      <input
-        type="text"
-        name=""
-        id=""
-        placeholder="添加选项"
-        @keyup.enter="addaoption()"
-        v-model="xuanze"
-      />
+      <span>添加选项</span>
     </p>
   </li>
 </template>
@@ -112,7 +105,7 @@ function optionsshow(index) {
   });
 }
 //添加选项
-let xuanze = ref("");
+let xuanze = ref("选项");
 function addaoption() {
   props.quesitem.option.push(xuanze.value);
 }
@@ -136,9 +129,8 @@ function deleoption(id) {
 
 <style lang="less" scoped>
 li {
-  height: 200px;
   // box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.25);
-
+  margin-bottom: 10px;
   .itemnav {
     display: flex;
     align-items: center;
@@ -206,7 +198,7 @@ li {
   .optionall {
     display: flex;
     height: 20px;
-    margin: 5px 0 5px 55px;
+    margin: 10px 0 5px 37px;
     .circle {
       width: 18px;
       height: 18px;
@@ -234,18 +226,17 @@ li {
     }
     .deloption {
       cursor: pointer;
-      font-size: 25px;
+      font-size: 20px;
       font-weight: 400;
       color: rgba(30, 111, 255, 1);
       font-style: normal;
     }
   }
   .addoption {
-    position: relative;
+    display: flex;
     .additem {
       cursor: pointer;
-      position: absolute;
-      left: 54px;
+      margin-left: 35px;
       font-size: 25px;
       font-weight: 400;
       color: rgba(30, 111, 255, 1);
@@ -263,10 +254,12 @@ li {
       text-align: left;
       border-width: 0;
     }
-    input {
-      position: absolute;
-      top: 8px;
-      left: 77px;
+    span {
+      margin-top: 8px;
+      margin-left: 5px;
+      font-size: 16px;
+      font-weight: 400;
+      color: rgba(217, 217, 217, 1);
     }
   }
 }
