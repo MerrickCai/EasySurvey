@@ -96,7 +96,7 @@
 </template>
 
 <script setup>
-import { inject, ref, computed, nextTick } from 'vue';
+import { inject, ref, computed, nextTick,onMounted } from 'vue';
 const status = inject('status')
 import { useStore } from '../../PiniaStores/index.js'
 //数据
@@ -109,6 +109,9 @@ let jump = ref(1);
 function toContent() {
     jump.value = 2;
 }
+
+
+
 
 // ---分配分数相关的变量和方法---
 // 分配分数
@@ -140,10 +143,14 @@ function distributeScore(elem, item, num) {
     // console.log(elem.value);
     //  console.log(-6+(elem.value)*40);
 
-}
+    }
+
+
+
+
+//----------   次级标题编辑相关的变量和方法  -------------
 // 切换编辑的input框
 const myRef = ref(null);
-
 // 切换至编辑
 function editHandle(elem, index) {
     elem.isEdit = true;
@@ -163,7 +170,10 @@ function editHandle2(elem, item, e) {
     distributeScore(elem, item, e.target.value)
 }
 
-// --- 滚动条部分的变量和方法 ---
+
+
+
+// -----------  滚动条部分的变量和方法 ----------------
 const thumb = ref(null);
 const text = ref(null);
 const content = ref(null);
@@ -199,7 +209,12 @@ function onScroll(e) {
     bluebcg_height.value = temp;
 }
 
-// ---提交按钮之后相关的变量和方法---
+
+
+
+
+
+// -----------点击提交按钮之后相关的变量和方法-------
 // 获取全部questiontitle
 const questiontitle = ref(null);
 // 进度条片段的高度
@@ -230,12 +245,12 @@ function toFinish() {
         content.value.scrollTop = questiontitle.value[fisrtreturn].offsetTop;
     }
     //    console.log(progressPartHeight);
-
     if (!flag) return
     jump.value = 3;
 }
 
 </script>
+
 
 <style scoped lang='less'>
 @a: 1px;
