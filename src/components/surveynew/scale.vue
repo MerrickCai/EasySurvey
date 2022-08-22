@@ -1,3 +1,4 @@
+
 <template>
   <li>
     <p class="itemnav">
@@ -26,10 +27,16 @@
         @blur="questitleshow = true"
         @keyup.enter="questitleshow = true"
       />
+      <div v-show="value1==true" class="scorebox">
+      <span class="score">
+        可支配分数
+        </span>
+        <input type="number"  class="scoreshow" v-model="quesitem.score">
+        </div>
     </p>
     <div class="secquesall">
     <p class="secques" v-for="(item, i) in quesitem.question">
-      <i class="additem" @click="addsectitle()">+</i>
+      <i class="additem" @click="addsectitle(i)">+</i>
       <span>{{ quesitem.question.indexOf(item) + 1 }}</span>
       <span
         class="secquestitlecon"
@@ -46,15 +53,20 @@
         @blur="secquestitleshow[i] = false"
         @keyup.enter="secquestitleshow[i] = false"
       />
+         <i class="delrditem" @click="deleterd(i)"
+        ref="deletesec"
+        @mousemove="cursorfailrd">×</i>
        <div class="slide" :style="{backgroundColor:`${quesitem.bcg}`}">   <!--400为slide的总宽度，根据分数总数来定每次滑块滑多少-->
          <div class="Gradient" :style="{ width:`${(item.value)* (400/(barArr[0].length-1))}px` }"></div>
                 <!-- 第三层循环 b,j -->
-              <div v-for="(b,j) of barArr[0]" :key="i" :class="j%2===0 ? 'doublebar' :'bar'" @click="distributeScore(item,quesitem,j)">
+              <div v-for="(b,j) of barArr[0]" :key="b" :class="j%2===0 ? 'doublebar' :'bar'">
                  <span class="num" v-if="!(j%2)">{{j}}</span>
               </div>
               <img class="thumb" :style="{ left: `${(item.value) * (400/(barArr[0].length-1))}px`}"  :src="item.value===0 ? quesitem.silderSrc : '/blue.png'">	
-              <span class="edit"  v-show="!item.isEdit" @click="editHandle(item,i)">{{item.value}}<img src="/icon-edit.png"></span>
-             <input class="editinput" type="text" v-show="item.isEdit" @blur="editHandle2(item,quesitem,$event)"  @keydown.enter="editHandle2(itequesitem$event)"  :value="item.value" ref="myRef">
+              <span class="edit"  v-show="!item.isEdit" >{{item.value}}<img src="/icon-edit.png"></span>
+             <input type="number" class="secnum" v-model="quesitem.secscore" 
+        @blur="judge()"
+        @keyup.enter="judge()">
         </div>  
     </p>
     </div>
@@ -62,10 +74,16 @@
 </template>
 
 <script setup>
-import { ref, nextTick, reactive, inject } from "vue";
+import { ref, nextTick, reactive, inject, watch } from "vue";
 import { nanoid } from "nanoid";
 
-const props = defineProps(["scalefile", "quesitem", "sreceive", "sdeleteques"]);
+const props = defineProps([
+  "scalefile",
+  "quesitem",
+  "sreceive",
+  "sdeleteques",
+  "it",
+]);
 //鼠标滚轮在添加新题目时滑动到底部
 let { scroll, updatescroll } = inject("changescroll");
 //添加主问题
@@ -73,19 +91,22 @@ function addamount() {
   const quesobj = {
     id: nanoid(),
     questiontitle: "请输入题目标题",
-    score: 10,
+    score: 20,
     //分配分数的时候要用到staticScore
-    staticScore: 10,
+    staticScore: 20,
     // slider的背景颜色
     bcg: "#f5f5f5",
     //滑块的样式
     silderSrc: "/blue.png",
     titleBorder: 0,
     progressPartbcg: "#ccc",
+    secscore: 10,
     question: [{ detail: "请输入次级题目标题", value: 0, isEdit: false }],
   };
   props.sreceive(quesobj);
+  console.log(1);
 }
+
 //删除主问题
 let deletematrix = ref(null);
 function cursorfail() {
@@ -124,17 +145,36 @@ function secchangeqlshow(index) {
 //次级题目
 const value1 = ref(true);
 //添加次级题目
-function addsectitle() {
-  const secques = { detail: "请输入次级题目标题", value: 0, isEdit: false };
+function addsectitle(i) {
+  const secques = {
+    detail: "请输入次级题目标题",
+    value: 0,
+    isEdit: false,
+  };
   props.quesitem.question.push(secques);
+}
+//删除次级题目
+// let deletesec = ref(null);
+// function cursorfailrd() {
+//   if (props.quesitem.question.length == 1) {
+//     deletesec.value.style.cursor = "not-allowed";
+//   }
+//   if (props.quesitem.question.length != 1) {
+//     deletesec.value.style.cursor = "pointer";
+//   }
+// }
+function deleterd(i) {
+  console.log(i);
+  if (props.quesitem.question.length != 1) {
+    props.quesitem.question.splice(i, 1);
+  }
 }
 
 //量表
 const barArr = new Array(1)
   .fill(0)
-  .map(
-    (item, index) => new Array(props.scalefile.questionList[index].score + 1)
-  );
+  .map((item, index) => new Array(props.quesitem.secscore + 1));
+
 //按照分数分配
 function distributeScore(elem, item, num) {
   let newValue = num / 1;
@@ -145,7 +185,9 @@ function distributeScore(elem, item, num) {
       return;
     }
   }
-  if (item.score < newValue - oldValue) return;
+  if (item.score < newValue - oldValue) {
+    return;
+  }
 
   elem.value = num;
   item.score = item.staticScore;
@@ -177,12 +219,39 @@ function editHandle(item, index) {
 // 编辑状态保存分数
 function editHandle2(elem, item, e) {
   elem.isEdit = false;
-  if (isNaN(e.target.value) || e.target.value > 10 || e.target.value < 0) {
-    alert("分数仅限定在0~10之间");
+  if (
+    isNaN(e.target.value) ||
+    e.target.value > item.secscore ||
+    e.target.value < 0
+  ) {
+    alert("分数仅限定在次级可支配分数之间");
     return;
   }
   distributeScore(elem, item, e.target.value);
 }
+//次级可支配数
+function judge() {
+  if (props.quesitem.secscore > props.quesitem.score) {
+    alert("次级分配分数不可大于可支配分数,请重新输入");
+    props.quesitem.secscore = 10;
+  }
+  if (props.quesitem.secscore > 20) {
+    alert("次级分配分数不可大于20");
+    props.quesitem.secscore = 10;
+  }
+  if (props.quesitem.secscore < 5) {
+    alert("次级分配分数不可小于5");
+    props.quesitem.secscore = 10;
+  }
+}
+watch(
+  () => props.quesitem.secscore,
+  () => {
+    console.log(4);
+    barArr.splice(0, 1, props.quesitem.secscore + 1);
+  },
+  { deep: true }
+);
 </script>
 
 <style lang="less" scoped>
@@ -259,6 +328,7 @@ li {
     }
     .delitem {
       cursor: pointer;
+      font-style: normal;
       position: absolute;
       right: 30px;
       font-size: 25px;
@@ -278,7 +348,7 @@ li {
       border: 1px dashed rgba(30, 111, 255, 1);
     }
     .titlecon {
-      width: 200px;
+      width: 400px;
       margin-left: 5px;
     }
     input[type="text"] {
@@ -287,10 +357,44 @@ li {
       -moz-appearance: none;
       outline: 0;
       /* 设置我们要的样式 */
-      width: 700px;
+      width: 400px;
       height: 20px;
       opacity: 1;
       text-align: left;
+    }
+    .scorebox {
+      display: flex;
+      justify-content: space-between;
+      width: 100px;
+      .score {
+        font-size: 14px;
+        font-weight: 400;
+        color: rgba(0, 0, 0, 1);
+      }
+      .scoreshow {
+        display: block;
+        width: 24px;
+        height: 24px;
+        margin-left: 5px;
+        border-radius: 100%;
+        background-color: rgba(30, 111, 255, 1);
+        text-align: center;
+        color: white;
+      }
+      input[type="number"] {
+        /* 清除原有input样式 */
+        -web-kit-appearance: none;
+        -moz-appearance: none;
+        outline: 0;
+        -webkit-appearance: none !important;
+        margin: 0;
+        /* 设置我们要的样式 */
+        border: 1px solid rgba(30, 111, 255, 1);
+      }
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+      }
     }
   }
   .secquesall {
@@ -299,6 +403,7 @@ li {
     .secques {
       position: relative;
       margin: 10px 40px 35px 35px;
+      padding-top: 5px;
       font-size: 16px;
       font-weight: 500;
       border: 1px solid transparent;
@@ -325,10 +430,19 @@ li {
         -moz-appearance: none;
         outline: 0;
         /* 设置我们要的样式 */
-        width: 700px;
+        width: 600px;
         height: 20px;
         opacity: 1;
         text-align: left;
+      }
+      .delrditem {
+        cursor: pointer;
+        font-style: normal;
+        position: absolute;
+        right: 100px;
+        font-size: 25px;
+        font-weight: 400;
+        color: rgba(30, 111, 255, 1);
       }
       .slide {
         // 400+4（其中的4为末尾一个bar的宽度，所以总宽度为404。
@@ -338,7 +452,7 @@ li {
         box-sizing: border-box;
         position: absolute;
         left: 45px;
-        top: 45px;
+        top: 55px;
         display: flex;
         justify-content: space-between;
         background-color: pink;
@@ -428,6 +542,18 @@ li {
           position: absolute;
           right: -42px;
           bottom: 0px;
+        }
+        .secnum {
+          position: absolute;
+          right: -115px;
+          bottom: 0px;
+          width: 60px;
+          height: 24px;
+          text-align: center;
+        }
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
         }
       }
     }

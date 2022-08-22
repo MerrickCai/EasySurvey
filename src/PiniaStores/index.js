@@ -21,9 +21,8 @@ export const useStore = defineStore('main', {
       age: 0,
       area: 0
     },
-    //填写问卷和创建问卷的数据
+    //填写问卷和创建问卷的数据：计划后期从survey.vue文件中通过异步网络请求获取，以下代码只是过渡使用
     survey: {
-      currentSurvey: 0,
       survey1,
       survey2,
       survey3,

@@ -1,64 +1,68 @@
+
 <template>
-  <div id="wrapper">
-    <div class="container">
-      <img dog-ear src="/tangible.png" />
-      <div class="decoration5"></div>
-      <div class="decoration1"></div>
-      <div class="decoration2"></div>
-      <div class="decoration3"></div>
-      <div class="decoration4"></div>
+  <div class="wrapper">
+    <img dog-ear src="/tangible.png" />
+    <div class="decoration5"></div>
+    <div class="decoration1"></div>
+    <div class="decoration2"></div>
+    <div class="decoration3"></div>
+    <div class="decoration4"></div>
 
+  <div class="newcon">
+    <div class="newword">
+      <!-- 新建问卷标题 -->
+      <p class="newtitle" v-show="titleshow" @click="changetitleshow">
+        {{ fileword.intro.title }}
+      </p>
+      <input
+        type="text"
+        ref="titlein"
+        class="titlein"
+        v-show="!titleshow"
+        v-model="fileword.intro.title"
+        @keyup.enter="titleshow = true"
+        @blur="titleshow = true"
+      />
+      <!-- 新建问卷介绍 -->
+      <p class="newintro">
+        <span class="newintro_title">{{ fileword.intro.intro_title }}</span>
+        <p class="newintro_con" v-show="introshow" @click="changeintroshow">
+          {{ fileword.intro.intro_content }}
+        </p>
 
-
-      <div class="newcon">
-        <div class="newword">
-          <!-- 新建问卷标题 -->
-          <p class="newtitle" v-show="titleshow" @click="changetitleshow">
-            {{ fileword.intro.title }}
-          </p>
-          <input type="text" ref="titlein" class="titlein" v-show="!titleshow" v-model="fileword.intro.title"
-            @keyup.enter="titleshow = true" @blur="titleshow = true" />
-          <!-- 新建问卷介绍 -->
-          <p class="newintro">
-            <span class="newintro_title">{{ fileword.intro.intro_title }}</span>
-          <p class="newintro_con" v-show="introshow" @click="changeintroshow">
-            {{ fileword.intro.intro_content }}
-          </p>
-
-          <textarea cols="30" rows="2" ref="introin" class="introin" v-show="!introshow"
-            v-model="fileword.intro.intro_content" @keyup.enter="introshow = true" @blur="introshow = true"></textarea>
-          </p>
-        </div>
-        <div class="quearea">
-          <div class="questype">
-            <span class="typetitle">请选择问卷类型:</span>
-            <span class="typeall">
-              <span :class="{ typeclick: type == 1 }" @click="type = 1">单选</span>
-              <span :class="{ typeclick: type == 2 }" @click="type = 2">多选</span>
-              <span :class="{ typeclick: type == 3 }" @click="type = 3">矩阵</span>
-              <span :class="{ typeclick: type == 4 }" @click="type = 4">量表</span>
-              <span :class="{ typeclick: type == 5 }" @click="type = 5">文本</span>
-            </span>
-          </div>
-          <!-- 题目列表 -->
-          <ul>
-            <keep-alive>
-              <component :is="typeview" :fileword="fileword" :receive="receive" :deleteques="deleteques"
-                :scalefile="scalefile" :sreceive="sreceive" :sdeleteques="sdeleteques" :radiofile="radiofile"
-                :rreceive="rreceive" :rdeleteques="rdeleteques" :checkboxfile="checkboxfile" :creceive="creceive"
-                :cdeleteques="cdeleteques" :textfile="textfile" :treceive="treceive" :tdeleteques="tdeleteques">
-              </component>
-            </keep-alive>
-          </ul>
-        </div>
-        <button class="push">发布问卷</button>
-      </div>
-
-
-
-
+        <textarea
+          cols="30"
+          rows="2"
+          ref="introin"
+          class="introin"
+          v-show="!introshow"
+          v-model="fileword.intro.intro_content"
+          @keyup.enter="introshow = true"
+          @blur="introshow = true"
+        ></textarea>
+      </p>
     </div>
+    <div class="quearea">
+      <div class="questype">
+        <span class="typetitle">请选择问卷类型:</span>
+        <span class="typeall">
+        <span :class="{typeclick:type==1}" @click="type=1">单选</span>
+        <span :class="{typeclick:type==2}" @click="type=2">多选</span>
+        <span :class="{typeclick:type==3}" @click="type=3">矩阵</span>
+        <span :class="{typeclick:type==4}" @click="type=4">量表</span>
+        <span :class="{typeclick:type==5}" @click="type=5">文本</span>
+        </span>
+      </div>
+      <!-- 题目列表 -->
+      <ul>
+        <keep-alive>
+        <component :is="typeview" :fileword="fileword" :receive="receive" :deleteques="deleteques" :scalefile="scalefile" :sreceive="sreceive" :sdeleteques="sdeleteques" :radiofile="radiofile" :rreceive="rreceive" :rdeleteques="rdeleteques" :checkboxfile="checkboxfile" :creceive="creceive" :cdeleteques="cdeleteques" :textfile="textfile" :treceive="treceive" :tdeleteques="tdeleteques"></component>               
+        </keep-alive>
+      </ul>
+    </div>
+    <button class="push">发布问卷</button>
   </div>
+    </div>
 </template>
 
 <script setup>
@@ -175,15 +179,16 @@ let scalefile = reactive({
     {
       id: nanoid(),
       questiontitle: "请输入题目标题",
-      score: 10,
+      score: 60,
       //分配分数的时候要用到staticScore
-      staticScore: 10,
+      staticScore: 60,
       // slider的背景颜色
       bcg: "#f5f5f5",
       //滑块的样式
       silderSrc: "/blue.png",
       titleBorder: 0,
       progressPartbcg: "#ccc",
+      secscore: 20,
       question: [
         {
           detail: "请输入次级题目标题",
@@ -277,260 +282,231 @@ function tdeleteques(id) {
 </script>
 
 <style lang="less" scoped>
-@tag_wrapperHeight: 40px;
-@themeColor1: rgba(30, 111, 255, 1);
-@themeColor2: rgba(235, 245, 255, 1);
-@themeColor: rgba(30, 111, 255, 1);
-
-.newcon {
+div.wrapper {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
   position: relative;
-  top: 50px;
-  width: 840px;
-  height: 570px;
+  top: 0;
+  left: 0;
+  border-radius: 5px;
+  box-shadow: 0px 5px 10px 0 rgba(73, 107, 158, 0.1);
+  z-index: 0;
 
-  .newtitle {
-    position: relative;
-    left: 50%;
-    top: 50%;
+  div.decoration1 {
+    display: block;
+    height: 400px;
     width: 400px;
-    height: 50px;
+    position: absolute;
+    z-index: -10;
+    top: 0;
+    left: 0;
     transform: translate(-50%, -50%);
-    word-wrap: break-word;
-    font-family: "思源黑体";
-    font-size: 36px;
-    font-weight: 600;
-    vertical-align: middle;
-    width: fit-content;
-    text-align: center;
+    border-radius: 50%;
+    background-color: rgba(235, 245, 255, 1);
+    clip-path: polygon(50% 50%, 100% 50%, 100% 100%, 50% 100%);
+  }
 
-    &::after {
-      content: "";
-      display: block;
+  div.decoration2 {
+    display: block;
+    height: 150px;
+    width: 150px;
+    position: absolute;
+    z-index: -3;
+    bottom: 40px;
+    right: 50px;
+    border-radius: 50%;
+    background-color: rgba(71, 145, 255, 1);
+  }
+
+  div.decoration3 {
+    display: block;
+    height: 100px;
+    width: 100px;
+    position: absolute;
+    z-index: -4;
+    bottom: 80px;
+    right: -20px;
+    border-radius: 50%;
+    background-color: rgba(30, 111, 255, 1);
+  }
+
+  div.decoration4 {
+    display: block;
+    height: 170px;
+    width: 170px;
+    position: absolute;
+    z-index: -4;
+    bottom: -20px;
+    right: 100px;
+    border-radius: 50%;
+    background-color: rgba(235, 245, 255, 1);
+  }
+
+  div.decoration5 {
+    display: block;
+    height: calc(108px + 5px);
+    width: calc(120px + 7px);
+    position: absolute;
+    z-index: 1;
+    top: -5px;
+    right: -7px;
+    background-color: rgb(255, 255, 255, 1);
+  }
+
+  img[dog-ear] {
+    display: block;
+    height: 108px;
+    width: 120px;
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    object-fit: contain;
+    transform: scale(1.07);
+  }
+  .newcon {
+    position: relative;
+    top: 50px;
+    width: 840px;
+    height: 570px;
+
+    .newtitle {
+      position: relative;
+      left: 50%;
+      top: 50%;
+      width: 400px;
+      height: 50px;
+      transform: translate(-50%, -50%);
+      word-wrap: break-word;
+      font-family: "思源黑体";
+      font-size: 36px;
+      font-weight: 600;
+      vertical-align: middle;
+      width: fit-content;
+      text-align: center;
+      &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        height: 4px;
+        width: 100%;
+        background-color: #1e6fff;
+        border-radius: 2px;
+      }
+    }
+    .titlein {
+      position: relative;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .newintro {
+      .newintro_title {
+        display: block;
+        font-size: 16px;
+        font-weight: 500;
+        color: rgba(30, 111, 255, 1);
+        text-align: left;
+        margin-bottom: 12px;
+      }
+      .newintro_con {
+        word-wrap: break-word; //超出页面自动换行
+        width: 840px;
+        height: 50px;
+        overflow: auto;
+      }
+      textarea {
+        width: 780px;
+        border: 1px dashed rgba(30, 111, 255, 1);
+        outline: none;
+        resize: none;
+      }
+    }
+    .quearea {
+      margin-top: 20px;
+      height: 300px;
+      overflow: auto;
+      .questype {
+        display: flex;
+        .typetitle {
+          position: relative;
+          font-size: 16px;
+          font-weight: 500;
+          color: rgba(0, 0, 0, 1);
+          text-align: left;
+          &::after {
+            content: "";
+            display: block;
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            height: 4px;
+            width: 100%;
+            background-color: #1e6fff;
+            border-radius: 2px;
+          }
+        }
+        .typeall {
+          margin-left: 6px;
+          display: flex;
+          > span {
+            display: block;
+            cursor: pointer;
+            width: 60px;
+            height: 24px;
+            margin-right: 12px;
+            text-align: center;
+            line-height: 24px;
+            color: rgba(30, 111, 255, 1);
+            font-size: 12px;
+            font-weight: 400;
+            opacity: 1;
+            box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
+          }
+          .typeclick {
+            background: rgba(235, 245, 255, 1);
+          }
+        }
+      }
+      > ul {
+        margin-top: 14px;
+      }
+    }
+    .push {
+      cursor: pointer;
       position: absolute;
-      bottom: -2px;
-      left: 0;
-      height: 4px;
-      width: 100%;
-      background-color: #1e6fff;
+      left: 50%;
+      bottom: 10%;
+      transform: translate(-50%);
+      width: 200px;
+      height: 50px;
+      background: rgba(30, 111, 255, 1);
+      border-color: rgba(30, 111, 255, 1);
+      font-size: 20px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 1);
       border-radius: 2px;
     }
   }
 
-  .titlein {
-    position: relative;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-  }
-
-  .newintro {
-    .newintro_title {
-      display: block;
-      font-size: 16px;
-      font-weight: 500;
-      color: rgba(30, 111, 255, 1);
-      text-align: left;
-      margin-bottom: 12px;
-    }
-
-    .newintro_con {
-      word-wrap: break-word; //超出页面自动换行
-      width: 840px;
-      height: 50px;
-      overflow: auto;
-    }
-
-    textarea {
-      width: 780px;
-      border: 1px dashed rgba(30, 111, 255, 1);
-      outline: none;
-      resize: none;
-    }
-  }
-
-  .quearea {
-    margin-top: 20px;
-    height: 300px;
-    overflow: auto;
-
-    .questype {
-      display: flex;
-
-      .typetitle {
-        position: relative;
-        font-size: 16px;
-        font-weight: 500;
-        color: rgba(0, 0, 0, 1);
-        text-align: left;
-
-        &::after {
-          content: "";
-          display: block;
-          position: absolute;
-          bottom: -2px;
-          left: 0;
-          height: 4px;
-          width: 100%;
-          background-color: #1e6fff;
-          border-radius: 2px;
-        }
-      }
-
-      .typeall {
-        margin-left: 6px;
-        display: flex;
-
-        >span {
-          display: block;
-          cursor: pointer;
-          width: 60px;
-          height: 24px;
-          margin-right: 12px;
-          text-align: center;
-          line-height: 24px;
-          color: rgba(30, 111, 255, 1);
-          font-size: 12px;
-          font-weight: 400;
-          opacity: 1;
-          box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
-        }
-
-        .typeclick {
-          background: rgba(235, 245, 255, 1);
-        }
-      }
-    }
-
-    >ul {
-      margin-top: 14px;
-    }
-  }
-
-  .push {
-    cursor: pointer;
-    position: absolute;
-    left: 50%;
-    bottom: 10%;
-    transform: translate(-50%);
-    width: 200px;
-    height: 50px;
-    background: rgba(30, 111, 255, 1);
-    border-color: rgba(30, 111, 255, 1);
-    font-size: 20px;
+  input[type="text"] {
+    /* 清除原有input样式 */
+    -web-kit-appearance: none;
+    -moz-appearance: none;
+    outline: 0;
+    /* 设置我们要的样式 */
+    border: 1px dashed rgba(30, 111, 255, 1);
+    width: fit-content;
+    height: auto;
+    font-size: 36px;
     font-weight: 500;
-    color: rgba(255, 255, 255, 1);
-    border-radius: 2px;
-  }
-}
-
-input[type="text"] {
-  /* 清除原有input样式 */
-  -web-kit-appearance: none;
-  -moz-appearance: none;
-  outline: 0;
-  /* 设置我们要的样式 */
-  border: 1px dashed rgba(30, 111, 255, 1);
-  width: fit-content;
-  height: auto;
-  font-size: 36px;
-  font-weight: 500;
-}
-
-
-
-#wrapper {
-  display: block;
-  height: 100%;
-  width: calc(100% - 14px);
-  margin: 0 7px;
-
-  >div.container {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    justify-content: center;
-    align-items: center;
-    height: calc(100% - @tag_wrapperHeight - 10px);
-    width: 100%;
-    position: relative;
-    top: 0;
-    left: 0;
-    border-radius: 5px;
-    box-shadow: 0px 5px 10px 0 rgba(73, 107, 158, 0.1);
-    z-index: 0;
-
-    div.decoration1 {
-      display: block;
-      height: 400px;
-      width: 400px;
-      position: absolute;
-      z-index: -10;
-      top: 0;
-      left: 0;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      background-color: rgba(235, 245, 255, 1);
-      clip-path: polygon(50% 50%, 100% 50%, 100% 100%, 50% 100%);
-    }
-
-    div.decoration2 {
-      display: block;
-      height: 150px;
-      width: 150px;
-      position: absolute;
-      z-index: -3;
-      bottom: 40px;
-      right: 50px;
-      border-radius: 50%;
-      background-color: rgba(71, 145, 255, 1);
-    }
-
-    div.decoration3 {
-      display: block;
-      height: 100px;
-      width: 100px;
-      position: absolute;
-      z-index: -4;
-      bottom: 80px;
-      right: -20px;
-      border-radius: 50%;
-      background-color: rgba(30, 111, 255, 1);
-    }
-
-    div.decoration4 {
-      display: block;
-      height: 170px;
-      width: 170px;
-      position: absolute;
-      z-index: -4;
-      bottom: -20px;
-      right: 100px;
-      border-radius: 50%;
-      background-color: rgba(235, 245, 255, 1);
-    }
-
-    div.decoration5 {
-      display: block;
-      height: calc(108px + 5px);
-      width: calc(120px + 7px);
-      position: absolute;
-      z-index: 1;
-      top: -5px;
-      right: -7px;
-      background-color: rgb(255, 255, 255, 1);
-    }
-
-    img[dog-ear] {
-      display: block;
-      height: 108px;
-      width: 120px;
-      position: absolute;
-      z-index: 2;
-      top: 0;
-      right: 0;
-      object-fit: contain;
-      transform: scale(1.07);
-    }
   }
 }
 </style>
