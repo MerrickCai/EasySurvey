@@ -1,15 +1,15 @@
 <template>
     <div wrapper>
         <!-- 介绍页 -->
-        <div class="wrapper" v-if="jump === 1">
+        <div class="wrapper" v-if="status.begin">
             <h2 class="title">{{ survey.intro.info_title }}</h2>
             <p class="second-title">问卷介绍：</p>
             <p class="para">{{ survey.intro.info_para }}</p>
-            <el-button type="primary" class="btn" @click="() => { toContent(); status = true }">开始问卷</el-button>
+            <el-button type="primary" class="btn" @click="toContent(); ">开始问卷</el-button>
         </div>
 
         <!-- 问卷内容部分 -->
-        <div class="wrapper extrachange" v-if="jump === 2">
+        <div class="wrapper extrachange" v-if="status.ongoing">
             <img src="/tangible.png" class="pic1">
             <div class="topbox">
                 <h2 class="top_title">{{ survey.intro.info_title }}</h2>
@@ -42,7 +42,7 @@
                     </div>
                     <input type="text" class="inputtext" placeholder="请输入" @blur="getValue(item, $event)">
                 </div>
-                <el-button type="primary" class="submit" @click="() => { toFinish(); status = true }"
+                <el-button type="primary" class="submit" @click="toFinish();"
                     :style="{ top: `${(survey.questionList.length === 1 || survey.questionList.length === 2) ? 250 : survey.questionList.length * 85}px` }">
                     提交问卷</el-button>
 
@@ -51,14 +51,14 @@
 
 
         <!-- 问卷完成部分 -->
-        <div class="finish-wrapper" v-if="jump === 3">
+        <div class="finish-wrapper" v-if="status.end">
             <div class="innerbox">
                 <div class="finish-title">
-                    <h2>{{ survey.end.finish }}</h2>
+                    <h2>您已完成</h2>
                     <h3>{{ survey.intro.info_title }}</h3>
-                    <p>{{ survey.end.para }}</p>
+                    <p>感谢您的答题，本次问卷已全部结束</p>
                 </div>
-                <el-button type="primary" class="finish-submit">{{ survey.end.button }}</el-button>
+                <el-button type="primary" class="finish-submit">完成答题</el-button>
             </div>
         </div>
     </div>
@@ -75,12 +75,11 @@ const survey = computed(() => {
     return datas.survey.survey5[0];
 });
 
-// 跳转：介绍页==>答题页
-let jump = ref(1);
-function toContent() {
-    jump.value = 2;
-}
 
+// -----跳转：介绍页==>答题页--------
+function toContent() { 
+    status.toOngoing();
+}
 
 
 // --- 滚动条部分的变量和方法 ---
@@ -167,7 +166,7 @@ function toFinish() {
     //    console.log(progressPartHeight);
 
     if (!flag) return
-    jump.value = 3;
+    status.toEnd();
 }
 
 </script>

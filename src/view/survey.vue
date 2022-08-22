@@ -1,5 +1,5 @@
 <script setup>
-import { provide, ref, computed } from 'vue'
+import { provide, ref, computed,reactive,toRef} from 'vue'
 
 //问卷模板
 import survey1 from '../components/surveyTemplate/survey1.vue'
@@ -24,13 +24,13 @@ axios({
 }).then((response) => {
   console.log(response)
   //假设获取到的问卷类型是2
-  viewId.value = 2
+  viewId.value = 1
 }).catch((error) => {
   console.log(error)
 })
 
 //问卷填写的状态（问卷介绍，填写问卷，填写结束）=>传给问卷模板组件
-const status = {
+const status = reactive({
   begin: true,
   ongoing: false,
   end: false,
@@ -42,7 +42,7 @@ const status = {
     this.ongoing = false
     this.end = true
   },
-}
+});
 provide('status', status)
 </script>
 

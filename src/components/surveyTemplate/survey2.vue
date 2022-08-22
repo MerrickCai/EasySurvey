@@ -1,16 +1,17 @@
 <template>
-    <div wrapper>
+<div wrapper>
         <!-- 介绍页 -->
-        <div class="wrapper" v-if="jump === 1">
+        <div class="wrapper" v-if="status.begin">
             <h2 class="title">{{ survey.intro.info_title }}</h2>
             <p class="second-title">问卷介绍：</p>
             <p class="para">{{ survey.intro.info_para }}</p>
-            <el-button type="primary" class="btn" @click="() => { toContent(); status = true }">开始问卷</el-button>
+            <el-button type="primary" class="btn" @click="toContent()">开始问卷</el-button>
         </div>
 
-        <!-- 问卷内容部分 -->
-        <div class="wrapper extrachange" v-if="jump === 2">
 
+
+        <!-- 问卷内容部分 -->
+        <div class="wrapper extrachange" v-if="status.ongoing">
             <!--问卷题目和介绍-->
             <div class="topbox">
                 <h2 class="top_title">{{ survey.intro.info_title }}</h2>
@@ -76,18 +77,17 @@
                 <el-button type="primary" class="submit" @click="toFinish()">提交问卷</el-button>
             </div>
             <!--问卷区域-->
-
         </div>
 
         <!-- 问卷完成部分 -->
-        <div class="finish-wrapper" v-if="jump === 3">
+        <div class="finish-wrapper" v-if="status.end">
             <div class="innerbox">
                 <div class="finish-title">
-                    <h2>{{ survey.end.finish }}</h2>
+                    <h2>您已完成</h2>
                     <h3>{{ survey.intro.info_title }}</h3>
-                    <p>{{ survey.end.para }}</p>
+                    <p>感谢您的答题，本次问卷已全部结束</p>
                 </div>
-                <el-button type="primary" class="finish-submit">{{ survey.end.button }}</el-button>
+                <el-button type="primary" class="finish-submit">完成答题</el-button>
             </div>
         </div>
 
@@ -96,21 +96,26 @@
 </template>
 
 <script setup>
-import { inject, ref, computed, nextTick } from 'vue';
+import { inject, ref, computed, nextTick,onMounted ,reactive} from 'vue';
 const status = inject('status')
 import { useStore } from '../../PiniaStores/index.js'
 //数据
 const datas = useStore();
+// 当前的应该是哪个页面
 const survey = computed(() => datas.survey.survey2[0])
-const barArr = new Array(survey.value.questionList.length).fill(0).map((item, index) => new Array(survey.value.questionList[index].score + 1));
+// 用来给上面的模板计算每次thumb应该移动多少的
+const barArr = new Array(survey.value.questionList.length).fill(0).map((item, index) => new Array(survey.value.questionList[index].secscore + 1));
 
-// 跳转：介绍页==>答题页
-let jump = ref(1);
-function toContent() {
-    jump.value = 2;
+
+
+// -----跳转：介绍页==>答题页--------
+function toContent() { 
+    status.toOngoing();
 }
 
-// ---分配分数相关的变量和方法---
+
+
+// -------分配分数相关的变量和方法-------
 // 分配分数
 function distributeScore(elem, item, num) {
     let newValue = num / 1;
@@ -122,7 +127,6 @@ function distributeScore(elem, item, num) {
         }
     }
     if (item.score < (newValue - oldValue)) return;
-
     elem.value = num;
     item.score = item.staticScore;
     item.question.forEach(e => {
@@ -141,9 +145,13 @@ function distributeScore(elem, item, num) {
     //  console.log(-6+(elem.value)*40);
 
 }
+
+
+
+
+//----------   次级标题编辑相关的变量和方法  -------------
 // 切换编辑的input框
 const myRef = ref(null);
-
 // 切换至编辑
 function editHandle(elem, index) {
     elem.isEdit = true;
@@ -156,14 +164,18 @@ function editHandle(elem, index) {
 // 编辑状态保存分数
 function editHandle2(elem, item, e) {
     elem.isEdit = false;
-    if (isNaN(e.target.value) || e.target.value > 10 || e.target.value < 0) {
-        alert('分数仅限定在0~10之间');
+    let newValue = e.target.value;
+    if (isNaN(newValue) || newValue < 0 ||  newValue> item.secscore) {
+        alert('分数超出了可选范围');
         return
     }
-    distributeScore(elem, item, e.target.value)
+    distributeScore(elem, item, newValue)
 }
 
-// --- 滚动条部分的变量和方法 ---
+
+
+
+// -----------  滚动条部分的变量和方法 ----------------
 const thumb = ref(null);
 const text = ref(null);
 const content = ref(null);
@@ -199,7 +211,12 @@ function onScroll(e) {
     bluebcg_height.value = temp;
 }
 
-// ---提交按钮之后相关的变量和方法---
+
+
+
+
+
+// -----------点击提交按钮之后相关的变量和方法-------
 // 获取全部questiontitle
 const questiontitle = ref(null);
 // 进度条片段的高度
@@ -230,12 +247,12 @@ function toFinish() {
         content.value.scrollTop = questiontitle.value[fisrtreturn].offsetTop;
     }
     //    console.log(progressPartHeight);
-
     if (!flag) return
-    jump.value = 3;
+    status.toEnd();
 }
 
 </script>
+
 
 <style scoped lang='less'>
 @a: 1px;
@@ -389,7 +406,7 @@ div[wrapper] {
 
     .top_title {
         .public_title();
-        width: 625px;
+        width: 655px;
     }
 
     .top_sectitle {
