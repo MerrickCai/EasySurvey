@@ -1,4 +1,5 @@
 <script setup>
+//问卷填写的状态（问卷介绍，填写问卷，填写结束）
 import { ref, onMounted, inject } from 'vue'
 const status = inject('status')
 
@@ -6,7 +7,7 @@ const status = inject('status')
 import { useStore } from '../../PiniaStores/index.js'
 const datas = useStore()
 
-// --- 滚动条部分的变量和方法 ---
+// 模板引用
 const thumb = ref(null);
 const text = ref(null);
 const content = ref(null);
@@ -14,12 +15,11 @@ const content = ref(null);
 let bluebcg_height = ref(0);
 // 滚动条的蓝色背景的dom
 const bluebcg = ref(null);
-// 中转变量
-let temp;
 
-//进度条   
-const scrollDistence = ref(0)
+
+//点击滚动条触发滚动
 function scrollTo(e) {
+  const scrollDistence = ref(0)
   if (scrollDistence.value === 0) {
     //此为滚动距离scrollTop最大值（e.currentTarget.offsetHeight == e.currentTarget.clientHeight）
     scrollDistence.value = e.currentTarget.nextSibling.scrollHeight - e.currentTarget.nextSibling.offsetHeight
@@ -29,7 +29,9 @@ function scrollTo(e) {
   e.currentTarget.nextSibling.scrollTop = (scrollDistence.value) * (e.offsetY / 400) - 8;
   e.currentTarget.lastChild.innerHTML = `${Math.ceil((e.offsetY / 400) * 100)} %`;
 }
+//监听滚动事件
 function onScroll(e) {
+  const scrollDistence = ref(0)
   if (scrollDistence.value === 0) {
     scrollDistence.value = e.currentTarget.scrollHeight - e.currentTarget.offsetHeight
   }
@@ -38,8 +40,8 @@ function onScroll(e) {
   thumb.value.setAttribute('style', `top: ${(400) * (e.currentTarget.scrollTop / scrollDistence.value)}px`);
   text.value.innerHTML = `${Math.ceil((e.currentTarget.scrollTop / scrollDistence.value) * 100)} %`
   console.log(e.currentTarget.scrollTop, scrollDistence.value);
-
-  temp = thumb.value.style.top.split("");
+  // 中转变量
+  let temp = thumb.value.style.top.split("");
   temp.pop();
   temp.pop();
   temp = temp.join("") / 1;
@@ -50,23 +52,21 @@ function onScroll(e) {
 // 获取全部questiontitle
 const ques = ref(null);
 // 进度条片段的高度
-const progressPartHeight = 400 / (datas.survey.currentSurvey.quesList.length);
+const progressPartHeight = 400 / (datas.survey.survey[0].quesList.length);
 
 onMounted(() => {
   //  console.log(barArr[0]);
-  console.log(datas.survey.currentSurvey.quesList[0].font[1]);
+  console.log(datas.survey.survey[0].quesList[0].font[1]);
 });
 
 // 提交按钮  跳转：答题页==>完成页
 function toFinish() {
-  console.log(ques.value[0]);
-
   let flag = true;
   // 记录未完成的问卷id
   const uncomplete = [];
   // 滚动的蓝色背景失效
   bluebcg.value.style.display = 'none';
-  datas.survey.currentSurvey.quesList.forEach(item => {
+  datas.survey.survey[0].quesList.forEach(item => {
     item.titleBorder = 0;
     item.progressPartbcg = '#5a9afa';
     if (item.value === 0) {
@@ -89,13 +89,14 @@ function toFinish() {
   datas.survey.currentSurvey.status.toEnd();
 }
 
-const barArr = new Array(datas.survey.currentSurvey.quesList.length).fill(0).map((item, index) => new Array(datas.survey.currentSurvey.quesList[index].series).fill(0));
+const barArr = new Array(datas.survey.survey[0].quesList.length).fill(0).map((item, index) => new Array(datas.survey.survey[0].quesList[index].series).fill(0));
 </script>
 
 <template>
   <div wrapper>
+
     <!--问卷介绍-->
-    <template v-if="datas.survey.currentSurvey.status.intro">
+    <template v-if="status.begin">
       <div class="survey_intro">
         <p title>{{ datas.survey.currentSurvey.intro.title }}</p>
         <p intro>
@@ -111,7 +112,7 @@ const barArr = new Array(datas.survey.currentSurvey.quesList.length).fill(0).map
     </template>
 
     <!--问卷填写-->
-    <template v-if="datas.survey.currentSurvey.status.survey">
+    <template v-if="status.ongoing">
       <div class="survey">
         <p title>{{ datas.survey.currentSurvey.intro.title }}</p>
         <div class="scrollbar_shadow"></div>
@@ -119,7 +120,7 @@ const barArr = new Array(datas.survey.currentSurvey.quesList.length).fill(0).map
         <div class="progress" @click="scrollTo($event)">
           <div>
             <!-- 进度条分段，使得点击提交按钮后进度条可以分段显示红色背景，多少个题目就分多少段 (外面多个div包裹下面的style的last-child才能生效)-->
-            <div class="progress-part" v-for="(item, index) of datas.survey.currentSurvey.quesList" :key="item.id"
+            <div class="progress-part" v-for="(item, index) of datas.survey.survey[0].quesList" :key="item.id"
               :style="{ height: `${progressPartHeight}px`, backgroundColor: `${item.progressPartbcg}` }"></div>
           </div>
           <div class="thumb" ref="thumb">
@@ -136,7 +137,7 @@ const barArr = new Array(datas.survey.currentSurvey.quesList.length).fill(0).map
             <span warn_content>{{ datas.survey.currentSurvey.intro.warn_content }}</span>
           </p>
           <div class="ques">
-            <div v-for="(item, index) of datas.survey.currentSurvey.quesList" ref="ques"
+            <div v-for="(item, index) of datas.survey.survey[0].quesList" ref="ques"
               :style="{ border: `${item.titleBorder}px solid red` }">
               <div>
                 <span>{{ index + 1 }}.</span><span>{{ item.ques }}</span>
@@ -145,7 +146,7 @@ const barArr = new Array(datas.survey.currentSurvey.quesList.length).fill(0).map
               <div :style="{ backgroundColor: `${item.value === 0 ? 'rgba(245, 245, 245, 1)' : 'rgb(229,229,229)'}` }">
                 <!-- bar -->
                 <div v-for="(b, i) of barArr[index]" class="bar" @click="item.value = i + 1">
-                  <div class="font">{{ datas.survey.currentSurvey.quesList[index].font[i] }}</div>
+                  <div class="font">{{ datas.survey.survey[0].quesList[index].font[i] }}</div>
                 </div>
                 <div class="thumb"
                   :style="{ left: `${item.value === 0 ? -12 : -12 + (item.value - 1) * 600 / (barArr[index].length - 1)}px` }">
@@ -156,11 +157,10 @@ const barArr = new Array(datas.survey.currentSurvey.quesList.length).fill(0).map
           <div class="submitBtn" @click="toFinish">提交问卷</div>
         </div>
       </div>
-
     </template>
 
     <!-- 问卷完成部分 -->
-    <div class="finish-wrapper" v-if="datas.survey.currentSurvey.status.end">
+    <div class="finish-wrapper" v-if="status.end">
       <div class="innerbox">
         <div class="finish-title">
           <h2>{{ datas.survey.currentSurvey.end.ok }}</h2>
@@ -170,24 +170,23 @@ const barArr = new Array(datas.survey.currentSurvey.quesList.length).fill(0).map
         <el-button type="primary" class="finish-submit">{{ datas.survey.currentSurvey.end.button }}</el-button>
       </div>
     </div>
+
   </div>
 </template>
 
 <style lang="less" scoped>
-@themeColor: rgba(30, 111, 255, 1);
-
-div[wrapper]{
+div[wrapper] {
   display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    position: relative;
-    top: 0;
-    left: 0;
-    z-index: -1;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  top: 0;
+  left: 0;
+  z-index: -1;
 }
 
 div.survey {
@@ -258,7 +257,7 @@ div.survey {
       width: 50px;
       bottom: -20px;
       left: -22px;
-      color: @themeColor;
+      color: rgba(30, 111, 255, 1);
       text-align: center;
       font-size: 16px;
       line-height: 18px;
@@ -303,7 +302,7 @@ div.survey {
       left: 0;
       height: 3px;
       width: 100%;
-      background-color: @themeColor;
+      background-color: rgba(30, 111, 255, 1);
       border-radius: 2px;
     }
   }
@@ -333,7 +332,7 @@ div.survey {
         width: auto;
         margin-bottom: 2px;
         font-size: 1.6rem;
-        color: @themeColor;
+        color: rgba(30, 111, 255, 1);
       }
 
       >span[intro_content] {
@@ -392,7 +391,7 @@ div.survey {
             width: 3px;
             top: 0;
             left: 0;
-            background-color: @themeColor;
+            background-color: rgba(30, 111, 255, 1);
           }
 
           >span:nth-child(1) {
@@ -455,7 +454,7 @@ div.survey {
             left: calc(0px - @thumbSize / 2); //thumbSize=24px
             height: @thumbSize;
             width: @thumbSize;
-            background-color: @themeColor;
+            background-color: rgba(30, 111, 255, 1);
             border-radius: 5px;
             transition: all 0.2s linear;
 
@@ -489,7 +488,7 @@ div.survey {
       width: auto;
       margin: 30px 0;
       padding: 20px 100px;
-      background-color: @themeColor;
+      background-color: rgba(30, 111, 255, 1);
       color: rgb(255, 255, 255);
       font-size: 1.8rem;
       border-radius: 5px;
@@ -525,7 +524,7 @@ div.survey_intro {
       left: 0;
       height: 4px;
       width: 100%;
-      background-color: @themeColor;
+      background-color: rgba(30, 111, 255, 1);
       border-radius: 2px;
     }
   }
@@ -542,7 +541,7 @@ div.survey_intro {
       width: auto;
       margin-bottom: 10px;
       font-size: 1.6rem;
-      color: @themeColor;
+      color: rgba(30, 111, 255, 1);
     }
 
     >span[intro_content] {
@@ -577,7 +576,7 @@ div.survey_intro {
     height: auto;
     width: auto;
     padding: 20px 100px;
-    background-color: @themeColor;
+    background-color: rgba(30, 111, 255, 1);
     color: rgb(255, 255, 255);
     font-size: 1.8rem;
     border-radius: 5px;
@@ -588,7 +587,6 @@ div.survey_intro {
   }
 }
 
-// 完成问卷页面的样式
 .finish-wrapper {
   width: 100%;
   height: 100%;
