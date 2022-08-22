@@ -1,15 +1,15 @@
 <template>
     <div wrapper>
         <!-- 介绍页 -->
-        <div class="wrapper" v-if="jump === 1">
+        <div class="wrapper" v-if="status.begin">
             <h2 class="title">{{ survey.intro.info_title }}</h2>
             <p class="second-title">问卷介绍：</p>
             <p class="para">{{ survey.intro.info_para }}</p>
-            <el-button type="primary" class="btn" @click="() => { toContent(); status = true }">开始问卷</el-button>
+            <el-button type="primary" class="btn" @click="toContent()">开始问卷</el-button>
         </div>
 
         <!-- 问卷内容部分 -->
-        <div class="wrapper extrachange" v-if="jump === 2">
+        <div class="wrapper extrachange" v-if="status.ongoing">
             <div class="topbox">
                 <h2 class="top_title">{{ survey.intro.info_title }}</h2>
                 <h5 class="top_sectitle">问卷介绍：</h5>
@@ -48,13 +48,13 @@
                         <p>{{ elem }}</p>
                     </div>
                 </div>
-                <el-button type="primary" class="submit" @click="() => { toFinish(); status = true }">提交问卷</el-button>
+                <el-button type="primary" class="submit" @click="toFinish()">提交问卷</el-button>
             </div>
         </div>
 
 
         <!-- 问卷完成部分 -->
-        <div class="finish-wrapper" v-if="jump === 3">
+        <div class="finish-wrapper" v-if="status.end">
             <div class="innerbox">
                 <div class="finish-title">
                     <h2>{{ survey.end.finish }}</h2>
@@ -80,11 +80,13 @@ const survey = computed(() => {
     return datas.survey.survey3[0];
 });
 
-// 跳转：介绍页==>答题页
-let jump = ref(1);
-function toContent() {
-    jump.value = 2;
+
+// -----跳转：介绍页==>答题页--------
+function toContent() { 
+    status.toOngoing();
 }
+
+
 
 // --- 滚动条部分的变量和方法 ---
 const thumb = ref(null);
@@ -97,7 +99,6 @@ let bluebcg_height = ref(0);
 let temp;
 // 滚动条
 const scrollDistence = ref(0);
-
 function scrollTo(e) {
     if (scrollDistence.value === 0) {
         //此为滚动距离scrollTop最大值（e.currentTarget.offsetHeight == e.currentTarget.clientHeight）
@@ -122,6 +123,7 @@ function onScroll(e) {
     temp = temp.join("") / 1 + 8;
     bluebcg_height.value = temp;
 }
+
 
 // 选择单选按钮的方法
 function seleted(i, e) {
@@ -163,7 +165,7 @@ function toFinish() {
     //    console.log(progressPartHeight);
 
     if (!flag) return
-    jump.value = 3;
+    status.toEnd();
 }
 
 </script>

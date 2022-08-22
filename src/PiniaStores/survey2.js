@@ -17,6 +17,7 @@ export default [
                 silderSrc: '/blue.png',
                 titleBorder: 0,
                 progressPartbcg: '#ccc',
+                secscore:10,
                 question: [
                     {
                         detail: 'A. 我能很快地发现并把握住新的机遇。',
@@ -71,6 +72,7 @@ export default [
                 silderSrc: '/blue.png',
                 titleBorder: 0,
                 progressPartbcg: '#ccc',
+                secscore:5,
                 question: [
                     {
                         detail: 'A.如果会议没有得到很好的组织、控制和主持，我会感到不痛快。',
@@ -126,6 +128,7 @@ export default [
                 silderSrc: '/blue.png',
                 titleBorder: 0,
                 progressPartbcg: '#ccc',
+                secscore:5,
                 question: [
                     {
                         detail: 'A.我有在不施加任何压力的情况下，去影响其他人的能力。',
@@ -182,6 +185,7 @@ export default [
                 silderSrc: '/blue.png',
                 titleBorder: 0,
                 progressPartbcg: '#ccc',
+                secscore:5,
                 question: [
                     {
                         detail: 'A.我有兴趣更多地了解我的同事。',
@@ -240,6 +244,7 @@ export default [
                 silderSrc: '/blue.png',
                 titleBorder: 0,
                 progressPartbcg: '#ccc',
+                secscore:5,
                 question: [
                     {
                         detail: 'A. 我喜欢分析情况，权衡所有可能的选择。',
@@ -296,6 +301,7 @@ export default [
                 silderSrc: '/blue.png',
                 titleBorder: 0,
                 progressPartbcg: '#ccc',
+                secscore:5,
                 question: [
                     {
                         detail: 'A. 在有新方案之前，我宁愿先躲进角落，拟定出一个解脱困境的方案。',
@@ -352,6 +358,7 @@ export default [
                 silderSrc: '/blue.png',
                 titleBorder: 0,
                 progressPartbcg: '#ccc',
+                secscore:5,
                 question: [
                     {
                         detail: 'A. 我很容易对那些阻碍前进的人表现出不耐烦。',

@@ -1,15 +1,15 @@
 <template>
     <div wrapper>
         <!-- 介绍页 -->
-        <div class="wrapper" v-if="jump === 1">
+        <div class="wrapper" v-if="status.begin">
             <h2 class="title">{{ survey.intro.info_title }}</h2>
             <p class="second-title">问卷介绍：</p>
             <p class="para">{{ survey.intro.info_para }}</p>
-            <el-button type="primary" class="btn" @click="() => { toContent(); status = true }">开始问卷</el-button>
+            <el-button type="primary" class="btn" @click="toContent()">开始问卷</el-button>
         </div>
 
         <!-- 问卷内容部分 -->
-        <div class="wrapper extrachange" v-if="jump === 2">
+        <div class="wrapper extrachange" v-if="status.ongoing">
             <div class="topbox">
                 <h2 class="top_title">{{ survey.intro.info_title }}</h2>
                 <h5 class="top_sectitle">问卷介绍：</h5>
@@ -49,13 +49,13 @@
                         <p>{{ elem }}</p>
                     </div>
                 </div>
-                <el-button type="primary" class="submit" @click="() => { toFinish(); status = true }">提交问卷</el-button>
+                <el-button type="primary" class="submit" @click=" toFinish();">提交问卷</el-button>
             </div>
         </div>
 
 
         <!-- 问卷完成部分 -->
-        <div class="finish-wrapper" v-if="jump === 3">
+        <div class="finish-wrapper" v-if="status.end">
             <div class="innerbox">
                 <div class="finish-title">
                     <h2>{{ survey.end.finish }}</h2>
@@ -79,12 +79,10 @@ const survey = computed(() => {
     return datas.survey.survey4[0];
 });
 
-// 跳转：介绍页==>答题页
-let jump = ref(1);
-function toContent() {
-    jump.value = 2;
+// -----跳转：介绍页==>答题页--------
+function toContent() { 
+    status.toOngoing();
 }
-
 
 
 // --- 滚动条部分的变量和方法 ---
@@ -188,7 +186,7 @@ function toFinish() {
     //    console.log(progressPartHeight);
 
     if (!flag) return
-    jump.value = 3;
+    status.toEnd();
 }
 
 </script>
