@@ -314,6 +314,8 @@ let show = ref("none");
 function pushfile() {
   if (type.value == 1) {
     console.log(radiofile);
+    radiofile.forEach((element) => delete element.id);
+    // delete radiofile.questionList;
     axios({
       url: "https://q.denglu1.cn/questions/rebuild",
       method: "post",
