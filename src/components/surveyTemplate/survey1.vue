@@ -11,12 +11,7 @@ const datas = useStore();
 // 当前的应该是哪个页面
 const survey = computed(() => datas.survey.survey1[0]);
 
-// 模板引用
 
-// onMounted(() => {
-//   //  console.log(barArr[0]);
-//   console.log(survey.value.quesList[0]);
-// });
 
 // ----------滚动条-----------
 const thumb = ref(null);
@@ -68,7 +63,7 @@ function onScroll(e) {
 // 获取全部questiontitle
 const ques = ref(null);
 // 进度条片段的高度
-const progressPartHeight = 400 / datas.survey.survey1[0].quesList.length;
+const progressPartHeight = 400 /survey.value.quesList.length;
 // 提交按钮  跳转：答题页==>完成页
 function toFinish() {
   let flag = true;
@@ -76,7 +71,7 @@ function toFinish() {
   const uncomplete = [];
   // 滚动的蓝色背景失效
   bluebcg.value.style.display = "none";
-  datas.survey.survey1[0].quesList.forEach((item) => {
+ survey.value.quesList.forEach((item) => {
     item.titleBorder = 0;
     item.progressPartbcg = "#5a9afa";
     if (item.value === 0) {
@@ -113,17 +108,7 @@ const barArr = new Array(datas.survey.survey1[0].quesList.length)
           <span intro_title>问卷介绍：</span>
           <span v-html="survey.intro.intro_content" intro_content></span>
         </p>
-        <p
-          button
-          @click="
-            () => {
-              datas.survey.currentSurvey.status.toSurvey();
-              status = true;
-            }
-          "
-        >
-          {{ datas.survey.currentSurvey.intro.button }}
-        </p>
+        <p button @click="status.toOngoing();">开始问卷 </p>
       </div>
     </template>
 
@@ -138,7 +123,7 @@ const barArr = new Array(datas.survey.survey1[0].quesList.length)
             <!-- 进度条分段，使得点击提交按钮后进度条可以分段显示红色背景，多少个题目就分多少段 (外面多个div包裹下面的style的last-child才能生效)-->
             <div
               class="progress-part"
-              v-for="(item, index) of datas.survey.survey1[0].quesList"
+              v-for="(item, index) of survey.quesList"
               :key="item.id"
               :style="{
                 height: `${progressPartHeight}px`,
@@ -158,22 +143,12 @@ const barArr = new Array(datas.survey.survey1[0].quesList.length)
 
         <div class="survey_area" @scroll="onScroll($event)" ref="content">
           <p intro>
-            <span intro_title>{{
-              datas.survey.currentSurvey.intro.intro_title
-            }}</span>
-            <span intro_content>{{
-              datas.survey.currentSurvey.intro.intro_content
-            }}</span>
-            <span warn_title>{{
-              datas.survey.currentSurvey.intro.warn_title
-            }}</span>
-            <span warn_content>{{
-              datas.survey.currentSurvey.intro.warn_content
-            }}</span>
+            <span intro_title>问卷介绍：</span>
+            <span v-html="survey.intro.intro_content" intro_content></span>
           </p>
           <div class="ques">
             <div
-              v-for="(item, index) of datas.survey.survey[0].quesList"
+              v-for="(item, index) of survey.quesList"
               ref="ques"
               :style="{ border: `${item.titleBorder}px solid red` }"
             >
@@ -197,7 +172,7 @@ const barArr = new Array(datas.survey.survey1[0].quesList.length)
                   @click="item.value = i + 1"
                 >
                   <div class="font">
-                    {{ datas.survey.survey[0].quesList[index].font[i] }}
+                    {{ survey.quesList[index].font[i] }}
                   </div>
                 </div>
                 <div
