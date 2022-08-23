@@ -98,6 +98,12 @@
 <script setup>
 import { inject, ref, computed, nextTick,onMounted ,reactive} from 'vue';
 const status = inject('status')
+
+
+// 获取survey1模板对应的数据，对接接口后的currentSurvey由survey.vue父组件传入
+import surveyData from '../../PiniaStores/survey1.js'
+const currentSurvey = surveyData[0]
+
 import { useStore } from '../../PiniaStores/index.js'
 //数据
 const datas = useStore();
