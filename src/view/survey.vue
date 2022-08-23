@@ -16,32 +16,15 @@ import axios from 'axios'
 import { useStore } from '../PiniaStores/index.js'
 const datas = useStore();
 
-const surveyObj = {
-
-}
-axios({
-  url: `https://q.denglu1.cn/user/fillQuestionnaire/${2}`,
-  method: 'get',
-  withCredentials: true,
-  headers: { 'Content-Type': 'application/json' },
-  headers: { 'token': datas.user.token }
-}).then((response) => {
-  // console.log(response.data.data.questionnaire)
-  // console.log(response.data.data.questionInfoMap);
-  console.log(response);
-  
-  
-  //假设获取到的问卷类型是2
-  viewId.value = 1
-}).catch((error) => {
-  console.log(error)
-})
 
 //问卷填写的状态（问卷介绍，填写问卷，填写结束）=>传给问卷模板组件
 const status = reactive({
   begin: true,
   ongoing: false,
   end: false,
+  surveyObj: {
+    id:0
+  },
   toOngoing() {
     this.begin = false
     this.ongoing = true
@@ -50,6 +33,22 @@ const status = reactive({
     this.ongoing = false
     this.end = true
   },
+  // getSurvey() {
+  //      axios({
+  //           url: `https://q.denglu1.cn/user/fillQuestionnaire/${2}`,
+  //           method: 'get',
+  //           withCredentials: true,
+  //           headers: { 'Content-Type': 'application/json' },
+  //           headers: { 'token': datas.user.token }
+  //          }).then((response) => {
+  //          console.log(response);
+        
+  //       //假设获取到的问卷类型是2
+  //       viewId.value = 1
+  //     }).catch((error) => {
+  //       console.log(error)
+  //     })
+  // }
 });
 provide('status', status)
 </script>

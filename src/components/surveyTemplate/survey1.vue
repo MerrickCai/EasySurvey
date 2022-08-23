@@ -47,7 +47,7 @@ function onScroll(e) {
   scrollDistence.value = e.currentTarget.scrollHeight - e.currentTarget.offsetHeight
   //转换
   thumb.value.setAttribute('style', `top: ${(400) * (e.currentTarget.scrollTop / scrollDistence.value)}px`);
-  text.value.innerHTML = `${Math.ceil((e.currentTarget.scrollTop / scrollDistence.value) * 100)} %`
+  text.value.innerHTML = `${Math.ceil(((e.currentTarget.scrollTop-1)/ scrollDistence.value) * 100)} %`
   // 中转变量
   let temp = thumb.value.style.top.split("");
   temp.pop();
@@ -91,26 +91,6 @@ function toFinish() {
 
 const barArr = new Array(datas.survey.survey1[0].quesList.length).fill(0).map((item, index) => new Array(datas.survey.survey1[0].quesList[index].series).fill(0));
 
-// function submit() {
-//   //  先查询目前是哪一个问卷
-//       axios({
-//       url: `https://q.denglu1.cn/user/fillQuestionnaire/${3}`,
-//       method: 'get',
-//       withCredentials: true,
-//       headers: { 'Content-Type': 'application/json' },
-//       headers: { 'token': datas.user.token }
-//     }).then((response) => {
-//         console.log(response.data.data.questionnaire)
-//         console.log(response.data.data.questionInfoMap);
-//         console.log(response);
-      
-//     }).catch((error) => {
-//       console.log(error)
-//     })
-// }
-// onMounted(() => {
-//   submit()
-// });
 
 </script>
 
@@ -124,8 +104,6 @@ const barArr = new Array(datas.survey.survey1[0].quesList.length).fill(0).map((i
         <p intro>
           <span intro_title>问卷介绍：</span>
           <span v-html="survey.intro.intro_content " intro_content></span>
-          <!-- <span warn_title></span>
-          <span warn_content>{{ survey.intro.warn_content }}</span> -->
         </p>
         <p button @click="status.toOngoing()">开始答题</p>
       </div>
@@ -220,9 +198,9 @@ div.survey {
 
   >div.scrollbar_shadow {
     position: absolute;
-    height: 500px;
+    height: 620px;
     width: 10px;
-    bottom: 0;
+    bottom: 0px;
     right: 0;
     z-index: 1;
     background-color: rgba(255, 255, 255, 1);
@@ -337,7 +315,7 @@ div.survey {
     overflow: auto;
     position: relative;
     background-color: white;
-
+  
     >p[intro] {
       display: block;
       height: auto;
@@ -369,21 +347,20 @@ div.survey {
       display: block;
       height: auto;
       width: 750px;
-      margin-top: 50px;
+      margin-top:35px;
 
       >div {
         display: block;
         height: auto;
         width: 100%;
-        margin-bottom: 30px;
-
+        margin-bottom: 45px;
         >div:nth-child(1) {
           display: block;
           height: auto;
           width: auto;
           position: relative;
           padding-left: 5px;
-          margin-bottom: 80px;
+          margin-bottom: 50px;
 
           &::before {
             content: "";
