@@ -14,7 +14,11 @@ const currentView = computed(() => surveyTemplateList[viewId.value - 1])
 //这里是根据用户打开的链接进行异步网络请求，获取问卷类型和数据，然后展示对应的模板
 import axios from 'axios'
 import { useStore } from '../PiniaStores/index.js'
-const datas = useStore()
+const datas = useStore();
+
+const surveyObj = {
+
+}
 axios({
   url: `https://q.denglu1.cn/user/fillQuestionnaire/${2}`,
   method: 'get',
@@ -22,8 +26,8 @@ axios({
   headers: { 'Content-Type': 'application/json' },
   headers: { 'token': datas.user.token }
 }).then((response) => {
-  console.log(response.data.data.questionnaire)
-  console.log(response.data.data.questionInfoMap);
+  // console.log(response.data.data.questionnaire)
+  // console.log(response.data.data.questionInfoMap);
   console.log(response);
   
   

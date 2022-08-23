@@ -91,7 +91,26 @@ function toFinish() {
 
 const barArr = new Array(datas.survey.survey1[0].quesList.length).fill(0).map((item, index) => new Array(datas.survey.survey1[0].quesList[index].series).fill(0));
 
-
+// function submit() {
+//   //  先查询目前是哪一个问卷
+//       axios({
+//       url: `https://q.denglu1.cn/user/fillQuestionnaire/${3}`,
+//       method: 'get',
+//       withCredentials: true,
+//       headers: { 'Content-Type': 'application/json' },
+//       headers: { 'token': datas.user.token }
+//     }).then((response) => {
+//         console.log(response.data.data.questionnaire)
+//         console.log(response.data.data.questionInfoMap);
+//         console.log(response);
+      
+//     }).catch((error) => {
+//       console.log(error)
+//     })
+// }
+// onMounted(() => {
+//   submit()
+// });
 
 </script>
 
@@ -103,14 +122,12 @@ const barArr = new Array(datas.survey.survey1[0].quesList.length).fill(0).map((i
       <div class="survey_intro">
         <p title>{{ survey.intro.title }}</p>
         <p intro>
-          <span intro_title>{{ survey.intro.intro_title }}</span>
-          <span intro_content>{{ survey.intro.intro_content }}</span>
-          <span warn_title>{{ survey.intro.warn_title }}</span>
-          <span warn_content>{{ survey.intro.warn_content }}</span>
+          <span intro_title>问卷介绍：</span>
+          <span v-html="survey.intro.intro_content " intro_content></span>
+          <!-- <span warn_title></span>
+          <span warn_content>{{ survey.intro.warn_content }}</span> -->
         </p>
-        <p button @click="status.toOngoing()">{{
-            survey.intro.button
-        }}</p>
+        <p button @click="status.toOngoing()">开始答题</p>
       </div>
     </template>
 
@@ -135,9 +152,7 @@ const barArr = new Array(datas.survey.survey1[0].quesList.length).fill(0).map((i
         <div class="survey_area" @scroll="onScroll($event)" ref="content">
           <p intro>
             <span intro_title>{{ survey.intro.intro_title }}</span>
-            <span intro_content>{{ survey.intro.intro_content }}</span>
-            <span warn_title>{{ survey.intro.warn_title }}</span>
-            <span warn_content>{{ survey.intro.warn_content }}</span>
+            <span v-html="survey.intro.intro_content"  intro_content></span>
           </p>
           <div class="ques">
             <div v-for="(item, index) of datas.survey.survey1[0].quesList" ref="ques"
@@ -345,25 +360,9 @@ div.survey {
         margin-bottom: 5px;
         font-size: 1.4rem;
         color: rgba(0, 0, 0, 1);
+        white-space: pre-wrap;
       }
 
-      >span[warn_title] {
-        display: block;
-        height: auto;
-        width: auto;
-        margin-bottom: 2px;
-        font-size: 1.6rem;
-        color: rgba(0, 0, 0, 1);
-        font-weight: bold;
-      }
-
-      >span[warn_content] {
-        display: block;
-        height: auto;
-        width: auto;
-        font-size: 1.4rem;
-        color: rgba(0, 0, 0, 1);
-      }
     }
 
     >div.ques {
@@ -548,30 +547,15 @@ div.survey_intro {
     }
 
     >span[intro_content] {
-      display: block;
-      height: auto;
-      width: auto;
-      margin-bottom: 20px;
-      font-size: 1.4rem;
-      color: rgba(0, 0, 0, 1);
+        display: block;
+        height: auto;
+        width: auto;
+        margin-bottom: 5px;
+        font-size: 1.4rem;
+        color: rgba(0, 0, 0, 1);
+        white-space: pre-wrap;
     }
 
-    >span[warn_title] {
-      display: block;
-      height: auto;
-      width: auto;
-      margin-bottom: 10px;
-      font-size: 1.6rem;
-      color: rgba(0, 0, 0, 1);
-    }
-
-    >span[warn_content] {
-      display: block;
-      height: auto;
-      width: auto;
-      font-size: 1.4rem;
-      color: rgba(0, 0, 0, 1);
-    }
   }
 
   >p[button] {
