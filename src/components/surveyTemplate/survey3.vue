@@ -70,7 +70,7 @@
 
 <script setup>
 
-import { inject } from 'vue'
+import { inject ,onMounted} from 'vue'
 const status = inject('status')
 import { ref, computed } from 'vue';
 import { useStore } from '../../PiniaStores/index.js'
@@ -80,7 +80,10 @@ const survey = computed(() => {
     return datas.survey.survey3[0];
 });
 
-
+onMounted(() => {
+    console.log(333333);
+    
+})
 // -----跳转：介绍页==>答题页--------
 function toContent() { 
     status.toOngoing();

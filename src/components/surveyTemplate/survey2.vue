@@ -96,16 +96,31 @@
 </template>
 
 <script setup>
-import { inject, ref, computed, nextTick,onMounted ,reactive} from 'vue';
+import { inject, ref, computed, nextTick,onMounted ,reactive,defineProps} from 'vue';
 const status = inject('status')
 import { useStore } from '../../PiniaStores/index.js'
 //数据
 const datas = useStore();
 // 当前的应该是哪个页面
-const survey = computed(() => datas.survey.survey2[0])
+const survey = computed(() => datas.survey.survey2[0]);
+
+// // 接受survey父组件传过来的参数。
+const props = defineProps(['surveyObj']);
+const surveyObj = computed(() => props.surveyObj)
+onMounted(() => {
+    
+    console.log(props);
+    console.log(222);
+    
+    // console.log(surveyObj.value); 
+});
+// const a = reactive({});
+// a.intro = surveyObj.value.questionnaire;
+// a.intro.info_title = surveyObj.value.questionnaire.title;
+// a.intro.info_para =  surveyObj.value.questionnaire.message;
+
 // 用来给上面的模板计算每次thumb应该移动多少的
 const barArr = new Array(survey.value.questionList.length).fill(0).map((item, index) => new Array(survey.value.questionList[index].secscore + 1));
-
 
 
 // -----跳转：介绍页==>答题页--------
