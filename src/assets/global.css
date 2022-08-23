@@ -1,5 +1,10 @@
+@font-face {
+  font-family: 'Han Sans';
+  src: url('SourceHanSansSC-VF.otf.woff2');
+}
+
 * {
-  font-family: "Microsoft Yahei";
+  font-family: "Han Sans";
   box-sizing: border-box;
   margin: 0;
   padding: 0;
