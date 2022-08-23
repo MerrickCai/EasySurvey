@@ -1,5 +1,5 @@
 <script setup>
-import { provide, ref, computed,reactive,toRef} from 'vue'
+import { provide, ref, computed, reactive } from 'vue'
 
 //问卷模板
 import survey1 from '../components/surveyTemplate/survey1.vue'
@@ -12,18 +12,35 @@ const viewId = ref(1) //默认问卷类型是2
 const currentView = computed(() => surveyTemplateList[viewId.value - 1])
 
 //这里是根据用户打开的链接进行异步网络请求，获取问卷类型和数据，然后展示对应的模板
-import axios from 'axios'
+
 import { useStore } from '../PiniaStores/index.js'
 const datas = useStore();
 
 
 //问卷填写的状态（问卷介绍，填写问卷，填写结束）=>传给问卷模板组件
+import axios from 'axios'
+function getSurvey() {
+  axios({
+    url: `https://q.denglu1.cn/user/fillQuestionnaire/${2}`,
+    method: 'get',
+    withCredentials: true,
+    headers: { 'Content-Type': 'application/json' },
+    headers: { 'token': datas.user.token }
+  }).then((response) => {
+    console.log(response);
+
+    //假设获取到的问卷类型是2
+    viewId.value = 1
+  }).catch((error) => {
+    console.log(error)
+  })
+}
 const status = reactive({
   begin: true,
   ongoing: false,
   end: false,
   surveyObj: {
-    id:0
+    id: 0
   },
   toOngoing() {
     this.begin = false
@@ -32,35 +49,23 @@ const status = reactive({
   toEnd() {
     this.ongoing = false
     this.end = true
-  },
-  // getSurvey() {
-  //      axios({
-  //           url: `https://q.denglu1.cn/user/fillQuestionnaire/${2}`,
-  //           method: 'get',
-  //           withCredentials: true,
-  //           headers: { 'Content-Type': 'application/json' },
-  //           headers: { 'token': datas.user.token }
-  //          }).then((response) => {
-  //          console.log(response);
-        
-  //       //假设获取到的问卷类型是2
-  //       viewId.value = 1
-  //     }).catch((error) => {
-  //       console.log(error)
-  //     })
-  // }
-});
+  }
+})
 provide('status', status)
 </script>
 
 <template>
   <div class="wrapper">
-    <img dog-ear src="/tangible.png" />
-    <div class="decoration5"></div>
+
+    <!--装饰品-->
     <div class="decoration1" v-show="status.begin || status.end"></div>
     <div class="decoration2" v-show="status.begin || status.end"></div>
     <div class="decoration3" v-show="status.begin || status.end"></div>
     <div class="decoration4" v-show="status.begin || status.end"></div>
+    <div class="decoration5"></div>
+    <img dog-ear src="/tangible.png" />
+    <!--装饰品-->
+
     <!--动态组件-->
     <Transition name="fade" mode="out-in">
       <KeepAlive>
@@ -68,6 +73,7 @@ provide('status', status)
       </KeepAlive>
     </Transition>
     <!--动态组件-->
+
   </div>
 </template>
 
@@ -83,7 +89,7 @@ div.wrapper {
   position: relative;
   top: 0;
   left: 0;
-  border-radius: 5px;
+  border-radius: 10px;
   box-shadow: 0px 5px 10px 0 rgba(73, 107, 158, 0.1);
   z-index: 0;
 
@@ -92,7 +98,7 @@ div.wrapper {
     height: 400px;
     width: 400px;
     position: absolute;
-    z-index: -10;
+    z-index: -1;
     top: 0;
     left: 0;
     transform: translate(-50%, -50%);
@@ -106,7 +112,7 @@ div.wrapper {
     height: 150px;
     width: 150px;
     position: absolute;
-    z-index: -3;
+    z-index: -1;
     bottom: 40px;
     right: 50px;
     border-radius: 50%;
@@ -118,7 +124,7 @@ div.wrapper {
     height: 100px;
     width: 100px;
     position: absolute;
-    z-index: -4;
+    z-index: -2;
     bottom: 80px;
     right: -20px;
     border-radius: 50%;
@@ -130,7 +136,7 @@ div.wrapper {
     height: 170px;
     width: 170px;
     position: absolute;
-    z-index: -4;
+    z-index: -3;
     bottom: -20px;
     right: 100px;
     border-radius: 50%;
