@@ -1,11 +1,12 @@
 <script setup>
-//问卷填写的状态
-import { ref,inject, computed } from "vue";
-const status = inject("status")
+import { ref, inject } from "vue"
 
-// 获取survey1模板对应的数据，对接接口后的currentSurvey由survey.vue父组件传入
-import surveyData from '../../PiniaStores/survey1.js'
-const currentSurvey = surveyData[0]
+
+
+//从父组件中获取当前问卷的状态和数据
+const currentSurvey = inject("currentSurvey")
+
+
 
 // ----------滚动条-----------
 const thumb = ref(null);
@@ -53,11 +54,13 @@ function onScroll(e) {
   bluebcg_height.value = temp;
 }
 
+
+
 // ------提交按钮之后相关的变量和方法------
 // 获取全部questiontitle
 const ques = ref(null);
 // 进度条片段的高度
-const progressPartHeight = 400 / currentSurvey.quesList.length;
+const progressPartHeight = 400 / currentSurvey.data.quesList.length;
 // 提交按钮  跳转：答题页==>完成页
 function toFinish() {
   let flag = true;
@@ -65,7 +68,7 @@ function toFinish() {
   const uncomplete = [];
   // 滚动的蓝色背景失效
   bluebcg.value.style.display = "none";
-  currentSurvey.value.quesList.forEach((item) => {
+  currentSurvey.data.quesList.forEach((item) => {
     item.titleBorder = 0;
     item.progressPartbcg = "#5a9afa";
     if (item.value === 0) {
@@ -81,41 +84,42 @@ function toFinish() {
   }
 
   if (!flag) return;
-  status.value = true;
-  status.toEnd();
+  currentSurvey.status.toEnd();
 }
-
-const barArr = new Array(currentSurvey.quesList.length)
+const barArr = new Array(currentSurvey.data.quesList.length)
   .fill(0)
   .map((item, index) =>
-    new Array(currentSurvey.quesList[index].series).fill(0)
-  );
+    new Array(currentSurvey.data.quesList[index].series).fill(0)
+  )
 </script>
 
 <template>
   <div wrapper>
+
+
     <!--问卷介绍-->
-    <template v-if="status.begin">
+    <template v-if="currentSurvey.status.begin">
       <div class="survey_intro">
-        <p title>{{ currentSurvey.intro.title }}</p>
+        <p title>{{ currentSurvey.data.intro.title }}</p>
         <p intro>
           <span intro_title>问卷介绍：</span>
-          <span v-html="currentSurvey.intro.intro_content" intro_content></span>
+          <span v-html="currentSurvey.data.intro.intro_content" intro_content></span>
         </p>
-        <p button @click="status.toOngoing();">开始问卷 </p>
+        <p button @click="currentSurvey.status.toOngoing();">开始问卷 </p>
       </div>
     </template>
 
+
     <!--问卷填写-->
-    <template v-if="status.ongoing">
+    <template v-if="currentSurvey.status.ongoing">
       <div class="survey">
-        <p title>{{ currentSurvey.intro.title }}</p>
+        <p title>{{ currentSurvey.data.intro.title }}</p>
         <div class="scrollbar_shadow"></div>
         <!-- 进度条 -->
         <div class="progress" @click="scrollTo($event)">
           <div>
             <!-- 进度条分段，使得点击提交按钮后进度条可以分段显示红色背景，多少个题目就分多少段 (外面多个div包裹下面的style的last-child才能生效)-->
-            <div class="progress-part" v-for="(item, index) of currentSurvey.quesList" :key="item.id" :style="{
+            <div class="progress-part" v-for="(item, index) of currentSurvey.data.quesList" :key="item.id" :style="{
               height: `${progressPartHeight}px`,
               backgroundColor: `${item.progressPartbcg}`,
             }"></div>
@@ -125,14 +129,13 @@ const barArr = new Array(currentSurvey.quesList.length)
           </div>
           <div class="text" ref="text">0%</div>
         </div>
-
         <div class="survey_area" @scroll="onScroll($event)" ref="content">
           <p intro>
             <span intro_title>问卷介绍：</span>
-            <span v-html="currentSurvey.intro.intro_content" intro_content></span>
+            <span v-html="currentSurvey.data.intro.intro_content" intro_content></span>
           </p>
           <div class="ques">
-            <div v-for="(item, index) of currentSurvey.quesList" ref="ques"
+            <div v-for="(item, index) of currentSurvey.data.quesList" ref="ques"
               :style="{ border: `${item.titleBorder}px solid red` }">
               <div>
                 <span>{{ index + 1 }}.</span><span>{{ item.ques }}</span>
@@ -140,28 +143,28 @@ const barArr = new Array(currentSurvey.quesList.length)
               <!-- 总宽度为600-->
               <div :style="{
                 backgroundColor: `${item.value === 0
-                    ? 'rgba(245, 245, 245, 1)'
-                    : 'rgb(229,229,229)'
+                  ? 'rgba(245, 245, 245, 1)'
+                  : 'rgb(229,229,229)'
                   }`,
               }">
                 <!-- bar -->
                 <div v-for="(b, i) of barArr[index]" class="bar" @click="item.value = i + 1">
                   <div class="font">
-                    {{ currentSurvey.quesList[index].font[i] }}
+                    {{ currentSurvey.data.quesList[index].font[i] }}
                   </div>
                 </div>
                 <div class="thumb" :style="{
                   left: `${item.value === 0
-                      ? -12
-                      : -12 +
-                      ((item.value - 1) * 600) / (barArr[index].length - 1)
+                    ? -12
+                    : -12 +
+                    ((item.value - 1) * 600) / (barArr[index].length - 1)
                     }px`,
                 }"></div>
                 <div class="thumb" :style="{
                   left: `${item.value === 0
-                      ? -12
-                      : -12 +
-                      ((item.value - 1) * 600) / (barArr[index].length - 1)
+                    ? -12
+                    : -12 +
+                    ((item.value - 1) * 600) / (barArr[index].length - 1)
                     }px`,
                 }"></div>
               </div>
@@ -172,17 +175,20 @@ const barArr = new Array(currentSurvey.quesList.length)
       </div>
     </template>
 
+
     <!-- 问卷完成部分 -->
-    <div class="finish-wrapper" v-if="status.end">
+    <div class="finish-wrapper" v-if="currentSurvey.status.end">
       <div class="innerbox">
         <div class="finish-title">
           <h2>您已完成</h2>
-          <h3>{{ currentSurvey.intro.title }}</h3>
+          <h3>{{ currentSurvey.data.intro.title }}</h3>
           <p>感谢您的答题，本次问卷已全部结束</p>
         </div>
         <el-button type="primary" class="finish-submit">完成答题</el-button>
       </div>
     </div>
+
+
   </div>
 </template>
 

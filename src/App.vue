@@ -66,9 +66,7 @@ router.beforeEach(async (to, from) => {
       <!--主路由容器-->
       <router-view v-slot="{ Component, route }">
         <transition name="mainView" mode="out-in">
-          <keep-alive>
-            <component :is="Component" :key="route.path" />
-          </keep-alive>
+          <component :is="Component" :key="route.path" />
         </transition>
       </router-view>
       <!--主路由容器-->

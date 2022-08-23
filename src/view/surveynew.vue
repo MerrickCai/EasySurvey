@@ -8,68 +8,57 @@
     <div class="decoration3"></div>
     <div class="decoration4"></div>
 
-  <div class="newcon">
-    <div class="newword">
-      <!-- 新建问卷标题 -->
-      <p class="newtitle" v-show="titleshow" @click="changetitleshow">
-        {{ filetitle.info_title }}
-      </p>
-      <input
-        type="text"
-        ref="titlein"
-        class="titlein"
-        v-show="!titleshow"
-        v-model="filetitle.info_title"
-        @keyup.enter="titleshow = true"
-        @blur="titleshow = true"
-      />
-      <!-- 新建问卷介绍 -->
-      <p class="newintro">
-        <span class="newintro_title">问卷介绍:</span>
+    <div class="newcon">
+      <div class="newword">
+        <!-- 新建问卷标题 -->
+        <p class="newtitle" v-show="titleshow" @click="changetitleshow">
+          {{ filetitle.info_title }}
+        </p>
+        <input type="text" ref="titlein" class="titlein" v-show="!titleshow" v-model="filetitle.info_title"
+          @keyup.enter="titleshow = true" @blur="titleshow = true" />
+        <!-- 新建问卷介绍 -->
+        <p class="newintro">
+          <span class="newintro_title">问卷介绍:</span>
         <p class="newintro_con" v-show="introshow" @click="changeintroshow">
           {{ filetitle.info_para }}
         </p>
 
-        <textarea
-          cols="30"
-          rows="2"
-          ref="introin"
-          class="introin"
-          v-show="!introshow"
-          v-model="filetitle.info_para"
-          @keyup.enter="introshow = true"
-          @blur="introshow = true"
-        ></textarea>
-      </p>
-    </div>
-    <div class="quearea">
-      <div class="questype">
-        <span class="typetitle">请选择问卷类型:</span>
-        <span class="typeall">
-        <span :class="{typeclick:type==1}" @click="type=1">单选</span>
-        <span :class="{typeclick:type==2}" @click="type=2">多选</span>
-        <span :class="{typeclick:type==3}" @click="type=3">矩阵</span>
-        <span :class="{typeclick:type==4}" @click="type=4">量表</span>
-        <span :class="{typeclick:type==5}" @click="type=5">文本</span>
-        </span>
+        <textarea cols="30" rows="2" ref="introin" class="introin" v-show="!introshow" v-model="filetitle.info_para"
+          @keyup.enter="introshow = true" @blur="introshow = true"></textarea>
+        </p>
       </div>
-      <!-- 题目列表 -->
-      <ul>
-        <keep-alive>
-        <component :is="typeview" :fileword="fileword" :receive="receive" :deleteques="deleteques" :scalefile="scalefile" :sreceive="sreceive" :sdeleteques="sdeleteques" :radiofile="radiofile" :rreceive="rreceive" :rdeleteques="rdeleteques" :checkboxfile="checkboxfile" :creceive="creceive" :cdeleteques="cdeleteques" :textfile="textfile" :treceive="treceive" :tdeleteques="tdeleteques"></component>               
-        </keep-alive>
-      </ul>
-    </div>
-    <button class="push" @click="pushfile($event)">发布问卷</button>
-    <div class="mask" :style="{display:show}">
-    <div class="sharefile">
-      <span class="shareword">分享问卷</span>
-      <span class="close" @click="disappear($event)">×</span>
-      <span class="sharequick">快分享以上二维码或点击复制<a>链接</a>填答问卷吧！</span>
-    </div>
+      <div class="quearea">
+        <div class="questype">
+          <span class="typetitle">请选择问卷类型:</span>
+          <span class="typeall">
+            <span :class="{ typeclick: type == 1 }" @click="type = 1">单选</span>
+            <span :class="{ typeclick: type == 2 }" @click="type = 2">多选</span>
+            <span :class="{ typeclick: type == 3 }" @click="type = 3">矩阵</span>
+            <span :class="{ typeclick: type == 4 }" @click="type = 4">量表</span>
+            <span :class="{ typeclick: type == 5 }" @click="type = 5">文本</span>
+          </span>
+        </div>
+        <!-- 题目列表 -->
+        <ul>
+          <keep-alive>
+            <component :is="typeview" :fileword="fileword" :receive="receive" :deleteques="deleteques"
+              :scalefile="scalefile" :sreceive="sreceive" :sdeleteques="sdeleteques" :radiofile="radiofile"
+              :rreceive="rreceive" :rdeleteques="rdeleteques" :checkboxfile="checkboxfile" :creceive="creceive"
+              :cdeleteques="cdeleteques" :textfile="textfile" :treceive="treceive" :tdeleteques="tdeleteques">
+            </component>
+          </keep-alive>
+        </ul>
+      </div>
+      <button class="push" @click="pushfile($event)">发布问卷</button>
+      <div class="mask" :style="{ display: show }">
+        <div class="sharefile">
+          <span class="shareword">分享问卷</span>
+          <span class="close" @click="disappear($event)">×</span>
+          <span class="sharequick">快分享以上二维码或点击复制<a>链接</a>填答问卷吧！</span>
+        </div>
+      </div>
     </div>
   </div>
-    </div>
 </template>
 
 <script setup>
@@ -91,8 +80,7 @@ import textlist from "../components/surveynew/textlist.vue";
 import { useStore } from "../PiniaStores/index.js";
 import axios from "axios";
 //数据
-const datas = useStore();
-console.log(datas);
+const datas = useStore()
 //动态组件视图
 let type = ref(1);
 let typelist = [radiolist, checkboxlist, matrixlist, scalelist, textlist];
@@ -317,14 +305,15 @@ function pushfile() {
     axios({
       url: "https://q.denglu1.cn/questions/rebuild",
       method: "post",
+      withCredentials: true,
       headers: { "Content-Type": "application/json" },
       headers: { token: datas.user.token },
-      date: {
+      data: {
         questionnaire: {
           userId: datas.user.userId,
           totalNumber: 1,
           message: filetitle.info_para,
-          title: filetitle.info_title,
+          title: filetitle.info_title
         },
         questionOptionList: radiofile,
       },
@@ -448,6 +437,7 @@ div.wrapper {
     object-fit: contain;
     transform: scale(1.07);
   }
+
   .newcon {
     position: relative;
     top: 50px;
@@ -468,6 +458,7 @@ div.wrapper {
       vertical-align: middle;
       width: fit-content;
       text-align: center;
+
       &::after {
         content: "";
         display: block;
@@ -480,12 +471,14 @@ div.wrapper {
         border-radius: 2px;
       }
     }
+
     .titlein {
       position: relative;
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
     }
+
     .newintro {
       .newintro_title {
         display: block;
@@ -495,12 +488,14 @@ div.wrapper {
         text-align: left;
         margin-bottom: 12px;
       }
+
       .newintro_con {
         word-wrap: break-word; //超出页面自动换行
         width: 840px;
         height: 50px;
         overflow: auto;
       }
+
       textarea {
         width: 780px;
         border: 1px dashed rgba(30, 111, 255, 1);
@@ -508,18 +503,22 @@ div.wrapper {
         resize: none;
       }
     }
+
     .quearea {
       margin-top: 20px;
       height: 300px;
       overflow: auto;
+
       .questype {
         display: flex;
+
         .typetitle {
           position: relative;
           font-size: 16px;
           font-weight: 500;
           color: rgba(0, 0, 0, 1);
           text-align: left;
+
           &::after {
             content: "";
             display: block;
@@ -532,10 +531,12 @@ div.wrapper {
             border-radius: 2px;
           }
         }
+
         .typeall {
           margin-left: 6px;
           display: flex;
-          > span {
+
+          >span {
             display: block;
             cursor: pointer;
             width: 60px;
@@ -549,15 +550,18 @@ div.wrapper {
             opacity: 1;
             box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
           }
+
           .typeclick {
             background: rgba(235, 245, 255, 1);
           }
         }
       }
-      > ul {
+
+      >ul {
         margin-top: 14px;
       }
     }
+
     .push {
       cursor: pointer;
       position: absolute;
@@ -574,6 +578,7 @@ div.wrapper {
       border-radius: 2px;
     }
   }
+
   .mask {
     display: none;
     position: fixed;
@@ -584,6 +589,7 @@ div.wrapper {
     left: 0;
     background-color: rgba(0, 0, 0, 0.5);
   }
+
   .sharefile {
     position: absolute;
     left: 50%;
@@ -595,6 +601,7 @@ div.wrapper {
     opacity: 1;
     background: rgba(255, 255, 255, 1);
     box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
+
     .shareword {
       position: absolute;
       left: 40px;
@@ -611,6 +618,7 @@ div.wrapper {
       text-align: left;
       vertical-align: top;
     }
+
     .close {
       cursor: pointer;
       position: absolute;
@@ -622,6 +630,7 @@ div.wrapper {
       color: rgba(30, 111, 255, 1);
       font-size: 25px;
     }
+
     .sharequick {
       position: absolute;
       left: 83px;
