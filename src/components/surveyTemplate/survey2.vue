@@ -1,7 +1,7 @@
 <template>
 <div wrapper>
         <!-- 介绍页 -->
-        <div class="wrapper" v-if="status.begin">
+        <div class="wrapper" v-if="currentSurvey.status.begin">
             <h2 class="title">{{ survey.intro.info_title }}</h2>
             <p class="second-title">问卷介绍：</p>
             <p class="para">{{ survey.intro.info_para }}</p>
@@ -11,7 +11,7 @@
 
 
         <!-- 问卷内容部分 -->
-        <div class="wrapper extrachange" v-if="status.ongoing">
+        <div class="wrapper extrachange" v-if="currentSurvey.status.ongoing">
             <!--问卷题目和介绍-->
             <div class="topbox">
                 <h2 class="top_title">{{ survey.intro.info_title }}</h2>
@@ -80,7 +80,7 @@
         </div>
 
         <!-- 问卷完成部分 -->
-        <div class="finish-wrapper" v-if="status.end">
+        <div class="finish-wrapper" v-if="currentSurvey.status.end">
             <div class="innerbox">
                 <div class="finish-title">
                     <h2>您已完成</h2>
@@ -96,27 +96,28 @@
 </template>
 
 <script setup>
-import { inject, ref, computed, nextTick,onMounted ,reactive} from 'vue';
-const status = inject('status')
+import { inject, ref, computed, nextTick,onMounted ,reactive,defineProps} from 'vue';
+const currentSurvey = inject('currentSurvey')
 
-
-// 获取survey1模板对应的数据，对接接口后的currentSurvey由survey.vue父组件传入
-import surveyData from '../../PiniaStores/survey1.js'
-const currentSurvey = surveyData[0]
 
 import { useStore } from '../../PiniaStores/index.js'
 //数据
 const datas = useStore();
 // 当前的应该是哪个页面
-const survey = computed(() => datas.survey.survey2[0])
+const survey = computed(() => datas.survey.survey2[0]);
+
+// // 接受survey父组件传过来的参数。
+const props = defineProps(['surveyObj']);
+const surveyObj = computed(() => props.surveyObj)
+
+
 // 用来给上面的模板计算每次thumb应该移动多少的
 const barArr = new Array(survey.value.questionList.length).fill(0).map((item, index) => new Array(survey.value.questionList[index].secscore + 1));
 
 
-
 // -----跳转：介绍页==>答题页--------
 function toContent() { 
-    status.toOngoing();
+    currentSurvey.status.toOngoing();
 }
 
 
@@ -254,7 +255,7 @@ function toFinish() {
     }
     //    console.log(progressPartHeight);
     if (!flag) return
-    status.toEnd();
+    currentSurvey.status.toEnd();
 }
 
 

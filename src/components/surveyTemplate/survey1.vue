@@ -1,11 +1,106 @@
 <script setup>
-//问卷填写的状态
-import { ref,inject, computed } from "vue";
-const status = inject("status")
+//问卷填写的状态（问卷介绍，填写问卷，填写结束）
+import axios from "axios";
+import { ref, onMounted, inject, computed ,reactive,defineProps} from "vue";
+const currentSurvey = inject("currentSurvey");
 
-// 获取survey1模板对应的数据，对接接口后的currentSurvey由survey.vue父组件传入
-import surveyData from '../../PiniaStores/survey1.js'
-const currentSurvey = surveyData[0]
+
+
+
+// 接受survey父组件传过来的参数。
+const props = defineProps(['surveyObj']);
+
+const surveyObj = computed(() => props.surveyObj)
+onMounted(() => {
+  // console.log(props);
+ console.log('请求参数',surveyObj.value);
+});
+
+// 封装survey-------给模板用--------
+const survey = reactive({});
+survey.intro = {};
+survey.effectiveNumber = surveyObj.value.questionnaire.effectiveNumber;
+survey.totalNumber = surveyObj.value.questionnaire.totalNumber;
+survey.count = surveyObj.value.questionnaire.count;
+survey.id = surveyObj.value.questionnaire.id;
+survey.intro.title = surveyObj.value.questionnaire.title;
+survey.intro.intro_content = surveyObj.value.questionnaire.message;
+
+
+
+survey.quesList = [];
+let optionDetail = [];
+let optionId = [];
+for (let i in surveyObj.value.optionMap) {
+  let t1 = [];
+  let t2 = [];
+  for (let j = 0; j < surveyObj.value.optionMap[i].length; j++){
+    t1.push(surveyObj.value.optionMap[i][j].detail);
+    t2.push(surveyObj.value.optionMap[i][j].id);
+  }
+  optionDetail.push(t1);
+  optionId.push(t2)
+}
+
+// 配置每一道题目
+for (let i in surveyObj.value.questionInfoMap) {
+  let item = surveyObj.value.questionInfoMap[i].info;
+  // 自己定义的数组从0开始就要-1，其他不用-1；
+    i/= 1;
+    let obj = {};
+    obj.ques = item;  //题目
+    obj.value = 0;  
+    obj.titleBorder = 0; 
+    obj.progressPartbcg = '#ccc';
+    obj.series = optionDetail[i-1].length;
+    obj.font = optionDetail[i-1];
+    obj.questionId = surveyObj.value.optionMap[i][1].questionId;
+    obj.optionId = optionId[i - 1];
+    obj.seleted = 0;
+    survey.quesList.push(obj)
+}
+
+console.log('封装好的数据', survey);
+
+
+  
+function sumbit() {
+   const optionList = [];
+  for(let item of survey.quesList) {
+       let obj = {};
+    obj.questionId = item.questionId;
+    obj.id = item.seleted;
+    obj.detail = item.font[item.value-1]; 
+    optionList.push(obj);
+  }
+console.log(optionList);
+
+     axios({
+        url: `https://q.denglu1.cn/questions/commit`,
+        method: 'post',
+        withCredentials: true,
+        headers: { 'Content-Type': 'application/json' },
+        headers: { 'token': datas.user.token },
+        data: {
+          "questionnaire_id": survey.id,
+          "totalNumber": survey.totalNumber,
+          "count":survey.count,     
+          "effectiveNumber":survey.effectiveNumber,  
+          "optionList":optionList,
+        }
+     }).then((response) => {
+        console.log(response);
+       if (response.data.code === 200) {
+         currentSurvey.toEnd();
+        console.log(survey);
+        
+       } else {
+          alert('提交失败')
+       } 
+      }).catch((error) => {
+        console.log(error)
+      })
+}
 
 // ----------滚动条-----------
 const thumb = ref(null);
@@ -53,11 +148,14 @@ function onScroll(e) {
   bluebcg_height.value = temp;
 }
 
+
+
 // ------提交按钮之后相关的变量和方法------
 // 获取全部questiontitle
 const ques = ref(null);
 // 进度条片段的高度
-const progressPartHeight = 400 / currentSurvey.quesList.length;
+const progressPartHeight = 400 /survey.quesList.length;
+
 // 提交按钮  跳转：答题页==>完成页
 function toFinish() {
   let flag = true;
@@ -65,7 +163,7 @@ function toFinish() {
   const uncomplete = [];
   // 滚动的蓝色背景失效
   bluebcg.value.style.display = "none";
-  currentSurvey.value.quesList.forEach((item) => {
+ survey.quesList.forEach((item) => {
     item.titleBorder = 0;
     item.progressPartbcg = "#5a9afa";
     if (item.value === 0) {
@@ -81,41 +179,46 @@ function toFinish() {
   }
 
   if (!flag) return;
-  status.value = true;
-  status.toEnd();
+  sumbit();
 }
 
-const barArr = new Array(currentSurvey.quesList.length)
+const barArr = new Array(survey.quesList.length)
   .fill(0)
   .map((item, index) =>
-    new Array(currentSurvey.quesList[index].series).fill(0)
-  );
+    new Array(survey.quesList[index].series).fill(0)
+);
+
+
+
 </script>
 
 <template>
   <div wrapper>
+
+
     <!--问卷介绍-->
-    <template v-if="status.begin">
+    <template v-if="currentSurvey.status.begin">
       <div class="survey_intro">
-        <p title>{{ currentSurvey.intro.title }}</p>
+        <p title>{{ survey.intro.title }}</p>
         <p intro>
           <span intro_title>问卷介绍：</span>
-          <span v-html="currentSurvey.intro.intro_content" intro_content></span>
+          <span v-html="survey.intro.intro_content"  intro_content></span>
         </p>
-        <p button @click="status.toOngoing();">开始问卷 </p>
+        <p button @click="currentSurvey.toOngoing();">开始问卷 </p>
       </div>
     </template>
 
+
     <!--问卷填写-->
-    <template v-if="status.ongoing">
+    <template v-if="currentSurvey.status.ongoing">
       <div class="survey">
-        <p title>{{ currentSurvey.intro.title }}</p>
+        <p title>{{ survey.intro.title }}</p>
         <div class="scrollbar_shadow"></div>
         <!-- 进度条 -->
         <div class="progress" @click="scrollTo($event)">
           <div>
             <!-- 进度条分段，使得点击提交按钮后进度条可以分段显示红色背景，多少个题目就分多少段 (外面多个div包裹下面的style的last-child才能生效)-->
-            <div class="progress-part" v-for="(item, index) of currentSurvey.quesList" :key="item.id" :style="{
+            <div class="progress-part" v-for="(item, index) of survey.quesList" :key="item.id" :style="{
               height: `${progressPartHeight}px`,
               backgroundColor: `${item.progressPartbcg}`,
             }"></div>
@@ -125,64 +228,71 @@ const barArr = new Array(currentSurvey.quesList.length)
           </div>
           <div class="text" ref="text">0%</div>
         </div>
-
         <div class="survey_area" @scroll="onScroll($event)" ref="content">
           <p intro>
             <span intro_title>问卷介绍：</span>
-            <span v-html="currentSurvey.intro.intro_content" intro_content></span>
+            <span v-html="survey.intro.intro_content" intro_content></span>
           </p>
           <div class="ques">
-            <div v-for="(item, index) of currentSurvey.quesList" ref="ques"
+            <div v-for="(item, index) of survey.quesList" ref="ques"
               :style="{ border: `${item.titleBorder}px solid red` }">
               <div>
-                <span>{{ index + 1 }}.</span><span>{{ item.ques }}</span>
+                <span></span><span>{{ item.ques }}</span>
               </div>
               <!-- 总宽度为600-->
               <div :style="{
                 backgroundColor: `${item.value === 0
-                    ? 'rgba(245, 245, 245, 1)'
-                    : 'rgb(229,229,229)'
+                  ? 'rgba(245, 245, 245, 1)'
+                  : 'rgb(229,229,229)'
                   }`,
               }">
                 <!-- bar -->
-                <div v-for="(b, i) of barArr[index]" class="bar" @click="item.value = i + 1">
+                <div
+                  v-for="(b, i) of barArr[index]"
+                  class="bar"
+                  @click="item.value = i + 1; item.seleted=item.optionId[i]; "
+                >
+
                   <div class="font">
-                    {{ currentSurvey.quesList[index].font[i] }}
+                    {{ survey.quesList[index].font[i] }}
                   </div>
                 </div>
                 <div class="thumb" :style="{
                   left: `${item.value === 0
-                      ? -12
-                      : -12 +
-                      ((item.value - 1) * 600) / (barArr[index].length - 1)
+                    ? -12
+                    : -12 +
+                    ((item.value - 1) * 600) / (barArr[index].length - 1)
                     }px`,
                 }"></div>
                 <div class="thumb" :style="{
                   left: `${item.value === 0
-                      ? -12
-                      : -12 +
-                      ((item.value - 1) * 600) / (barArr[index].length - 1)
+                    ? -12
+                    : -12 +
+                    ((item.value - 1) * 600) / (barArr[index].length - 1)
                     }px`,
                 }"></div>
               </div>
             </div>
-          </div>
-          <div class="submitBtn" @click="toFinish">提交问卷</div>
+          </div> 
+          <div class="submitBtn" @click="toFinish()">提交问卷</div>
         </div>
       </div>
     </template>
 
+
     <!-- 问卷完成部分 -->
-    <div class="finish-wrapper" v-if="status.end">
+    <div class="finish-wrapper" v-if="currentSurvey.status.end">
       <div class="innerbox">
         <div class="finish-title">
           <h2>您已完成</h2>
-          <h3>{{ currentSurvey.intro.title }}</h3>
+          <h3>{{ survey.intro.title }}</h3>
           <p>感谢您的答题，本次问卷已全部结束</p>
         </div>
         <el-button type="primary" class="finish-submit">完成答题</el-button>
       </div>
     </div>
+
+
   </div>
 </template>
 
@@ -447,7 +557,7 @@ div.survey {
           .font {
             font-family: "思源黑体";
             text-align: center;
-            width: 60px;
+            width: 70px;
             font-size: 12;
             position: absolute;
             left: 50%;
