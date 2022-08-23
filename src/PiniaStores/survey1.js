@@ -32,7 +32,7 @@ export default [
                 titleBorder: 0,
                 progressPartbcg: '#ccc',
                 // series为该题目的级数
-                series: 5,
+                series: 10,
                 font: ['完全不符合', '不太符合', '部分符合', '比较符合', '完全符合']
             },
             {
@@ -42,7 +42,7 @@ export default [
                 titleBorder: 0,
                 progressPartbcg: '#ccc',
                 // series为该题目的级数
-                series: 5,
+                series: 3,
                 font: ['完全不符合', '不太符合', '部分符合', '比较符合', '完全符合']
             },
             {
