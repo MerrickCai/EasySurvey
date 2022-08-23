@@ -29,7 +29,7 @@
           </i>
           <input
             ref="planinput"
-            type="text"
+            type="number"
             v-show="!PlannumShow"
             v-model.number="plannum"
             placeholder="请输入计划问卷数"
@@ -54,7 +54,7 @@
           </i>
           <input
             ref="Moneyinput"
-            type="text"
+            type="number"
             placeholder="请输入总支出数"
             v-show="!MoneyShow"
             v-model.number="Moneynum"
@@ -134,5 +134,22 @@ function ChangeMoneyShow() {
       }
     }
   }
+}
+input[type="number"] {
+  /* 清除原有input样式 */
+  -web-kit-appearance: none;
+  -moz-appearance: none;
+  outline: 0;
+  /* 设置我们要的样式 */
+  width: 100px;
+  height: 42px;
+  opacity: 1;
+  border: 1px solid rgba(166, 166, 166, 1);
+  text-align: center;
+  font-size: 36px;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
 }
 </style>

@@ -18,7 +18,8 @@
                 :percentage="0"
                 :width="90"
                 :height="90"
-                stroke-width="80"
+                :stroke-width="80"
+                :show-text="false"
               />
             </span>
           </div>
@@ -43,10 +44,34 @@ import { onMounted, ref } from "vue";
 //路由
 import { useRouter } from "vue-router";
 const router = useRouter();
+import { useStore } from "../../PiniaStores/index.js";
+const datas = useStore();
+import axios from "axios";
 function routerPush(path) {
   router.push({ path });
 }
 const amount = ref(3);
+let userId = datas.user.userId;
+console.log(userId);
+console.log(typeof userId);
+let id = parseInt(datas.user.userId);
+console.log(id);
+console.log(typeof id);
+
+// await axios({
+//   url: "https://q.denglu1.cn/user/questionnaire/datas.user.userId",
+//   method: "get",
+//   headers: { token: datas.user.token },
+//   params: { userId: id },
+// })
+//   .then((response) => {
+//     console.log(response);
+//   })
+//   .catch((error) => {
+//     console.log(error);
+//   });
+
+//问卷旋转
 let clickrotate = ref(null);
 </script>
 

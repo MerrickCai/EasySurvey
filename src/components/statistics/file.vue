@@ -13,7 +13,8 @@
           <span class="creat">创建问卷</span>
           <span class="delete">×</span>
         </div>
-        <span class="plus"> </span>
+        <span class="filename">威廉斯创造力倾向表A </span>
+        <span class="filenum">有效问卷数</span>
         <!-- 进度条 -->
         <span class="progress">
           <el-progress
@@ -21,8 +22,11 @@
             :percentage="0"
             :width="90"
             :height="90"
-            stroke-width="80"
+            :stroke-width="80"
+            :show-text="false"
           />
+          <span class="number">100</span>
+          <span class="fen">份</span>
         </span>
       </div>
       <!-- 文件阴影 -->
@@ -99,6 +103,45 @@ function startDrag(e) {
       font-size: 12px;
     }
   }
+  .filename {
+    position: absolute;
+    left: 10px;
+    bottom: 60px;
+    width: 82px;
+    text-align: center;
+    word-wrap: break-word; //超出页面自动换行
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .filenum {
+    position: absolute;
+    left: 15px;
+    bottom: 30px;
+    font-size: 10px;
+    font-weight: 400;
+    text-align: center;
+  }
+  .progress {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    .number {
+      position: absolute;
+      bottom: 35px;
+      right: 20px;
+      font-size: 20px;
+      font-weight: 500;
+      text-align: center;
+    }
+    .fen {
+      position: absolute;
+      bottom: 32px;
+      right: 9px;
+      font-size: 10px;
+      font-weight: 400;
+      text-align: center;
+    }
+  }
 }
 
 .shadow {
@@ -128,16 +171,5 @@ function startDrag(e) {
   100% {
     transform: rotate(5deg);
   }
-}
-
-.plus {
-  position: absolute;
-  bottom: 40px;
-  left: 30px;
-}
-.progress {
-  position: absolute;
-  bottom: 10px;
-  right: 30px;
 }
 </style>
