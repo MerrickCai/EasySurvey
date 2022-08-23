@@ -13,35 +13,39 @@
       >
     </p>
     <p class="questitle">
-      <span>{{ radiofile.questionList.indexOf(quesitem) + 1 }}</span>
+      <span>{{ radiofile.indexOf(quesitem) + 1 }}</span>
       <span class="titlecon" v-show="questitleshow" @click="changeqlshow">
-        {{ quesitem.questiontitle }}
+        {{ quesitem.question.detail }}
       </span>
       <input
         type="text"
         ref="questitle"
         v-show="!questitleshow"
-        v-model="quesitem.questiontitle"
+        v-model="quesitem.question.detail"
         @blur="questitleshow = true"
         @keyup.enter="questitleshow = true"
       />
     </p>
-    <p class="optionall" v-for="i in quesitem.option.length">
+    <p class="optionall" v-for="(con, index) in quesitem.options">
       <span class="circle"></span>
-      <span class="option" v-show="!optionshow[i]" @click="optionsshow(i)">
-        {{ quesitem.option[i - 1] }}
+      <span
+        class="option"
+        v-show="!optionshow[index]"
+        @click="optionsshow(index)"
+      >
+        {{ con.detail }}
       </span>
       <input
         type="text"
         ref="optiontitle"
-        v-show="optionshow[i]"
-        v-model="quesitem.option[i - 1]"
-        @blur="optionshow[i] = false"
-        @keyup.enter="optionshow[i] = false"
+        v-show="optionshow[index]"
+        v-model="con.detail"
+        @blur="optionshow[index] = false"
+        @keyup.enter="optionshow[index] = false"
       />
       <i
         class="deloption"
-        @click="deleoption(i)"
+        @click="deleoption(index)"
         ref="deleteo"
         @mousemove="opcursorfail"
         >×</i
@@ -55,7 +59,7 @@
 </template>
 
 <script setup>
-import { ref, nextTick, inject } from "vue";
+import { ref, nextTick, inject, reactive } from "vue";
 import { nanoid } from "nanoid";
 const props = defineProps(["quesitem", "radiofile", "rreceive", "rdeleteques"]);
 //鼠标滚轮在添加新题目时滑动到底部
@@ -64,23 +68,23 @@ let { scroll, updatescroll } = inject("changescroll");
 function addamount() {
   const quesobj = {
     id: nanoid(),
-    questiontitle: "请输入题目标题",
-    option: ["选项", "选项"],
+    question: { detail: "请输入题目标题", type: 1 },
+    options: [{ detail: "选项" }, { detail: "选项" }],
   };
   props.rreceive(quesobj);
 }
 //删除问题
 let deletematrix = ref(null);
 function cursorfail() {
-  if (props.radiofile.questionList.length == 1) {
+  if (props.radiofile.length == 1) {
     deletematrix.value.style.cursor = "not-allowed";
   }
-  if (props.radiofile.questionList.length != 1) {
+  if (props.radiofile.length != 1) {
     deletematrix.value.style.cursor = "pointer";
   }
 }
 function deleteamount(id) {
-  if (props.radiofile.questionList.length != 1) {
+  if (props.radiofile.length != 1) {
     props.rdeleteques(id);
   }
 }
@@ -102,13 +106,13 @@ let optionshow = ref([]);
 function optionsshow(index) {
   optionshow.value[index] = true;
   nextTick(() => {
-    optiontitle.value[index - 1].focus();
+    optiontitle.value[index].focus();
   });
 }
 //添加选项
-let xuanze = ref("选项");
+let xuanze = reactive({ detail: "选项" });
 function addaoption() {
-  props.quesitem.option.push(xuanze.value);
+  props.quesitem.options.push(xuanze);
 }
 //删除选项
 // let deleteo = ref(null);
@@ -121,10 +125,9 @@ function addaoption() {
 //   }
 // }
 function deleoption(id) {
-  if (props.quesitem.option.length != 1) {
-    props.quesitem.option.splice(id - 1, 1);
+  if (props.quesitem.options.length != 1) {
+    props.quesitem.options.splice(id, 1);
   }
-  console.log(props.quesitem.option.length);
 }
 </script>
 

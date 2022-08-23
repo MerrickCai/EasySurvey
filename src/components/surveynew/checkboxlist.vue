@@ -2,7 +2,7 @@
   <div class="checkboxall">
     <transition-group name="checkboxques">
       <checkbox
-        v-for="(item, index) in checkboxfile.questionList"
+        v-for="(item, index) in checkboxfile"
         :key="item.id"
         :quesitem="item"
         :checkboxfile="checkboxfile"

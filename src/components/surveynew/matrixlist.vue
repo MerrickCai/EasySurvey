@@ -3,7 +3,7 @@
     <transition-group name="matrixques">
       <matrix
         class="matrixq"
-        v-for="(item, index) in fileword.quesList"
+        v-for="(item, index) in fileword"
         :key="item.id"
         :quesitem="item"
         :fileword="fileword"

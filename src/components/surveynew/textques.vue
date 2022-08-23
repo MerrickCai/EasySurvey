@@ -12,15 +12,15 @@
       >
     </p>
     <p class="questitle">
-      <span>{{ textfile.questionList.indexOf(quesitem) + 1 }}</span>
+      <span>{{ textfile.indexOf(quesitem) + 1 }}</span>
       <span class="titlecon" v-show="questitleshow" @click="changeqlshow">
-        {{ quesitem.questiontitle }}
+        {{ quesitem.question.detail }}
       </span>
       <input
         type="text"
         ref="questitle"
         v-show="!questitleshow"
-        v-model="quesitem.questiontitle"
+        v-model="quesitem.question.detail"
         @blur="questitleshow = true"
         @keyup.enter="questitleshow = true"
       />
@@ -38,24 +38,23 @@ let { scroll, updatescroll } = inject("changescroll");
 //添加问题
 function addamount() {
   const quesobj = {
+    question: { detail: "请输入题目标题", type: 2 },
     id: nanoid(),
-    questiontitle: "请输入题目标题",
-    option: ["选项", "选项"],
   };
   props.treceive(quesobj);
 }
 //删除问题
 let deletematrix = ref(null);
 function cursorfail() {
-  if (props.textfile.questionList.length == 1) {
+  if (props.textfile.length == 1) {
     deletematrix.value.style.cursor = "not-allowed";
   }
-  if (props.textfile.questionList.length != 1) {
+  if (props.textfile.length != 1) {
     deletematrix.value.style.cursor = "pointer";
   }
 }
 function deleteamount(id) {
-  if (props.textfile.questionList.length != 1) {
+  if (props.textfile.length != 1) {
     props.tdeleteques(id);
   }
 }
@@ -69,37 +68,6 @@ function changeqlshow() {
   nextTick(() => {
     questitle.value.focus();
   });
-}
-//选项题目标题
-let optiontitle = ref([]);
-let optionshow = ref([]);
-
-function optionsshow(index) {
-  optionshow.value[index] = true;
-  nextTick(() => {
-    optiontitle.value[index - 1].focus();
-  });
-}
-//添加选项
-let xuanze = ref("");
-function addaoption() {
-  props.quesitem.option.push(xuanze.value);
-}
-//删除选项
-// let deleteo = ref(null);
-// function opcursorfail() {
-//   if (props.quesitem.option.length == 1) {
-//     deleteo.value.style.cursor = "not-allowed";
-//   }
-//   if (props.quesitem.option.length != 1) {
-//     deleteo.value.style.cursor = "pointer";
-//   }
-// }
-function deleoption(id) {
-  if (props.quesitem.option.length != 1) {
-    props.quesitem.option.splice(id - 1, 1);
-  }
-  console.log(props.quesitem.option.length);
 }
 </script>
 

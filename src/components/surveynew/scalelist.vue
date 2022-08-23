@@ -3,7 +3,7 @@
   <div class="scaleall">
     <transition-group name="scaleques">
       <scale
-        v-for="(item, index) in scalefile.questionList"
+        v-for="(item, index) in scalefile"
         :key="item.id"
         :quesitem="item"
         :scalefile="scalefile"

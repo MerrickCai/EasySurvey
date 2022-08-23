@@ -14,15 +14,15 @@
       >
     </p>
     <p class="questitle">
-      <span>{{ fileword.quesList.indexOf(quesitem) + 1 }}</span>
+      <span>{{ fileword.indexOf(quesitem) + 1 }}</span>
       <span class="titlecon" v-show="questitleshow" @click="changeqlshow">
-        {{ quesitem.ques }}
+        {{ quesitem.question.detail }}
       </span>
       <input
         type="text"
         ref="questitle"
         v-show="!questitleshow"
-        v-model="quesitem.ques"
+        v-model="quesitem.question.detail"
         @blur="questitleshow = true"
         @keyup.enter="questitleshow = true"
       />
@@ -34,7 +34,7 @@
         @click="num = index"
         :style="{ left: `${(600 / (quesitem.series - 1)) * (index - 1)}px` }"
       >
-        <input type="text" v-model="quesitem.font[index]" />
+        <input type="text" v-model="quesitem.options[index - 1].detail" />
       </div>
       <div
         class="thumb"
@@ -48,7 +48,8 @@
         type="number"
         class="blocknum"
         v-model.number="quesitem.series"
-        oninput="if(value>7)value=7;if(value<3)value=3"
+        @blur="tip()"
+        @keyup.enter="tip()"
         max="7"
         min="3"
         @change="num = 0"
@@ -94,26 +95,33 @@ let { scroll, updatescroll } = inject("changescroll");
 //添加问题
 function addamount() {
   const quesobj = {
+    question: { detail: "请输入题目标题", type: 1 },
+    options: [
+      { detail: "" },
+      { detail: "" },
+      { detail: "" },
+      { detail: "" },
+      { detail: "" },
+      { detail: "" },
+      { detail: "" },
+    ],
     id: nanoid(),
-    ques: "请输入题目标题",
-    value: 0,
     series: 5,
-    font: [],
   };
   props.receive(quesobj);
 }
 //删除问题
 let deletematrix = ref(null);
 function cursorfail() {
-  if (props.fileword.quesList.length == 1) {
+  if (props.fileword.length == 1) {
     deletematrix.value.style.cursor = "not-allowed";
   }
-  if (props.fileword.quesList.length != 1) {
+  if (props.fileword.length != 1) {
     deletematrix.value.style.cursor = "pointer";
   }
 }
 function deleteamount(id) {
-  if (props.fileword.quesList.length != 1) {
+  if (props.fileword.length != 1) {
     props.deleteques(id);
   }
 }
@@ -132,6 +140,14 @@ function changeqlshow() {
   nextTick(() => {
     questitle.value.focus();
   });
+}
+
+//提示
+function tip() {
+  if (props.quesitem.series > 7 || props.quesitem.series < 3) {
+    alert("级别个数需大于3个,小于7个");
+    props.quesitem.series = 7;
+  }
 }
 
 //动画
@@ -238,6 +254,10 @@ li {
       opacity: 1;
       border: 1px solid rgba(166, 166, 166, 1);
       text-align: center;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
     }
     display: block;
     height: @Height;

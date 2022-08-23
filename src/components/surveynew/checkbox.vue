@@ -13,29 +13,29 @@
       >
     </p>
     <p class="questitle">
-      <span>{{ checkboxfile.questionList.indexOf(quesitem) + 1 }}</span>
+      <span>{{ checkboxfile.indexOf(quesitem) + 1 }}</span>
       <span class="titlecon" v-show="questitleshow" @click="changeqlshow">
-        {{ quesitem.questiontitle }}
+        {{ quesitem.question.detail }}
       </span>
       <input
         type="text"
         ref="questitle"
         v-show="!questitleshow"
-        v-model="quesitem.questiontitle"
+        v-model="quesitem.question.detail"
         @blur="questitleshow = true"
         @keyup.enter="questitleshow = true"
       />
     </p>
-    <p class="optionall" v-for="i in quesitem.option.length">
+    <p class="optionall" v-for="(con, i) in quesitem.options">
       <span class="circle"></span>
       <span class="option" v-show="!optionshow[i]" @click="optionsshow(i)">
-        {{ quesitem.option[i - 1] }}
+        {{ con.detail }}
       </span>
       <input
         type="text"
         ref="optiontitle"
         v-show="optionshow[i]"
-        v-model="quesitem.option[i - 1]"
+        v-model="con.detail"
         @blur="optionshow[i] = false"
         @keyup.enter="optionshow[i] = false"
       />
@@ -55,7 +55,7 @@
 </template>
 
 <script setup>
-import { ref, nextTick, inject } from "vue";
+import { ref, nextTick, inject, reactive } from "vue";
 import { nanoid } from "nanoid";
 const props = defineProps([
   "quesitem",
@@ -68,24 +68,25 @@ let { scroll, updatescroll } = inject("changescroll");
 //添加问题
 function addamount() {
   const quesobj = {
+    question: { detail: "请输入题目标题", type: 2 },
+    options: [{ detail: "选项" }, { detail: "选项" }],
     id: nanoid(),
-    questiontitle: "请输入题目标题",
-    option: ["选项", "选项"],
   };
   props.creceive(quesobj);
 }
 //删除问题
 let deletematrix = ref(null);
 function cursorfail() {
-  if (props.checkboxfile.questionList.length == 1) {
+  if (props.checkboxfile.length == 1) {
     deletematrix.value.style.cursor = "not-allowed";
   }
-  if (props.checkboxfile.questionList.length != 1) {
+  if (props.checkboxfile.length != 1) {
     deletematrix.value.style.cursor = "pointer";
   }
 }
 function deleteamount(id) {
-  if (props.checkboxfile.questionList.length != 1) {
+  console.log(props.quesitem);
+  if (props.checkboxfile.length != 1) {
     props.cdeleteques(id);
   }
 }
@@ -107,13 +108,13 @@ let optionshow = ref([]);
 function optionsshow(index) {
   optionshow.value[index] = true;
   nextTick(() => {
-    optiontitle.value[index - 1].focus();
+    optiontitle.value[index].focus();
   });
 }
 //添加选项
-let xuanze = ref("选项");
+let xuanze = reactive({ detail: "选项" });
 function addaoption() {
-  props.quesitem.option.push(xuanze.value);
+  props.quesitem.options.push(xuanze);
 }
 //删除选项
 // let deleteo = ref(null);
@@ -126,8 +127,8 @@ function addaoption() {
 //   }
 // }
 function deleoption(id) {
-  if (props.quesitem.option.length != 1) {
-    props.quesitem.option.splice(id - 1, 1);
+  if (props.quesitem.options.length != 1) {
+    props.quesitem.options.splice(id, 1);
   }
 }
 </script>

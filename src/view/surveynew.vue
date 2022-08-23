@@ -89,8 +89,10 @@ import matrixlist from "../components/surveynew/matrixlist.vue";
 import scalelist from "../components/surveynew/scalelist.vue";
 import textlist from "../components/surveynew/textlist.vue";
 import { useStore } from "../PiniaStores/index.js";
+import axios from "axios";
 //数据
 const datas = useStore();
+console.log(datas);
 //动态组件视图
 let type = ref(1);
 let typelist = [radiolist, checkboxlist, matrixlist, scalelist, textlist];
@@ -117,27 +119,36 @@ let filetitle = reactive({
     "为了使问卷调查结果更加清晰，准确，请输入关于问卷的简短介绍以及注意事项，方便填写问卷的人更清晰的认识问卷，字数少于500字",
 });
 //存储矩阵问卷信息内容
-let fileword = reactive({
-  status: {
-    intro: true,
-    survey: false,
-    end: false,
-    toSurvey() {
-      this.intro = false;
-      this.end = false;
-      this.survey = true;
-    },
+let fileword = reactive([
+  {
+    question: { detail: "请输入题目标题", type: 1 },
+    options: [
+      { detail: "" },
+      { detail: "" },
+      { detail: "" },
+      { detail: "" },
+      { detail: "" },
+      { detail: "" },
+      { detail: "" },
+    ],
+    id: nanoid(),
+    series: 5,
   },
-  quesList: [
-    {
-      id: nanoid(),
-      ques: "请输入题目标题",
-      value: 0,
-      series: 5,
-      font: [],
-    },
-  ],
-});
+  {
+    question: { detail: "请输入题目标题", type: 1 },
+    options: [
+      { detail: "" },
+      { detail: "" },
+      { detail: "" },
+      { detail: "" },
+      { detail: "" },
+      { detail: "" },
+      { detail: "" },
+    ],
+    id: nanoid(),
+    series: 5,
+  },
+]);
 
 //问卷标题修改
 let titleshow = ref(true);
@@ -159,145 +170,171 @@ function changeintroshow() {
 }
 //矩阵问卷新增问题
 function receive(quesobj) {
-  fileword.quesList.push(quesobj);
+  fileword.push(quesobj);
 }
 //矩阵问卷删除问题
 function deleteques(id) {
   if (confirm("确定删除吗")) {
-    fileword.quesList = fileword.quesList.filter((quesitem) => {
-      return quesitem.id != id;
+    fileword.map((i, x) => {
+      if (i.id == id) fileword.splice(x, 1);
     });
   }
 }
 
 //存储量表问卷信息内容
-let scalefile = reactive({
-  questionIntro: {
-    title: "",
-    sec_title: "问卷介绍：",
-    para: "",
+let scalefile = reactive([
+  {
+    question: { detail: "请输入题目标题", type: 1 },
+    options: [
+      { detail: "请输入次级题目标题" },
+      { detail: "请输入次级题目标题" },
+    ],
+    id: nanoid(),
+    score: 60,
+    secscore: 20,
   },
-  questionList: [
-    {
-      id: nanoid(),
-      questiontitle: "请输入题目标题",
-      score: 60,
-      //分配分数的时候要用到staticScore
-      staticScore: 60,
-      // slider的背景颜色
-      bcg: "#f5f5f5",
-      //滑块的样式
-      silderSrc: "/blue.png",
-      titleBorder: 0,
-      progressPartbcg: "#ccc",
-      secscore: 20,
-      question: [
-        {
-          detail: "请输入次级题目标题",
-          value: 0,
-          isEdit: false,
-        },
-      ],
-    },
-  ],
-});
+  {
+    question: { detail: "请输入题目标题", type: 1 },
+    options: [
+      { detail: "请输入次级题目标题" },
+      { detail: "请输入次级题目标题" },
+    ],
+    id: nanoid(),
+    score: 50,
+    secscore: 10,
+  },
+]);
 //量表问卷新增问题
 function sreceive(quesobj) {
-  scalefile.questionList.push(quesobj);
+  scalefile.push(quesobj);
 }
 //量表问卷删除问题
 function sdeleteques(id) {
   if (confirm("确定删除吗")) {
-    scalefile.questionList = scalefile.questionList.filter((quesitem) => {
-      return quesitem.id != id;
+    scalefile.map((i, x) => {
+      if (i.id == id) scalefile.splice(x, 1);
     });
   }
 }
 
 //存储单选问卷信息内容
-let radiofile = reactive({
-  questionList: [
-    {
-      id: nanoid(),
-      questiontitle: "请输入题目标题",
-      option: ["选项", "选项"],
-    },
-  ],
-});
+let radiofile = reactive([
+  {
+    question: { detail: "请输入题目标题", type: 1 },
+    options: [{ detail: "选项" }, { detail: "选项" }],
+    id: nanoid(),
+  },
+  {
+    question: { detail: "请输入题目标题", type: 1 },
+    options: [{ detail: "选项" }, { detail: "选项" }],
+    id: nanoid(),
+  },
+]);
 //单选问卷新增问题
 function rreceive(quesobj) {
-  radiofile.questionList.push(quesobj);
+  radiofile.push(quesobj);
 }
 //单选问卷删除问题
 function rdeleteques(id) {
   if (confirm("确定删除吗")) {
-    radiofile.questionList = radiofile.questionList.filter((quesitem) => {
-      return quesitem.id != id;
+    radiofile.map((i, x) => {
+      if (i.id == id) radiofile.splice(x, 1);
     });
   }
 }
 
 //存储多选问卷信息内容
-let checkboxfile = reactive({
-  questionList: [
-    {
-      id: nanoid(),
-      questiontitle: "请输入题目标题",
-      option: ["选项", "选项"],
-    },
-  ],
-});
+let checkboxfile = reactive([
+  {
+    question: { detail: "请输入题目标题", type: 2 },
+    options: [{ detail: "选项" }, { detail: "选项" }],
+    id: nanoid(),
+  },
+  {
+    question: { detail: "请输入题目标题", type: 2 },
+    options: [{ detail: "选项" }, { detail: "选项" }],
+    id: nanoid(),
+  },
+]);
 //多选问卷新增问题
 function creceive(quesobj) {
-  checkboxfile.questionList.push(quesobj);
+  checkboxfile.push(quesobj);
+  console.log(checkboxfile);
 }
 //多选问卷删除问题
 function cdeleteques(id) {
   if (confirm("确定删除吗")) {
-    checkboxfile.questionList = checkboxfile.questionList.filter((quesitem) => {
-      return quesitem.id != id;
+    console.log(checkboxfile);
+    console.log(id);
+    checkboxfile.map((i, x) => {
+      if (i.id == id) checkboxfile.splice(x, 1);
     });
+    console.log(checkboxfile);
   }
 }
 
 //存储文本问卷信息内容
-let textfile = reactive({
-  questionList: [
-    {
-      id: nanoid(),
-      questiontitle: "请输入题目标题",
-    },
-  ],
-});
+let textfile = reactive([
+  {
+    question: { detail: "请输入题目标题", type: 1 },
+    id: nanoid(),
+  },
+  {
+    question: { detail: "请输入题目标题", type: 1 },
+    id: nanoid(),
+  },
+]);
 //文本问卷新增问题
 function treceive(quesobj) {
-  textfile.questionList.push(quesobj);
+  textfile.push(quesobj);
 }
 //文本问卷删除问题
 function tdeleteques(id) {
+  console.log(textfile);
   if (confirm("确定删除吗")) {
-    textfile.questionList = textfile.questionList.filter((quesitem) => {
-      return quesitem.id != id;
+    textfile.map((i, x) => {
+      if (i.id == id) textfile.splice(x, 1);
     });
+    console.log(textfile);
   }
 }
+let trya = ref([
+  {
+    question: { detail: 2, type: 1 },
+    options: [{ detail: "111" }, { detail: "222" }],
+    id: 1,
+  },
+  {
+    question: { detail: 2, type: 1 },
+    options: [{ detail: "111" }, { detail: "222" }],
+  },
+]);
 //发布问卷
 let show = ref("none");
 function pushfile() {
   if (type.value == 1) {
-    radiofile["intro"] = filetitle;
     console.log(radiofile);
-    datas.survey.survey3.push(radiofile);
-    console.log(datas.survey.survey3);
-    radiofile = {
-      questionList: [
-        {
-          id: nanoid(),
-          questiontitle: "请输入题目标题",
-          option: ["选项", "选项"],
+    axios({
+      url: "https://q.denglu1.cn/questions/rebuild",
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      headers: { token: datas.user.token },
+      date: {
+        questionnaire: {
+          userId: datas.user.userId,
+          totalNumber: 1,
+          message: filetitle.info_para,
+          title: filetitle.info_title,
         },
-      ],
-    };
+        questionOptionList: radiofile,
+      },
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
   if (type.value == 2) {
     checkboxfile["intro"] = filetitle;

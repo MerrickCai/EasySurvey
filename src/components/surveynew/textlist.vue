@@ -2,7 +2,7 @@
   <div class="textall">
     <transition-group name="textques">
       <textques
-        v-for="(item, index) in textfile.questionList"
+        v-for="(item, index) in textfile"
         :key="item.id"
         :quesitem="item"
         :textfile="textfile"

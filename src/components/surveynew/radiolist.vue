@@ -2,9 +2,9 @@
   <div class="radioall">
     <transition-group name="radioques">
       <radio
-        v-for="(item, index) in radiofile.questionList"
-        :key="item.id"
+        v-for="(item, index) in radiofile"
         :quesitem="item"
+        :key="item.id"
         :radiofile="radiofile"
         :rreceive="rreceive"
         :rdeleteques="rdeleteques"
@@ -27,11 +27,11 @@ const props = defineProps(["radiofile", "rreceive", "rdeleteques"]);
 .radioques-enter-from,
 .radioques-leave-to {
   opacity: 0;
-  transform: radio(0) translateY(30px);
+  transform: scale(0.5) translateY(30px);
 }
 .radioques-enter-to,
 .radioques-leave-from {
   opacity: 1;
-  transform: radio(1);
+  transform: scale(1);
 }
 </style>

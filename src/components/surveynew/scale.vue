@@ -15,15 +15,15 @@
         @mousemove="cursorfail">×</i>
     </p>
     <p class="questitle">
-      <span>{{ scalefile.questionList.indexOf(quesitem) + 1 }}</span>
+      <span>{{ scalefile.indexOf(quesitem) + 1 }}</span>
       <span class="titlecon" v-show="questitleshow" @click="changeqlshow">
-        {{ quesitem.questiontitle }}
+        {{ quesitem.question.detail }}
       </span>
       <input
         type="text"
         ref="questitle"
         v-show="!questitleshow"
-        v-model="quesitem.questiontitle"
+        v-model="quesitem.question.detail"
         @blur="questitleshow = true"
         @keyup.enter="questitleshow = true"
       />
@@ -35,9 +35,9 @@
         </div>
     </p>
     <div class="secquesall">
-    <p class="secques" v-for="(item, i) in quesitem.question">
+    <p class="secques" v-for="(item, i) in quesitem.options">
       <i class="additem" @click="addsectitle(i)">+</i>
-      <span>{{ quesitem.question.indexOf(item) + 1 }}</span>
+      <span>{{ quesitem.options.indexOf(item) + 1 }}</span>
       <span
         class="secquestitlecon"
         v-show="!secquestitleshow[i]"
@@ -56,7 +56,7 @@
          <i class="delrditem" @click="deleterd(i)"
         ref="deletesec"
         @mousemove="cursorfailrd">×</i>
-       <div class="slide" :style="{backgroundColor:`${quesitem.bcg}`}">   <!--400为slide的总宽度，根据分数总数来定每次滑块滑多少-->
+       <div class="slide" >   <!--400为slide的总宽度，根据分数总数来定每次滑块滑多少-->
          <div class="Gradient" :style="{ width:`${(item.value)* (400/(barArr[0].length-1))}px` }"></div>
                 <!-- 第三层循环 b,j -->
               <div v-for="(b,j) of barArr[0]" :key="b" :class="j%2===0 ? 'doublebar' :'bar'">
@@ -89,36 +89,30 @@ let { scroll, updatescroll } = inject("changescroll");
 //添加主问题
 function addamount() {
   const quesobj = {
+    question: { detail: "请输入题目标题", type: 1 },
+    options: [
+      { detail: "请输入次级题目标题" },
+      { detail: "请输入次级题目标题" },
+    ],
     id: nanoid(),
-    questiontitle: "请输入题目标题",
-    score: 20,
-    //分配分数的时候要用到staticScore
-    staticScore: 20,
-    // slider的背景颜色
-    bcg: "#f5f5f5",
-    //滑块的样式
-    silderSrc: "/blue.png",
-    titleBorder: 0,
-    progressPartbcg: "#ccc",
-    secscore: 10,
-    question: [{ detail: "请输入次级题目标题", value: 0, isEdit: false }],
+    score: 60,
+    secscore: 20,
   };
   props.sreceive(quesobj);
-  console.log(1);
 }
 
 //删除主问题
 let deletematrix = ref(null);
 function cursorfail() {
-  if (props.scalefile.questionList.length == 1) {
+  if (props.scalefile.length == 1) {
     deletematrix.value.style.cursor = "not-allowed";
   }
-  if (props.scalefile.questionList.length != 1) {
+  if (props.scalefile.length != 1) {
     deletematrix.value.style.cursor = "pointer";
   }
 }
 function deleteamount(id) {
-  if (props.scalefile.questionList.length != 1) {
+  if (props.scalefile.length != 1) {
     props.sdeleteques(id);
   }
 }
@@ -127,7 +121,6 @@ let questitle = ref(null);
 let questitleshow = ref(true);
 function changeqlshow() {
   questitleshow.value = false;
-  console.log(questitle.value);
   nextTick(() => {
     questitle.value.focus();
   });
@@ -148,10 +141,8 @@ const value1 = ref(true);
 function addsectitle(i) {
   const secques = {
     detail: "请输入次级题目标题",
-    value: 0,
-    isEdit: false,
   };
-  props.quesitem.question.push(secques);
+  props.quesitem.options.push(secques);
 }
 //删除次级题目
 // let deletesec = ref(null);
@@ -164,9 +155,8 @@ function addsectitle(i) {
 //   }
 // }
 function deleterd(i) {
-  console.log(i);
-  if (props.quesitem.question.length != 1) {
-    props.quesitem.question.splice(i, 1);
+  if (props.quesitem.options.length != 1) {
+    props.quesitem.options.splice(i, 1);
   }
 }
 
@@ -448,14 +438,13 @@ li {
         // 400+4（其中的4为末尾一个bar的宽度，所以总宽度为404。
         width: 404px;
         height: 8px;
-        background-color: #f5f5f5;
+        background-color: rgba(229, 229, 229, 1);
         box-sizing: border-box;
         position: absolute;
         left: 45px;
         top: 55px;
         display: flex;
         justify-content: space-between;
-        background-color: pink;
         @Width: 400px;
         .barStyle() {
           width: 4px;
