@@ -8,32 +8,23 @@ import survey3 from '../components/surveyTemplate/survey3.vue'
 import survey4 from '../components/surveyTemplate/survey4.vue'
 import survey5 from '../components/surveyTemplate/survey5.vue'
 const surveyTemplateList = [survey1, survey2, survey3, survey4, survey5]
-const viewId = ref(2) //默认问卷类型是2
+const viewId = ref(1) //默认问卷类型是2
 const currentView = computed(() => surveyTemplateList[viewId.value - 1])
 
 //这里是根据用户打开的链接进行异步网络请求，获取问卷类型和数据，然后展示对应的模板
 import axios from 'axios'
 import { useStore } from '../PiniaStores/index.js'
-const datas = useStore()
-axios({
-  url: `https://q.denglu1.cn/user/fillQuestionnaire/${3}`,
-  method: 'get',
-  withCredentials: true,
-  headers: { 'Content-Type': 'application/json' },
-  headers: { 'token': datas.user.token }
-}).then((response) => {
-  console.log(response)
-  //假设获取到的问卷类型是2
-  viewId.value = 1
-}).catch((error) => {
-  console.log(error)
-})
+const datas = useStore();
+
 
 //问卷填写的状态（问卷介绍，填写问卷，填写结束）=>传给问卷模板组件
 const status = reactive({
   begin: true,
   ongoing: false,
   end: false,
+  surveyObj: {
+    id:0
+  },
   toOngoing() {
     this.begin = false
     this.ongoing = true
@@ -42,6 +33,22 @@ const status = reactive({
     this.ongoing = false
     this.end = true
   },
+  // getSurvey() {
+  //      axios({
+  //           url: `https://q.denglu1.cn/user/fillQuestionnaire/${2}`,
+  //           method: 'get',
+  //           withCredentials: true,
+  //           headers: { 'Content-Type': 'application/json' },
+  //           headers: { 'token': datas.user.token }
+  //          }).then((response) => {
+  //          console.log(response);
+        
+  //       //假设获取到的问卷类型是2
+  //       viewId.value = 1
+  //     }).catch((error) => {
+  //       console.log(error)
+  //     })
+  // }
 });
 provide('status', status)
 </script>

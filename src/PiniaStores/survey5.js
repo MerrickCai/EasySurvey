@@ -19,6 +19,21 @@ export default [
                 titleBorder: 0,
                 progressPartbcg: '#ccc',
             },
+            {
+                id: 3,
+                questiontitle: '一、我认为我能为团队做出的贡献是：',
+                value: 0,
+                titleBorder: 0,
+                progressPartbcg: '#ccc',
+            },
+            {
+                id: 4,
+                questiontitle: '一、我认为我能为团队做出的贡献是：',
+                value: 0,
+                titleBorder: 0,
+                progressPartbcg: '#ccc',
+            },
+            
         ],
 
     }

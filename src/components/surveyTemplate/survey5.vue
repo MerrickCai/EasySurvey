@@ -10,7 +10,6 @@
 
         <!-- 问卷内容部分 -->
         <div class="wrapper extrachange" v-if="status.ongoing">
-            <img src="/tangible.png" class="pic1">
             <div class="topbox">
                 <h2 class="top_title">{{ survey.intro.info_title }}</h2>
                 <h5 class="top_sectitle">问卷介绍：</h5>
@@ -36,14 +35,14 @@
             <div class="content" ref="content" @scroll="onScroll($event)">
                 <!-- 题目 -->
                 <!-- 第一层循环 item, i -->
-                <div class="main" v-for="(item, i) of survey.questionList" :key="item.id" :style="{ height: `${60}px` }">
+                <div class="main" v-for="(item, i) of survey.questionList" :key="item.id" :style="{ height: `${100}px` }">
                     <div class="questiontitle" ref="questiontitle" :style="{ border: `${item.titleBorder}px solid red` }">
                         {{ item.questiontitle }}
                     </div>
-                    <input type="text" class="inputtext" placeholder="请输入" @blur="getValue(item, $event)">
+                    <textarea clos="20" rows="7" class="inputtext" placeholder="请输入" @blur="getValue(item, $event)"></textarea>
                 </div>
                 <el-button type="primary" class="submit" @click="toFinish();"
-                    :style="{ top: `${(survey.questionList.length === 1 || survey.questionList.length === 2) ? 250 : survey.questionList.length * 85}px` }">
+                    :style="{ top: `${(survey.questionList.length === 1 || survey.questionList.length === 2) ? 250 : survey.questionList.length * 145}px` }">
                     提交问卷</el-button>
 
             </div>
@@ -360,8 +359,9 @@ div[wrapper] {
 
         .inputtext {
             width: 500px;
-            height: 50px;
+            height: 80px;
             border: 1px solid rgba(217, 217, 217, 1);
+            padding-top: 5px;
             text-indent: 10px;
             outline: none;
             transform: translateX(5px) translateY(10px);
