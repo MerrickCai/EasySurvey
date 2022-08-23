@@ -66,7 +66,9 @@ router.beforeEach(async (to, from) => {
       <!--主路由容器-->
       <router-view v-slot="{ Component, route }">
         <transition name="mainView" mode="out-in">
-          <component :is="Component" :key="route.path" />
+          <keep-alive>
+            <component :is="Component" :key="route.path" />
+          </keep-alive>
         </transition>
       </router-view>
       <!--主路由容器-->
@@ -83,19 +85,19 @@ main {
   width: var(--safe_area);
   margin: 0 auto;
 
-  > div {
+  >div {
     display: block;
     height: calc(100vh - @navSpan);
     width: 100%;
     overflow: visible;
 
-    > .mainView-enter-active,
-    > .mainView-leave-active {
+    >.mainView-enter-active,
+    >.mainView-leave-active {
       transition: all 0.2s ease-in-out 0s;
     }
 
-    > .mainView-enter-from,
-    > .mainView-leave-to {
+    >.mainView-enter-from,
+    >.mainView-leave-to {
       filter: opacity(0);
     }
   }
