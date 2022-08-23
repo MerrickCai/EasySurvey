@@ -2,14 +2,10 @@
 //问卷填写的状态（问卷介绍，填写问卷，填写结束）
 import axios from "axios";
 import { ref, onMounted, inject, computed ,reactive,defineProps} from "vue";
-const status = inject("status");
+const currentSurvey = inject("currentSurvey");
 
-//数据
-import { useStore } from "../../PiniaStores/index.js";
-const datas = useStore();
 
-// 当前的应该是哪个页面
-// const survey = computed(() => datas.survey.survey1[0]);
+
 
 // 接受survey父组件传过来的参数。
 const props = defineProps(['surveyObj']);
@@ -20,7 +16,7 @@ onMounted(() => {
  console.log('请求参数',surveyObj.value);
 });
 
-// 封装survey-------给模板用
+// 封装survey-------给模板用--------
 const survey = reactive({});
 survey.intro = {};
 survey.effectiveNumber = surveyObj.value.questionnaire.effectiveNumber;
@@ -30,9 +26,7 @@ survey.id = surveyObj.value.questionnaire.id;
 survey.intro.title = surveyObj.value.questionnaire.title;
 survey.intro.intro_content = surveyObj.value.questionnaire.message;
 
-// 第俩个威廉斯的para数据特殊处理
-// console.log(surveyObj.value.questionnaire.message);
-// console.log(survey.intro.intro_content);
+
 
 survey.quesList = [];
 let optionDetail = [];
@@ -97,7 +91,7 @@ console.log(optionList);
      }).then((response) => {
         console.log(response);
        if (response.data.code === 200) {
-        //  status.toEnd();
+         currentSurvey.toEnd();
         console.log(survey);
         
        } else {
@@ -155,11 +149,13 @@ function onScroll(e) {
 }
 
 
+
 // ------提交按钮之后相关的变量和方法------
 // 获取全部questiontitle
 const ques = ref(null);
 // 进度条片段的高度
 const progressPartHeight = 400 /survey.quesList.length;
+
 // 提交按钮  跳转：答题页==>完成页
 function toFinish() {
   let flag = true;
@@ -192,24 +188,29 @@ const barArr = new Array(survey.quesList.length)
     new Array(survey.quesList[index].series).fill(0)
 );
 
+
+
 </script>
 
 <template>
   <div wrapper>
+
+
     <!--问卷介绍-->
-    <template v-if="status.begin">
+    <template v-if="currentSurvey.status.begin">
       <div class="survey_intro">
         <p title>{{ survey.intro.title }}</p>
         <p intro>
           <span intro_title>问卷介绍：</span>
           <span v-html="survey.intro.intro_content"  intro_content></span>
         </p>
-        <p button @click="status.toOngoing();">开始问卷 </p>
+        <p button @click="currentSurvey.toOngoing();">开始问卷 </p>
       </div>
     </template>
 
+
     <!--问卷填写-->
-    <template v-if="status.ongoing">
+    <template v-if="currentSurvey.status.ongoing">
       <div class="survey">
         <p title>{{ survey.intro.title }}</p>
         <div class="scrollbar_shadow"></div>
@@ -217,82 +218,59 @@ const barArr = new Array(survey.quesList.length)
         <div class="progress" @click="scrollTo($event)">
           <div>
             <!-- 进度条分段，使得点击提交按钮后进度条可以分段显示红色背景，多少个题目就分多少段 (外面多个div包裹下面的style的last-child才能生效)-->
-            <div
-              class="progress-part"
-              v-for="(item, index) of survey.quesList"
-              :key="item.id"
-              :style="{
-                height: `${progressPartHeight}px`,
-                backgroundColor: `${item.progressPartbcg}`,
-              }"
-            ></div>
+            <div class="progress-part" v-for="(item, index) of survey.quesList" :key="item.id" :style="{
+              height: `${progressPartHeight}px`,
+              backgroundColor: `${item.progressPartbcg}`,
+            }"></div>
           </div>
           <div class="thumb" ref="thumb">
-            <div
-              class="bluebcg"
-              ref="bluebcg"
-              :style="{ height: `${bluebcg_height}px` }"
-            ></div>
+            <div class="bluebcg" ref="bluebcg" :style="{ height: `${bluebcg_height}px` }"></div>
           </div>
           <div class="text" ref="text">0%</div>
         </div>
-
         <div class="survey_area" @scroll="onScroll($event)" ref="content">
           <p intro>
             <span intro_title>问卷介绍：</span>
             <span v-html="survey.intro.intro_content" intro_content></span>
           </p>
           <div class="ques">
-            <div
-              v-for="(item, index) of survey.quesList"
-              ref="ques"
-              :style="{ border: `${item.titleBorder}px solid red` }"
-            >
+            <div v-for="(item, index) of survey.quesList" ref="ques"
+              :style="{ border: `${item.titleBorder}px solid red` }">
               <div>
                 <span></span><span>{{ item.ques }}</span>
               </div>
               <!-- 总宽度为600-->
-              <div
-                :style="{
-                  backgroundColor: `${
-                    item.value === 0
-                      ? 'rgba(245, 245, 245, 1)'
-                      : 'rgb(229,229,229)'
+              <div :style="{
+                backgroundColor: `${item.value === 0
+                  ? 'rgba(245, 245, 245, 1)'
+                  : 'rgb(229,229,229)'
                   }`,
-                }"
-              >
+              }">
                 <!-- bar -->
                 <div
                   v-for="(b, i) of barArr[index]"
                   class="bar"
                   @click="item.value = i + 1; item.seleted=item.optionId[i]; "
                 >
+
                   <div class="font">
                     {{ survey.quesList[index].font[i] }}
                   </div>
                 </div>
-                <div
-                  class="thumb"
-                  :style="{
-                    left: `${
-                      item.value === 0
-                        ? -12
-                        : -12 +
-                          ((item.value - 1) * 600) / (barArr[index].length - 1)
+                <div class="thumb" :style="{
+                  left: `${item.value === 0
+                    ? -12
+                    : -12 +
+                    ((item.value - 1) * 600) / (barArr[index].length - 1)
                     }px`,
-                  }"
-                ></div>
-                <div
-                  class="thumb"
-                  :style="{
-                    left: `${
-                      item.value === 0
-                        ? -12
-                        : -12 +
-                          ((item.value - 1) * 600) / (barArr[index].length - 1)
+                }"></div>
+                <div class="thumb" :style="{
+                  left: `${item.value === 0
+                    ? -12
+                    : -12 +
+                    ((item.value - 1) * 600) / (barArr[index].length - 1)
                     }px`,
-                  }"
-                ></div>
+                }"></div>
               </div>
             </div>
           </div> 
@@ -301,8 +279,9 @@ const barArr = new Array(survey.quesList.length)
       </div>
     </template>
 
+
     <!-- 问卷完成部分 -->
-    <div class="finish-wrapper" v-if="status.end">
+    <div class="finish-wrapper" v-if="currentSurvey.status.end">
       <div class="innerbox">
         <div class="finish-title">
           <h2>您已完成</h2>
@@ -312,6 +291,8 @@ const barArr = new Array(survey.quesList.length)
         <el-button type="primary" class="finish-submit">完成答题</el-button>
       </div>
     </div>
+
+
   </div>
 </template>
 
@@ -341,7 +322,7 @@ div.survey {
   padding: 20px 0 0 15px;
   position: relative;
 
-  > div.scrollbar_shadow {
+  >div.scrollbar_shadow {
     position: absolute;
     height: 620px;
     width: 10px;
@@ -351,8 +332,8 @@ div.survey {
     background-color: rgba(255, 255, 255, 1);
   }
 
-  > div.progress {
-    > div.thumb {
+  >div.progress {
+    >div.thumb {
       content: "";
       position: absolute;
       z-index: 2;
@@ -391,7 +372,7 @@ div.survey {
       }
     }
 
-    > div.text {
+    >div.text {
       position: absolute;
       z-index: 1;
       height: 18px;
@@ -427,7 +408,7 @@ div.survey {
     cursor: pointer;
   }
 
-  > p[title] {
+  >p[title] {
     display: block;
     height: auto;
     width: auto;
@@ -448,7 +429,7 @@ div.survey {
     }
   }
 
-  > div.survey_area {
+  >div.survey_area {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -461,13 +442,13 @@ div.survey {
     position: relative;
     background-color: white;
 
-    > p[intro] {
+    >p[intro] {
       display: block;
       height: auto;
       width: calc(600px + 250px);
       margin-top: 15px;
 
-      > span[intro_title] {
+      >span[intro_title] {
         display: block;
         height: auto;
         width: auto;
@@ -476,7 +457,7 @@ div.survey {
         color: rgba(30, 111, 255, 1);
       }
 
-      > span[intro_content] {
+      >span[intro_content] {
         display: block;
         height: auto;
         width: auto;
@@ -486,7 +467,7 @@ div.survey {
         white-space: pre-wrap;
       }
 
-      > span[warn_title] {
+      >span[warn_title] {
         display: block;
         height: auto;
         width: auto;
@@ -496,7 +477,7 @@ div.survey {
         font-weight: bold;
       }
 
-      > span[warn_content] {
+      >span[warn_content] {
         display: block;
         height: auto;
         width: auto;
@@ -505,19 +486,19 @@ div.survey {
       }
     }
 
-    > div.ques {
+    >div.ques {
       display: block;
       height: auto;
       width: 750px;
       margin-top: 35px;
 
-      > div {
+      >div {
         display: block;
         height: auto;
         width: 100%;
         margin-bottom: 30px;
 
-        > div:nth-child(1) {
+        >div:nth-child(1) {
           display: block;
           height: auto;
           width: auto;
@@ -536,19 +517,19 @@ div.survey {
             background-color: rgba(30, 111, 255, 1);
           }
 
-          > span:nth-child(1) {
+          >span:nth-child(1) {
             font-size: 2rem;
             color: rgb(0, 0, 0);
             margin-right: 15px;
           }
 
-          > span:nth-child(2) {
+          >span:nth-child(2) {
             font-size: 2rem;
             color: rgb(0, 0, 0);
           }
         }
 
-        > div:nth-child(2) {
+        >div:nth-child(2) {
           @Height: 20px;
           @Width: 605px;
           @barWidth: 5px;
@@ -565,7 +546,7 @@ div.survey {
           justify-content: space-between;
           transform: translateX(45px);
 
-          > div.bar {
+          >div.bar {
             height: @barHeight;
             width: @barWidth;
             background-color: rgba(204, 204, 204, 1);
@@ -589,7 +570,7 @@ div.survey {
             vertical-align: top;
           }
 
-          > div.thumb {
+          >div.thumb {
             position: absolute;
             z-index: 2;
             bottom: -2px;
@@ -624,7 +605,7 @@ div.survey {
       }
     }
 
-    > div.submitBtn {
+    >div.submitBtn {
       display: block;
       height: auto;
       width: auto;
@@ -649,7 +630,7 @@ div.survey_intro {
   height: auto;
   width: 100%;
 
-  > p[title] {
+  >p[title] {
     display: block;
     height: auto;
     width: auto;
@@ -671,13 +652,13 @@ div.survey_intro {
     }
   }
 
-  > p[intro] {
+  >p[intro] {
     display: block;
     height: auto;
     width: 70%;
     margin-bottom: 80px;
 
-    > span[intro_title] {
+    >span[intro_title] {
       display: block;
       height: auto;
       width: auto;
@@ -686,7 +667,7 @@ div.survey_intro {
       color: rgba(30, 111, 255, 1);
     }
 
-    > span[intro_content] {
+    >span[intro_content] {
       display: block;
       height: auto;
       width: auto;
@@ -696,7 +677,7 @@ div.survey_intro {
       white-space: pre-wrap;
     }
 
-    > span[warn_title] {
+    >span[warn_title] {
       display: block;
       height: auto;
       width: auto;
@@ -705,7 +686,7 @@ div.survey_intro {
       color: rgba(0, 0, 0, 1);
     }
 
-    > span[warn_content] {
+    >span[warn_content] {
       display: block;
       height: auto;
       width: auto;
@@ -714,7 +695,7 @@ div.survey_intro {
     }
   }
 
-  > p[button] {
+  >p[button] {
     display: block;
     height: auto;
     width: auto;
@@ -769,11 +750,9 @@ div.survey_intro {
           font-size: 24px;
           width: 36px;
           height: 36px;
-          background: radial-gradient(
-            104.2% 104.2%,
-            rgba(30, 111, 255, 1) 0%,
-            rgba(170, 203, 255, 1) 100%
-          );
+          background: radial-gradient(104.2% 104.2%,
+              rgba(30, 111, 255, 1) 0%,
+              rgba(170, 203, 255, 1) 100%);
           border-radius: 50%;
           position: absolute;
           margin-left: 8px;

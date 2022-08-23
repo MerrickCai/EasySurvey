@@ -1,40 +1,48 @@
 <script setup>
 import { provide, ref, computed,reactive,toRef,onMounted} from 'vue'
 
-//问卷模板
+import axios from 'axios';
+//问卷模板子组件
+//目前有五套：矩阵，量表（特殊：贝尔宾），单选，多选，文本。分别对应类型1-5
 import survey1 from '../components/surveyTemplate/survey1.vue'
 import survey2 from '../components/surveyTemplate/survey2.vue'
 import survey3 from '../components/surveyTemplate/survey3.vue'
 import survey4 from '../components/surveyTemplate/survey4.vue'
 import survey5 from '../components/surveyTemplate/survey5.vue'
-const surveyTemplateList = [survey1, survey2, survey3, survey4, survey5]
-const viewId = ref(0) //默认问卷类型是2
-const currentView = computed(() => surveyTemplateList[viewId.value - 1])
-
-//这里是根据用户打开的链接进行异步网络请求，获取问卷类型和数据，然后展示对应的模板
-import axios from 'axios'
 import { useStore } from '../PiniaStores/index.js'
 const datas = useStore();
+const surveyTemplateList = [survey1, survey2, survey3, survey4, survey5]
+const viewId = ref(0) //一开始不加载
+const currentView = computed(() => surveyTemplateList[viewId.value - 1])
 
+
+
+// 发送请求拿到数据，先假设是第一个问卷
 onMounted(() => {
-  status.getSurvey()
+  currentSurvey.getSurvey();
 });
 
+
+//网络请求获取问卷类型和问卷数据，然后加载对应的问卷模板并响应式填充问卷数据
 //问卷填写的状态（问卷介绍，填写问卷，填写结束）=>传给问卷模板组件
-const status = reactive({
-  begin: true,
-  ongoing: false,
-  end: false,
+
+const currentSurvey = reactive({
+      //问卷的填写状态：填写前，填写中，填写完
+  status: {
+      begin: true,
+      ongoing: false,
+      end: false,
+  },
+  //从网络请求获取到的问卷数据
   surveyObj: {
-    // id:0
   },
   toOngoing() {
-    this.begin = false
-    this.ongoing = true
+    this.status.begin = false
+    this.status.ongoing = true
   },
   toEnd() {
-    this.ongoing = false
-    this.end = true
+    this.status.ongoing = false
+    this.status.end = true
   },
   getSurvey() {
     axios({
@@ -44,12 +52,8 @@ const status = reactive({
         headers: { 'Content-Type': 'application/json' },
         headers: { 'token': datas.user.token }
         }).then((response) => {
-        // console.log(response);
-        
+        // 该值传递通过props传递给子组件
           this.surveyObj = response.data.data;
-          console.log(111111);
-          // this.surveyObj.id = 2;
-      // console.log(this.surveyObj);
         //假设获取到的问卷类型是2
           viewId.value = 1;  
       }).catch((error) => {
@@ -57,24 +61,31 @@ const status = reactive({
       })
   }
 });
-provide('status', status)
+
+//provide给问卷模板子组件当前问卷的状态和数据
+provide('currentSurvey', currentSurvey)
 </script>
 
 <template>
   <div class="wrapper">
-    <img dog-ear src="/tangible.png" />
+
+    <!--装饰品-->
+    <div class="decoration1" v-show="currentSurvey.status.begin || currentSurvey.status.end"></div>
+    <div class="decoration2" v-show="currentSurvey.status.begin || currentSurvey.status.end"></div>
+    <div class="decoration3" v-show="currentSurvey.status.begin || currentSurvey.status.end"></div>
+    <div class="decoration4" v-show="currentSurvey.status.begin || currentSurvey.status.end"></div>
     <div class="decoration5"></div>
-    <div class="decoration1" v-show="status.begin || status.end"></div>
-    <div class="decoration2" v-show="status.begin || status.end"></div>
-    <div class="decoration3" v-show="status.begin || status.end"></div>
-    <div class="decoration4" v-show="status.begin || status.end"></div>
+    <img dog-ear src="/tangible.png" />
+    <!--装饰品-->
+
     <!--动态组件-->
     <Transition name="fade" mode="out-in">
       <KeepAlive>
-        <component :is="currentView" :survey-obj="status.surveyObj"></component>
+        <component :is="currentView" :survey-obj="currentSurvey.surveyObj"></component>
       </KeepAlive>
     </Transition>
-    <!--动态组件-->
+
+
   </div>
 </template>
 
@@ -90,8 +101,9 @@ div.wrapper {
   position: relative;
   top: 0;
   left: 0;
-  border-radius: 5px;
+  border-radius: 10px;
   box-shadow: 0px 5px 10px 0 rgba(73, 107, 158, 0.1);
+  background-color: rgb(255, 255, 255);
   z-index: 0;
 
   div.decoration1 {
@@ -99,7 +111,7 @@ div.wrapper {
     height: 400px;
     width: 400px;
     position: absolute;
-    z-index: -10;
+    z-index: -1;
     top: 0;
     left: 0;
     transform: translate(-50%, -50%);
@@ -113,7 +125,7 @@ div.wrapper {
     height: 150px;
     width: 150px;
     position: absolute;
-    z-index: -3;
+    z-index: -1;
     bottom: 40px;
     right: 50px;
     border-radius: 50%;
@@ -125,7 +137,7 @@ div.wrapper {
     height: 100px;
     width: 100px;
     position: absolute;
-    z-index: -4;
+    z-index: -2;
     bottom: 80px;
     right: -20px;
     border-radius: 50%;
@@ -137,7 +149,7 @@ div.wrapper {
     height: 170px;
     width: 170px;
     position: absolute;
-    z-index: -4;
+    z-index: -3;
     bottom: -20px;
     right: 100px;
     border-radius: 50%;
@@ -165,17 +177,6 @@ div.wrapper {
     right: 0;
     object-fit: contain;
     transform: scale(1.07);
-  }
-
-
-  .fade-enter-active,
-  .navbar-leave-active {
-    transition: all 0.2s ease-in-out 0s;
-  }
-
-  .fade-enter-from,
-  .fade-leave-to {
-    filter: opacity(0);
   }
 }
 </style>

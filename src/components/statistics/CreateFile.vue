@@ -5,7 +5,9 @@
         <!-- 使得文件阴影定位 -->
         <div class="file">
           <div class="creatcontent">
-            <span class="creatfile">创建问卷</span>
+            <div class="filetop">
+              <span class="creat">创建问卷</span>
+            </div>
             <span class="plus">
               <el-icon color="white" :size="5 * 5"><Plus /></el-icon>
             </span>
@@ -16,6 +18,8 @@
                 :percentage="0"
                 :width="90"
                 :height="90"
+                :stroke-width="80"
+                :show-text="false"
               />
             </span>
           </div>
@@ -40,10 +44,34 @@ import { onMounted, ref } from "vue";
 //路由
 import { useRouter } from "vue-router";
 const router = useRouter();
+import { useStore } from "../../PiniaStores/index.js";
+const datas = useStore();
+import axios from "axios";
 function routerPush(path) {
   router.push({ path });
 }
 const amount = ref(3);
+let userId = datas.user.userId;
+console.log(userId);
+console.log(typeof userId);
+let id = parseInt(datas.user.userId);
+console.log(id);
+console.log(typeof id);
+
+// await axios({
+//   url: "https://q.denglu1.cn/user/questionnaire/datas.user.userId",
+//   method: "get",
+//   headers: { token: datas.user.token },
+//   params: { userId: id },
+// })
+//   .then((response) => {
+//     console.log(response);
+//   })
+//   .catch((error) => {
+//     console.log(error);
+//   });
+
+//问卷旋转
 let clickrotate = ref(null);
 </script>
 
@@ -79,26 +107,44 @@ let clickrotate = ref(null);
   width: 210px;
   height: 148px;
   border-radius: 0px 4px 4px 4px;
-  clip-path: polygon(35% 0, 40% 13%, 100% 13%, 100% 100%, 0 100%, 0 0);
+  clip-path: polygon(40% 0, 45% 13%, 100% 13%, 100% 100%, 0 100%, 0 0);
   text-align: left;
   text-indent: 10px;
   color: white;
   box-shadow: 5px 5px rgba(15, 174, 254);
-  .creatfile {
-    font-size: 12px;
-  }
   background: rgba(221, 237, 255, 0.35);
   backdrop-filter: blur(45px);
+  .filetop {
+    display: flex;
+    img {
+      position: absolute;
+      left: 3px;
+      top: 3px;
+    }
+    .creat {
+      position: absolute;
+      top: 3px;
+      left: 10px;
+    }
+    .delete {
+      position: absolute;
+      left: 60px;
+      top: 3px;
+    }
+    span {
+      font-size: 12px;
+    }
+  }
 }
 
 .shadow {
   position: absolute;
   top: 5px;
-  left: 5px;
+  left: 7px;
   width: 210px;
   height: 148px;
   border-radius: 0px 4px 4px 4px;
-  clip-path: polygon(35% 0, 40% 13%, 100% 13%, 100% 100%, 0 100%, 0 0);
+  clip-path: polygon(40% 0, 45% 13%, 100% 13%, 100% 100%, 0 100%, 0 0);
   background: linear-gradient(
     90deg,
     rgba(30, 111, 255, 1) 0%,

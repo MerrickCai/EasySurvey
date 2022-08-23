@@ -1,7 +1,7 @@
 <template>
 <div wrapper>
         <!-- 介绍页 -->
-        <div class="wrapper" v-if="status.begin">
+        <div class="wrapper" v-if="currentSurvey.status.begin">
             <h2 class="title">{{ survey.intro.info_title }}</h2>
             <p class="second-title">问卷介绍：</p>
             <p class="para">{{ survey.intro.info_para }}</p>
@@ -11,7 +11,7 @@
 
 
         <!-- 问卷内容部分 -->
-        <div class="wrapper extrachange" v-if="status.ongoing">
+        <div class="wrapper extrachange" v-if="currentSurvey.status.ongoing">
             <!--问卷题目和介绍-->
             <div class="topbox">
                 <h2 class="top_title">{{ survey.intro.info_title }}</h2>
@@ -80,7 +80,7 @@
         </div>
 
         <!-- 问卷完成部分 -->
-        <div class="finish-wrapper" v-if="status.end">
+        <div class="finish-wrapper" v-if="currentSurvey.status.end">
             <div class="innerbox">
                 <div class="finish-title">
                     <h2>您已完成</h2>
@@ -97,7 +97,9 @@
 
 <script setup>
 import { inject, ref, computed, nextTick,onMounted ,reactive,defineProps} from 'vue';
-const status = inject('status')
+const currentSurvey = inject('currentSurvey')
+
+
 import { useStore } from '../../PiniaStores/index.js'
 //数据
 const datas = useStore();
@@ -107,17 +109,7 @@ const survey = computed(() => datas.survey.survey2[0]);
 // // 接受survey父组件传过来的参数。
 const props = defineProps(['surveyObj']);
 const surveyObj = computed(() => props.surveyObj)
-onMounted(() => {
-    
-    console.log(props);
-    console.log(222);
-    
-    // console.log(surveyObj.value); 
-});
-// const a = reactive({});
-// a.intro = surveyObj.value.questionnaire;
-// a.intro.info_title = surveyObj.value.questionnaire.title;
-// a.intro.info_para =  surveyObj.value.questionnaire.message;
+
 
 // 用来给上面的模板计算每次thumb应该移动多少的
 const barArr = new Array(survey.value.questionList.length).fill(0).map((item, index) => new Array(survey.value.questionList[index].secscore + 1));
@@ -125,7 +117,7 @@ const barArr = new Array(survey.value.questionList.length).fill(0).map((item, in
 
 // -----跳转：介绍页==>答题页--------
 function toContent() { 
-    status.toOngoing();
+    currentSurvey.status.toOngoing();
 }
 
 
@@ -263,7 +255,7 @@ function toFinish() {
     }
     //    console.log(progressPartHeight);
     if (!flag) return
-    status.toEnd();
+    currentSurvey.status.toEnd();
 }
 
 
