@@ -70,6 +70,7 @@ import {
   provide,
   watch,
   computed,
+  toRaw,
 } from "vue";
 import { nanoid } from "nanoid";
 import radiolist from "../components/surveynew/radiolist.vue";
@@ -208,16 +209,17 @@ function sdeleteques(id) {
 //存储单选问卷信息内容
 let radiofile = reactive([
   {
-    question: { detail: "请输入题目标题", type: 1 },
     options: [{ detail: "选项" }, { detail: "选项" }],
+    question: { detail: "请输入题目标题", type: 1 },
     id: nanoid(),
   },
   {
-    question: { detail: "请输入题目标题", type: 1 },
     options: [{ detail: "选项" }, { detail: "选项" }],
+    question: { detail: "请输入题目标题", type: 1 },
     id: nanoid(),
   },
 ]);
+console.log(radiofile);
 //单选问卷新增问题
 function rreceive(quesobj) {
   radiofile.push(quesobj);
@@ -286,23 +288,23 @@ function tdeleteques(id) {
     console.log(textfile);
   }
 }
-let trya = ref([
-  {
-    question: { detail: 2, type: 1 },
-    options: [{ detail: "111" }, { detail: "222" }],
-    id: 1,
-  },
-  {
-    question: { detail: 2, type: 1 },
-    options: [{ detail: "111" }, { detail: "222" }],
-  },
-]);
+
 //发布问卷
 let show = ref("none");
-function pushfile() {
+async function pushfile() {
   if (type.value == 1) {
     console.log(radiofile);
-    axios({
+    let staticti = toRaw(radiofile);
+    console.log(staticti);
+    // JSON.parse(JSON.stringify(radiofile));
+    console.log(JSON.parse(JSON.stringify(radiofile)));
+    // radiofile.forEach((element) => delete element.id);
+    JSON.parse(JSON.stringify(radiofile));
+    console.log(JSON.parse(JSON.stringify(radiofile)));
+    console.log(datas.user.userId);
+    console.log(filetitle.info_para);
+    console.log(filetitle.info_title);
+    await axios({
       url: "https://q.denglu1.cn/questions/rebuild",
       method: "post",
       withCredentials: true,
@@ -315,7 +317,7 @@ function pushfile() {
           message: filetitle.info_para,
           title: filetitle.info_title
         },
-        questionOptionList: radiofile,
+        questionOptionList: JSON.parse(JSON.stringify(radiofile)),
       },
     })
       .then((response) => {
