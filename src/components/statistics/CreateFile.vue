@@ -58,18 +58,18 @@ let id = parseInt(datas.user.userId);
 console.log(id);
 console.log(typeof id);
 
-// await axios({
-//   url: "https://q.denglu1.cn/user/questionnaire/datas.user.userId",
-//   method: "get",
-//   headers: { token: datas.user.token },
-//   params: { userId: id },
-// })
-//   .then((response) => {
-//     console.log(response);
-//   })
-//   .catch((error) => {
-//     console.log(error);
-//   });
+await axios({
+  url: "https://q.denglu1.cn/user/questionnaire/datas.user.userId",
+  method: "get",
+  headers: { token: datas.user.token },
+  params: { userId: datas.user.userId },
+})
+  .then((response) => {
+    console.log(response);
+  })
+  .catch((error) => {
+    console.log(error);
+  });
 
 //问卷旋转
 let clickrotate = ref(null);

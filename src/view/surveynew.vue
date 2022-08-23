@@ -318,7 +318,7 @@ async function pushfile() {
     console.log(filetitle.info_title);
     await axios({
       url: "https://q.denglu1.cn/questions/rebuild",
-      method: "get",
+      method: "post",
       withCredentials: true,
       headers: { "Content-Type": "application/json" },
       headers: { token: datas.user.token },
