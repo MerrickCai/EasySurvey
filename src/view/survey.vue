@@ -25,7 +25,8 @@ onMounted(() => {
 
 //网络请求获取问卷类型和问卷数据，然后加载对应的问卷模板并响应式填充问卷数据
 //问卷填写的状态（问卷介绍，填写问卷，填写结束）=>传给问卷模板组件
-
+import { useRoute } from 'vue-router'
+const route=useRoute()
 const currentSurvey = reactive({
       //问卷的填写状态：填写前，填写中，填写完
   status: {
@@ -46,7 +47,7 @@ const currentSurvey = reactive({
   },
   getSurvey() {
     axios({
-        url: `https://q.denglu1.cn/user/fillQuestionnaire/${1}`,
+        url: `https://q.denglu1.cn/user/fillQuestionnaire/${route.params.questionnaireId}`,
         method: 'get',
         withCredentials: true,
         headers: { 'Content-Type': 'application/json' },

@@ -28,7 +28,7 @@ const routes = [
         component: surveynew
     },
     {
-        path: '/survey',
+        path: '/survey/:questionnaireId',
         meta: { requireLogin: true },
         component: survey
     },
