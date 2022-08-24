@@ -59,8 +59,6 @@
         </div>
       </div>
     </div>
-    <input type="reset">
-    </form>
   </div>
 </template>
 
