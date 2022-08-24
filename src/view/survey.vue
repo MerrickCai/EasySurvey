@@ -45,8 +45,8 @@ const currentSurvey = reactive({
   },
   getSurvey() {
     axios({
-      url: `https://q.denglu1.cn/user/fillQuestionnaire/${17}`,
-      // url: `https://q.denglu1.cn/user/fillQuestionnaire/$  {route.params.questionnaireId}`,
+      // url: `https://q.denglu1.cn/user/fillQuestionnaire/${17}`,
+      url: `https://q.denglu1.cn/user/fillQuestionnaire/${route.params.questionnaireId}`,
       method: "get",
       withCredentials: true,
       headers: { "Content-Type": "application/json" },
@@ -58,7 +58,7 @@ const currentSurvey = reactive({
         console.log("请求参数", this.surveyObj);
 
         //假设获取到的问卷类型是2
-        viewId.value = 4;
+        viewId.value = 1;
       })
       .catch((error) => {
         console.log(error);
