@@ -94,7 +94,7 @@
 </template>
 
 <script setup>
-import { inject, ref, computed, nextTick,onMounted ,reactive,defineProps} from 'vue';
+import { inject, ref, computed, nextTick,onMounted ,reactive} from 'vue';
 const currentSurvey = inject('currentSurvey')
 import { useStore } from '../../PiniaStores/index.js'
 import axios from 'axios';
@@ -147,7 +147,6 @@ for (let i in surveyObj.value.questionInfoMap) {
     obj.progressPartbcg = '#ccc';
     obj.question = optionDetail[start];
     obj.questionId = surveyObj.value.optionMap[i][1].questionId;
-    // obj.seleted = 0;
     obj.silderSrc ='/blue.png';
     obj.score = item.dominate;
     obj.staticScore = obj.score;
@@ -192,11 +191,14 @@ function sumbit() {
      }).then((response) => {
         console.log(response);
        if (response.data.code === 200) {
-          console.log(survey);
-          
-        //  currentSurvey.toEnd();
+         console.log(survey);
+          if (response.data.msg === '问卷已收集齐了') {
+              alert('问卷已收集齐了');
+          } else {
+             currentSurvey.toEnd();
+           }
         } else {
-          alert('提交失败')
+         alert('提交失败,请勿重复提交');
         } 
       }).catch((error) => {
         console.log(error)
