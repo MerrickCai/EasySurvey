@@ -26,31 +26,33 @@
         @keyup.enter="questitleshow = true"
       />
     </p>
-    <p class="optionall" v-for="(con, i) in quesitem.options">
-      <span class="circle"></span>
-      <span class="option" v-show="!optionshow[i]" @click="optionsshow(i)">
-        {{ con.detail }}
-      </span>
-      <input
-        type="text"
-        ref="optiontitle"
-        v-show="optionshow[i]"
-        v-model="con.detail"
-        @blur="optionshow[i] = false"
-        @keyup.enter="optionshow[i] = false"
-      />
-      <i
-        class="deloption"
-        @click="deleoption(i)"
-        ref="deleteo"
-        @mousemove="opcursorfail"
-        >×</i
-      >
-    </p>
-    <p class="addoption">
-      <i class="additem" @click="addaoption()">+</i>
-      <span>添加选项</span>
-    </p>
+    <el-scrollbar max-height="400px">
+      <p class="optionall" v-for="(con, i) in quesitem.options">
+        <span class="circle"></span>
+        <span class="option" v-show="!optionshow[i]" @click="optionsshow(i)">
+          {{ con.detail }}
+        </span>
+        <input
+          type="text"
+          ref="optiontitle"
+          v-show="optionshow[i]"
+          v-model="con.detail"
+          @blur="optionshow[i] = false"
+          @keyup.enter="optionshow[i] = false"
+        />
+        <i
+          class="deloption"
+          @click="deleoption(i)"
+          ref="deleteo"
+          @mousemove="opcursorfail"
+          >×</i
+        >
+      </p>
+      <p class="addoption">
+        <i class="additem" @click="addaoption()">+</i>
+        <span>添加选项</span>
+      </p>
+    </el-scrollbar>
   </li>
 </template>
 
@@ -202,60 +204,71 @@ li {
       text-align: left;
     }
   }
-  .optionall {
-    display: flex;
-    height: 20px;
-    margin: 5px 0 5px 55px;
-    .circle {
-      width: 18px;
-      height: 18px;
-      border: 2px solid rgba(217, 217, 217, 1);
+  .el-scrollbar {
+    width: 720px;
+    height: 130px;
+
+    --el-scrollbar-opacity: 0.3;
+    --el-scrollbar-bg-color: rgba(71, 145, 255, 1);
+    --el-scrollbar-hover-opacity: 0.5;
+    --el-scrollbar-hover-bg-color: rgba(71, 145, 255, 1);
+
+    .el-scrollbar__bar {
+      width: 8px;
+      position: absolute;
+      right: 0;
     }
-    .option {
-      display: block;
-      width: 600px;
-      margin-left: 5px;
-      font-size: 16px;
-      font-weight: 400;
-      color: rgba(0, 0, 0, 1);
-    }
-    input[type="text"] {
-      /* 清除原有input样式 */
-      -web-kit-appearance: none;
-      -moz-appearance: none;
-      outline: 0;
-      /* 设置我们要的样式 */
-      width: 600px;
+    .optionall {
+      display: flex;
       height: 20px;
-      opacity: 1;
-      text-align: left;
-    }
-    .deloption {
-      cursor: pointer;
-      font-size: 25px;
-      font-weight: 400;
-      color: rgba(30, 111, 255, 1);
-      font-style: normal;
+      margin: 5px 0 10px 37px;
+      .circle {
+        width: 18px;
+        height: 18px;
+        border: 2px solid rgba(217, 217, 217, 1);
+      }
+      .option {
+        display: block;
+        width: 600px;
+        margin-left: 5px;
+        font-size: 16px;
+        font-weight: 400;
+        color: rgba(0, 0, 0, 1);
+      }
+      input[type="text"] {
+        /* 清除原有input样式 */
+        -web-kit-appearance: none;
+        -moz-appearance: none;
+        outline: 0;
+        /* 设置我们要的样式 */
+        width: 600px;
+        height: 20px;
+        opacity: 1;
+        text-align: left;
+      }
+      .deloption {
+        cursor: pointer;
+        font-size: 25px;
+        font-weight: 400;
+        color: rgba(30, 111, 255, 1);
+        font-style: normal;
+      }
     }
   }
   .addoption {
-    position: relative;
+    display: flex;
     .additem {
       cursor: pointer;
-      position: absolute;
-      left: 54px;
+      margin-left: 37px;
       font-size: 25px;
       font-weight: 400;
       color: rgba(30, 111, 255, 1);
       font-style: normal;
     }
     span {
-      position: absolute;
       cursor: default;
-      top: 8px;
-      left: 77px;
-      width: 500px;
-      height: 20px;
+      margin-top: 10px;
+      margin-left: 10px;
       opacity: 1;
       text-align: left;
       border-width: 0;

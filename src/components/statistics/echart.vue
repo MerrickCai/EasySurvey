@@ -25,6 +25,7 @@
 <script setup>
 import * as echarts from "echarts";
 import draggable from "vuedraggable";
+import mitter from "../../mitt";
 import { onMounted, ref, reactive } from "vue";
 //路由
 import { useRouter } from "vue-router";

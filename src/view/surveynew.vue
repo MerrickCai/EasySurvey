@@ -128,8 +128,6 @@ if (localStorage.getItem("matrix")) {
         { detail: "" },
         { detail: "" },
         { detail: "" },
-        { detail: "" },
-        { detail: "" },
       ],
       id: nanoid(),
       series: 5,
@@ -318,7 +316,7 @@ async function pushfile() {
       data: {
         questionnaire: {
           userId: datas.user.userId,
-          totalNumber: 1,
+          totalNumber: 100,
           message: filetitle.info_para,
           title: filetitle.info_title,
         },
@@ -351,7 +349,7 @@ async function pushfile() {
       data: {
         questionnaire: {
           userId: datas.user.userId,
-          totalNumber: 1,
+          totalNumber: 100,
           message: filetitle.info_para,
           title: filetitle.info_title,
         },
@@ -376,6 +374,7 @@ async function pushfile() {
     fileword.forEach((element) => {
       delete element.id;
     });
+    console.log(fileword);
     await axios({
       url: "https://q.denglu1.cn/questions/rebuild",
       method: "post",
@@ -385,7 +384,7 @@ async function pushfile() {
       data: {
         questionnaire: {
           userId: datas.user.userId,
-          totalNumber: 1,
+          totalNumber: 100,
           message: filetitle.info_para,
           title: filetitle.info_title,
         },
@@ -398,13 +397,13 @@ async function pushfile() {
       .catch((error) => {
         console.log(error);
       });
-    localStorage.removeItem("matrix");
-    fileword.splice(0, fileword.length);
-    fileword.push({
-      options: [{ detail: "选项" }],
-      question: { detail: "请输入题目标题", type: 1 },
-      id: nanoid(),
-    });
+    // localStorage.removeItem("matrix");
+    // fileword.splice(0, fileword.length);
+    // fileword.push({
+    //   options: [{ detail: "选项" }],
+    //   question: { detail: "请输入题目标题", type: 1 },
+    //   id: nanoid(),
+    // });
   }
   if (type.value == 4) {
     scalefile.forEach((element) => {
@@ -423,7 +422,7 @@ async function pushfile() {
       data: {
         questionnaire: {
           userId: datas.user.userId,
-          totalNumber: 1,
+          totalNumber: 100,
           message: filetitle.info_para,
           title: filetitle.info_title,
           count: 2,
@@ -458,7 +457,7 @@ async function pushfile() {
       data: {
         questionnaire: {
           userId: datas.user.userId,
-          totalNumber: 1,
+          totalNumber: 100,
           message: filetitle.info_para,
           title: filetitle.info_title,
         },

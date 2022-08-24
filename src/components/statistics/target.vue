@@ -73,8 +73,36 @@
 </template>
 
 <script setup>
-import { ref, nextTick } from "vue";
+import { ref, nextTick, onMounted, onBeforeUpdate, watch } from "vue";
+import emitter from "../../mitt";
+import { useStore } from "../../PiniaStores/index.js";
+const datas = useStore();
+import axios from "axios";
 
+let num = ref("");
+emitter.on("filenum", (e) => {
+  num.value = e;
+});
+watch(num, (newnum) => {
+  console.log(num.value);
+  getfile();
+});
+
+function getfile() {
+  axios({
+    url: `https://q.denglu1.cn/user/questionnaireDetail/${parseInt(num.value)}`,
+    method: "get",
+    withCredentials: true,
+    headers: { "Content-Type": "application/json" },
+    headers: { token: datas.user.token },
+  })
+    .then((response) => {
+      console.log(response);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
 //计划问卷调查数量修改
 let planinput = ref(null); //
 let plannum = ref(300); //计划问卷调查
