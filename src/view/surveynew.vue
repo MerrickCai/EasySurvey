@@ -49,6 +49,7 @@
           </keep-alive>
         </ul>
       </div>
+      <button class="keep" @click="keepinfor">保存</button>
       <button class="push" @click="pushfile($event)">发布问卷</button>
       <div class="mask" :style="{ display: show }">
         <div class="sharefile">
@@ -102,44 +103,39 @@ watch(scroll, () => {
   });
 });
 //问卷标题介绍
-let filetitle = reactive({
-  info_title: "请输入问卷标题",
-  info_para:
-    "为了使问卷调查结果更加清晰，准确，请输入关于问卷的简短介绍以及注意事项，方便填写问卷的人更清晰的认识问卷，字数少于500字",
-});
 
+let filetitle = reactive(null);
+if (localStorage.getItem("title")) {
+  filetitle = reactive(JSON.parse(localStorage.getItem("title")));
+} else {
+  filetitle = reactive({
+    info_title: "请输入问卷标题",
+    info_para:
+      "为了使问卷调查结果更加清晰，准确，请输入关于问卷的简短介绍以及注意事项，方便填写问卷的人更清晰的认识问卷，字数少于500字",
+  });
+}
 //存储矩阵问卷信息内容
-let fileword = reactive([
-  {
-    question: { detail: "请输入题目标题", type: 1 },
-    options: [
-      { detail: "" },
-      { detail: "" },
-      { detail: "" },
-      { detail: "" },
-      { detail: "" },
-      { detail: "" },
-      { detail: "" },
-    ],
-    id: nanoid(),
-    series: 5,
-  },
-  {
-    question: { detail: "请输入题目标题", type: 1 },
-    options: [
-      { detail: "" },
-      { detail: "" },
-      { detail: "" },
-      { detail: "" },
-      { detail: "" },
-      { detail: "" },
-      { detail: "" },
-    ],
-    id: nanoid(),
-    series: 5,
-  },
-]);
-
+let fileword = reactive(null);
+if (localStorage.getItem("matrix")) {
+  fileword = reactive(JSON.parse(localStorage.getItem("matrix")));
+} else {
+  fileword = reactive([
+    {
+      question: { detail: "请输入题目标题", type: 1 },
+      options: [
+        { detail: "" },
+        { detail: "" },
+        { detail: "" },
+        { detail: "" },
+        { detail: "" },
+        { detail: "" },
+        { detail: "" },
+      ],
+      id: nanoid(),
+      series: 5,
+    },
+  ]);
+}
 //问卷标题修改
 let titleshow = ref(true);
 let titlein = ref(null);
@@ -184,28 +180,20 @@ function deleteques(id) {
 }
 
 //存储量表问卷信息内容
-let scalefile = reactive([
-  {
-    question: { detail: "请输入题目标题", type: 1 },
-    options: [
-      { detail: "请输入次级题目标题", dominate: 20 },
-      { detail: "请输入次级题目标题", dominate: 20 },
-    ],
-    id: nanoid(),
-    dominate: 60,
-    secscore: 20,
-  },
-  {
-    question: { detail: "请输入题目标题", type: 1 },
-    options: [
-      { detail: "请输入次级题目标题", dominate: 20 },
-      { detail: "请输入次级题目标题", dominate: 20 },
-    ],
-    id: nanoid(),
-    dominate: 50,
-    secscore: 10,
-  },
-]);
+let scalefile = reactive(null);
+if (localStorage.getItem("scale")) {
+  scalefile = reactive(JSON.parse(localStorage.getItem("scale")));
+} else {
+  scalefile = reactive([
+    {
+      options: [{ detail: "选项", dominate: 20 }],
+      question: { detail: "请输入题目标题", type: 1 },
+      id: nanoid(),
+      dominate: 60,
+      secscore: 20,
+    },
+  ]);
+}
 //量表问卷新增问题
 function sreceive(quesobj) {
   scalefile.push(quesobj);
@@ -220,19 +208,18 @@ function sdeleteques(id) {
 }
 
 //存储单选问卷信息内容
-let radiofile = reactive([
-  {
-    options: [{ detail: "选项" }, { detail: "选项" }],
-    question: { detail: "请输入题目标题", type: 1 },
-    id: nanoid(),
-  },
-  {
-    options: [{ detail: "选项" }, { detail: "选项" }],
-    question: { detail: "请输入题目标题", type: 1 },
-    id: nanoid(),
-  },
-]);
-console.log(radiofile);
+let radiofile = reactive(null);
+if (localStorage.getItem("radio")) {
+  radiofile = reactive(JSON.parse(localStorage.getItem("radio")));
+} else {
+  radiofile = reactive([
+    {
+      options: [{ detail: "选项" }],
+      question: { detail: "请输入题目标题", type: 1 },
+      id: nanoid(),
+    },
+  ]);
+}
 //单选问卷新增问题
 function rreceive(quesobj) {
   radiofile.push(quesobj);
@@ -247,18 +234,18 @@ function rdeleteques(id) {
 }
 
 //存储多选问卷信息内容
-let checkboxfile = reactive([
-  {
-    question: { detail: "请输入题目标题", type: 2 },
-    options: [{ detail: "选项" }, { detail: "选项" }],
-    id: nanoid(),
-  },
-  {
-    question: { detail: "请输入题目标题", type: 2 },
-    options: [{ detail: "选项" }, { detail: "选项" }],
-    id: nanoid(),
-  },
-]);
+let checkboxfile = reactive(null);
+if (localStorage.getItem("checkbox")) {
+  checkboxfile = reactive(JSON.parse(localStorage.getItem("checkbox")));
+} else {
+  checkboxfile = reactive([
+    {
+      options: [{ detail: "选项" }],
+      question: { detail: "请输入题目标题", type: 1 },
+      id: nanoid(),
+    },
+  ]);
+}
 //多选问卷新增问题
 function creceive(quesobj) {
   checkboxfile.push(quesobj);
@@ -277,16 +264,18 @@ function cdeleteques(id) {
 }
 
 //存储文本问卷信息内容
-let textfile = reactive([
-  {
-    question: { detail: "请输入题目标题", type: 1 },
-    id: nanoid(),
-  },
-  {
-    question: { detail: "请输入题目标题", type: 1 },
-    id: nanoid(),
-  },
-]);
+let textfile = reactive(null);
+if (localStorage.getItem("text")) {
+  textfile = reactive(JSON.parse(localStorage.getItem("text")));
+} else {
+  textfile = reactive([
+    {
+      options: [{ detail: "选项" }],
+      question: { detail: "请输入题目标题", type: 1 },
+      id: nanoid(),
+    },
+  ]);
+}
 //文本问卷新增问题
 function treceive(quesobj) {
   textfile.push(quesobj);
@@ -301,7 +290,25 @@ function tdeleteques(id) {
     console.log(textfile);
   }
 }
-
+//保存问卷
+function keepinfor() {
+  localStorage.setItem("title", JSON.stringify(filetitle));
+  if (type.value == 1) {
+    localStorage.setItem("radio", JSON.stringify(radiofile));
+  }
+  if (type.value == 2) {
+    localStorage.setItem("checkbox", JSON.stringify(checkboxfile));
+  }
+  if (type.value == 3) {
+    localStorage.setItem("matrix", JSON.stringify(fileword));
+  }
+  if (type.value == 4) {
+    localStorage.setItem("scale", JSON.stringify(scalefile));
+  }
+  if (type.value == 5) {
+    localStorage.setItem("text", JSON.stringify(textfile));
+  }
+}
 //发布问卷
 let show = ref("none");
 async function pushfile() {
@@ -336,6 +343,14 @@ async function pushfile() {
       .catch((error) => {
         console.log(error);
       });
+    localStorage.removeItem("radio");
+    radiofile.splice(0, radiofile.length);
+    console.log(radiofile);
+    radiofile.push({
+      options: [{ detail: "选项" }],
+      question: { detail: "请输入题目标题", type: 1 },
+      id: nanoid(),
+    });
   }
   if (type.value == 2) {
     checkboxfile.forEach((element) => delete element.id);
@@ -361,6 +376,13 @@ async function pushfile() {
       .catch((error) => {
         console.log(error);
       });
+    localStorage.removeItem("checkbox");
+    checkboxfile.splice(0, checkboxfile.length);
+    checkboxfile.push({
+      options: [{ detail: "选项" }],
+      question: { detail: "请输入题目标题", type: 1 },
+      id: nanoid(),
+    });
   }
   if (type.value == 3) {
     fileword.forEach((element) => {
@@ -388,6 +410,13 @@ async function pushfile() {
       .catch((error) => {
         console.log(error);
       });
+    localStorage.removeItem("matrix");
+    fileword.splice(0, fileword.length);
+    fileword.push({
+      options: [{ detail: "选项" }],
+      question: { detail: "请输入题目标题", type: 1 },
+      id: nanoid(),
+    });
   }
   if (type.value == 4) {
     scalefile.forEach((element) => {
@@ -420,6 +449,15 @@ async function pushfile() {
       .catch((error) => {
         console.log(error);
       });
+    localStorage.removeItem("scale");
+    scalefile.splice(0, scalefile.length);
+    scalefile.push({
+      question: { detail: "请输入题目标题", type: 1 },
+      options: [{ detail: "请输入次级题目标题", dominate: 20 }],
+      id: nanoid(),
+      dominate: 60,
+      secscore: 20,
+    });
   }
   if (type.value == 5) {
     textfile.forEach((element) => delete element.id);
@@ -445,8 +483,16 @@ async function pushfile() {
       .catch((error) => {
         console.log(error);
       });
+    localStorage.removeItem("text");
+    textfile.splice(0, textfile.length);
+    textfile.push({
+      options: [{ detail: "选项" }],
+      question: { detail: "请输入题目标题", type: 1 },
+      id: nanoid(),
+    });
   }
   show.value = "block";
+  localStorage.removeItem("title");
 }
 //遮罩
 function disappear() {
@@ -666,11 +712,24 @@ div.wrapper {
         margin-top: 14px;
       }
     }
-
+    .keep {
+      cursor: pointer;
+      position: absolute;
+      left: 34%;
+      bottom: 10%;
+      transform: translate(-50%);
+      width: 200px;
+      height: 50px;
+      background: #ebf5ff;
+      font-size: 20px;
+      font-weight: 500;
+      color: #8c8c8c;
+      border: 0px;
+    }
     .push {
       cursor: pointer;
       position: absolute;
-      left: 50%;
+      left: 63%;
       bottom: 10%;
       transform: translate(-50%);
       width: 200px;
