@@ -1,10 +1,5 @@
 <template >
-  <li
-    class="filenew"
-    @click="filerotate($event, index)"
-    draggable="true"
-    @dragstart="startDrag($event)"
-  >
+  <li class="filenew" @click="filerotate($event, index)" draggable="true" @dragstart="startDrag($event)">
     <!-- 使得文件阴影定位 -->
     <div class="file">
       <div class="creatcontent">
@@ -13,19 +8,12 @@
           <span class="creat">创建问卷</span>
           <span class="delete">×</span>
         </div>
-        <span class="filename">威廉斯创造力倾向表A </span>
+        <span class="filename">{{ item.title }}</span>
         <span class="filenum">有效问卷数</span>
         <!-- 进度条 -->
         <span class="progress">
-          <el-progress
-            type="circle"
-            :percentage="0"
-            :width="90"
-            :height="90"
-            :stroke-width="80"
-            :show-text="false"
-          />
-          <span class="number">100</span>
+          <el-progress type="circle" :percentage="0" :width="90" :height="90" :stroke-width="80" :show-text="false" />
+          <span class="number">{{ item.totalNumber }}</span>
           <span class="fen">份</span>
         </span>
       </div>
@@ -36,14 +24,11 @@
 </template>
 
 <script setup>
-import { ref, nextTick, reactive } from "vue";
-import draggable from "vuedraggable";
-
-const emit = defineEmits(["update:clickrotate"]);
-const props = defineProps(["index", "clickrotate"]);
+import { ref } from "vue"
+const emit = defineEmits(["update:clickrotate"])
+const props = defineProps(["index", "clickrotate", 'item'])
 
 //点击文件夹阴影旋转
-let style = ref(false);
 let shadow = ref("shadow");
 let shadowclick = ref("shadowclick");
 
@@ -64,10 +49,6 @@ function startDrag(e) {
   margin-top: 84px;
   padding-left: 20px;
 }
-// .file {
-//   position: absolute;
-//   left: 20px;
-// }
 .creatcontent {
   position: relative;
   width: 210px;
@@ -80,29 +61,35 @@ function startDrag(e) {
   box-shadow: 5px 5px rgba(15, 174, 254);
   background: rgba(221, 237, 255, 0.35);
   backdrop-filter: blur(45px);
+
   .filetop {
     display: flex;
+
     img {
       cursor: pointer;
       position: absolute;
       left: 3px;
       top: 3px;
     }
+
     .creat {
       position: absolute;
       top: 3px;
       left: 10px;
     }
+
     .delete {
       cursor: pointer;
       position: absolute;
       left: 64px;
       top: 3px;
     }
+
     span {
       font-size: 12px;
     }
   }
+
   .filename {
     position: absolute;
     left: 10px;
@@ -113,6 +100,7 @@ function startDrag(e) {
     font-size: 12px;
     font-weight: 700;
   }
+
   .filenum {
     position: absolute;
     left: 15px;
@@ -121,10 +109,12 @@ function startDrag(e) {
     font-weight: 400;
     text-align: center;
   }
+
   .progress {
     position: absolute;
     bottom: 10px;
     right: 20px;
+
     .number {
       position: absolute;
       bottom: 35px;
@@ -133,6 +123,7 @@ function startDrag(e) {
       font-weight: 500;
       text-align: center;
     }
+
     .fen {
       position: absolute;
       bottom: 32px;
@@ -152,11 +143,9 @@ function startDrag(e) {
   height: 148px;
   border-radius: 0px 4px 4px 4px;
   clip-path: polygon(40% 0, 45% 13%, 100% 13%, 100% 100%, 0 100%, 0 0);
-  background: linear-gradient(
-    90deg,
-    rgba(30, 111, 255, 1) 0%,
-    rgba(138, 204, 237, 1) 100%
-  );
+  background: linear-gradient(90deg,
+      rgba(30, 111, 255, 1) 0%,
+      rgba(138, 204, 237, 1) 100%);
   z-index: -1;
   transform-origin: left top;
 }
@@ -164,10 +153,12 @@ function startDrag(e) {
 .shadowclick {
   animation: rotate 0.35s forwards;
 }
+
 @keyframes rotate {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(5deg);
   }
