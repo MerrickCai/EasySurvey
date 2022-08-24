@@ -19,13 +19,15 @@
         <span class="progress">
           <el-progress
             type="circle"
-            :percentage="0"
+            :percentage="
+              (props.item.effectiveNumber / props.item.totalNumber) * 100
+            "
             :width="90"
             :height="90"
-            :stroke-width="80"
+            :stroke-width="8"
             :show-text="false"
           />
-          <span class="number">{{ item.totalNumber }}</span>
+          <span class="number">{{ item.effectiveNumber }}</span>
           <span class="fen">份</span>
         </span>
       </div>
@@ -41,7 +43,7 @@ import emitter from "../../mitt";
 import { useStore } from "../../PiniaStores/index.js";
 const datas = useStore();
 import axios from "axios";
-const emit = defineEmits(["update:clickrotate"]);
+const emit = defineEmits(["update:clickrotate", "deletefile"]);
 const props = defineProps(["index", "clickrotate", "item"]);
 
 //点击文件夹阴影旋转
@@ -59,19 +61,22 @@ function startDrag(e) {
   e.dataTransfer.effectAllowed = "move";
 }
 function delfile() {
-  axios({
-    url: `https://q.denglu1.cn/deleteQuestion/${parseInt(props.item.id)}`,
-    method: "get",
-    withCredentials: true,
-    headers: { "Content-Type": "application/json" },
-    headers: { token: datas.user.token },
-  })
-    .then((response) => {
-      console.log(response);
+  if (confirm("确定删除吗")) {
+    axios({
+      url: `https://q.denglu1.cn/deleteQuestion/${parseInt(props.item.id)}`,
+      method: "get",
+      withCredentials: true,
+      headers: { "Content-Type": "application/json" },
+      headers: { token: datas.user.token },
     })
-    .catch((error) => {
-      console.log(error);
-    });
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    emit("deletefile", props.index);
+  }
 }
 </script>
 
@@ -150,7 +155,8 @@ function delfile() {
     .number {
       position: absolute;
       bottom: 35px;
-      right: 20px;
+      right: 50%;
+      transform: translate(70%);
       font-size: 20px;
       font-weight: 500;
       text-align: center;

@@ -20,7 +20,7 @@
                 :percentage="0"
                 :width="90"
                 :height="90"
-                :stroke-width="80"
+                :stroke-width="8"
                 :show-text="false"
               />
             </span>
@@ -36,6 +36,7 @@
         :index="index"
         :clickrotate="clickrotate"
         @update:clickrotate="(n) => (clickrotate = n)"
+        @deletefile="(index) => fileall[0].splice(index, 1)"
       ></file>
     </el-scrollbar>
   </ul>

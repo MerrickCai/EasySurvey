@@ -6,19 +6,19 @@
       <span class="sum number">
         总问卷数
         <img src="/sum.png" alt="" />
-        <i>150</i>
+        <i>{{ filenews.context.questionnaire.totalNumber || 0 }}</i>
       </span>
       <span class="useful number">
         有效问卷数
         <img src="/useful.png" alt="" />
-        <i>80</i>
+        <i>{{ filenews.context.questionnaire.totalNumber || 0 }}</i>
       </span>
       <span class="plan number">
         计划问卷数
         <img src="/plan.png" alt="" />
         <div class="planbox">
           <i v-show="PlannumShow">
-            {{ plannum }}
+            {{ filenews.context.questionnaire.effectiveNumber || 0 }}
             <img
               class="change"
               style="display: inline"
@@ -31,7 +31,7 @@
             ref="planinput"
             type="number"
             v-show="!PlannumShow"
-            v-model.number="plannum"
+            v-model.number="filenews.context.questionnaire.totalNumber"
             placeholder="请输入计划问卷数"
             @blur="PlannumShow = true"
             @keyup.enter="PlannumShow = true"
@@ -66,28 +66,31 @@
       <span class="reputation number">
         用户平均信誉度
         <img src="/credit.png" alt="" />
-        <i>90%</i>
+        <i>0</i>
       </span>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, nextTick, onMounted, onBeforeUpdate, watch } from "vue";
+import { ref, nextTick, onMounted, onBeforeUpdate, watch, reactive } from "vue";
 import emitter from "../../mitt";
 import { useStore } from "../../PiniaStores/index.js";
 const datas = useStore();
 import axios from "axios";
 
+//接收确定是哪一份问卷
 let num = ref("");
 emitter.on("filenum", (e) => {
   num.value = e;
 });
 watch(num, (newnum) => {
-  console.log(num.value);
   getfile();
 });
 
+let filenews = reactive({
+  context: { questionnaire: { totalNumber: 0, effectiveNumber: 0 } },
+});
 function getfile() {
   axios({
     url: `https://q.denglu1.cn/user/questionnaireDetail/${parseInt(num.value)}`,
@@ -98,6 +101,7 @@ function getfile() {
   })
     .then((response) => {
       console.log(response);
+      filenews.context = response.data.data;
     })
     .catch((error) => {
       console.log(error);
@@ -116,7 +120,7 @@ function ChangePlanShow() {
 
 //总支出数量修改
 let Moneyinput = ref(null); //
-let Moneynum = ref(100); //总支出调查
+let Moneynum = ref(0); //总支出调查
 let MoneyShow = ref(true); //总支出input框是否显示
 function ChangeMoneyShow() {
   MoneyShow.value = false;
