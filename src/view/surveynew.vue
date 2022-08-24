@@ -318,7 +318,7 @@ async function pushfile() {
       data: {
         questionnaire: {
           userId: datas.user.userId,
-          totalNumber: 1,
+          totalNumber: 100,
           message: filetitle.info_para,
           title: filetitle.info_title,
         },
@@ -351,7 +351,7 @@ async function pushfile() {
       data: {
         questionnaire: {
           userId: datas.user.userId,
-          totalNumber: 1,
+          totalNumber: 100,
           message: filetitle.info_para,
           title: filetitle.info_title,
         },
@@ -385,7 +385,7 @@ async function pushfile() {
       data: {
         questionnaire: {
           userId: datas.user.userId,
-          totalNumber: 1,
+          totalNumber: 100,
           message: filetitle.info_para,
           title: filetitle.info_title,
         },
@@ -423,7 +423,7 @@ async function pushfile() {
       data: {
         questionnaire: {
           userId: datas.user.userId,
-          totalNumber: 1,
+          totalNumber: 100,
           message: filetitle.info_para,
           title: filetitle.info_title,
           count: 2,
@@ -458,7 +458,7 @@ async function pushfile() {
       data: {
         questionnaire: {
           userId: datas.user.userId,
-          totalNumber: 1,
+          totalNumber: 100,
           message: filetitle.info_para,
           title: filetitle.info_title,
         },
