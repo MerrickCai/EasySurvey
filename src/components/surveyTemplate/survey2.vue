@@ -90,34 +90,128 @@
                 <el-button type="primary" class="finish-submit">完成答题</el-button>
             </div>
         </div>
-
-
     </div>
 </template>
 
 <script setup>
 import { inject, ref, computed, nextTick,onMounted ,reactive,defineProps} from 'vue';
 const currentSurvey = inject('currentSurvey')
-
-
 import { useStore } from '../../PiniaStores/index.js'
+import axios from 'axios';
 //数据
 const datas = useStore();
-// 当前的应该是哪个页面
-const survey = computed(() => datas.survey.survey2[0]);
 
-// // 接受survey父组件传过来的参数。
+
+// ------------------接收survey父组件传过来的参数。-------------------------------
 const props = defineProps(['surveyObj']);
+// 从父组件拿到数据
 const surveyObj = computed(() => props.surveyObj)
 
 
-// 用来给上面的模板计算每次thumb应该移动多少的
-const barArr = new Array(survey.value.questionList.length).fill(0).map((item, index) => new Array(survey.value.questionList[index].secscore + 1));
+// 封装一个survey---------------用以在模板和存放提交时候的用户数据------------------（按照PiniStores中的结构模板来封装的）
+const survey = reactive({});
+// survey的介绍和提交问卷用的信息
+survey.intro = {};  
+survey.effectiveNumber = surveyObj.value.questionnaire.effectiveNumber;
+survey.totalNumber = surveyObj.value.questionnaire.totalNumber;
+survey.count = surveyObj.value.questionnaire.count;
+survey.id = surveyObj.value.questionnaire.id;
+survey.intro.info_title = surveyObj.value.questionnaire.title;
+survey.intro.info_para = surveyObj.value.questionnaire.message;
+
+// survey的问题列表数据
+survey.questionList = []; 
+let optionDetail = [];  //装每一项option的数据
+for (let i in surveyObj.value.optionMap) {
+  let t1 = [];
+  for (let j = 0; j < surveyObj.value.optionMap[i].length; j++){
+      t1.push({
+          detail: surveyObj.value.optionMap[i][j].detail,
+          value: 0,
+          isEdit: false,
+          id:surveyObj.value.optionMap[i][j].id
+      });
+  }
+  optionDetail.push(t1);
+}
+
+let start = 0;  
+// 配置每一道题目
+for (let i in surveyObj.value.questionInfoMap) {
+  let item = surveyObj.value.questionInfoMap[i];
+    i/= 1;
+    let obj = {};
+    obj.questiontitle = item.info;  //题目
+    obj.value = 0;  
+    obj.titleBorder = 0; 
+    obj.progressPartbcg = '#ccc';
+    obj.question = optionDetail[start];
+    obj.questionId = surveyObj.value.optionMap[i][1].questionId;
+    // obj.seleted = 0;
+    obj.silderSrc ='/blue.png';
+    obj.score = item.dominate;
+    obj.staticScore = obj.score;
+    obj.secscore = surveyObj.value.optionMap[i][0].dominate;
+    start++;
+    survey.questionList.push(obj)
+}
+console.log('封装好的数据', survey);
+// -------------------------------------------------
+
+
+
+
+//------------------ 提交问卷请求---------------
+function sumbit() {
+  // 请求参数里面的问卷信息列表
+    const optionList = [];
+    const scoreList = [];
+    for (let item of survey.questionList) {
+       for (let elem of item.question) {
+          let obj = {};
+           obj.questionId = item.questionId;
+           obj.id = elem.id;
+           optionList.push(obj);
+           scoreList.push(elem.value);
+       }   
+  }
+     axios({
+        url: `https://q.denglu1.cn/questions/commit`,
+        method: 'post',
+        withCredentials: true,
+        headers: { 'Content-Type': 'application/json' },
+        headers: { 'token': datas.user.token },
+        data: {
+          "questionnaire_id": survey.id,
+          "totalNumber": survey.totalNumber,
+          "count":survey.count,     
+          "effectiveNumber":survey.effectiveNumber,  
+           "optionList": optionList,
+           "scoreList":scoreList
+        }
+     }).then((response) => {
+        console.log(response);
+       if (response.data.code === 200) {
+          console.log(survey);
+          
+        //  currentSurvey.toEnd();
+        } else {
+          alert('提交失败')
+        } 
+      }).catch((error) => {
+        console.log(error)
+      })
+}
+
+
+
+
+
 
 
 // -----跳转：介绍页==>答题页--------
 function toContent() { 
-    currentSurvey.status.toOngoing();
+    currentSurvey.toOngoing();
 }
 
 
@@ -127,7 +221,7 @@ function toContent() {
 function distributeScore(elem, item, num) {
     let newValue = num / 1;
     let oldValue = elem.value / 1;
-    const staticScore = survey.value.questionList[0].score;
+    const staticScore = survey.questionList[0].score;
     if (item.score <= 0) {
         if (oldValue < newValue) {
             return
@@ -148,9 +242,6 @@ function distributeScore(elem, item, num) {
         item.bcg = '#f5f5f5';
         item.silderSrc = '/blue.png';
     }
-    // console.log(elem.value);
-    //  console.log(-6+(elem.value)*40);
-
 }
 
 
@@ -227,24 +318,25 @@ function onScroll(e) {
 // 获取全部questiontitle
 const questiontitle = ref(null);
 // 进度条片段的高度
-const progressPartHeight = 300 / (survey.value.questionList.length);
+const progressPartHeight = 300 / (survey.questionList.length);
 
 // 提交按钮  跳转：答题页==>完成页
 function toFinish() {
     let flag = true;
     // 记录未完成的问卷id
     const uncomplete = [];
-    // 滚动的蓝色背景失效
-    bluebcg.value.style.display = 'none';
-    survey.value.questionList.forEach(item => {
+    let queId = 1;
+    bluebcg.value.style.display = 'none';      // 进度条滚动的蓝色背景失效
+    survey.questionList.forEach(item => {
         item.titleBorder = 0;
         item.progressPartbcg = '#5a9afa';
         if (item.score !== 0) {
             flag = false;
-            uncomplete.push(item.id);
+            uncomplete.push(queId);
             item.titleBorder = 1;
             item.progressPartbcg = 'red';
         }
+        queId++;
     });
     // console.log(uncomplete); 
     // console.log(questiontitle.value[0].offsetTop); 保存对应未完成题目距离顶部的距离
@@ -255,13 +347,13 @@ function toFinish() {
     }
     //    console.log(progressPartHeight);
     if (!flag) return
-    currentSurvey.status.toEnd();
+    sumbit();
 }
 
 
 
-
-
+//--------- 用来给上面的模板计算每次thumb应该移动多少的------
+const barArr = new Array(survey.questionList.length).fill(0).map((item, index) => new Array(survey.questionList[index].secscore + 1));
 
 </script>
 
@@ -611,7 +703,6 @@ div[wrapper] {
             bottom: 6px;
             display: flex;
             justify-content: space-between;
-            background-color: pink;
             @Width: 400px;
 
             .barStyle() {

@@ -1,7 +1,7 @@
 <template>
     <div wrapper>
         <!-- 介绍页 -->
-        <div class="wrapper" v-if="status.begin">
+        <div class="wrapper" v-if="currentSurvey.status.begin">
             <h2 class="title">{{ survey.intro.info_title }}</h2>
             <p class="second-title">问卷介绍：</p>
             <p class="para">{{ survey.intro.info_para }}</p>
@@ -9,7 +9,7 @@
         </div>
 
         <!-- 问卷内容部分 -->
-        <div class="wrapper extrachange" v-if="status.ongoing">
+        <div class="wrapper extrachange" v-if="currentSurvey.status.ongoing">
             <div class="topbox">
                 <h2 class="top_title">{{ survey.intro.info_title }}</h2>
                 <h5 class="top_sectitle">问卷介绍：</h5>
@@ -55,7 +55,7 @@
 
 
         <!-- 问卷完成部分 -->
-        <div class="finish-wrapper" v-if="status.end">
+        <div class="finish-wrapper" v-if="currentSurvey.status.end">
             <div class="innerbox">
                 <div class="finish-title">
                     <h2>您已完成</h2>
@@ -69,11 +69,11 @@
 </template>
 
 <script setup>
-import { inject } from 'vue'
-const status = inject('status')
-import { ref, reactive, toRefs, onBeforeMount, onMounted, watchEffect, computed } from 'vue';
+import axios from 'axios'
+import { ref, reactive, toRefs, onBeforeMount, onMounted, watchEffect, computed ,inject} from 'vue';
 import { useStore } from '../../PiniaStores/index.js'
 const datas = useStore();
+const currentSurvey = inject('currentSurvey')
 
 const survey = computed(() => {
     return datas.survey.survey4[0];
@@ -81,7 +81,7 @@ const survey = computed(() => {
 
 // -----跳转：介绍页==>答题页--------
 function toContent() { 
-    status.toOngoing();
+    currentSurvey.toOngoing();
 }
 
 
@@ -139,15 +139,15 @@ function seleted(item, i, e) {
     //这个数组保存的就是目前点击的checkbox对应题目的全部input的dom
     const Oneques_input = input.value.slice(start, start + item.option.length);
 
-    survey.value.questionList[i].value = [];
+    survey.questionList[i].value = [];
     Oneques_input.forEach(elem => {
         // input的dom的checked属性保存了是否被选中 
         // console.log(elem.checked);
         if (elem.checked) {
-            survey.value.questionList[i].value.push(elem.value);
+            survey.questionList[i].value.push(elem.value);
         }
     })
-    console.log(survey.value.questionList[i].value);
+    console.log(survey.questionList[i].value);
 
 }
 
@@ -156,37 +156,31 @@ function seleted(item, i, e) {
 // 获取全部questiontitle
 const questiontitle = ref(null);
 // 进度条片段的高度
-const progressPartHeight = 300 / (survey.value.questionList.length);
+const progressPartHeight = 300 / (survey.questionList.length);
 
 // 提交按钮  跳转：答题页==>完成页
 function toFinish() {
-
-    let flag = true;
-    // 记录未完成的问卷id
-    const uncomplete = [];
-    // 滚动的蓝色背景失效
-    bluebcg.value.style.display = 'none';
-    survey.value.questionList.forEach(item => {
+       let flag = true;
+    const uncomplete = [];   // 记录未完成的问卷id
+    bluebcg.value.style.display = 'none';  // 滚动的蓝色背景失效
+       let queId = 1;  
+    survey.questionList.forEach(item => {
         item.titleBorder = 0;
         item.progressPartbcg = '#5a9afa';
         if (item.value.length === 0) {
             flag = false;
-            uncomplete.push(item.id);
+            uncomplete.push(queId);
             item.titleBorder = 1;
             item.progressPartbcg = 'red';
         }
+        queId++;
     });
-    // console.log(uncomplete); 
-    // console.log(questiontitle.value[0].offsetTop); 保存对应未完成题目距离顶部的距离
-
     let fisrtreturn = uncomplete[0] - 1;
     if (uncomplete.length) {
         content.value.scrollTop = questiontitle.value[fisrtreturn].offsetTop;
     }
-    //    console.log(progressPartHeight);
-
     if (!flag) return
-    status.toEnd();
+    currentSurvey.toEnd();
 }
 
 </script>

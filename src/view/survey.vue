@@ -25,15 +25,14 @@ onMounted(() => {
 
 //网络请求获取问卷类型和问卷数据，然后加载对应的问卷模板并响应式填充问卷数据
 //问卷填写的状态（问卷介绍，填写问卷，填写结束）=>传给问卷模板组件
-
 const currentSurvey = reactive({
-      //问卷的填写状态：填写前，填写中，填写完
+     //问卷的填写状态：填写前，填写中，填写完
   status: {
       begin: true,
       ongoing: false,
       end: false,
   },
-  //从网络请求获取到的问卷数据
+  //从网络请求获取到的问卷数据存入这里
   surveyObj: {
   },
   toOngoing() {
@@ -46,7 +45,7 @@ const currentSurvey = reactive({
   },
   getSurvey() {
     axios({
-        url: `https://q.denglu1.cn/user/fillQuestionnaire/${1}`,
+        url: `https://q.denglu1.cn/user/fillQuestionnaire/${13}`,
         method: 'get',
         withCredentials: true,
         headers: { 'Content-Type': 'application/json' },
@@ -54,8 +53,10 @@ const currentSurvey = reactive({
         }).then((response) => {
         // 该值传递通过props传递给子组件
           this.surveyObj = response.data.data;
-        //假设获取到的问卷类型是2
-          viewId.value = 1;  
+         console.log('请求参数',this.surveyObj);
+   
+       //假设获取到的问卷类型是2
+          viewId.value = 3;  
       }).catch((error) => {
         console.log(error)
       })

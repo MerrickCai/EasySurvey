@@ -1,7 +1,7 @@
 <template>
     <div wrapper>
         <!-- 介绍页 -->
-        <div class="wrapper" v-if="status.begin">
+        <div class="wrapper" v-if="currentSurvey.status.begin">
             <h2 class="title">{{ survey.intro.info_title }}</h2>
             <p class="second-title">问卷介绍：</p>
             <p class="para">{{ survey.intro.info_para }}</p>
@@ -9,7 +9,7 @@
         </div>
 
         <!-- 问卷内容部分 -->
-        <div class="wrapper extrachange" v-if="status.ongoing">
+        <div class="wrapper extrachange" v-if="currentSurvey.status.ongoing">
             <div class="topbox">
                 <h2 class="top_title">{{ survey.intro.info_title }}</h2>
                 <h5 class="top_sectitle">问卷介绍：</h5>
@@ -50,7 +50,7 @@
 
 
         <!-- 问卷完成部分 -->
-        <div class="finish-wrapper" v-if="status.end">
+        <div class="finish-wrapper" v-if="currentSurvey.status.end">
             <div class="innerbox">
                 <div class="finish-title">
                     <h2>您已完成</h2>
@@ -65,7 +65,8 @@
 
 <script setup>
 import { inject } from 'vue'
-const status = inject('status')
+const currentSurvey = inject('currentSurvey')
+import axios from 'axios'
 import { ref, reactive, toRefs, onBeforeMount, onMounted, watchEffect, computed } from 'vue';
 import { useStore } from '../../PiniaStores/index.js'
 const datas = useStore();
@@ -77,7 +78,7 @@ const survey = computed(() => {
 
 // -----跳转：介绍页==>答题页--------
 function toContent() { 
-    status.toOngoing();
+    currentSurvey.toOngoing();
 }
 
 
@@ -148,15 +149,15 @@ function toFinish() {
     survey.value.questionList.forEach(item => {
         item.titleBorder = 0;
         item.progressPartbcg = '#5a9afa';
+        let queId = 1;
         if (item.value === 0) {
             flag = false;
-            uncomplete.push(item.id);
+            uncomplete.push(queId);
             item.titleBorder = 1;
             item.progressPartbcg = 'red';
         }
+        queId++;
     });
-    // console.log(uncomplete); 
-    // console.log(questiontitle.value[0].offsetTop); 保存对应未完成题目距离顶部的距离
 
     let fisrtreturn = uncomplete[0] - 1;
     if (uncomplete.length) {
@@ -165,7 +166,7 @@ function toFinish() {
     //    console.log(progressPartHeight);
 
     if (!flag) return
-    status.toEnd();
+    currentSurvey.toEnd();
 }
 
 </script>
