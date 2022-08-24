@@ -15,6 +15,9 @@ const surveyTemplateList = [survey1, survey2, survey3, survey4, survey5];
 const viewId = ref(0); //一开始不加载
 const currentView = computed(() => surveyTemplateList[viewId.value - 1]);
 
+import { useRoute } from "vue-router";
+const route = useRoute();
+
 // 发送请求拿到数据，先假设是第一个问卷
 onMounted(() => {
   currentSurvey.getSurvey();
@@ -30,7 +33,7 @@ const currentSurvey = reactive({
     ongoing: false,
     end: false,
   },
-  //从网络请求获取到的问卷数据
+  //从网络请求获取到的问卷数据存入这里
   surveyObj: {},
   toOngoing() {
     this.status.begin = false;
@@ -42,18 +45,23 @@ const currentSurvey = reactive({
   },
   getSurvey() {
     axios({
-      url: `https://q.denglu1.cn/user/fillQuestionnaire/${1}`,
+      // url: `https://q.denglu1.cn/user/fillQuestionnaire/${13}`,
+      url: `https://q.denglu1.cn/user/fillQuestionnaire/$  {route.params.questionnaireId}`,
       method: "get",
       withCredentials: true,
       headers: { "Content-Type": "application/json" },
       headers: { token: datas.user.token },
     })
       .then((response) => {
-        console.log(response);
         // 该值传递通过props传递给子组件
         this.surveyObj = response.data.data;
+        console.log("请求参数", this.surveyObj);
+
         //假设获取到的问卷类型是2
-        viewId.value = 1;
+        viewId.value = 3;
+      })
+      .catch((error) => {
+        console.log(error);
       })
       .catch((error) => {
         console.log(error);

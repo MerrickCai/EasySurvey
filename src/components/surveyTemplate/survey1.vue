@@ -1,24 +1,22 @@
 <script setup>
 //问卷填写的状态（问卷介绍，填写问卷，填写结束）
 import axios from "axios";
-import { ref, onMounted, inject, computed ,reactive,defineProps} from "vue";
+import { ref, onMounted, inject, computed ,reactive} from "vue";
 const currentSurvey = inject("currentSurvey");
+import { useStore } from "../../PiniaStores/index.js";
+const datas = useStore();
 
-
-
-
-// 接受survey父组件传过来的参数。
+// ------------------接受survey父组件传过来的参数。-------------------------------
 const props = defineProps(['surveyObj']);
-
+// 从父组件拿到数据
 const surveyObj = computed(() => props.surveyObj)
-onMounted(() => {
-  // console.log(props);
- console.log('请求参数',surveyObj.value);
-});
 
-// 封装survey-------给模板用--------
+
+
+// 封装一个survey---------------用以在模板和存放提交时候的用户数据------------------（按照PiniStores中的结构模板来封装的）
 const survey = reactive({});
-survey.intro = {};
+// survey的介绍和提交问卷用的信息
+survey.intro = {};  
 survey.effectiveNumber = surveyObj.value.questionnaire.effectiveNumber;
 survey.totalNumber = surveyObj.value.questionnaire.totalNumber;
 survey.count = surveyObj.value.questionnaire.count;
@@ -26,11 +24,10 @@ survey.id = surveyObj.value.questionnaire.id;
 survey.intro.title = surveyObj.value.questionnaire.title;
 survey.intro.intro_content = surveyObj.value.questionnaire.message;
 
-
-
-survey.quesList = [];
-let optionDetail = [];
-let optionId = [];
+// survey的问题列表数据
+survey.quesList = []; 
+let optionDetail = [];  //装全部的选项的文字描述（如比较符合....这些）
+let optionId = [];   //装全部选项对应的ID
 for (let i in surveyObj.value.optionMap) {
   let t1 = [];
   let t2 = [];
@@ -42,29 +39,33 @@ for (let i in surveyObj.value.optionMap) {
   optionId.push(t2)
 }
 
+let start = 0; //  因为optionDetail和optionId是数组，是以0开始的，所以在赋值给每一项的时候索引要从0开始。
 // 配置每一道题目
 for (let i in surveyObj.value.questionInfoMap) {
   let item = surveyObj.value.questionInfoMap[i].info;
-  // 自己定义的数组从0开始就要-1，其他不用-1；
     i/= 1;
     let obj = {};
     obj.ques = item;  //题目
     obj.value = 0;  
     obj.titleBorder = 0; 
     obj.progressPartbcg = '#ccc';
-    obj.series = optionDetail[i-1].length;
-    obj.font = optionDetail[i-1];
+    obj.series = optionDetail[start].length;
+    obj.font = optionDetail[start];
     obj.questionId = surveyObj.value.optionMap[i][1].questionId;
-    obj.optionId = optionId[i - 1];
+    obj.optionId = optionId[start];
     obj.seleted = 0;
+    start++;
     survey.quesList.push(obj)
 }
-
 console.log('封装好的数据', survey);
+// -------------------------------------------------
 
 
-  
+
+
+//------------------ 提交问卷请求，在toFinish函数里面被调用---------------
 function sumbit() {
+  // 请求参数里面的问卷信息列表
    const optionList = [];
   for(let item of survey.quesList) {
        let obj = {};
@@ -73,8 +74,7 @@ function sumbit() {
     obj.detail = item.font[item.value-1]; 
     optionList.push(obj);
   }
-console.log(optionList);
-
+// console.log(optionList);
      axios({
         url: `https://q.denglu1.cn/questions/commit`,
         method: 'post',
@@ -91,18 +91,24 @@ console.log(optionList);
      }).then((response) => {
         console.log(response);
        if (response.data.code === 200) {
+          console.log(survey);
+          
          currentSurvey.toEnd();
-        console.log(survey);
-        
-       } else {
+        } else {
           alert('提交失败')
-       } 
+        } 
       }).catch((error) => {
         console.log(error)
       })
 }
 
-// ----------滚动条-----------
+
+
+
+
+
+
+// -------------滚动条--------------
 const thumb = ref(null);
 const text = ref(null);
 const content = ref(null);
@@ -150,6 +156,8 @@ function onScroll(e) {
 
 
 
+
+
 // ------提交按钮之后相关的变量和方法------
 // 获取全部questiontitle
 const ques = ref(null);
@@ -163,25 +171,30 @@ function toFinish() {
   const uncomplete = [];
   // 滚动的蓝色背景失效
   bluebcg.value.style.display = "none";
+  let queId = 1;
  survey.quesList.forEach((item) => {
     item.titleBorder = 0;
     item.progressPartbcg = "#5a9afa";
     if (item.value === 0) {
       flag = false;
-      uncomplete.push(item.id);
+      uncomplete.push(queId);
       item.titleBorder = 1;
       item.progressPartbcg = "red";
-    }
+   }
+    queId++;
   });
   let fisrtreturn = uncomplete[0] - 1;
   if (uncomplete.length) {
     content.value.scrollTop = ques.value[fisrtreturn].offsetTop;
   }
-
   if (!flag) return;
-  sumbit();
+   sumbit();
 }
 
+
+
+
+// ----------用来判断滑块每次该滑动多远的距离----------
 const barArr = new Array(survey.quesList.length)
   .fill(0)
   .map((item, index) =>
@@ -189,12 +202,10 @@ const barArr = new Array(survey.quesList.length)
 );
 
 
-
 </script>
 
 <template>
   <div wrapper>
-
 
     <!--问卷介绍-->
     <template v-if="currentSurvey.status.begin">
@@ -240,37 +251,14 @@ const barArr = new Array(survey.quesList.length)
                 <span></span><span>{{ item.ques }}</span>
               </div>
               <!-- 总宽度为600-->
-              <div :style="{
-                backgroundColor: `${item.value === 0
-                  ? 'rgba(245, 245, 245, 1)'
-                  : 'rgb(229,229,229)'
-                  }`,
-              }">
+              <div :style="{backgroundColor: `${item.value === 0 ? 'rgba(245, 245, 245, 1)' : 'rgb(229,229,229)'}`,}">
                 <!-- bar -->
-                <div
-                  v-for="(b, i) of barArr[index]"
-                  class="bar"
-                  @click="item.value = i + 1; item.seleted=item.optionId[i]; "
-                >
-
+                <div v-for="(b, i) of barArr[index]" class="bar"  @click="item.value = i + 1; item.seleted=item.optionId[i]; ">
                   <div class="font">
                     {{ survey.quesList[index].font[i] }}
                   </div>
                 </div>
-                <div class="thumb" :style="{
-                  left: `${item.value === 0
-                    ? -12
-                    : -12 +
-                    ((item.value - 1) * 600) / (barArr[index].length - 1)
-                    }px`,
-                }"></div>
-                <div class="thumb" :style="{
-                  left: `${item.value === 0
-                    ? -12
-                    : -12 +
-                    ((item.value - 1) * 600) / (barArr[index].length - 1)
-                    }px`,
-                }"></div>
+                <div class="thumb" :style="{left: `${item.value === 0 ? -12 : -12 + ((item.value - 1) * 600) / (barArr[index].length - 1)}px`, }"></div>
               </div>
             </div>
           </div> 

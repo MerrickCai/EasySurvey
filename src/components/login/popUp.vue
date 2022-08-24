@@ -1,7 +1,34 @@
 <script setup>
-import { reactive } from "vue";
-//跳过
+import { onMounted, reactive, ref, computed, watch } from "vue"
+
+
+
+//跳过逻辑
+const count = ref(5)
+const countShow = computed(() => {
+  if (count.value !== 0) {
+    return ` (${count.value})`
+  } else {
+    return ``
+  }
+})
+const jump_cursor = ref('default')
+onMounted(() => {
+  let id
+  function countDown() {
+    if (count.value === 1) {
+      clearInterval(id)
+      jump_cursor.value = 'pointer'
+    }
+    count.value--
+  }
+  id = setInterval(countDown, 1000)
+})
 function jump() {
+  if (count.value !== 0) { //判断倒计时是否结束
+    alert('请稍后跳过')
+    return false
+  }
   if (route.query.redirect) {
     //判断用户是否从其他页面过来
     router.push({ path: route.query.redirect });
@@ -9,7 +36,42 @@ function jump() {
     router.push({ path: "/" });
   }
 }
-//信息填写逻辑
+
+
+
+//确定按键变色
+const confirmStyle = reactive({
+  bgColor: 'rgba(235, 245, 255, 1)',
+  color: 'rgba(140, 140, 140, 1)',
+  cursor: 'default'
+})
+const confirm = reactive({
+  area: false,
+  age: false
+})
+watch(confirm, (n, o) => {
+  if (n.area && n.age) {
+    confirmStyle.bgColor = 'rgba(30, 111, 255, 1)'
+    confirmStyle.color = 'rgba(255, 255, 255, 1)'
+    confirmStyle.cursor = 'pointer'
+  }
+})
+
+
+
+
+//地区数据
+import area from "../../PiniaStores/area.js";
+const props = {
+  expandTrigger: "hover",
+  children: "childs",
+  value: "name",
+  label: "name",
+};
+
+
+
+//信息上传交互提交逻辑
 const user = reactive({ area: "", age: "" });
 import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
@@ -26,16 +88,11 @@ function validate(age) {
   }
   return true;
 }
-//地区数据
-import area from "../../PiniaStores/area.js";
-const props = {
-  expandTrigger: "hover",
-  children: "childs",
-  value: "name",
-  label: "name",
-};
-//上传交互
 async function upLoad(area, age) {
+  if (!(confirm.area && confirm.age)) { //没填完
+    alert('请填写信息')
+    return false
+  }
   if (!validate(age)) {
     //表单验证
     return false;
@@ -82,22 +139,18 @@ async function upLoad(area, age) {
         <div>所在地区</div>
       </div>
       <div areaSelect>
-        <el-cascader
-          v-model="user.area"
-          placeholder="请选择所在地区"
-          :options="area"
-          :props="props"
-          separator=" "
-        />
+        <el-cascader @change="confirm.area = true" v-model="user.area" placeholder="请选择所在地区" :options="area"
+          :props="props" separator=" " />
       </div>
       <div class="title">
         <div>您的年龄</div>
       </div>
-      <input type="text" v-model="user.age" placeholder="请输入您的年龄" />
+      <input @change="confirm.age = true" @input="confirm.age = true" type="text" v-model="user.age"
+        placeholder="请输入您的年龄" />
     </div>
     <div button>
-      <div @click="jump">跳过</div>
-      <div @click="upLoad(user.area, user.age)">确认</div>
+      <div jump @click="jump">跳过{{ countShow }}</div>
+      <div confirm @click="upLoad(user.area, user.age)">确认</div>
     </div>
   </div>
 </template>
@@ -111,7 +164,7 @@ div.wrapper {
   height: 400px;
   width: 420px;
 
-  > div.titleArea {
+  >div.titleArea {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -119,7 +172,7 @@ div.wrapper {
     height: 100px;
     width: 100%;
 
-    > p {
+    >p {
       display: block;
       font-size: 18px;
       color: rgba(0, 0, 0, 1);
@@ -131,7 +184,7 @@ div.wrapper {
     }
   }
 
-  > div.typeArea {
+  >div.typeArea {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -139,7 +192,7 @@ div.wrapper {
     height: 200px;
     width: 70%;
 
-    > div[areaSelect] {
+    >div[areaSelect] {
       display: flex;
       flex-direction: row;
       justify-content: center;
@@ -177,7 +230,7 @@ div.wrapper {
       }
     }
 
-    > div.title {
+    >div.title {
       display: flex;
       flex-direction: row;
       justify-content: flex-start;
@@ -186,7 +239,7 @@ div.wrapper {
       width: 100%;
       margin-bottom: 10px;
 
-      > div {
+      >div {
         color: rgba(0, 0, 0, 1);
         font-size: 16px;
         position: relative;
@@ -205,7 +258,7 @@ div.wrapper {
       }
     }
 
-    > input {
+    >input {
       display: block;
       outline: none;
       height: 45px;
@@ -223,7 +276,7 @@ div.wrapper {
     }
   }
 
-  > div[button] {
+  >div[button] {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -231,18 +284,28 @@ div.wrapper {
     height: 100px;
     width: 70%;
 
-    > div {
+    >div {
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       height: 35px;
-      background-color: rgba(30, 111, 255, 1);
+      background-color: rgba(235, 245, 255, 1);
       border-radius: 10px;
       width: 35%;
-      color: rgba(255, 255, 255, 1);
+      color: rgba(140, 140, 140, 1);
       font-size: 14px;
       cursor: pointer;
+
+      &[jump] {
+        cursor: v-bind('jump_cursor');
+      }
+
+      &[confirm] {
+        background-color: v-bind('confirmStyle.bgColor');
+        color: v-bind('confirmStyle.color');
+        cursor: v-bind('confirmStyle.cursor');
+      }
     }
   }
 }
