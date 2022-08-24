@@ -15,7 +15,8 @@ const surveyTemplateList = [survey1, survey2, survey3, survey4, survey5]
 const viewId = ref(0) //一开始不加载
 const currentView = computed(() => surveyTemplateList[viewId.value - 1])
 
-
+import { useRoute } from 'vue-router'
+const route=useRoute()
 
 // 发送请求拿到数据，先假设是第一个问卷
 onMounted(() => {
@@ -25,6 +26,8 @@ onMounted(() => {
 
 //网络请求获取问卷类型和问卷数据，然后加载对应的问卷模板并响应式填充问卷数据
 //问卷填写的状态（问卷介绍，填写问卷，填写结束）=>传给问卷模板组件
+
+
 const currentSurvey = reactive({
      //问卷的填写状态：填写前，填写中，填写完
   status: {
@@ -45,7 +48,8 @@ const currentSurvey = reactive({
   },
   getSurvey() {
     axios({
-        url: `https://q.denglu1.cn/user/fillQuestionnaire/${13}`,
+        // url: `https://q.denglu1.cn/user/fillQuestionnaire/${13}`,
+        url: `https://q.denglu1.cn/user/fillQuestionnaire/$  {route.params.questionnaireId}`,
         method: 'get',
         withCredentials: true,
         headers: { 'Content-Type': 'application/json' },
