@@ -1,79 +1,89 @@
 <script setup>
-import { provide, ref, computed,reactive,toRef,onMounted} from 'vue'
+import { provide, ref, computed, reactive, toRef, onMounted } from "vue";
 
-import axios from 'axios';
+import axios from "axios";
 //问卷模板子组件
 //目前有五套：矩阵，量表（特殊：贝尔宾），单选，多选，文本。分别对应类型1-5
-import survey1 from '../components/surveyTemplate/survey1.vue'
-import survey2 from '../components/surveyTemplate/survey2.vue'
-import survey3 from '../components/surveyTemplate/survey3.vue'
-import survey4 from '../components/surveyTemplate/survey4.vue'
-import survey5 from '../components/surveyTemplate/survey5.vue'
-import { useStore } from '../PiniaStores/index.js'
+import survey1 from "../components/surveyTemplate/survey1.vue";
+import survey2 from "../components/surveyTemplate/survey2.vue";
+import survey3 from "../components/surveyTemplate/survey3.vue";
+import survey4 from "../components/surveyTemplate/survey4.vue";
+import survey5 from "../components/surveyTemplate/survey5.vue";
+import { useStore } from "../PiniaStores/index.js";
 const datas = useStore();
-const surveyTemplateList = [survey1, survey2, survey3, survey4, survey5]
-const viewId = ref(0) //一开始不加载
-const currentView = computed(() => surveyTemplateList[viewId.value - 1])
-
-
+const surveyTemplateList = [survey1, survey2, survey3, survey4, survey5];
+const viewId = ref(0); //一开始不加载
+const currentView = computed(() => surveyTemplateList[viewId.value - 1]);
 
 // 发送请求拿到数据，先假设是第一个问卷
 onMounted(() => {
   currentSurvey.getSurvey();
 });
 
-
 //网络请求获取问卷类型和问卷数据，然后加载对应的问卷模板并响应式填充问卷数据
 //问卷填写的状态（问卷介绍，填写问卷，填写结束）=>传给问卷模板组件
 
 const currentSurvey = reactive({
-      //问卷的填写状态：填写前，填写中，填写完
+  //问卷的填写状态：填写前，填写中，填写完
   status: {
-      begin: true,
-      ongoing: false,
-      end: false,
+    begin: true,
+    ongoing: false,
+    end: false,
   },
   //从网络请求获取到的问卷数据
-  surveyObj: {
-  },
+  surveyObj: {},
   toOngoing() {
-    this.status.begin = false
-    this.status.ongoing = true
+    this.status.begin = false;
+    this.status.ongoing = true;
   },
   toEnd() {
-    this.status.ongoing = false
-    this.status.end = true
+    this.status.ongoing = false;
+    this.status.end = true;
   },
   getSurvey() {
     axios({
-        url: `https://q.denglu1.cn/user/fillQuestionnaire/${1}`,
-        method: 'get',
-        withCredentials: true,
-        headers: { 'Content-Type': 'application/json' },
-        headers: { 'token': datas.user.token }
-        }).then((response) => {
+      url: `https://q.denglu1.cn/user/fillQuestionnaire/${1}`,
+      method: "get",
+      withCredentials: true,
+      headers: { "Content-Type": "application/json" },
+      headers: { token: datas.user.token },
+    })
+      .then((response) => {
+        console.log(response);
         // 该值传递通过props传递给子组件
-          this.surveyObj = response.data.data;
+        this.surveyObj = response.data.data;
         //假设获取到的问卷类型是2
-          viewId.value = 1;  
-      }).catch((error) => {
-        console.log(error)
+        viewId.value = 1;
       })
-  }
+      .catch((error) => {
+        console.log(error);
+      });
+  },
 });
 
 //provide给问卷模板子组件当前问卷的状态和数据
-provide('currentSurvey', currentSurvey)
+provide("currentSurvey", currentSurvey);
 </script>
 
 <template>
   <div class="wrapper">
-
     <!--装饰品-->
-    <div class="decoration1" v-show="currentSurvey.status.begin || currentSurvey.status.end"></div>
-    <div class="decoration2" v-show="currentSurvey.status.begin || currentSurvey.status.end"></div>
-    <div class="decoration3" v-show="currentSurvey.status.begin || currentSurvey.status.end"></div>
-    <div class="decoration4" v-show="currentSurvey.status.begin || currentSurvey.status.end"></div>
+    <div
+      class="decoration1"
+      v-show="currentSurvey.status.begin || currentSurvey.status.end"
+    ></div>
+    <div
+      class="decoration2"
+      v-show="currentSurvey.status.begin || currentSurvey.status.end"
+    ></div>
+    <div
+      class="decoration3"
+      v-show="currentSurvey.status.begin || currentSurvey.status.end"
+    ></div>
+    <div
+      class="decoration4"
+      v-show="currentSurvey.status.begin || currentSurvey.status.end"
+    ></div>
     <div class="decoration5"></div>
     <img dog-ear src="/tangible.png" />
     <!--装饰品-->
@@ -81,11 +91,12 @@ provide('currentSurvey', currentSurvey)
     <!--动态组件-->
     <Transition name="fade" mode="out-in">
       <KeepAlive>
-        <component :is="currentView" :survey-obj="currentSurvey.surveyObj"></component>
+        <component
+          :is="currentView"
+          :survey-obj="currentSurvey.surveyObj"
+        ></component>
       </KeepAlive>
     </Transition>
-
-
   </div>
 </template>
 

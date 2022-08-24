@@ -28,11 +28,10 @@
         </div>
       </li>
       <file
-        v-for="(item, index) in amount"
+        v-for="(item, index) of fileall[0]"
         :key="item"
         :index="index"
         :clickrotate="clickrotate"
-        @update:clickrotate="(n) => (clickrotate = n)"
       ></file>
     </el-scrollbar>
   </ul>
@@ -40,7 +39,7 @@
 <script setup>
 import { Plus } from "@element-plus/icons-vue";
 import file from "./file.vue";
-import { onMounted, ref } from "vue";
+import { onMounted, reactive, ref, onBeforeMount, nextTick } from "vue";
 //路由
 import { useRouter } from "vue-router";
 const router = useRouter();
@@ -50,6 +49,7 @@ import axios from "axios";
 function routerPush(path) {
   router.push({ path });
 }
+
 const amount = ref(3);
 let userId = datas.user.userId;
 console.log(userId);
@@ -58,18 +58,32 @@ let id = parseInt(datas.user.userId);
 console.log(id);
 console.log(typeof id);
 
-await axios({
-  url: "https://q.denglu1.cn/user/questionnaire/datas.user.userId",
-  method: "get",
-  headers: { token: datas.user.token },
-  params: { userId: datas.user.userId },
-})
-  .then((response) => {
-    console.log(response);
+let fileall = reactive([]);
+function getinfor() {
+  axios({
+    url: `https://q.denglu1.cn/user/questionnaire/${parseInt(
+      datas.user.userId
+    )}`,
+    method: "get",
+    withCredentials: true,
+    headers: { "Content-Type": "application/json" },
+    headers: { token: datas.user.token },
   })
-  .catch((error) => {
-    console.log(error);
-  });
+    .then((response) => {
+      console.log(response);
+      console.log(response.data.data);
+      fileall.push(response.data.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+console.log(1);
+getinfor();
+
+onMounted(() => {
+  console.log(fileall);
+});
 
 //问卷旋转
 let clickrotate = ref(null);

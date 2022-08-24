@@ -15,7 +15,7 @@
           {{ filetitle.info_title }}
         </p>
         <input type="text" ref="titlein" class="titlein" v-show="!titleshow" v-model="filetitle.info_title"
-          @keyup.enter="titleshow = true" @blur="titleshow = true" />
+          @keyup.enter="titlechange" @blur="titlechange" />
         <!-- 新建问卷介绍 -->
         <p class="newintro">
           <span class="newintro_title">问卷介绍:</span>
@@ -24,7 +24,7 @@
         </p>
 
         <textarea cols="30" rows="2" ref="introin" class="introin" v-show="!introshow" v-model="filetitle.info_para"
-          @keyup.enter="introshow = true" @blur="introshow = true"></textarea>
+          @keyup.enter="introchange" @blur="introchange"></textarea>
         </p>
       </div>
       <div class="quearea">
@@ -81,7 +81,7 @@ import textlist from "../components/surveynew/textlist.vue";
 import { useStore } from "../PiniaStores/index.js";
 import axios from "axios";
 //数据
-const datas = useStore()
+const datas = useStore();
 //动态组件视图
 let type = ref(1);
 let typelist = [radiolist, checkboxlist, matrixlist, scalelist, textlist];
@@ -107,6 +107,7 @@ let filetitle = reactive({
   info_para:
     "为了使问卷调查结果更加清晰，准确，请输入关于问卷的简短介绍以及注意事项，方便填写问卷的人更清晰的认识问卷，字数少于500字",
 });
+
 //存储矩阵问卷信息内容
 let fileword = reactive([
   {
@@ -157,9 +158,20 @@ function changeintroshow() {
     introin.value.focus();
   });
 }
+//问卷题目修改
+function titlechange() {
+  titleshow = true;
+  sessionStorage.setItem("title", JSON.stringify(filetitle));
+}
+//问卷题目介绍修改
+function introchange() {
+  introshow = true;
+  sessionStorage.setItem("title", JSON.stringify(filetitle));
+}
 //矩阵问卷新增问题
 function receive(quesobj) {
   fileword.push(quesobj);
+  sessionStorage.setItem("matrix", JSON.stringify(fileword));
 }
 //矩阵问卷删除问题
 function deleteques(id) {
@@ -168,6 +180,7 @@ function deleteques(id) {
       if (i.id == id) fileword.splice(x, 1);
     });
   }
+  sessionStorage.setItem("matrix", JSON.stringify(fileword));
 }
 
 //存储量表问卷信息内容
@@ -175,21 +188,21 @@ let scalefile = reactive([
   {
     question: { detail: "请输入题目标题", type: 1 },
     options: [
-      { detail: "请输入次级题目标题" },
-      { detail: "请输入次级题目标题" },
+      { detail: "请输入次级题目标题", dominate: 20 },
+      { detail: "请输入次级题目标题", dominate: 20 },
     ],
     id: nanoid(),
-    score: 60,
+    dominate: 60,
     secscore: 20,
   },
   {
     question: { detail: "请输入题目标题", type: 1 },
     options: [
-      { detail: "请输入次级题目标题" },
-      { detail: "请输入次级题目标题" },
+      { detail: "请输入次级题目标题", dominate: 20 },
+      { detail: "请输入次级题目标题", dominate: 20 },
     ],
     id: nanoid(),
-    score: 50,
+    dominate: 50,
     secscore: 10,
   },
 ]);
@@ -294,12 +307,9 @@ let show = ref("none");
 async function pushfile() {
   if (type.value == 1) {
     console.log(radiofile);
-    let staticti = toRaw(radiofile);
-    console.log(staticti);
     // JSON.parse(JSON.stringify(radiofile));
     console.log(JSON.parse(JSON.stringify(radiofile)));
-    // radiofile.forEach((element) => delete element.id);
-    JSON.parse(JSON.stringify(radiofile));
+    radiofile.forEach((element) => delete element.id);
     console.log(JSON.parse(JSON.stringify(radiofile)));
     console.log(datas.user.userId);
     console.log(filetitle.info_para);
@@ -315,7 +325,7 @@ async function pushfile() {
           userId: datas.user.userId,
           totalNumber: 1,
           message: filetitle.info_para,
-          title: filetitle.info_title
+          title: filetitle.info_title,
         },
         questionOptionList: JSON.parse(JSON.stringify(radiofile)),
       },
@@ -328,20 +338,113 @@ async function pushfile() {
       });
   }
   if (type.value == 2) {
-    checkboxfile["intro"] = filetitle;
-    datas.survey.survey4.push(checkboxfile);
+    checkboxfile.forEach((element) => delete element.id);
+    await axios({
+      url: "https://q.denglu1.cn/questions/rebuild",
+      method: "post",
+      withCredentials: true,
+      headers: { "Content-Type": "application/json" },
+      headers: { token: datas.user.token },
+      data: {
+        questionnaire: {
+          userId: datas.user.userId,
+          totalNumber: 1,
+          message: filetitle.info_para,
+          title: filetitle.info_title,
+        },
+        questionOptionList: JSON.parse(JSON.stringify(checkboxfile)),
+      },
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
   if (type.value == 3) {
-    fileword["intro"] = filetitle;
-    datas.survey.survey1.push(fileword);
+    fileword.forEach((element) => {
+      delete element.id;
+    });
+    await axios({
+      url: "https://q.denglu1.cn/questions/rebuild",
+      method: "post",
+      withCredentials: true,
+      headers: { "Content-Type": "application/json" },
+      headers: { token: datas.user.token },
+      data: {
+        questionnaire: {
+          userId: datas.user.userId,
+          totalNumber: 1,
+          message: filetitle.info_para,
+          title: filetitle.info_title,
+        },
+        questionOptionList: JSON.parse(JSON.stringify(fileword)),
+      },
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
   if (type.value == 4) {
-    scalefile["intro"] = filetitle;
-    datas.survey.survey2.push(scalefile);
+    scalefile.forEach((element) => {
+      delete element.id;
+      element.options.forEach((options) => {
+        options.dominate = element.secscore;
+      });
+      // delete element.secscore;
+    });
+    await axios({
+      url: "https://q.denglu1.cn/questions/rebuild",
+      method: "post",
+      withCredentials: true,
+      headers: { "Content-Type": "application/json" },
+      headers: { token: datas.user.token },
+      data: {
+        questionnaire: {
+          userId: datas.user.userId,
+          totalNumber: 1,
+          message: filetitle.info_para,
+          title: filetitle.info_title,
+          count: 2,
+        },
+        questionOptionList: JSON.parse(JSON.stringify(scalefile)),
+      },
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
   if (type.value == 5) {
-    textfile["intro"] = filetitle;
-    datas.survey.survey5.push(textfile);
+    textfile.forEach((element) => delete element.id);
+    await axios({
+      url: "https://q.denglu1.cn/questions/rebuild",
+      method: "post",
+      withCredentials: true,
+      headers: { "Content-Type": "application/json" },
+      headers: { token: datas.user.token },
+      data: {
+        questionnaire: {
+          userId: datas.user.userId,
+          totalNumber: 1,
+          message: filetitle.info_para,
+          title: filetitle.info_title,
+        },
+        questionOptionList: JSON.parse(JSON.stringify(textfile)),
+      },
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
   show.value = "block";
 }
@@ -538,7 +641,7 @@ div.wrapper {
           margin-left: 6px;
           display: flex;
 
-          >span {
+          > span {
             display: block;
             cursor: pointer;
             width: 60px;
@@ -559,7 +662,7 @@ div.wrapper {
         }
       }
 
-      >ul {
+      > ul {
         margin-top: 14px;
       }
     }

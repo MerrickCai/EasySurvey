@@ -31,7 +31,7 @@
       <span class="score">
         可支配分数
         </span>
-        <input type="number"  class="scoreshow" v-model="quesitem.score">
+        <input type="number"  class="scoreshow" v-model="quesitem.dominate">
         </div>
     </p>
     <div class="secquesall">
@@ -91,8 +91,8 @@ function addamount() {
   const quesobj = {
     question: { detail: "请输入题目标题", type: 1 },
     options: [
-      { detail: "请输入次级题目标题" },
-      { detail: "请输入次级题目标题" },
+      { detail: "请输入次级题目标题", dominate: 20 },
+      { detail: "请输入次级题目标题", dominate: 20 },
     ],
     id: nanoid(),
     score: 60,
