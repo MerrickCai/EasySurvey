@@ -1,7 +1,7 @@
 <template>
   <ul class="filesum">
     <el-scrollbar max-height="600px">
-      <li class="creatfile" @click="routerPush('/surveynew')">
+      <li class="creatfile" @click="router.push('/surveynew')">
         <!-- 使得文件阴影定位 -->
         <div class="file">
           <div class="creatcontent">
@@ -9,61 +9,40 @@
               <span class="creat">创建问卷</span>
             </div>
             <span class="plus">
-              <el-icon color="white" :size="5 * 5"><Plus /></el-icon>
+              <el-icon color="white" :size="5 * 5">
+                <Plus />
+              </el-icon>
             </span>
             <!-- 进度条 -->
             <span class="progress">
-              <el-progress
-                type="circle"
-                :percentage="0"
-                :width="90"
-                :height="90"
-                :stroke-width="80"
-                :show-text="false"
-              />
+              <el-progress type="circle" :percentage="0" :width="90" :height="90" :stroke-width="80"
+                :show-text="false" />
             </span>
           </div>
           <!-- 文件阴影 -->
           <div class="shadow"></div>
         </div>
       </li>
-      <file
-        v-for="(item, index) of fileall[0]"
-        :key="item"
-        :index="index"
-        :clickrotate="clickrotate"
-      ></file>
+      <file v-for="(item, index) of fileall[0]" :key="item" :item="item" :index="index" :clickrotate="clickrotate"></file>
     </el-scrollbar>
   </ul>
 </template>
+
 <script setup>
 import { Plus } from "@element-plus/icons-vue";
 import file from "./file.vue";
-import { onMounted, reactive, ref, onBeforeMount, nextTick } from "vue";
-//路由
+import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
 import { useStore } from "../../PiniaStores/index.js";
 const datas = useStore();
 import axios from "axios";
-function routerPush(path) {
-  router.push({ path });
-}
-
-const amount = ref(3);
-let userId = datas.user.userId;
-console.log(userId);
-console.log(typeof userId);
-let id = parseInt(datas.user.userId);
-console.log(id);
-console.log(typeof id);
 
 let fileall = reactive([]);
+
 function getinfor() {
   axios({
-    url: `https://q.denglu1.cn/user/questionnaire/${parseInt(
-      datas.user.userId
-    )}`,
+    url: `https://q.denglu1.cn/user/questionnaire/${datas.user.userId}`,
     method: "get",
     withCredentials: true,
     headers: { "Content-Type": "application/json" },
@@ -71,22 +50,18 @@ function getinfor() {
   })
     .then((response) => {
       console.log(response);
-      console.log(response.data.data);
       fileall.push(response.data.data);
     })
     .catch((error) => {
       console.log(error);
     });
 }
-console.log(1);
+console.log(fileall)
 getinfor();
-
-onMounted(() => {
-  console.log(fileall);
-});
 
 //问卷旋转
 let clickrotate = ref(null);
+
 </script>
 
 <style lang="less" scoped>
@@ -94,6 +69,7 @@ let clickrotate = ref(null);
   height: 600px;
   width: 300px;
   padding: 0px 20px;
+
   .el-scrollbar {
     width: 300px;
     --el-scrollbar-opacity: 0.3;
@@ -108,9 +84,11 @@ let clickrotate = ref(null);
     }
   }
 }
+
 .creatfile {
   padding-left: 20px;
   cursor: pointer;
+
   .file {
     position: relative;
   }
@@ -128,23 +106,28 @@ let clickrotate = ref(null);
   box-shadow: 5px 5px rgba(15, 174, 254);
   background: rgba(221, 237, 255, 0.35);
   backdrop-filter: blur(45px);
+
   .filetop {
     display: flex;
+
     img {
       position: absolute;
       left: 3px;
       top: 3px;
     }
+
     .creat {
       position: absolute;
       top: 3px;
       left: 10px;
     }
+
     .delete {
       position: absolute;
       left: 60px;
       top: 3px;
     }
+
     span {
       font-size: 12px;
     }
@@ -159,11 +142,9 @@ let clickrotate = ref(null);
   height: 148px;
   border-radius: 0px 4px 4px 4px;
   clip-path: polygon(40% 0, 45% 13%, 100% 13%, 100% 100%, 0 100%, 0 0);
-  background: linear-gradient(
-    90deg,
-    rgba(30, 111, 255, 1) 0%,
-    rgba(138, 204, 237, 1) 100%
-  );
+  background: linear-gradient(90deg,
+      rgba(30, 111, 255, 1) 0%,
+      rgba(138, 204, 237, 1) 100%);
   z-index: -1;
 }
 
@@ -172,6 +153,7 @@ let clickrotate = ref(null);
   bottom: 40px;
   left: 30px;
 }
+
 .progress {
   position: absolute;
   bottom: 10px;

@@ -75,9 +75,115 @@ import { useStore } from '../../PiniaStores/index.js'
 const datas = useStore();
 const currentSurvey = inject('currentSurvey')
 
-const survey = computed(() => {
-    return datas.survey.survey4[0];
-});
+// const survey = computed(() => {
+//     return datas.survey.survey4[0];
+// });
+
+// ------------------接收survey父组件传过来的参数。-------------------------------
+const props = defineProps(['surveyObj']);
+// 从父组件拿到数据
+const surveyObj = computed(() => props.surveyObj)
+
+// 封装一个survey---------------用以在模板和存放提交时候的用户数据------------------（按照PiniStores中的结构模板来封装的）
+const survey = reactive({});
+// survey的介绍和提交问卷用的信息
+survey.intro = {};  
+survey.effectiveNumber = surveyObj.value.questionnaire.effectiveNumber;
+survey.totalNumber = surveyObj.value.questionnaire.totalNumber;
+survey.count = surveyObj.value.questionnaire.count;
+survey.id = surveyObj.value.questionnaire.id;
+survey.intro.info_title = surveyObj.value.questionnaire.title;
+survey.intro.info_para = surveyObj.value.questionnaire.message;
+
+// survey的问题列表数据
+survey.questionList = []; 
+let optionDetail = [];  //装全部的选项的文字描述（如比较符合....这些）
+let optionId = [];   //装全部选项对应的ID
+for (let i in surveyObj.value.optionMap) {
+  let t1 = [];
+  let t2 = [];
+  for (let j = 0; j < surveyObj.value.optionMap[i].length; j++){
+    t1.push(surveyObj.value.optionMap[i][j].detail);
+    t2.push(surveyObj.value.optionMap[i][j].id);
+  }
+  optionDetail.push(t1);
+  optionId.push(t2)
+}
+
+let start = 0;  
+// 配置每一道题目
+for (let i in surveyObj.value.questionInfoMap) {
+  let item = surveyObj.value.questionInfoMap[i];
+    i/= 1;
+    let obj = {};
+    obj.questiontitle = item.info;  //题目
+    obj.value = [];  
+    obj.titleBorder = 0; 
+    obj.progressPartbcg = '#ccc';
+    obj.option = optionDetail[start];
+    obj.questionId = surveyObj.value.optionMap[i][1].questionId;
+    obj.optionId = optionId[start];
+    // obj.seleted = 0;
+    start++;
+    survey.questionList.push(obj)
+}
+console.log('封装好的数据', survey);
+// -------------------------------------------------
+
+
+
+
+//------------------ 提交问卷请求---------------
+function sumbit() {
+  // 请求参数里面的问卷信息列表
+    const optionList = [];
+    for (let item of survey.questionList) {
+        for (let elem of item.value) {
+           let obj = {};
+           obj.questionId = item.questionId;
+           obj.id = elem.id;
+           obj.detail = elem.value;
+           optionList.push(obj)
+        }
+
+    }
+    // console.log(optionList);
+    // console.log(survey);
+    
+     axios({
+        url: `https://q.denglu1.cn/questions/commit`,
+        method: 'post',
+        withCredentials: true,
+        headers: { 'Content-Type': 'application/json' },
+        headers: { 'token': datas.user.token },
+        data: {
+          "questionnaire_id": survey.id,
+          "totalNumber": survey.totalNumber,
+          "count":survey.count,     
+          "effectiveNumber":survey.effectiveNumber,  
+          "optionList": optionList,
+        }
+     }).then((response) => {
+        console.log(response);
+        if (response.data.code === 200) {
+        //  console.log(survey);
+          if (response.data.msg === '问卷已收集齐了') {
+              alert('问卷已收集齐了');
+           } else {
+             currentSurvey.toEnd();
+           }
+        } else {
+         alert('提交失败,请勿重复提交');
+        } 
+      }).catch((error) => {
+        console.log(error)
+      })
+}
+// 以上是提交问卷请求的内容------------------------------------------------------
+
+
+
+
 
 // -----跳转：介绍页==>答题页--------
 function toContent() { 
@@ -138,17 +244,19 @@ function seleted(item, i, e) {
     // console.log(start,start + item.option.length);
     //这个数组保存的就是目前点击的checkbox对应题目的全部input的dom
     const Oneques_input = input.value.slice(start, start + item.option.length);
-
+    
     survey.questionList[i].value = [];
-    Oneques_input.forEach(elem => {
+    Oneques_input.forEach((elem,index) => {
         // input的dom的checked属性保存了是否被选中 
         // console.log(elem.checked);
-        if (elem.checked) {
-            survey.questionList[i].value.push(elem.value);
+        if (elem.checked){
+            survey.questionList[i].value.push({
+                value: elem.value,
+                id: survey.questionList[i].optionId[survey.questionList[i].option.indexOf(elem.value)]
+            });
         }
     })
     console.log(survey.questionList[i].value);
-
 }
 
 
@@ -180,7 +288,7 @@ function toFinish() {
         content.value.scrollTop = questiontitle.value[fisrtreturn].offsetTop;
     }
     if (!flag) return
-    currentSurvey.toEnd();
+    sumbit();
 }
 
 </script>

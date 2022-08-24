@@ -91,11 +91,14 @@ function sumbit() {
      }).then((response) => {
         console.log(response);
        if (response.data.code === 200) {
-          console.log(survey);
-          
-         currentSurvey.toEnd();
+         console.log(survey);
+          if (response.data.msg === '问卷已收集齐了') {
+              alert('问卷已收集齐了');
+          } else {
+             currentSurvey.toEnd();
+           }
         } else {
-          alert('提交失败')
+         alert('提交失败,请勿重复提交');
         } 
       }).catch((error) => {
         console.log(error)

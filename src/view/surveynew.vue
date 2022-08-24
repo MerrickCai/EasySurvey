@@ -15,7 +15,7 @@
           {{ filetitle.info_title }}
         </p>
         <input type="text" ref="titlein" class="titlein" v-show="!titleshow" v-model="filetitle.info_title"
-          @keyup.enter="titlechange" @blur="titlechange" />
+          @keyup.enter="titleshow = true" @blur="titleshow = true" />
         <!-- 新建问卷介绍 -->
         <p class="newintro">
           <span class="newintro_title">问卷介绍:</span>
@@ -24,7 +24,7 @@
         </p>
 
         <textarea cols="30" rows="2" ref="introin" class="introin" v-show="!introshow" v-model="filetitle.info_para"
-          @keyup.enter="introchange" @blur="introchange"></textarea>
+          @keyup.enter="introshow = true" @blur="introshow = true"></textarea>
         </p>
       </div>
       <div class="quearea">
@@ -59,6 +59,8 @@
         </div>
       </div>
     </div>
+    <input type="reset">
+    </form>
   </div>
 </template>
 
@@ -154,20 +156,9 @@ function changeintroshow() {
     introin.value.focus();
   });
 }
-//问卷题目修改
-function titlechange() {
-  titleshow = true;
-  sessionStorage.setItem("title", JSON.stringify(filetitle));
-}
-//问卷题目介绍修改
-function introchange() {
-  introshow = true;
-  sessionStorage.setItem("title", JSON.stringify(filetitle));
-}
 //矩阵问卷新增问题
 function receive(quesobj) {
   fileword.push(quesobj);
-  sessionStorage.setItem("matrix", JSON.stringify(fileword));
 }
 //矩阵问卷删除问题
 function deleteques(id) {
@@ -176,7 +167,6 @@ function deleteques(id) {
       if (i.id == id) fileword.splice(x, 1);
     });
   }
-  sessionStorage.setItem("matrix", JSON.stringify(fileword));
 }
 
 //存储量表问卷信息内容
