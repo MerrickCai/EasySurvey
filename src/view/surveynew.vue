@@ -123,7 +123,7 @@ if (localStorage.getItem("matrix")) {
 } else {
   fileword = reactive([
     {
-      question: { detail: "请输入题目标题", type: 1 },
+      question: { detail: "请输入题目标题", type: 2 },
       options: [
         { detail: "" },
         { detail: "" },
@@ -175,7 +175,7 @@ if (localStorage.getItem("scale")) {
   scalefile = reactive([
     {
       options: [{ detail: "选项", dominate: 20 }],
-      question: { detail: "请输入题目标题", type: 1 },
+      question: { detail: "请输入题目标题", type: 3 },
       id: nanoid(),
       dominate: 60,
       secscore: 20,
@@ -203,7 +203,7 @@ if (localStorage.getItem("radio")) {
   radiofile = reactive([
     {
       options: [{ detail: "选项" }],
-      question: { detail: "请输入题目标题", type: 1 },
+      question: { detail: "请输入题目标题", type: 0 },
       id: nanoid(),
     },
   ]);
@@ -259,7 +259,7 @@ if (localStorage.getItem("text")) {
   textfile = reactive([
     {
       options: [{ detail: "选项" }],
-      question: { detail: "请输入题目标题", type: 1 },
+      question: { detail: "请输入题目标题", type: 4 },
       id: nanoid(),
     },
   ]);

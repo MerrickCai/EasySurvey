@@ -4,12 +4,12 @@
       <div class="list_title">用户列表</div>
       <el-scrollbar max-height="400px">
         <p
-          v-for="item in filenews.context.users"
+          v-for="item in filenews.context.userWithScores"
           :key="item"
           class="scrollbar-demo-item"
         >
-          <span class="username">{{ item.username }}</span>
-          <span class="userscore">得分: 0</span>
+          <span class="username">{{ item.user.username }}</span>
+          <span class="userscore">得分: {{ item.score }}</span>
         </p>
       </el-scrollbar>
     </div>
@@ -93,12 +93,12 @@ function echartupdate() {
   let userChartpie = echarts.init(document.getElementById("userpie"));
   let province = reactive([]);
   const provincenum = new Map();
-  if (filenews.context.users != null) {
-    for (let i = 0; i < filenews.context.users.length; i++) {
-      if (provincenum.has(filenews.context.users[i].province)) {
-        provincenum[filenews.context.users[i].province]++;
+  if (filenews.context.userWithScores != null) {
+    for (let i = 0; i < filenews.context.userWithScores.length; i++) {
+      if (provincenum.has(filenews.context.userWithScores[i].user.province)) {
+        provincenum[filenews.context.userWithScores[i].user.province]++;
       } else {
-        provincenum[filenews.context.users[i].province] = 1;
+        provincenum[filenews.context.userWithScores[i].user.province] = 1;
       }
     }
     for (let i = 0; i < Object.keys(provincenum).length; i++) {
@@ -143,19 +143,19 @@ function echartupdate() {
             myChartpie2.style.display = "block";
           },
         },
-        myTool2: {
-          show: true,
-          title: "切换为横向柱状图",
-          icon: "image:///row.png",
-          onclick: function () {
-            series: [
-              {
-                type: "pie",
-                data: province,
-              },
-            ];
-          },
-        },
+        // myTool2: {
+        //   show: true,
+        //   title: "切换为横向柱状图",
+        //   icon: "image:///row.png",
+        //   onclick: function () {
+        //     series: [
+        //       {
+        //         type: "pie",
+        //         data: province,
+        //       },
+        //     ];
+        //   },
+        // },
       },
       emphasis: {
         color: "red",
@@ -163,6 +163,9 @@ function echartupdate() {
     },
     xAxis: {
       data: Object.keys(provincenum),
+      axisLabel: {
+        rotate: 45,
+      },
     },
     yAxis: {},
     series: [
@@ -221,12 +224,12 @@ function echartupdate() {
             myChartpie2.style.display = "block";
           },
         },
-        myTool2: {
-          show: true,
-          title: "切换为横向柱状图",
-          icon: "image:///row.png",
-          onclick: function () {},
-        },
+        // myTool2: {
+        //   show: true,
+        //   title: "切换为横向柱状图",
+        //   icon: "image:///row.png",
+        //   onclick: function () {},
+        // },
       },
     },
     series: [
@@ -242,50 +245,52 @@ watch(
   () => filenews.context,
   () => {
     echartupdate();
+    echartnum();
   },
   { deep: true }
 );
-
-//第一个echart
-onMounted(() => {
-  //需要获取到element,所以是onMounted的Hook
+function echartnum() {
   let myChart = echarts.init(document.getElementById("echart_mes"));
   let myChartpie = echarts.init(document.getElementById("myChartpie"));
-
-  let json = reactive([
-    {
-      x: 1,
-      y: 50,
-    },
-    {
-      x: 2,
-      y: 66,
-    },
-    {
-      x: 3,
-      y: 20,
-    },
-    {
-      x: 4,
-      y: 92,
-    },
-    {
-      x: 5,
-      y: 70,
-    },
-  ]);
-  let xDataArr = reactive([]);
-  let yDataArr = reactive([]);
-
-  for (let i = 0; i < json.length; i++) {
-    xDataArr.push(json[i].x);
-    yDataArr.push(json[i].y);
+  let yDataArr = reactive([0, 0, 0, 0, 0]);
+  if (filenews.context.userWithScores != null) {
+    for (let i = 0; i < filenews.context.userWithScores.length; i++) {
+      if (
+        filenews.context.userWithScores[i].score >= 0 &&
+        filenews.context.userWithScores[i].score < 50
+      ) {
+        yDataArr[0]++;
+      }
+      if (
+        filenews.context.userWithScores[i].score >= 50 &&
+        filenews.context.userWithScores[i].score < 100
+      ) {
+        yDataArr[1]++;
+      }
+      if (
+        filenews.context.userWithScores[i].score >= 100 &&
+        filenews.context.userWithScores[i].score < 150
+      ) {
+        yDataArr[2]++;
+      }
+      if (
+        filenews.context.userWithScores[i].score >= 150 &&
+        filenews.context.userWithScores[i].score < 200
+      ) {
+        yDataArr[3]++;
+      }
+      if (
+        filenews.context.userWithScores[i].score >= 200 &&
+        filenews.context.userWithScores[i].score < 250
+      ) {
+        yDataArr[4]++;
+      }
+    }
   }
-  // let xDataArr = reactive(["12-3", "12-4", "12-5", "12-6", "12-7", "12-8"]);
-  // let yDataArr = reactive([5, 20, 36, 10, 10, 20]);
+  let xDataArr = reactive(["0~50", "50~100", "100~150", "150~200", "200~250"]);
   // 绘制柱状图表
   myChart.setOption({
-    title: { text: "总用户量" },
+    title: { text: "分数区间" },
     tooltip: {},
     toolbox: {
       feature: {
@@ -318,24 +323,24 @@ onMounted(() => {
             myChartpie2.style.display = "block";
           },
         },
-        myTool2: {
-          show: true,
-          title: "切换为横向柱状图",
-          icon: "image:///row.png",
-          onclick: function () {
-            series: [
-              {
-                type: "pie",
-                data: [
-                  {
-                    value: json.y,
-                    name: json.x,
-                  },
-                ],
-              },
-            ];
-          },
-        },
+        // myTool2: {
+        //   show: true,
+        //   title: "切换为横向柱状图",
+        //   icon: "image:///row.png",
+        //   onclick: function () {
+        //     series: [
+        //       {
+        //         type: "pie",
+        //         data: [
+        //           {
+        //             value: json.y,
+        //             name: json.x,
+        //           },
+        //         ],
+        //       },
+        //     ];
+        //   },
+        // },
       },
       emphasis: {
         color: "red",
@@ -343,6 +348,9 @@ onMounted(() => {
     },
     xAxis: {
       data: xDataArr,
+      axisLabel: {
+        rotate: 45,
+      },
     },
     yAxis: {},
     series: [
@@ -415,34 +423,31 @@ onMounted(() => {
         type: "pie",
         data: [
           {
-            value: 50,
-            name: 1,
+            value: yDataArr[0],
+            name: xDataArr[0],
           },
           {
-            value: 66,
-            name: 2,
+            value: yDataArr[1],
+            name: xDataArr[1],
           },
           {
-            value: 20,
-            name: 3,
+            value: yDataArr[2],
+            name: xDataArr[2],
           },
           {
-            value: 92,
-            name: 4,
+            value: yDataArr[3],
+            name: xDataArr[3],
           },
           {
-            value: 70,
-            name: 5,
+            value: yDataArr[4],
+            name: xDataArr[4],
           },
         ],
       },
     ],
   });
-  // window.onresize = function () {
-  //   //自适应大小
-  //   myChart.resize();
-  // };
-});
+}
+//第一个echart
 </script>
 
 <style lang="less" scoped>
@@ -459,6 +464,7 @@ onMounted(() => {
     grid-column-end: 8;
     grid-row-start: 1;
     grid-row-end: 2;
+    box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
     .list_title {
       text-align: left;
       font-size: 14px;
@@ -492,10 +498,17 @@ onMounted(() => {
     }
   }
   .userarea {
+    position: relative;
     grid-column-start: 8;
     grid-column-end: 13;
     grid-row-start: 1;
     grid-row-end: 2;
+    box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
+    .userareatit {
+      position: absolute;
+      left: 20px;
+      top: 20px;
+    }
     .echart_user {
       width: 330px;
       height: 240px;

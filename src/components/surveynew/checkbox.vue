@@ -70,7 +70,7 @@ let { scroll, updatescroll } = inject("changescroll");
 //添加问题
 function addamount() {
   const quesobj = {
-    question: { detail: "请输入题目标题", type: 2 },
+    question: { detail: "请输入题目标题", type: 1 },
     options: [{ detail: "选项" }, { detail: "选项" }],
     id: nanoid(),
   };
