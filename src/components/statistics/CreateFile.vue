@@ -15,15 +15,29 @@
             </span>
             <!-- 进度条 -->
             <span class="progress">
-              <el-progress type="circle" :percentage="0" :width="90" :height="90" :stroke-width="80"
-                :show-text="false" />
+              <el-progress
+                type="circle"
+                :percentage="0"
+                :width="90"
+                :height="90"
+                :stroke-width="8"
+                :show-text="false"
+              />
             </span>
           </div>
           <!-- 文件阴影 -->
           <div class="shadow"></div>
         </div>
       </li>
-      <file v-for="(item, index) of fileall[0]" :key="item" :item="item" :index="index" :clickrotate="clickrotate"></file>
+      <file
+        v-for="(item, index) of fileall[0]"
+        :key="item"
+        :item="item"
+        :index="index"
+        :clickrotate="clickrotate"
+        @update:clickrotate="(n) => (clickrotate = n)"
+        @deletefile="(index) => fileall[0].splice(index, 1)"
+      ></file>
     </el-scrollbar>
   </ul>
 </template>
@@ -56,12 +70,10 @@ function getinfor() {
       console.log(error);
     });
 }
-console.log(fileall)
 getinfor();
 
 //问卷旋转
 let clickrotate = ref(null);
-
 </script>
 
 <style lang="less" scoped>
@@ -142,9 +154,11 @@ let clickrotate = ref(null);
   height: 148px;
   border-radius: 0px 4px 4px 4px;
   clip-path: polygon(40% 0, 45% 13%, 100% 13%, 100% 100%, 0 100%, 0 0);
-  background: linear-gradient(90deg,
-      rgba(30, 111, 255, 1) 0%,
-      rgba(138, 204, 237, 1) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(30, 111, 255, 1) 0%,
+    rgba(138, 204, 237, 1) 100%
+  );
   z-index: -1;
 }
 

@@ -3,12 +3,20 @@
     <div class="userlist">
       <div class="list_title">用户列表</div>
       <el-scrollbar max-height="400px">
-        <p v-for="item in count" :key="item" class="scrollbar-demo-item">
-          {{ item }}
+        <p
+          v-for="item in filenews.context.users"
+          :key="item"
+          class="scrollbar-demo-item"
+        >
+          <span class="username">{{ item.username }}</span>
+          <span class="userscore">得分: 0</span>
         </p>
       </el-scrollbar>
     </div>
-    <div class="userarea"></div>
+    <div class="userarea">
+      <div class="echart_user" id="echart_user"></div>
+      <div id="userpie" class="userpie"></div>
+    </div>
     <div class="sta_one">
       <div class="echart_mes" id="echart_mes" ref="echart_mes"></div>
       <div id="myChartpie" class="myChartpie"></div>
@@ -18,19 +26,30 @@
       id="echart_compare"
       @dragover.prevent
       @drop.prevent="drop($event)"
-    ></div>
+    >
+      <img src="/compare.png" alt="" />
+      <span>+</span>
+      <i>快将同类型问卷拖入此处对比问卷吧！</i>
+    </div>
   </div>
 </template>
 
 <script setup>
 import * as echarts from "echarts";
 import draggable from "vuedraggable";
-import { onMounted, ref, reactive } from "vue";
+import emitter from "../../mitt";
+import { onMounted, ref, reactive, watch } from "vue";
 //路由
 import { useRouter } from "vue-router";
 const router = useRouter();
+//PiniaStores
+import { useStore } from "../../PiniaStores/index.js";
+const datas = useStore();
+import axios from "axios";
+
 const count = ref(5);
 
+//拖拽
 function drop(event) {
   console.log(event.target);
   event.preventDefault();
@@ -38,6 +57,194 @@ function drop(event) {
     console.log("完成");
   }
 }
+
+//接收确定是哪一份问卷
+let num = ref("");
+emitter.on("filenum", (e) => {
+  num.value = e;
+});
+watch(num, (newnum) => {
+  getfile();
+});
+
+let filenews = reactive({
+  context: { questionnaire: { totalNumber: 0, effectiveNumber: 0 } },
+});
+function getfile() {
+  axios({
+    url: `https://q.denglu1.cn/user/questionnaireDetail/${parseInt(num.value)}`,
+    method: "get",
+    withCredentials: true,
+    headers: { "Content-Type": "application/json" },
+    headers: { token: datas.user.token },
+  })
+    .then((response) => {
+      console.log(response);
+      filenews.context = response.data.data;
+      console.log(filenews.context);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
+function echartupdate() {
+  let userChart = echarts.init(document.getElementById("echart_user"));
+  let userChartpie = echarts.init(document.getElementById("userpie"));
+  let province = reactive([]);
+  const provincenum = new Map();
+  if (filenews.context.users != null) {
+    for (let i = 0; i < filenews.context.users.length; i++) {
+      if (provincenum.has(filenews.context.users[i].province)) {
+        provincenum[filenews.context.users[i].province]++;
+      } else {
+        provincenum[filenews.context.users[i].province] = 1;
+      }
+    }
+    for (let i = 0; i < Object.keys(provincenum).length; i++) {
+      let piedata = {};
+      piedata["name"] = Object.keys(provincenum)[i];
+      piedata["value"] = Object.values(provincenum)[i];
+      province.push(piedata);
+    }
+  }
+  console.log(province);
+  userChart.setOption({
+    title: { text: "用户群体" },
+    tooltip: {},
+    toolbox: {
+      feature: {
+        saveAsImage: {
+          iconStyle: {
+            borderColor: "rbg(217, 217, 217)",
+          },
+        },
+        magicType: {
+          type: ["bar", "line"],
+          icon: {
+            line: "image:///line.png",
+            bar: "image:///column.png",
+          },
+          onmouseover: function () {
+            icon.line = "image:///sum.png";
+            line.color = "red";
+          },
+        },
+
+        myTool1: {
+          show: true,
+          title: "切换为饼图",
+          icon: "image:///pancake.png",
+
+          onclick: function () {
+            let echart_mes = document.getElementById("echart_user");
+            let myChartpie2 = document.getElementById("userpie");
+            echart_mes.style.display = "none";
+            myChartpie2.style.display = "block";
+          },
+        },
+        myTool2: {
+          show: true,
+          title: "切换为横向柱状图",
+          icon: "image:///row.png",
+          onclick: function () {
+            series: [
+              {
+                type: "pie",
+                data: province,
+              },
+            ];
+          },
+        },
+      },
+      emphasis: {
+        color: "red",
+      },
+    },
+    xAxis: {
+      data: Object.keys(provincenum),
+    },
+    yAxis: {},
+    series: [
+      {
+        name: "个数",
+        type: "bar",
+        data: Object.values(provincenum),
+        label: {
+          show: true,
+          position: "top",
+        },
+      },
+    ],
+  });
+  //绘制饼状图表
+  userChartpie.setOption({
+    title: { text: "总用户量" },
+    tooltip: {},
+    toolbox: {
+      feature: {
+        saveAsImage: {
+          iconStyle: {
+            borderColor: "rbg(217, 217, 217)",
+          },
+        },
+        myTool3: {
+          show: true,
+          title: "切换为柱状图",
+          icon: "image:///column.png",
+          onclick: function () {
+            let echart_mes = document.getElementById("echart_user");
+            let myChartpie2 = document.getElementById("userpie");
+            echart_mes.style.display = "block";
+            myChartpie2.style.display = "none";
+          },
+        },
+        myTool4: {
+          show: true,
+          title: "切换为折线图",
+          icon: "image:///line.png",
+          onclick: function () {
+            let echart_mes = document.getElementById("echart_user");
+            let myChartpie2 = document.getElementById("userpie");
+            echart_mes.style.display = "block";
+            myChartpie2.style.display = "none";
+          },
+        },
+        myTool1: {
+          show: true,
+          title: "切换为饼图",
+          icon: "image:///pancake.png",
+          onclick: function () {
+            let echart_mes = document.getElementById("echart_user");
+            let myChartpie2 = document.getElementById("userpie");
+            echart_mes.style.display = "none";
+            myChartpie2.style.display = "block";
+          },
+        },
+        myTool2: {
+          show: true,
+          title: "切换为横向柱状图",
+          icon: "image:///row.png",
+          onclick: function () {},
+        },
+      },
+    },
+    series: [
+      {
+        name: "用户量",
+        type: "pie",
+        data: province,
+      },
+    ],
+  });
+}
+watch(
+  () => filenews.context,
+  () => {
+    echartupdate();
+  },
+  { deep: true }
+);
 
 //第一个echart
 onMounted(() => {
@@ -267,6 +474,16 @@ onMounted(() => {
       --el-scrollbar-hover-opacity: 0.5;
       --el-scrollbar-hover-bg-color: rgba(71, 145, 255, 1);
 
+      .scrollbar-demo-item {
+        justify-content: start;
+        .userscore {
+          margin-left: 25px;
+          font-size: 10px;
+          font-weight: 400;
+          color: rgba(30, 111, 255, 1);
+          text-align: left;
+        }
+      }
       .el-scrollbar__bar {
         width: 8px;
         position: absolute;
@@ -279,7 +496,15 @@ onMounted(() => {
     grid-column-end: 13;
     grid-row-start: 1;
     grid-row-end: 2;
-    background-color: orange;
+    .echart_user {
+      width: 330px;
+      height: 240px;
+    }
+    .userpie {
+      width: 330px;
+      height: 240px;
+      display: none;
+    }
   }
   .sta_one {
     width: 390px;
@@ -302,6 +527,7 @@ onMounted(() => {
   }
 
   .echart_compare {
+    position: relative;
     width: 390px;
     height: 220px;
     grid-column-start: 7;
@@ -310,6 +536,29 @@ onMounted(() => {
     grid-row-end: 3;
     background-color: white;
     box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
+    img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    span {
+      position: absolute;
+      bottom: 26px;
+      left: 60px;
+      font-size: 20px;
+      color: rgba(71, 145, 255, 1);
+    }
+    i {
+      font-style: normal;
+      position: absolute;
+      bottom: 30px;
+      left: 80px;
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(217, 217, 217, 1);
+      text-align: center;
+    }
   }
   .scrollbar-demo-item {
     display: flex;
