@@ -63,10 +63,10 @@ const currentSurvey = reactive({
           case 2: //矩阵
             viewId.value = 1;
             break;
-          case 3: //贝尔宾
+          case 3: //量表（特殊：贝尔宾）
             viewId.value = 2;
             break;
-          case 5: //文本
+          case 4: //文本
             viewId.value = 5;
             break;
         }
