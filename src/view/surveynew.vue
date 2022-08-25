@@ -55,7 +55,8 @@
         <div class="sharefile">
           <span class="shareword">分享问卷</span>
           <span class="close" @click="disappear($event)">×</span>
-          <span class="sharequick">快分享以上二维码或点击复制<a>链接</a>填答问卷吧！</span>
+          <img src="/login_icon1.png" alt="" class="barcode">
+          <span class="sharequick">快分享以上二维码或点击复制<a class="link" @click="getlink">链接</a>填答问卷吧！</span>
         </div>
       </div>
     </div>
@@ -81,6 +82,7 @@ import scalelist from "../components/surveynew/scalelist.vue";
 import textlist from "../components/surveynew/textlist.vue";
 import { useStore } from "../PiniaStores/index.js";
 import axios from "axios";
+import clipboard3 from "vue-clipboard3";
 //数据
 const datas = useStore();
 //动态组件视图
@@ -123,8 +125,6 @@ if (localStorage.getItem("matrix")) {
     {
       question: { detail: "请输入题目标题", type: 1 },
       options: [
-        { detail: "" },
-        { detail: "" },
         { detail: "" },
         { detail: "" },
         { detail: "" },
@@ -296,19 +296,13 @@ function keepinfor() {
   if (type.value == 5) {
     localStorage.setItem("text", JSON.stringify(textfile));
   }
+  alert("保存成功!");
 }
 //发布问卷
 let show = ref("none");
 async function pushfile() {
   if (type.value == 1) {
-    console.log(radiofile);
-    // JSON.parse(JSON.stringify(radiofile));
-    console.log(JSON.parse(JSON.stringify(radiofile)));
     radiofile.forEach((element) => delete element.id);
-    console.log(JSON.parse(JSON.stringify(radiofile)));
-    console.log(datas.user.userId);
-    console.log(filetitle.info_para);
-    console.log(filetitle.info_title);
     await axios({
       url: "https://q.denglu1.cn/questions/rebuild",
       method: "post",
@@ -327,6 +321,7 @@ async function pushfile() {
     })
       .then((response) => {
         console.log(response);
+        link.value = response.data.data.link;
       })
       .catch((error) => {
         console.log(error);
@@ -360,6 +355,7 @@ async function pushfile() {
     })
       .then((response) => {
         console.log(response);
+        link.value = response.data.data.link;
       })
       .catch((error) => {
         console.log(error);
@@ -376,6 +372,7 @@ async function pushfile() {
     fileword.forEach((element) => {
       delete element.id;
     });
+    console.log(fileword);
     await axios({
       url: "https://q.denglu1.cn/questions/rebuild",
       method: "post",
@@ -394,6 +391,7 @@ async function pushfile() {
     })
       .then((response) => {
         console.log(response);
+        link.value = response.data.data.link;
       })
       .catch((error) => {
         console.log(error);
@@ -433,6 +431,7 @@ async function pushfile() {
     })
       .then((response) => {
         console.log(response);
+        link.value = response.data.data.link;
       })
       .catch((error) => {
         console.log(error);
@@ -467,6 +466,7 @@ async function pushfile() {
     })
       .then((response) => {
         console.log(response);
+        link.value = response.data.data.link;
       })
       .catch((error) => {
         console.log(error);
@@ -481,6 +481,24 @@ async function pushfile() {
   }
   show.value = "block";
   localStorage.removeItem("title");
+}
+let link = ref(1);
+const { toClipboard } = clipboard3();
+async function getlink() {
+  try {
+    await toClipboard(
+      "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
+        parseInt(link.value)
+    );
+    alert(
+      "复制的是:" +
+        "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
+        parseInt(link.value) +
+        "复制成功!"
+    );
+  } catch (error) {
+    alert("复制失败!");
+  }
 }
 //遮罩
 function disappear() {
@@ -587,7 +605,7 @@ div.wrapper {
       position: relative;
       left: 50%;
       top: 50%;
-      width: 400px;
+      width: 800px;
       height: 50px;
       transform: translate(-50%, -50%);
       word-wrap: break-word;
@@ -595,20 +613,23 @@ div.wrapper {
       font-size: 36px;
       font-weight: 600;
       vertical-align: middle;
-      width: fit-content;
+      // width: fit-content;
       text-align: center;
+      text-decoration-line: underline;
+      text-decoration-color: #1e6fff;
+      text-decoration-thickness: 5px;
 
-      &::after {
-        content: "";
-        display: block;
-        position: absolute;
-        bottom: -2px;
-        left: 0;
-        height: 4px;
-        width: 100%;
-        background-color: #1e6fff;
-        border-radius: 2px;
-      }
+      // &::after {
+      //   content: "";
+      //   display: block;
+      //   position: absolute;
+      //   bottom: -2px;
+      //   left: 0;
+      //   height: 4px;
+      //   width: 100%;
+      //   background-color: #1e6fff;
+      //   border-radius: 2px;
+      // }
     }
 
     .titlein {
@@ -732,7 +753,7 @@ div.wrapper {
   }
 
   .mask {
-    display: none;
+    display: block;
     position: fixed;
     width: 100%;
     height: 100%;
@@ -783,6 +804,14 @@ div.wrapper {
       font-size: 25px;
     }
 
+    .barcode {
+      position: absolute;
+      top: 85px;
+      left: 133px;
+      width: 180px;
+      height: 180px;
+    }
+
     .sharequick {
       position: absolute;
       left: 83px;
@@ -796,9 +825,11 @@ div.wrapper {
       letter-spacing: 0px;
       line-height: 22px;
       color: rgba(0, 0, 0, 1);
-      /** 文本2 */
-      font-size: 14px;
-      font-weight: 400;
+      .link {
+        cursor: pointer;
+        text-decoration-line: underline;
+        color: rgba(71, 145, 255, 1);
+      }
     }
   }
 

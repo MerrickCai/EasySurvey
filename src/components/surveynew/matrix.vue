@@ -85,7 +85,7 @@
 </template>
 
 <script setup>
-import { ref, nextTick, inject } from "vue";
+import { ref, nextTick, inject, watch } from "vue";
 import { nanoid } from "nanoid";
 
 const emit = defineEmits(["updateamount"]);
@@ -102,14 +102,13 @@ function addamount() {
       { detail: "" },
       { detail: "" },
       { detail: "" },
-      { detail: "" },
-      { detail: "" },
     ],
     id: nanoid(),
     series: 5,
   };
   props.receive(quesobj);
 }
+
 //删除问题
 let deletematrix = ref(null);
 function cursorfail() {
@@ -125,7 +124,24 @@ function deleteamount(id) {
     props.deleteques(id);
   }
 }
-
+//级别个数
+watch(
+  () => props.quesitem.series,
+  (newValue, oldValue) => {
+    if (newValue > oldValue) {
+      for (let i = 0; i < newValue - oldValue; i++) {
+        props.quesitem.options.push({ detail: "" });
+      }
+    }
+    if (newValue < oldValue) {
+      for (let i = 0; i < oldValue - newValue; i++) {
+        props.quesitem.options.pop();
+      }
+    }
+    console.log(props.quesitem.options);
+  },
+  { deep: true }
+);
 //级数样式
 let blocknum = ref(5);
 //滑块样式改变
@@ -220,7 +236,8 @@ li {
       border: 1px dashed rgba(30, 111, 255, 1);
     }
     .titlecon {
-      width: 200px;
+      width: 700px;
+      height: fit-content;
       margin-left: 5px;
     }
     input[type="text"] {
