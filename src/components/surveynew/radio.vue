@@ -186,8 +186,8 @@ li {
       border: 1px dashed rgba(30, 111, 255, 1);
     }
     .titlecon {
-      width: 200px;
-      height: 20px;
+      width: 700px;
+      height: fit-content;
       margin-left: 5px;
     }
     input[type="text"] {
@@ -220,7 +220,8 @@ li {
     .optionall {
       display: flex;
       height: 20px;
-      margin: 5px 0 10px 37px;
+      height: fit-content;
+      margin: 5px 0 5px 37px;
       .circle {
         width: 18px;
         height: 18px;
@@ -230,6 +231,9 @@ li {
       .option {
         display: block;
         width: 600px;
+        height: fit-content;
+        word-wrap: break-word; //超出页面自动换行
+
         margin-left: 5px;
         font-size: 16px;
         font-weight: 400;

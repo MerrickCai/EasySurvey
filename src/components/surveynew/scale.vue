@@ -338,7 +338,8 @@ li {
       border: 1px dashed rgba(30, 111, 255, 1);
     }
     .titlecon {
-      width: 400px;
+      width: 700px;
+      height: fit-content;
       margin-left: 5px;
     }
     input[type="text"] {
