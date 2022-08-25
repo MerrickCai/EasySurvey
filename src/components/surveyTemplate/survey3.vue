@@ -44,11 +44,12 @@
                     </div>
                     <!-- 第二层循环 elem,index -->
                     <div class="ques" v-for="(elem, index) of item.option" :key="index">
-                        <input type="radio" class="input" :name="item.questionId" :value="elem" @click="seleted(i,index, $event)">
+                        <input type="radio" class="input" :name="item.questionId" :value="elem"
+                            @click="seleted(i, index, $event)">
                         <p>{{ elem }}</p>
                     </div>
                 </div>
-                <el-button type="primary" class="submit" @click="toFinish()">提交问卷</el-button>
+                <div class="submit" @click="toFinish()">提交问卷</div>
             </div>
         </div>
 
@@ -70,7 +71,7 @@
 
 <script setup>
 
-import { inject ,onMounted,ref, computed,reactive} from 'vue'
+import { inject, onMounted, ref, computed, reactive } from 'vue'
 const currentSurvey = inject('currentSurvey')
 import axios from 'axios'
 import { useStore } from '../../PiniaStores/index.js'
@@ -86,7 +87,7 @@ const surveyObj = computed(() => props.surveyObj)
 // 封装一个survey---------------用以在模板和存放提交时候的用户数据------------------（按照PiniStores中的结构模板来封装的）
 const survey = reactive({});
 // survey的介绍和提交问卷用的信息
-survey.intro = {};  
+survey.intro = {};
 survey.effectiveNumber = surveyObj.value.questionnaire.effectiveNumber;
 survey.totalNumber = surveyObj.value.questionnaire.totalNumber;
 survey.count = surveyObj.value.questionnaire.count;
@@ -95,29 +96,29 @@ survey.intro.info_title = surveyObj.value.questionnaire.title;
 survey.intro.info_para = surveyObj.value.questionnaire.message;
 
 // survey的问题列表数据
-survey.questionList = []; 
+survey.questionList = [];
 let optionDetail = [];  //装全部的选项的文字描述（如比较符合....这些）
 let optionId = [];   //装全部选项对应的ID
 for (let i in surveyObj.value.optionMap) {
-  let t1 = [];
-  let t2 = [];
-  for (let j = 0; j < surveyObj.value.optionMap[i].length; j++){
-    t1.push(surveyObj.value.optionMap[i][j].detail);
-    t2.push(surveyObj.value.optionMap[i][j].id);
-  }
-  optionDetail.push(t1);
-  optionId.push(t2)
+    let t1 = [];
+    let t2 = [];
+    for (let j = 0; j < surveyObj.value.optionMap[i].length; j++) {
+        t1.push(surveyObj.value.optionMap[i][j].detail);
+        t2.push(surveyObj.value.optionMap[i][j].id);
+    }
+    optionDetail.push(t1);
+    optionId.push(t2)
 }
 
-let start = 0;  
+let start = 0;
 // 配置每一道题目
 for (let i in surveyObj.value.questionInfoMap) {
-  let item = surveyObj.value.questionInfoMap[i];
-    i/= 1;
+    let item = surveyObj.value.questionInfoMap[i];
+    i /= 1;
     let obj = {};
     obj.questiontitle = item.info;  //题目
-    obj.value = 0;  
-    obj.titleBorder = 0; 
+    obj.value = 0;
+    obj.titleBorder = 0;
     obj.progressPartbcg = '#ccc';
     obj.option = optionDetail[start];
     obj.questionId = surveyObj.value.optionMap[i][1].questionId;
@@ -134,43 +135,44 @@ console.log('封装好的数据', survey);
 
 //------------------ 提交问卷请求---------------
 function sumbit() {
-  // 请求参数里面的问卷信息列表
+    // 请求参数里面的问卷信息列表
     const optionList = [];
     for (let item of survey.questionList) {
-          let obj = {};
-           obj.questionId = item.questionId;
-           obj.id = item.seleted;
-           obj.detail = item.value;
-           optionList.push(obj)
+        let obj = {};
+        obj.questionId = item.questionId;
+        obj.id = item.seleted;
+        obj.detail = item.value;
+        optionList.push(obj)
     }
-     axios({
+    axios({
         url: `https://q.denglu1.cn/questions/commit`,
         method: 'post',
         withCredentials: true,
         headers: { 'Content-Type': 'application/json' },
         headers: { 'token': datas.user.token },
         data: {
-          "questionnaire_id": survey.id,
-          "totalNumber": survey.totalNumber,
-          "count":survey.count,     
-          "effectiveNumber":survey.effectiveNumber,  
-          "optionList": optionList,
+            "questionnaire_id": survey.id,
+            "totalNumber": survey.totalNumber,
+            "count": 0,
+            // "count": survey.count,
+            "effectiveNumber": survey.effectiveNumber,
+            "optionList": optionList,
         }
-     }).then((response) => {
+    }).then((response) => {
         console.log(response);
         if (response.data.code === 200) {
-         console.log(survey);
-          if (response.data.msg === '问卷已收集齐了') {
-              alert('问卷已收集齐了');
-          } else {
-             currentSurvey.toEnd();
-           }
+            console.log(survey);
+            if (response.data.msg === '问卷已收集齐了') {
+                alert('问卷已收集齐了');
+            } else {
+                currentSurvey.toEnd();
+            }
         } else {
-         alert('提交失败,请勿重复提交');
-        } 
-      }).catch((error) => {
+            alert('提交失败,请勿重复提交');
+        }
+    }).catch((error) => {
         console.log(error)
-      })
+    })
 }
 
 // 以上是提交问卷请求的内容------------------------------------------------------
@@ -179,7 +181,7 @@ function sumbit() {
 
 
 // -----跳转：介绍页==>答题页--------
-function toContent() { 
+function toContent() {
     currentSurvey.toOngoing();
 }
 
@@ -223,7 +225,7 @@ function onScroll(e) {
 
 
 // 选择单选按钮的方法
-function seleted(i, index,e) {
+function seleted(i, index, e) {
     survey.questionList[i].value = e.target.value;
     survey.questionList[i].seleted = survey.questionList[i].optionId[index];
 }
@@ -241,8 +243,8 @@ function toFinish() {
     let flag = true;
     // 记录未完成的问卷id
     const uncomplete = [];
-      let queId = 1;
-   bluebcg.value.style.display = 'none';      // 进度条滚动的蓝色背景失效
+    let queId = 1;
+    bluebcg.value.style.display = 'none';      // 进度条滚动的蓝色背景失效
     survey.questionList.forEach(item => {
         item.titleBorder = 0;
         item.progressPartbcg = '#5a9afa';
@@ -259,7 +261,7 @@ function toFinish() {
         content.value.scrollTop = questiontitle.value[fisrtreturn].offsetTop;
     }
     if (!flag) return
-        sumbit();
+    sumbit();
 }
 
 </script>
@@ -338,6 +340,11 @@ div[wrapper] {
     width: 100%;
     height: 100%;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
 
     .title {
         .public_title();
@@ -398,9 +405,7 @@ div[wrapper] {
 // 答题内容部分
 // 头部的文字解释
 .topbox {
-    position: absolute;
-    left: 40px;
-    top: 40px;
+    margin: 40px 0 30px 40px;
     display: flex;
     flex-direction: column;
 
@@ -431,12 +436,11 @@ div[wrapper] {
 
 // 问卷题目内容部分
 .content {
-    position: absolute;
-    top: 220px;
-    left: 50px;
-    width: 1155px;
-    height: 350px;
+    width: 100%;
+    height: auto;
+    padding-left: 30px;
     overflow: auto;
+    flex: 1;
 
     .main {
         background-color: white;
@@ -490,14 +494,19 @@ div[wrapper] {
 
     // 问卷内容完成提交按钮
     .submit {
-        position: absolute;
-        left: 0;
-        right: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         margin: 0 auto;
-        width: 180px;
-        height: 40px;
+        width: 240px;
+        height: 60px;
+        margin: 20px auto;
         background-color: rgba(30, 111, 255, 1);
-        margin-top: 40px;
+        cursor: pointer;
+        border-radius: 10px;
+        font-size: 20px;
+        color:rgb(255,255,255);
 
         &:hover {
             background-color: #4791ff;
@@ -512,19 +521,10 @@ div[wrapper] {
 
 
 
-// 对最外层wrapper的微调
-div.extrachange {
-    width: 1210px;
-    z-index: 10;
-}
-
-
-// 完成问卷页面的样式
 .finish-wrapper {
     width: 100%;
     height: 100%;
 
-    // background-color: pink;
     .innerbox {
         width: 400px;
         height: 380px;

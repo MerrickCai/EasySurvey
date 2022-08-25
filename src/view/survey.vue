@@ -45,7 +45,7 @@ const currentSurvey = reactive({
   },
   getSurvey() {
     axios({
-      // url: `https://q.denglu1.cn/user/fillQuestionnaire/${17}`,
+
       url: `https://q.denglu1.cn/user/fillQuestionnaire/${route.params.questionnaireId}`,
       method: "get",
       withCredentials: true,
@@ -53,21 +53,33 @@ const currentSurvey = reactive({
       headers: { token: datas.user.token },
     })
       .then((response) => {
+        //根据问卷类型动态改变视图
+        switch (response.data.data.questionnaire.count) {
+          case 0://单选
+            viewId.value = 3;
+            break;
+          case 1: //多选
+            viewId.value = 4;
+            break;
+          case 2: //矩阵
+            viewId.value = 1;
+            break;
+          case 3: //量表（特殊：贝尔宾）
+            viewId.value = 2;
+            break;
+          case 4: //文本
+            viewId.value = 5;
+            break;
+        }
         // 该值传递通过props传递给子组件
-        this.surveyObj = response.data.data;
         console.log("请求参数", this.surveyObj);
-
-        //假设获取到的问卷类型是2
-        viewId.value = 1;
+        this.surveyObj = response.data.data
       })
       .catch((error) => {
         console.log(error);
       })
-      .catch((error) => {
-        console.log(error);
-      });
-  },
-});
+  }
+})
 
 //provide给问卷模板子组件当前问卷的状态和数据
 provide("currentSurvey", currentSurvey);
@@ -76,22 +88,10 @@ provide("currentSurvey", currentSurvey);
 <template>
   <div class="wrapper">
     <!--装饰品-->
-    <div
-      class="decoration1"
-      v-show="currentSurvey.status.begin || currentSurvey.status.end"
-    ></div>
-    <div
-      class="decoration2"
-      v-show="currentSurvey.status.begin || currentSurvey.status.end"
-    ></div>
-    <div
-      class="decoration3"
-      v-show="currentSurvey.status.begin || currentSurvey.status.end"
-    ></div>
-    <div
-      class="decoration4"
-      v-show="currentSurvey.status.begin || currentSurvey.status.end"
-    ></div>
+    <div class="decoration1" v-show="currentSurvey.status.begin || currentSurvey.status.end"></div>
+    <div class="decoration2" v-show="currentSurvey.status.begin || currentSurvey.status.end"></div>
+    <div class="decoration3" v-show="currentSurvey.status.begin || currentSurvey.status.end"></div>
+    <div class="decoration4" v-show="currentSurvey.status.begin || currentSurvey.status.end"></div>
     <div class="decoration5"></div>
     <img dog-ear src="/tangible.png" />
     <!--装饰品-->
@@ -99,10 +99,7 @@ provide("currentSurvey", currentSurvey);
     <!--动态组件-->
     <Transition name="fade" mode="out-in">
       <KeepAlive>
-        <component
-          :is="currentView"
-          :survey-obj="currentSurvey.surveyObj"
-        ></component>
+        <component :is="currentView" :survey-obj="currentSurvey.surveyObj"></component>
       </KeepAlive>
     </Transition>
   </div>

@@ -159,7 +159,8 @@ function sumbit() {
         data: {
           "questionnaire_id": survey.id,
           "totalNumber": survey.totalNumber,
-          "count":survey.count,     
+        //   "count":survey.count,    
+          "count": 1,
           "effectiveNumber":survey.effectiveNumber,  
           "optionList": optionList,
         }

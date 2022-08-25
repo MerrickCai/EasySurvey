@@ -171,9 +171,11 @@ function sumbit() {
            obj.questionId = item.questionId;
            obj.id = elem.id;
            optionList.push(obj);
-           scoreList.push(elem.value);
+           scoreList.push(elem.value/1);
        }   
-  }
+    }
+  console.log(scoreList);
+  
      axios({
         url: `https://q.denglu1.cn/questions/commit`,
         method: 'post',
@@ -183,7 +185,7 @@ function sumbit() {
         data: {
           "questionnaire_id": survey.id,
           "totalNumber": survey.totalNumber,
-          "count":survey.count,     
+          "count":3,     
           "effectiveNumber":survey.effectiveNumber,  
            "optionList": optionList,
            "scoreList":scoreList
