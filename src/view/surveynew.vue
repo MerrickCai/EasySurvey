@@ -29,6 +29,7 @@
 
 
       <div class="quearea">
+
         <div class="questype">
           <span class="typetitle">请选择问卷类型:</span>
           <span class="typeall">
@@ -39,7 +40,7 @@
             <span :class="{ typeclick: type == 5 }" @click="type = 5">文本</span>
           </span>
         </div>
-        <!-- 题目列表 -->
+
         <div class="quesList">
           <keep-alive>
             <component :is="typeview" :fileword="fileword" :receive="receive" :deleteques="deleteques"
@@ -49,6 +50,7 @@
             </component>
           </keep-alive>
         </div>
+
       </div>
 
 
@@ -562,7 +564,7 @@ div.wrapper {
         display: block;
         width: auto;
         height: auto;
-        font-size: 36px;
+        font-size: 33px;
         font-weight: bold;
         color: rgb(0, 0, 0);
         position: relative;
@@ -584,7 +586,7 @@ div.wrapper {
         display: block;
         width: auto;
         height: auto;
-        font-size: 36px;
+        font-size: 33px;
         font-weight: bold;
         color: rgb(0, 0, 0);
         outline: 0;
@@ -599,20 +601,20 @@ div.wrapper {
         align-items: flex-start;
         height: auto;
         width: 70%;
-        margin-top: 10px;
+        margin-top: 5px;
 
         >span.newintro_title {
           display: block;
-          font-size: 18px;
+          font-size: 16px;
           color: rgba(30, 111, 255, 1);
-          margin-bottom: 10px;
+          margin-bottom: 5px;
         }
 
         >p.newintro_con {
           display: block;
           height: auto;
           width: auto;
-          font-size: 17px;
+          font-size: 15px;
           color: rgb(0, 0, 0);
         }
 
@@ -620,7 +622,7 @@ div.wrapper {
           display: block;
           height: auto;
           width: 100%;
-          font-size: 17px;
+          font-size: 15px;
           color: rgb(0, 0, 0);
           outline: none;
           resize: none;
@@ -638,7 +640,8 @@ div.wrapper {
       align-items: flex-start;
       height: auto;
       width: 70%;
-      margin-top: 10px;
+      margin-top: 5px;
+      overflow: hidden;
 
       >div.questype {
         display: flex;
@@ -648,59 +651,64 @@ div.wrapper {
         align-items: center;
         height: auto;
         width: 100%;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
 
         .typetitle {
-          position: relative;
+          display: block;
+          height: auto;
+          width: auto;
           font-size: 16px;
-          font-weight: 500;
           color: rgba(0, 0, 0, 1);
-          text-align: left;
+          position: relative;
+          margin-right: 10px;
 
           &::after {
             content: "";
             display: block;
             position: absolute;
-            bottom: -2px;
+            bottom: -3px;
             left: 0;
-            height: 4px;
+            height: 2px;
             width: 100%;
             background-color: #1e6fff;
-            border-radius: 2px;
+            border-radius: 5px;
           }
         }
 
         .typeall {
-          margin-left: 6px;
           display: flex;
+          flex-direction: row;
+          flex-wrap: nowrap;
+          justify-content: flex-start;
+          align-items: center;
 
           >span {
             display: block;
-            cursor: pointer;
             width: 60px;
             height: 24px;
-            margin-right: 12px;
+            margin-right: 10px;
             text-align: center;
             line-height: 24px;
             color: rgba(30, 111, 255, 1);
-            font-size: 12px;
-            font-weight: 400;
-            opacity: 1;
+            font-size: 13px;
             box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
-          }
+            background-color: rgb(255, 255, 255);
+            border-radius: 5px;
+            cursor: pointer;
 
-          .typeclick {
-            background: rgba(235, 245, 255, 1);
+            &.typeclick {
+              background: rgba(235, 245, 255, 1);
+            }
           }
         }
       }
 
       >div.quesList {
+        flex: 1;
         display: block;
         height: auto;
-        width: auto;
-        flex: 1;
-        overflow: scroll;
+        width: 100%;
+        overflow: auto;
       }
     }
 
@@ -712,7 +720,7 @@ div.wrapper {
       align-items: center;
       height: auto;
       width: 100%;
-      margin-bottom: 15px;
+      margin: 10px 0;
 
       >div[button] {
         display: flex;
@@ -720,10 +728,10 @@ div.wrapper {
         flex-wrap: nowrap;
         justify-content: center;
         align-items: center;
-        width: 200px;
-        height: 54px;
+        width: 180px;
+        height: 45px;
         cursor: pointer;
-        font-size: 20px;
+        font-size: 18px;
         border-radius: 10px;
 
         &[keep] {
