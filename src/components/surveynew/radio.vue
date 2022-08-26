@@ -32,7 +32,7 @@
         <span
           class="option"
           v-show="!optionshow[index]"
-          @click="optionsshow(index)"
+          @click="optionsshow(index, con)"
         >
           {{ con.detail }}
         </span>
@@ -46,7 +46,7 @@
         />
         <i
           class="deloption"
-          @click="deleoption(index)"
+          @click="deleoption(index, con)"
           ref="deleteo"
           @mousemove="opcursorfail"
           >×</i
@@ -105,16 +105,15 @@ function changeqlshow() {
 let optiontitle = ref([]);
 let optionshow = ref([]);
 
-function optionsshow(index) {
+function optionsshow(index, con) {
   optionshow.value[index] = true;
   nextTick(() => {
     optiontitle.value[index].focus();
   });
 }
 //添加选项
-let xuanze = reactive({ detail: "选项" });
 function addaoption() {
-  props.quesitem.options.push(xuanze);
+  props.quesitem.options.push({ detail: "选项1" });
 }
 //删除选项
 // let deleteo = ref(null);
@@ -126,10 +125,12 @@ function addaoption() {
 //     deleteo.value.style.cursor = "pointer";
 //   }
 // }
-function deleoption(id) {
+function deleoption(id, con) {
+  console.log(con);
   if (props.quesitem.options.length != 1) {
     props.quesitem.options.splice(id, 1);
   }
+  console.log(props.quesitem);
 }
 </script>
 

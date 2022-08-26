@@ -114,9 +114,8 @@ function optionsshow(index) {
   });
 }
 //添加选项
-let xuanze = reactive({ detail: "选项" });
 function addaoption() {
-  props.quesitem.options.push(xuanze);
+  props.quesitem.options.push({ detail: "选项" });
 }
 //删除选项
 // let deleteo = ref(null);
