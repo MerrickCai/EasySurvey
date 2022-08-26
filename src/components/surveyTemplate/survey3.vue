@@ -117,6 +117,7 @@ for (let i in surveyObj.value.questionInfoMap) {
     i /= 1;
     let obj = {};
     obj.questiontitle = item.info;  //题目
+    obj.type = item.type;
     obj.value = 0;
     obj.titleBorder = 0;
     obj.progressPartbcg = '#ccc';
@@ -136,14 +137,19 @@ console.log('封装好的数据', survey);
 //------------------ 提交问卷请求---------------
 function sumbit() {
     // 请求参数里面的问卷信息列表
-    const optionList = [];
-    for (let item of survey.questionList) {
-        let obj = {};
-        obj.questionId = item.questionId;
-        obj.id = item.seleted;
-        obj.detail = item.value;
-        optionList.push(obj)
+    const questionAnswerList = [];
+     for(let item of survey.questionList) {
+         let obj = {};
+         obj.questionId = item.questionId; 
+         obj.type = item.type;
+         obj.optionList = [{
+            id: item.seleted,
+            detail:item.value
+        }]
+        questionAnswerList.push(obj);
     }
+    console.log(questionAnswerList);
+    
     axios({
         url: `https://q.denglu1.cn/questions/commit`,
         method: 'post',
@@ -151,12 +157,11 @@ function sumbit() {
         headers: { 'Content-Type': 'application/json' },
         headers: { 'token': datas.user.token },
         data: {
-            "questionnaire_id": survey.id,
-            "totalNumber": survey.totalNumber,
-            "count": 0,
-            // "count": survey.count,
-            "effectiveNumber": survey.effectiveNumber,
-            "optionList": optionList,
+          "questionnaire_id": survey.id,
+          "totalNumber": survey.totalNumber,
+          "count":survey.count,   
+          "effectiveNumber":survey.effectiveNumber,  
+          "questionAnswerList":questionAnswerList,
         }
     }).then((response) => {
         console.log(response);
@@ -165,6 +170,7 @@ function sumbit() {
             if (response.data.msg === '问卷已收集齐了') {
                 alert('问卷已收集齐了');
             } else {
+                console.log(response);
                 currentSurvey.toEnd();
             }
         } else {
@@ -611,8 +617,9 @@ div[wrapper] {
 //  遮挡原来的
 .zhedang {
     position: absolute;
-    right: 7px;
+    right: 2px;
     background-color: white;
+    // background-color: pink;
     width: 10px;
     height: 500px;
     z-index: 10;
@@ -625,8 +632,8 @@ div[wrapper] {
     z-index: 1;
     height: 300px;
     width: 8px;
-    bottom: 65px;
-    right: 35px;
+    bottom: 165px;
+    right: 155px;
     border-radius: 5px;
     background-color: rgba(204, 204, 204, 1);
     cursor: pointer;

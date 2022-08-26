@@ -57,7 +57,7 @@
         <div class="sharefile">
           <span class="shareword">分享问卷</span>
           <span class="close" @click="disappear($event)">×</span>
-          <img src="/login_icon1.png" alt="" class="barcode">
+          <qrcode-vue :value="linkqr" class="barcode"  backgroundColor="blue" colorDark="blue"></qrcode-vue>
           <span class="sharequick">快分享以上二维码或点击复制<a class="link" @click="getlink">链接</a>填答问卷吧！</span>
         </div>
       </div>
@@ -78,6 +78,7 @@ import textlist from "../components/surveynew/textlist.vue";
 import { useStore } from "../PiniaStores/index.js";
 import axios from "axios";
 import clipboard3 from "vue-clipboard3";
+import QrcodeVue from "qrcode.vue";
 //数据
 const datas = useStore();
 //动态组件视图
@@ -118,7 +119,7 @@ if (localStorage.getItem("matrix")) {
 } else {
   fileword = reactive([
     {
-      question: { detail: "请输入题目标题", type: 2 },
+      question: { detail: "请输入题目标题", type: 0 },
       options: [
         { detail: "" },
         { detail: "" },
@@ -170,7 +171,7 @@ if (localStorage.getItem("scale")) {
   scalefile = reactive([
     {
       options: [{ detail: "选项", dominate: 20 }],
-      question: { detail: "请输入题目标题", type: 3 },
+      question: { detail: "请输入题目标题" },
       id: nanoid(),
       dominate: 60,
       secscore: 20,
@@ -254,7 +255,7 @@ if (localStorage.getItem("text")) {
   textfile = reactive([
     {
       options: [{ detail: "选项" }],
-      question: { detail: "请输入题目标题", type: 4 },
+      question: { detail: "请输入题目标题", type: 2 },
       id: nanoid(),
     },
   ]);
@@ -310,7 +311,7 @@ async function pushfile() {
           totalNumber: 100,
           message: filetitle.info_para,
           title: filetitle.info_title,
-          count: 0
+          count: 0,
         },
         questionOptionList: JSON.parse(JSON.stringify(radiofile)),
       },
@@ -318,6 +319,9 @@ async function pushfile() {
       .then((response) => {
         console.log(response);
         link.value = response.data.data.link;
+        linkqr.value =
+          "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
+          parseInt(link.value);
       })
       .catch((error) => {
         console.log(error);
@@ -353,6 +357,9 @@ async function pushfile() {
       .then((response) => {
         console.log(response);
         link.value = response.data.data.link;
+        linkqr.value =
+          "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
+          parseInt(link.value);
       })
       .catch((error) => {
         console.log(error);
@@ -390,6 +397,9 @@ async function pushfile() {
       .then((response) => {
         console.log(response);
         link.value = response.data.data.link;
+        linkqr.value =
+          "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
+          parseInt(link.value);
       })
       .catch((error) => {
         console.log(error);
@@ -430,6 +440,9 @@ async function pushfile() {
       .then((response) => {
         console.log(response);
         link.value = response.data.data.link;
+        linkqr.value =
+          "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
+          parseInt(link.value);
       })
       .catch((error) => {
         console.log(error);
@@ -466,6 +479,9 @@ async function pushfile() {
       .then((response) => {
         console.log(response);
         link.value = response.data.data.link;
+        linkqr.value =
+          "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
+          parseInt(link.value);
       })
       .catch((error) => {
         console.log(error);
@@ -482,19 +498,15 @@ async function pushfile() {
   localStorage.removeItem("title");
 }
 let link = ref(1);
+let linkqr = ref(
+  "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
+    parseInt(link.value)
+);
 const { toClipboard } = clipboard3();
 async function getlink() {
   try {
-    await toClipboard(
-      "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
-      parseInt(link.value)
-    );
-    alert(
-      "复制的是:" +
-      "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
-      parseInt(link.value) +
-      "复制成功!"
-    );
+    await toClipboard(linkqr.value);
+    alert("复制的是:" + linkqr.value + "复制成功!");
   } catch (error) {
     alert("复制失败!");
   }
@@ -696,7 +708,7 @@ div.wrapper {
           margin-left: 6px;
           display: flex;
 
-          >span {
+          > span {
             display: block;
             cursor: pointer;
             width: 60px;
@@ -717,7 +729,7 @@ div.wrapper {
         }
       }
 
-      >ul {
+      > ul {
         margin-top: 14px;
       }
     }
@@ -808,8 +820,8 @@ div.wrapper {
 
     .barcode {
       position: absolute;
-      top: 85px;
-      left: 133px;
+      top: 122px;
+      left: 177px;
       width: 180px;
       height: 180px;
     }
