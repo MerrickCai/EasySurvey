@@ -20,7 +20,7 @@ import survey3 from "../components/surveyTemplate/survey3.vue"
 import survey4 from "../components/surveyTemplate/survey4.vue"
 import survey5 from "../components/surveyTemplate/survey5.vue"
 const surveyTemplateList = [survey1, survey2, survey3, survey4, survey5]
-const viewId = ref(1)
+const viewId = ref(0)
 const currentView = computed(() => surveyTemplateList[viewId.value - 1])
 
 
@@ -67,6 +67,8 @@ const currentSurvey = reactive({
             viewId.value = 5
             break
         }
+        console.log("请求参数",this.surveyObj);
+        
       })
       .catch((error) => {
         console.log(error)

@@ -163,18 +163,22 @@ console.log('封装好的数据', survey);
 //------------------ 提交问卷请求---------------
 function sumbit() {
   // 请求参数里面的问卷信息列表
-    const optionList = [];
+    const questionAnswerList = [];
     const scoreList = [];
     for (let item of survey.questionList) {
-       for (let elem of item.question) {
           let obj = {};
-           obj.questionId = item.questionId;
-           obj.id = elem.id;
-           optionList.push(obj);
-           scoreList.push(elem.value/1);
-       }   
-    }
-  console.log(scoreList);
+        obj.questionId = item.questionId;
+        obj.optionList = [];
+          for (let elem of item.question) {
+              let obj2 = {};
+              obj2.id = elem.id;
+              obj.optionList.push(obj2);
+             scoreList.push(elem.value/1);
+           }
+           questionAnswerList.push(obj);
+        }
+//   console.log(questionAnswerList);
+//   console.log(scoreList);
   
      axios({
         url: `https://q.denglu1.cn/questions/commit`,
@@ -185,15 +189,15 @@ function sumbit() {
         data: {
           "questionnaire_id": survey.id,
           "totalNumber": survey.totalNumber,
-          "count":3,     
+          "count":survey.count,   
           "effectiveNumber":survey.effectiveNumber,  
-           "optionList": optionList,
+           "questionAnswerList": questionAnswerList,
            "scoreList":scoreList
         }
      }).then((response) => {
         console.log(response);
        if (response.data.code === 200) {
-         console.log(survey);
+        //  console.log(survey);
           if (response.data.msg === '问卷已收集齐了') {
               alert('问卷已收集齐了');
           } else {
