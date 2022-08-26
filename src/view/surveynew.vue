@@ -1,12 +1,14 @@
-
 <template>
   <div class="wrapper">
-    <img dog-ear src="/tangible.png" />
-    <div class="decoration5"></div>
+    <!--装饰品-->
     <div class="decoration1"></div>
     <div class="decoration2"></div>
     <div class="decoration3"></div>
     <div class="decoration4"></div>
+    <div class="decoration5"></div>
+    <img dog-ear src="/tangible.png" />
+    <!--装饰品-->
+
 
     <div class="newcon">
       <div class="newword">
@@ -60,20 +62,13 @@
         </div>
       </div>
     </div>
+
+
   </div>
 </template>
 
 <script setup>
-import {
-  nextTick,
-  onMounted,
-  reactive,
-  ref,
-  provide,
-  watch,
-  computed,
-  toRaw,
-} from "vue";
+import { nextTick, reactive, ref, provide, watch, computed, toRaw } from "vue";
 import { nanoid } from "nanoid";
 import radiolist from "../components/surveynew/radiolist.vue";
 import checkboxlist from "../components/surveynew/checkboxlist.vue";
@@ -522,8 +517,9 @@ div.wrapper {
   position: relative;
   top: 0;
   left: 0;
-  border-radius: 5px;
+  border-radius: 10px;
   box-shadow: 0px 5px 10px 0 rgba(73, 107, 158, 0.1);
+  background-color: rgb(255, 255, 255);
   z-index: 0;
 
   div.decoration1 {
@@ -531,7 +527,7 @@ div.wrapper {
     height: 400px;
     width: 400px;
     position: absolute;
-    z-index: -10;
+    z-index: -1;
     top: 0;
     left: 0;
     transform: translate(-50%, -50%);
@@ -545,7 +541,7 @@ div.wrapper {
     height: 150px;
     width: 150px;
     position: absolute;
-    z-index: -3;
+    z-index: -1;
     bottom: 40px;
     right: 50px;
     border-radius: 50%;
@@ -557,7 +553,7 @@ div.wrapper {
     height: 100px;
     width: 100px;
     position: absolute;
-    z-index: -4;
+    z-index: -2;
     bottom: 80px;
     right: -20px;
     border-radius: 50%;
@@ -569,7 +565,7 @@ div.wrapper {
     height: 170px;
     width: 170px;
     position: absolute;
-    z-index: -4;
+    z-index: -3;
     bottom: -20px;
     right: 100px;
     border-radius: 50%;
@@ -601,9 +597,9 @@ div.wrapper {
 
   .newcon {
     position: relative;
-    top: 50px;
-    width: 840px;
-    height: 570px;
+    height: 100%;
+    width: 100%;
+    
 
     .newtitle {
       position: relative;
