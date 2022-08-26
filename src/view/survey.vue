@@ -54,6 +54,8 @@ const currentSurvey = reactive({
     })
       .then((response) => {
         //根据问卷类型动态改变视图
+        console.log(response);
+        
         switch (response.data.data.questionnaire.count) {
           case 0://单选
             viewId.value = 3;
@@ -71,9 +73,11 @@ const currentSurvey = reactive({
             viewId.value = 5;
             break;
         }
+        viewId.value=5 //测试用等下删        
         // 该值传递通过props传递给子组件
-        console.log("请求参数", this.surveyObj);
         this.surveyObj = response.data.data
+        console.log("请求参数", this.surveyObj);
+
       })
       .catch((error) => {
         console.log(error);

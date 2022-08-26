@@ -71,9 +71,85 @@ import { ref, reactive, toRefs, onBeforeMount, onMounted, watchEffect, computed 
 import { useStore } from '../../PiniaStores/index.js'
 const datas = useStore();
 
-const survey = computed(() => {
-    return datas.survey.survey5[0];
-});
+// const survey = computed(() => {
+//     return datas.survey.survey5[0];
+// });
+
+
+// ------------------接收survey父组件传过来的参数。-------------------------------
+const props = defineProps(['surveyObj']);
+// 从父组件拿到数据
+const surveyObj = computed(() => props.surveyObj)
+
+// 封装一个survey---------------用以在模板和存放提交时候的用户数据------------------（按照PiniStores中的结构模板来封装的）
+const survey = reactive({});
+// survey的介绍和提交问卷用的信息
+survey.intro = {};  
+survey.effectiveNumber = surveyObj.value.questionnaire.effectiveNumber;
+survey.totalNumber = surveyObj.value.questionnaire.totalNumber;
+survey.count = surveyObj.value.questionnaire.count;
+survey.id = surveyObj.value.questionnaire.id;
+survey.intro.info_title = surveyObj.value.questionnaire.title;
+survey.intro.info_para = surveyObj.value.questionnaire.message;
+
+// survey的问题列表数据
+survey.questionList = []; 
+
+// 配置每一道题目
+for (let i in surveyObj.value.questionInfoMap) {
+  let item = surveyObj.value.questionInfoMap[i];
+    i/= 1;
+    let obj = {};
+    obj.questiontitle = item.info;  //题目
+    obj.type = item.type;
+    obj.value = "";  
+    obj.titleBorder = 0; 
+    obj.progressPartbcg = '#ccc';
+    obj.questionId = i ;
+    survey.questionList.push(obj)
+}
+console.log('封装好的数据', survey);
+// -------------------------------------------------
+
+
+
+//------------------ 提交问卷请求---------------
+function sumbit() {
+
+     axios({
+        url: `https://q.denglu1.cn/questions/commit`,
+        method: 'post',
+        withCredentials: true,
+        headers: { 'Content-Type': 'application/json' },
+        headers: { 'token': datas.user.token },
+        data: {
+          "questionnaire_id": survey.id,
+          "totalNumber": survey.totalNumber,
+          "count":4,    
+          "effectiveNumber": survey.effectiveNumber,  
+          "text":survey.questionList.value
+        }
+     }).then((response) => {
+        console.log(response);
+        if (response.data.code === 200) {
+        //  console.log(survey);
+          if (response.data.msg === '问卷已收集齐了') {
+              alert('问卷已收集齐了');
+          } else {
+            console.log(survey);
+        // currentSurvey.toEnd();
+            
+           }
+        } else {
+         alert('提交失败,请勿重复提交');
+        } 
+      }).catch((error) => {
+        console.log(error)
+      })
+}
+// 以上是提交问卷请求的内容------------------------------------------------------
+
+
 
 
 // -----跳转：介绍页==>答题页--------
@@ -136,7 +212,7 @@ function getValue(item, e) {
 // 获取全部questiontitle
 const questiontitle = ref(null);
 // 进度条片段的高度
-const progressPartHeight = 300 / (survey.value.questionList.length);
+const progressPartHeight = 300 / (survey.questionList.length);
 
 // 提交按钮  跳转：答题页==>完成页
 function toFinish() {
@@ -146,7 +222,7 @@ function toFinish() {
     const uncomplete = [];
     // 滚动的蓝色背景失效
     bluebcg.value.style.display = 'none';
-    survey.value.questionList.forEach(item => {
+    survey.questionList.forEach(item => {
         item.titleBorder = 0;
         item.progressPartbcg = '#5a9afa';
         let queId = 1;
@@ -166,7 +242,7 @@ function toFinish() {
     //    console.log(progressPartHeight);
 
     if (!flag) return
-    currentSurvey.toEnd();
+    sumbit();
 }
 
 </script>

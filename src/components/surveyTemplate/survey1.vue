@@ -42,10 +42,11 @@ for (let i in surveyObj.value.optionMap) {
 let start = 0; //  因为optionDetail和optionId是数组，是以0开始的，所以在赋值给每一项的时候索引要从0开始。
 // 配置每一道题目
 for (let i in surveyObj.value.questionInfoMap) {
-  let item = surveyObj.value.questionInfoMap[i].info;
+  let item = surveyObj.value.questionInfoMap[i];
     i/= 1;
     let obj = {};
-    obj.ques = item;  //题目
+    obj.ques = item.info;  //题目
+    obj.type = item.type;
     obj.value = 0;  
     obj.titleBorder = 0; 
     obj.progressPartbcg = '#ccc';
@@ -66,15 +67,19 @@ console.log('封装好的数据', survey);
 //------------------ 提交问卷请求，在toFinish函数里面被调用---------------
 function sumbit() {
   // 请求参数里面的问卷信息列表
-   const optionList = [];
+   const questionAnswerList = [];
   for(let item of survey.quesList) {
        let obj = {};
-    obj.questionId = item.questionId;
-    obj.id = item.seleted;
-    obj.detail = item.font[item.value-1]; 
-    optionList.push(obj);
+    obj.questionId = item.questionId; 
+    obj.type = item.type;
+    obj.optionList = [{
+         id: item.seleted,
+         detail:item.font[item.value-1]
+    }]
+    questionAnswerList.push(obj);
   }
-// console.log(optionList);
+  console.log(questionAnswerList);
+  
      axios({
         url: `https://q.denglu1.cn/questions/commit`,
         method: 'post',
@@ -84,15 +89,14 @@ function sumbit() {
         data: {
           "questionnaire_id": survey.id,
           "totalNumber": survey.totalNumber,
-          // "count":survey.count,   
-          "count":2,     
+          "count":survey.count,   
           "effectiveNumber":survey.effectiveNumber,  
-          "optionList":optionList,
+          "questionAnswerList":questionAnswerList,
         }
      }).then((response) => {
-        console.log(response);
+        // console.log(response);
        if (response.data.code === 200) {
-         console.log(survey);
+        //  console.log(survey);
           if (response.data.msg === '问卷已收集齐了') {
               alert('问卷已收集齐了');
           } else {
@@ -156,6 +160,7 @@ function onScroll(e) {
   temp.pop();
   temp = temp.join("") / 1;
   bluebcg_height.value = temp;
+
 }
 
 

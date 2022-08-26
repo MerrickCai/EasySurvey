@@ -117,6 +117,7 @@ for (let i in surveyObj.value.questionInfoMap) {
     i/= 1;
     let obj = {};
     obj.questiontitle = item.info;  //题目
+    obj.type = item.type;
     obj.value = [];  
     obj.titleBorder = 0; 
     obj.progressPartbcg = '#ccc';
@@ -136,18 +137,20 @@ console.log('封装好的数据', survey);
 //------------------ 提交问卷请求---------------
 function sumbit() {
   // 请求参数里面的问卷信息列表
-    const optionList = [];
+    const questionAnswerList = [];
     for (let item of survey.questionList) {
-        for (let elem of item.value) {
-           let obj = {};
+    let obj = {};
            obj.questionId = item.questionId;
-           obj.id = elem.id;
-           obj.detail = elem.value;
-           optionList.push(obj)
+           obj.type = item.type;
+           obj.optionList = []
+        for (let elem of item.value) {
+            let obj2 = {};
+            obj2.id = elem.id;
+            obj2.detail = elem.value;
+            obj.optionList.push(obj2);
         }
-
+           questionAnswerList.push(obj)
     }
-    // console.log(optionList);
     // console.log(survey);
     
      axios({
@@ -159,10 +162,9 @@ function sumbit() {
         data: {
           "questionnaire_id": survey.id,
           "totalNumber": survey.totalNumber,
-        //   "count":survey.count,    
-          "count": 1,
+          "count":survey.count,    
           "effectiveNumber":survey.effectiveNumber,  
-          "optionList": optionList,
+          "questionAnswerList": questionAnswerList,
         }
      }).then((response) => {
         console.log(response);
