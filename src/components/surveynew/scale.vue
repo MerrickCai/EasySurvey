@@ -89,7 +89,7 @@ let { scroll, updatescroll } = inject("changescroll");
 //添加主问题
 function addamount() {
   const quesobj = {
-    question: { detail: "请输入题目标题", type: 3 },
+    question: { detail: "请输入题目标题" },
     options: [{ detail: "请输入次级题目标题", dominate: 20 }],
     id: nanoid(),
     score: 60,
