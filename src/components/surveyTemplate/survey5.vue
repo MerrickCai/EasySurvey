@@ -115,7 +115,14 @@ console.log('封装好的数据', survey);
 
 //------------------ 提交问卷请求---------------
 function sumbit() {
-
+    const questionAnswerList = [];
+    for (let item of survey.questionList) {
+    let obj = {};
+           obj.questionId = item.questionId;
+           obj.type = item.type;
+           obj.text = item.value;
+           questionAnswerList.push(obj)
+    }
      axios({
         url: `https://q.denglu1.cn/questions/commit`,
         method: 'post',
@@ -125,9 +132,9 @@ function sumbit() {
         data: {
           "questionnaire_id": survey.id,
           "totalNumber": survey.totalNumber,
-          "count":4,    
+          "count":survey.count,    
           "effectiveNumber": survey.effectiveNumber,  
-          "text":survey.questionList.value
+          "questionAnswerList": questionAnswerList
         }
      }).then((response) => {
         console.log(response);

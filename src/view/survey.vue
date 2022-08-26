@@ -1,51 +1,47 @@
 <script setup>
-import { provide, ref, computed, reactive, toRef, onMounted } from "vue";
+import { ref, reactive, computed, provide } from "vue"
+import axios from "axios"
+import { useRoute } from "vue-router"
+const route = useRoute()
+import { useStore } from "../PiniaStores/index.js"
+const datas = useStore()
 
-import axios from "axios";
-//问卷模板子组件
-//目前有五套：矩阵，量表（特殊：贝尔宾），单选，多选，文本。分别对应类型1-5
-import survey1 from "../components/surveyTemplate/survey1.vue";
-import survey2 from "../components/surveyTemplate/survey2.vue";
-import survey3 from "../components/surveyTemplate/survey3.vue";
-import survey4 from "../components/surveyTemplate/survey4.vue";
-import survey5 from "../components/surveyTemplate/survey5.vue";
-import { useStore } from "../PiniaStores/index.js";
-const datas = useStore();
-const surveyTemplateList = [survey1, survey2, survey3, survey4, survey5];
-const viewId = ref(0); //一开始不加载
-const currentView = computed(() => surveyTemplateList[viewId.value - 1]);
 
-import { useRoute } from "vue-router";
-const route = useRoute();
 
-// 发送请求拿到数据，先假设是第一个问卷
-onMounted(() => {
-  currentSurvey.getSurvey();
-});
+//问卷模板子组件（共五套）
+//矩阵：问卷类型:1，count:2
+//量表：问卷类型:2，count:3
+//单选：问卷类型:3，count:0
+//多选：问卷类型:4，count:1
+//文本：问卷类型:5，count:4
+import survey1 from "../components/surveyTemplate/survey1.vue"
+import survey2 from "../components/surveyTemplate/survey2.vue"
+import survey3 from "../components/surveyTemplate/survey3.vue"
+import survey4 from "../components/surveyTemplate/survey4.vue"
+import survey5 from "../components/surveyTemplate/survey5.vue"
+const surveyTemplateList = [survey1, survey2, survey3, survey4, survey5]
+const viewId = ref(0)
+const currentView = computed(() => surveyTemplateList[viewId.value - 1])
 
-//网络请求获取问卷类型和问卷数据，然后加载对应的问卷模板并响应式填充问卷数据
-//问卷填写的状态（问卷介绍，填写问卷，填写结束）=>传给问卷模板组件
+
 
 const currentSurvey = reactive({
-  //问卷的填写状态：填写前，填写中，填写完
   status: {
     begin: true,
     ongoing: false,
     end: false,
   },
-  //从网络请求获取到的问卷数据存入这里
-  surveyObj: {},
   toOngoing() {
-    this.status.begin = false;
-    this.status.ongoing = true;
+    this.status.begin = false
+    this.status.ongoing = true
   },
   toEnd() {
-    this.status.ongoing = false;
-    this.status.end = true;
+    this.status.ongoing = false
+    this.status.end = true
   },
+  surveyObj: {},
   getSurvey() {
     axios({
-
       url: `https://q.denglu1.cn/user/fillQuestionnaire/${route.params.questionnaireId}`,
       method: "get",
       withCredentials: true,
@@ -53,40 +49,34 @@ const currentSurvey = reactive({
       headers: { token: datas.user.token },
     })
       .then((response) => {
-        //根据问卷类型动态改变视图
-        console.log(response);
-        
-        switch (response.data.data.questionnaire.count) {
-          case 0://单选
-            viewId.value = 3;
-            break;
-          case 1: //多选
-            viewId.value = 4;
-            break;
-          case 2: //矩阵
-            viewId.value = 1;
-            break;
-          case 3: //量表（特殊：贝尔宾）
-            viewId.value = 2;
-            break;
-          case 4: //文本
-            viewId.value = 5;
-            break;
-        }
-        viewId.value=5 //测试用等下删        
-        // 该值传递通过props传递给子组件
         this.surveyObj = response.data.data
-        console.log("请求参数", this.surveyObj);
-
+        switch (response.data.data.questionnaire.count) {
+          case 0: //单选
+            viewId.value = 3
+            break
+          case 1: //多选
+            viewId.value = 4
+            break
+          case 2: //矩阵
+            viewId.value = 1
+            break
+          case 3: //量表
+            viewId.value = 2
+            break
+          case 4: //文本
+            viewId.value = 5
+            break
+        }
+        console.log("请求参数",this.surveyObj);
+        
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error)
       })
   }
 })
-
-//provide给问卷模板子组件当前问卷的状态和数据
-provide("currentSurvey", currentSurvey);
+currentSurvey.getSurvey()
+provide("currentSurvey", currentSurvey)
 </script>
 
 <template>
@@ -101,11 +91,8 @@ provide("currentSurvey", currentSurvey);
     <!--装饰品-->
 
     <!--动态组件-->
-    <Transition name="fade" mode="out-in">
-      <KeepAlive>
-        <component :is="currentView" :survey-obj="currentSurvey.surveyObj"></component>
-      </KeepAlive>
-    </Transition>
+    <component :is="currentView" :survey-obj="currentSurvey.surveyObj"></component>
+    <!--动态组件-->
   </div>
 </template>
 

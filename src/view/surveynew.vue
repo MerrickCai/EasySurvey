@@ -315,6 +315,7 @@ async function pushfile() {
           totalNumber: 100,
           message: filetitle.info_para,
           title: filetitle.info_title,
+          count: 0
         },
         questionOptionList: JSON.parse(JSON.stringify(radiofile)),
       },
@@ -349,6 +350,7 @@ async function pushfile() {
           totalNumber: 100,
           message: filetitle.info_para,
           title: filetitle.info_title,
+          count: 1,
         },
         questionOptionList: JSON.parse(JSON.stringify(checkboxfile)),
       },
@@ -385,6 +387,7 @@ async function pushfile() {
           totalNumber: 100,
           message: filetitle.info_para,
           title: filetitle.info_title,
+          count: 2,
         },
         questionOptionList: JSON.parse(JSON.stringify(fileword)),
       },
@@ -424,7 +427,7 @@ async function pushfile() {
           totalNumber: 100,
           message: filetitle.info_para,
           title: filetitle.info_title,
-          count: 2,
+          count: 3,
         },
         questionOptionList: JSON.parse(JSON.stringify(scalefile)),
       },
@@ -460,6 +463,7 @@ async function pushfile() {
           totalNumber: 100,
           message: filetitle.info_para,
           title: filetitle.info_title,
+          count: 4,
         },
         questionOptionList: JSON.parse(JSON.stringify(textfile)),
       },
@@ -488,13 +492,13 @@ async function getlink() {
   try {
     await toClipboard(
       "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
-        parseInt(link.value)
+      parseInt(link.value)
     );
     alert(
       "复制的是:" +
-        "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
-        parseInt(link.value) +
-        "复制成功!"
+      "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
+      parseInt(link.value) +
+      "复制成功!"
     );
   } catch (error) {
     alert("复制失败!");
@@ -696,7 +700,7 @@ div.wrapper {
           margin-left: 6px;
           display: flex;
 
-          > span {
+          >span {
             display: block;
             cursor: pointer;
             width: 60px;
@@ -717,10 +721,11 @@ div.wrapper {
         }
       }
 
-      > ul {
+      >ul {
         margin-top: 14px;
       }
     }
+
     .keep {
       cursor: pointer;
       position: absolute;
@@ -735,6 +740,7 @@ div.wrapper {
       color: #8c8c8c;
       border: 0px;
     }
+
     .push {
       cursor: pointer;
       position: absolute;
@@ -825,6 +831,7 @@ div.wrapper {
       letter-spacing: 0px;
       line-height: 22px;
       color: rgba(0, 0, 0, 1);
+
       .link {
         cursor: pointer;
         text-decoration-line: underline;
