@@ -102,7 +102,7 @@ for (let i in surveyObj.value.questionInfoMap) {
     let obj = {};
     obj.questiontitle = item.info;  //题目
     obj.type = item.type;
-    obj.value = "";  
+    obj.value = 0;  
     obj.titleBorder = 0; 
     obj.progressPartbcg = '#ccc';
     obj.questionId = i ;
