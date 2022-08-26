@@ -1,40 +1,33 @@
 <script setup>
-import { provide, ref, computed, reactive, toRef, onMounted } from "vue";
+//准备工作
+import { provide, ref, computed, reactive } from "vue"
+import axios from "axios"
+import { useRoute } from "vue-router"
+const route = useRoute()
+import { useStore } from "../PiniaStores/index.js"
+const datas = useStore()
 
-import axios from "axios";
-//问卷模板子组件
-//目前有五套：矩阵，量表（特殊：贝尔宾），单选，多选，文本。分别对应类型1-5
-import survey1 from "../components/surveyTemplate/survey1.vue";
-import survey2 from "../components/surveyTemplate/survey2.vue";
-import survey3 from "../components/surveyTemplate/survey3.vue";
-import survey4 from "../components/surveyTemplate/survey4.vue";
-import survey5 from "../components/surveyTemplate/survey5.vue";
-import { useStore } from "../PiniaStores/index.js";
-const datas = useStore();
-const surveyTemplateList = [survey1, survey2, survey3, survey4, survey5];
-const viewId = ref(0); //一开始不加载
-const currentView = computed(() => surveyTemplateList[viewId.value - 1]);
 
-import { useRoute } from "vue-router";
-const route = useRoute();
 
-// 发送请求拿到数据，先假设是第一个问卷
-onMounted(() => {
-  currentSurvey.getSurvey();
-});
+//问卷模板子组件(五套)：矩阵，量表（特殊：贝尔宾），单选，多选，文本。分别对应类型1-5
+import survey1 from "../components/surveyTemplate/survey1.vue"
+import survey2 from "../components/surveyTemplate/survey2.vue"
+import survey3 from "../components/surveyTemplate/survey3.vue"
+import survey4 from "../components/surveyTemplate/survey4.vue"
+import survey5 from "../components/surveyTemplate/survey5.vue"
+const surveyTemplateList = [survey1, survey2, survey3, survey4, survey5]
+const viewId = ref(0)
+const currentView = computed(() => surveyTemplateList[viewId.value - 1])
 
-//网络请求获取问卷类型和问卷数据，然后加载对应的问卷模板并响应式填充问卷数据
-//问卷填写的状态（问卷介绍，填写问卷，填写结束）=>传给问卷模板组件
 
+
+//currentSurvey对象
 const currentSurvey = reactive({
-  //问卷的填写状态：填写前，填写中，填写完
   status: {
     begin: true,
     ongoing: false,
     end: false,
   },
-  //从网络请求获取到的问卷数据存入这里
-  surveyObj: {},
   toOngoing() {
     this.status.begin = false;
     this.status.ongoing = true;
@@ -43,9 +36,9 @@ const currentSurvey = reactive({
     this.status.ongoing = false;
     this.status.end = true;
   },
+  surveyObj: {},  //网络请求获取问卷数据并存入
   getSurvey() {
     axios({
-
       url: `https://q.denglu1.cn/user/fillQuestionnaire/${route.params.questionnaireId}`,
       method: "get",
       withCredentials: true,
@@ -56,32 +49,33 @@ const currentSurvey = reactive({
         //根据问卷类型动态改变视图
         switch (response.data.data.questionnaire.count) {
           case 0://单选
-            viewId.value = 3;
-            break;
+            viewId.value = 3
+            break
           case 1: //多选
-            viewId.value = 4;
-            break;
+            viewId.value = 4
+            break
           case 2: //矩阵
-            viewId.value = 1;
-            break;
+            viewId.value = 1
+            break
           case 3: //量表（特殊：贝尔宾）
-            viewId.value = 2;
-            break;
+            viewId.value = 2
+            break
           case 4: //文本
-            viewId.value = 5;
-            break;
+            viewId.value = 5
+            break
         }
-        // 该值传递通过props传递给子组件
-        console.log("请求参数", this.surveyObj);
         this.surveyObj = response.data.data
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error)
       })
   }
 })
 
-//provide给问卷模板子组件当前问卷的状态和数据
+
+//开始网络请求
+currentSurvey.getSurvey()
+//provide这个对象给子组件
 provide("currentSurvey", currentSurvey);
 </script>
 
