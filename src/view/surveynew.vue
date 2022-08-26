@@ -316,6 +316,7 @@ async function pushfile() {
           totalNumber: 100,
           message: filetitle.info_para,
           title: filetitle.info_title,
+          count: 0,
         },
         questionOptionList: JSON.parse(JSON.stringify(radiofile)),
       },
@@ -353,6 +354,7 @@ async function pushfile() {
           totalNumber: 100,
           message: filetitle.info_para,
           title: filetitle.info_title,
+          count: 1,
         },
         questionOptionList: JSON.parse(JSON.stringify(checkboxfile)),
       },
@@ -392,6 +394,7 @@ async function pushfile() {
           totalNumber: 100,
           message: filetitle.info_para,
           title: filetitle.info_title,
+          count: 2,
         },
         questionOptionList: JSON.parse(JSON.stringify(fileword)),
       },
@@ -434,7 +437,7 @@ async function pushfile() {
           totalNumber: 100,
           message: filetitle.info_para,
           title: filetitle.info_title,
-          count: 2,
+          count: 3,
         },
         questionOptionList: JSON.parse(JSON.stringify(scalefile)),
       },
@@ -473,6 +476,7 @@ async function pushfile() {
           totalNumber: 100,
           message: filetitle.info_para,
           title: filetitle.info_title,
+          count: 4,
         },
         questionOptionList: JSON.parse(JSON.stringify(textfile)),
       },
@@ -733,6 +737,7 @@ div.wrapper {
         margin-top: 14px;
       }
     }
+
     .keep {
       cursor: pointer;
       position: absolute;
@@ -747,6 +752,7 @@ div.wrapper {
       color: #8c8c8c;
       border: 0px;
     }
+
     .push {
       cursor: pointer;
       position: absolute;
@@ -837,6 +843,7 @@ div.wrapper {
       letter-spacing: 0px;
       line-height: 22px;
       color: rgba(0, 0, 0, 1);
+
       .link {
         cursor: pointer;
         text-decoration-line: underline;
