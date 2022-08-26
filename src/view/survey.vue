@@ -1,6 +1,5 @@
 <script setup>
-//准备工作
-import { provide, ref, computed, reactive } from "vue"
+import { ref, reactive, computed, provide } from "vue"
 import axios from "axios"
 import { useRoute } from "vue-router"
 const route = useRoute()
@@ -9,19 +8,23 @@ const datas = useStore()
 
 
 
-//问卷模板子组件(五套)：矩阵，量表（特殊：贝尔宾），单选，多选，文本。分别对应类型1-5
+//问卷模板子组件（共五套）
+//矩阵：问卷类型:1，count:2
+//量表：问卷类型:2，count:3
+//单选：问卷类型:3，count:0
+//多选：问卷类型:4，count:1
+//文本：问卷类型:5，count:4
 import survey1 from "../components/surveyTemplate/survey1.vue"
 import survey2 from "../components/surveyTemplate/survey2.vue"
 import survey3 from "../components/surveyTemplate/survey3.vue"
 import survey4 from "../components/surveyTemplate/survey4.vue"
 import survey5 from "../components/surveyTemplate/survey5.vue"
 const surveyTemplateList = [survey1, survey2, survey3, survey4, survey5]
-const viewId = ref(0)
+const viewId = ref(1)
 const currentView = computed(() => surveyTemplateList[viewId.value - 1])
 
 
 
-//currentSurvey对象
 const currentSurvey = reactive({
   status: {
     begin: true,
@@ -29,14 +32,14 @@ const currentSurvey = reactive({
     end: false,
   },
   toOngoing() {
-    this.status.begin = false;
-    this.status.ongoing = true;
+    this.status.begin = false
+    this.status.ongoing = true
   },
   toEnd() {
-    this.status.ongoing = false;
-    this.status.end = true;
+    this.status.ongoing = false
+    this.status.end = true
   },
-  surveyObj: {},  //网络请求获取问卷数据并存入
+  surveyObj: {},
   getSurvey() {
     axios({
       url: `https://q.denglu1.cn/user/fillQuestionnaire/${route.params.questionnaireId}`,
@@ -46,9 +49,9 @@ const currentSurvey = reactive({
       headers: { token: datas.user.token },
     })
       .then((response) => {
-        //根据问卷类型动态改变视图
+        this.surveyObj = response.data.data
         switch (response.data.data.questionnaire.count) {
-          case 0://单选
+          case 0: //单选
             viewId.value = 3
             break
           case 1: //多选
@@ -57,26 +60,21 @@ const currentSurvey = reactive({
           case 2: //矩阵
             viewId.value = 1
             break
-          case 3: //量表（特殊：贝尔宾）
+          case 3: //量表
             viewId.value = 2
             break
           case 4: //文本
             viewId.value = 5
             break
         }
-        this.surveyObj = response.data.data
       })
       .catch((error) => {
         console.log(error)
       })
   }
 })
-
-
-//开始网络请求
 currentSurvey.getSurvey()
-//provide这个对象给子组件
-provide("currentSurvey", currentSurvey);
+provide("currentSurvey", currentSurvey)
 </script>
 
 <template>
@@ -91,11 +89,8 @@ provide("currentSurvey", currentSurvey);
     <!--装饰品-->
 
     <!--动态组件-->
-    <Transition name="fade" mode="out-in">
-      <KeepAlive>
-        <component :is="currentView" :survey-obj="currentSurvey.surveyObj"></component>
-      </KeepAlive>
-    </Transition>
+    <component :is="currentView" :survey-obj="currentSurvey.surveyObj"></component>
+    <!--动态组件-->
   </div>
 </template>
 
