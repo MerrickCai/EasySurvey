@@ -71,7 +71,7 @@ let { scroll, updatescroll } = inject("changescroll");
 function addamount() {
   const quesobj = {
     question: { detail: "请输入题目标题", type: 1 },
-    options: [{ detail: "选项" }, { detail: "选项" }],
+    options: [{ detail: "选项" }],
     id: nanoid(),
   };
   props.creceive(quesobj);

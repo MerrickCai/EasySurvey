@@ -71,7 +71,7 @@ function addamount() {
   const quesobj = {
     id: nanoid(),
     question: { detail: "请输入题目标题", type: 0 },
-    options: [{ detail: "选项" }, { detail: "选项" }],
+    options: [{ detail: "选项" }],
   };
   props.rreceive(quesobj);
 }

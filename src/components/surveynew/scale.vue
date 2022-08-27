@@ -335,7 +335,7 @@ li {
       border: 1px dashed rgba(30, 111, 255, 1);
     }
     .titlecon {
-      width: 600px;
+      width: 500px;
       height: fit-content;
       margin-left: 5px;
     }
@@ -345,7 +345,7 @@ li {
       -moz-appearance: none;
       outline: 0;
       /* 设置我们要的样式 */
-      width: 600px;
+      width: 500px;
       height: 20px;
       opacity: 1;
       text-align: left;
