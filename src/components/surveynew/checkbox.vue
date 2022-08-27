@@ -221,7 +221,7 @@ li {
       display: flex;
       height: 20px;
       height: fit-content;
-      margin: 5px 0 10px 37px;
+      margin: 5px 0 5px 37px;
       .circle {
         width: 18px;
         height: 18px;
@@ -250,7 +250,7 @@ li {
       }
       .deloption {
         cursor: pointer;
-        font-size: 25px;
+        font-size: 20px;
         font-weight: 400;
         color: rgba(30, 111, 255, 1);
         font-style: normal;
