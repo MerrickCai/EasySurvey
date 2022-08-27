@@ -14,7 +14,7 @@ function validate(account, password) {
         return false
     }
     if (!/^[0-9a-zA-Z_!.]{8,20}$/.test(password)) { //8-20位字母数字+特殊字符（_!.）
-        alert('请输入正确的密码')
+    alert('请输入8-20位仅含数字、字母和部分特殊字符的密码');
         return false
     }
     return true

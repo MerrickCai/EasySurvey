@@ -146,7 +146,7 @@ for (let i in surveyObj.value.questionInfoMap) {
     obj.titleBorder = 0; 
     obj.progressPartbcg = '#ccc';
     obj.question = optionDetail[start];
-    obj.questionId = surveyObj.value.optionMap[i][1].questionId;
+    obj.questionId = surveyObj.value.optionMap[i][0].questionId;
     obj.silderSrc ='/blue.png';
     obj.score = item.dominate;
     obj.staticScore = obj.score;
@@ -643,7 +643,8 @@ div[wrapper] {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        margin-bottom: 20px;
+        margin-bottom: 38px;
+        // background-color: #bfa;
     }
 
     .questiontitle {
@@ -698,6 +699,8 @@ div[wrapper] {
         font-size: 14px;
         font-family: '思源黑体';
         position: relative;
+        margin-top: 12px;
+        // background-color: pink;
 
         // 滑块
         .slide {

@@ -122,7 +122,7 @@ for (let i in surveyObj.value.questionInfoMap) {
     obj.titleBorder = 0;
     obj.progressPartbcg = '#ccc';
     obj.option = optionDetail[start];
-    obj.questionId = surveyObj.value.optionMap[i][1].questionId;
+    obj.questionId = surveyObj.value.optionMap[i][0].questionId;
     obj.optionId = optionId[start];
     obj.seleted = 0;
     start++;

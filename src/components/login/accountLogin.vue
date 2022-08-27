@@ -17,7 +17,7 @@ function validate(account, password) {
   }
   if (!/^[0-9a-zA-Z_!.]{8,20}$/.test(password)) {
     //8-20位字母数字+特殊字符（_!.）
-    alert("请输入正确的密码");
+    alert('请输入8-20位仅含数字、字母和部分特殊字符的密码');
     return false;
   }
   return true;
@@ -79,7 +79,7 @@ async function login(account, password, remember) {
       <input
         type="text"
         v-model="user.account"
-        placeholder="用户名 / 手机号 / Email"
+        placeholder="请输入手机号 "
       />
       <input
         type="password"

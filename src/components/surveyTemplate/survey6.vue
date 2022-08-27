@@ -37,18 +37,23 @@
             <div class="content" ref="content" @scroll="onScroll($event)">
                 <!-- 题目 -->
                 <!-- 第一层循环 item, i -->
-                <!-- <div class="main" v-for="(item, i) of survey.questionList" :key="item.id"
-                    :style="{ item.type===2 ? height: `${100}px`   :  height: `${37.5 * item.option.length}px` }">
+                <div class="main" v-for="(item, i) of survey.questionList" :key="item.id"
+                    :style="item.type===2 ? { height: `${100}px`} :  {height: `${37.5 * item.option.length}px` }">
                     <div class="questiontitle" ref="questiontitle"
                         :style="{ border: `${item.titleBorder}px solid red` }">
                         {{ item.questiontitle }}
                     </div>  -->
                     <!-- 第二层循环 elem,index -->
-                    <!-- <div class="ques" v-for="(elem, index) of item.option" :key="index">
+                   <div v-if="item.type===2">
+                   
+                   </div>
+                   <div v-else>
+                      <div class="ques" v-for="(elem, index) of item.option" :key="index">
                         <input type="radio" class="input" :name="item.questionId" :value="elem"
                             @click="seleted(i, index, $event)">
                         <p>{{ elem }}</p>
-                    </div> -->
+                      </div>
+                   </div>
                 </div>
                 <div class="submit" @click="toFinish()">提交问卷</div>
             </div>
