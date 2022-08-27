@@ -172,9 +172,8 @@ if (localStorage.getItem("scale")) {
   scalefile = reactive([
     {
       options: [{ detail: "选项", dominate: 20 }],
-      question: { detail: "请输入题目标题" },
+      question: { detail: "请输入题目标题",dominate: 60 },
       id: nanoid(),
-      dominate: 60,
       secscore: 20,
     },
   ]);
