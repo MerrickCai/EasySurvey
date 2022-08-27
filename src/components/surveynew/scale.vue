@@ -92,7 +92,7 @@ function addamount() {
     question: { detail: "请输入题目标题" },
     options: [{ detail: "请输入次级题目标题", dominate: 20 }],
     id: nanoid(),
-    score: 60,
+    dominate: 60,
     secscore: 20,
   };
   props.sreceive(quesobj);
