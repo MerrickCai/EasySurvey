@@ -11,14 +11,14 @@
       <span class="useful number">
         有效问卷数
         <img src="/useful.png" alt="" />
-        <i>{{ filenews.context.questionnaire.totalNumber || 0 }}</i>
+        <i>{{ filenews.context.questionnaire.effectiveNumber || 0 }}</i>
       </span>
       <span class="plan number">
         计划问卷数
         <img src="/plan.png" alt="" />
         <div class="planbox">
           <i v-show="PlannumShow">
-            {{ filenews.context.questionnaire.effectiveNumber || 0 }}
+            {{ filenews.context.questionnaire.totalNumber || 0 }}
             <img
               class="change"
               style="display: inline"
