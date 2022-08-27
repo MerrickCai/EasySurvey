@@ -1,33 +1,35 @@
-
 <template>
   <div class="wrapper">
-    <img dog-ear src="/tangible.png" />
-    <div class="decoration5"></div>
+    <!--装饰品-->
     <div class="decoration1"></div>
     <div class="decoration2"></div>
     <div class="decoration3"></div>
     <div class="decoration4"></div>
+    <div class="decoration5"></div>
+    <img dog-ear src="/tangible.png" />
+    <!--装饰品-->
+    <div class="container">
 
-    <div class="newcon">
-      <div class="newword">
+
+      <div class="title">
         <!-- 新建问卷标题 -->
-        <p class="newtitle" v-show="titleshow" @click="changetitleshow">
-          {{ filetitle.info_title }}
-        </p>
+        <p class="newtitle" v-show="titleshow" @click="changetitleshow">{{ filetitle.info_title }}</p>
         <input type="text" ref="titlein" class="titlein" v-show="!titleshow" v-model="filetitle.info_title"
           @keyup.enter="titleshow = true" @blur="titleshow = true" />
         <!-- 新建问卷介绍 -->
-        <p class="newintro">
-          <span class="newintro_title">问卷介绍:</span>
-        <p class="newintro_con" v-show="introshow" @click="changeintroshow">
-          {{ filetitle.info_para }}
-        </p>
-
-        <textarea cols="30" rows="2" ref="introin" class="introin" v-show="!introshow" v-model="filetitle.info_para"
-          @keyup.enter="introshow = true" @blur="introshow = true"></textarea>
-        </p>
+        <div class="newintro">
+          <span class="newintro_title">问卷介绍：</span>
+          <p class="newintro_con" v-show="introshow" @click="changeintroshow">
+            {{ filetitle.info_para }}
+          </p>
+          <textarea cols="30" rows="2" ref="introin" class="introin" v-show="!introshow" v-model="filetitle.info_para"
+            @keyup.enter="introshow = true" @blur="introshow = true"></textarea>
+        </div>
       </div>
+
+
       <div class="quearea">
+
         <div class="questype">
           <span class="typetitle">请选择问卷类型:</span>
           <span class="typeall">
@@ -38,8 +40,8 @@
             <span :class="{ typeclick: type == 5 }" @click="type = 5">文本</span>
           </span>
         </div>
-        <!-- 题目列表 -->
-        <ul>
+
+        <div class="quesList">
           <keep-alive>
             <component :is="typeview" :fileword="fileword" :receive="receive" :deleteques="deleteques"
               :scalefile="scalefile" :sreceive="sreceive" :sdeleteques="sdeleteques" :radiofile="radiofile"
@@ -47,33 +49,34 @@
               :cdeleteques="cdeleteques" :textfile="textfile" :treceive="treceive" :tdeleteques="tdeleteques">
             </component>
           </keep-alive>
-        </ul>
+        </div>
+
       </div>
-      <button class="keep" @click="keepinfor">保存</button>
-      <button class="push" @click="pushfile($event)">发布问卷</button>
+
+
+      <div class="buttonArea">
+        <div button keep @click="keepinfor">保存</div>
+        <div button push @click="pushfile($event)">发布问卷</div>
+      </div>
+
+
+
       <div class="mask" :style="{ display: show }">
         <div class="sharefile">
           <span class="shareword">分享问卷</span>
           <span class="close" @click="disappear($event)">×</span>
-          <qrcode-vue :value="linkqr" class="barcode"  backgroundColor="blue" colorDark="blue"></qrcode-vue>
+          <qrcode-vue :value="linkqr" class="barcode" backgroundColor="blue" colorDark="blue"></qrcode-vue>
           <span class="sharequick">快分享以上二维码或点击复制<a class="link" @click="getlink">链接</a>填答问卷吧！</span>
         </div>
       </div>
+
+
     </div>
   </div>
 </template>
 
 <script setup>
-import {
-  nextTick,
-  onMounted,
-  reactive,
-  ref,
-  provide,
-  watch,
-  computed,
-  toRaw,
-} from "vue";
+import { nextTick, reactive, ref, provide, watch, computed, toRaw } from "vue";
 import { nanoid } from "nanoid";
 import radiolist from "../components/surveynew/radiolist.vue";
 import checkboxlist from "../components/surveynew/checkboxlist.vue";
@@ -505,7 +508,7 @@ async function pushfile() {
 let link = ref(1);
 let linkqr = ref(
   "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
-    parseInt(link.value)
+  parseInt(link.value)
 );
 const { toClipboard } = clipboard3();
 async function getlink() {
@@ -534,16 +537,305 @@ div.wrapper {
   position: relative;
   top: 0;
   left: 0;
-  border-radius: 5px;
+  border-radius: 10px;
   box-shadow: 0px 5px 10px 0 rgba(73, 107, 158, 0.1);
+  background-color: rgb(255, 255, 255);
   z-index: 0;
 
-  div.decoration1 {
+  >div.container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+
+    >div.title {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      justify-content: center;
+      align-items: center;
+      height: auto;
+      width: 100%;
+
+      >p.newtitle {
+        display: block;
+        width: auto;
+        height: auto;
+        font-size: 33px;
+        font-weight: bold;
+        color: rgb(0, 0, 0);
+        position: relative;
+
+        &::after {
+          content: "";
+          display: block;
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          height: 4px;
+          width: 100%;
+          background-color: #1e6fff;
+          border-radius: 2px;
+        }
+      }
+
+      >input.titlein {
+        display: block;
+        width: auto;
+        height: auto;
+        font-size: 33px;
+        font-weight: bold;
+        color: rgb(0, 0, 0);
+        outline: 0;
+        border: 1px dashed rgba(30, 111, 255, 1);
+      }
+
+      >div.newintro {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: flex-start;
+        height: auto;
+        width: 70%;
+        margin-top: 5px;
+
+        >span.newintro_title {
+          display: block;
+          font-size: 16px;
+          color: rgba(30, 111, 255, 1);
+          margin-bottom: 5px;
+        }
+
+        >p.newintro_con {
+          display: block;
+          height: auto;
+          width: auto;
+          font-size: 15px;
+          color: rgb(0, 0, 0);
+        }
+
+        >textarea {
+          display: block;
+          height: auto;
+          width: 100%;
+          font-size: 15px;
+          color: rgb(0, 0, 0);
+          outline: none;
+          resize: none;
+          border: 1px dashed rgba(30, 111, 255, 1);
+        }
+      }
+    }
+
+    >div.quearea {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      align-items: flex-start;
+      height: auto;
+      width: 70%;
+      margin-top: 5px;
+      overflow: hidden;
+
+      >div.questype {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        align-items: center;
+        height: auto;
+        width: 100%;
+        margin-bottom: 5px;
+
+        .typetitle {
+          display: block;
+          height: auto;
+          width: auto;
+          font-size: 16px;
+          color: rgba(0, 0, 0, 1);
+          position: relative;
+          margin-right: 10px;
+
+          &::after {
+            content: "";
+            display: block;
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            height: 2px;
+            width: 100%;
+            background-color: #1e6fff;
+            border-radius: 5px;
+          }
+        }
+
+        .typeall {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: nowrap;
+          justify-content: flex-start;
+          align-items: center;
+
+          >span {
+            display: block;
+            width: 60px;
+            height: 24px;
+            margin-right: 10px;
+            text-align: center;
+            line-height: 24px;
+            color: rgba(30, 111, 255, 1);
+            font-size: 13px;
+            box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
+            background-color: rgb(255, 255, 255);
+            border-radius: 5px;
+            cursor: pointer;
+
+            &.typeclick {
+              background: rgba(235, 245, 255, 1);
+            }
+          }
+        }
+      }
+
+      >div.quesList {
+        flex: 1;
+        display: block;
+        height: auto;
+        width: 100%;
+        overflow: auto;
+      }
+    }
+
+    >div.buttonArea {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: center;
+      align-items: center;
+      height: auto;
+      width: 100%;
+      margin: 10px 0;
+
+      >div[button] {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+        width: 180px;
+        height: 45px;
+        cursor: pointer;
+        font-size: 18px;
+        border-radius: 10px;
+
+        &[keep] {
+          background-color: #ebf5ff;
+          color: #8c8c8c;
+          margin-right: 50px;
+        }
+
+        &[push] {
+          background-color: rgba(30, 111, 255, 1);
+          color: rgba(255, 255, 255, 1);
+        }
+      }
+    }
+
+    >div.mask {
+      display: block;
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: 3;
+      top: 0;
+      left: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+
+      .sharefile {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        z-index: 3;
+        transform: translate(-50%, -50%);
+        width: 440px;
+        height: 380px;
+        opacity: 1;
+        background: rgba(255, 255, 255, 1);
+        box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
+
+        .shareword {
+          position: absolute;
+          left: 40px;
+          top: 40px;
+          width: 82px;
+          height: 32px;
+          opacity: 1;
+          /** 文本1 */
+          font-size: 20px;
+          font-weight: 500;
+          letter-spacing: 0px;
+          line-height: 28px;
+          color: rgba(0, 0, 0, 1);
+          text-align: left;
+          vertical-align: top;
+        }
+
+        .close {
+          cursor: pointer;
+          position: absolute;
+          right: 49px;
+          top: 35px;
+          width: 10px;
+          height: 10px;
+          opacity: 1;
+          color: rgba(30, 111, 255, 1);
+          font-size: 25px;
+        }
+
+        .barcode {
+          position: absolute;
+          top: 122px;
+          left: 177px;
+          width: 180px;
+          height: 180px;
+        }
+
+        .sharequick {
+          position: absolute;
+          left: 83px;
+          bottom: 54px;
+          width: 300px;
+          height: 24px;
+          opacity: 1;
+          /** 文本1 */
+          font-size: 14px;
+          font-weight: 400;
+          letter-spacing: 0px;
+          line-height: 22px;
+          color: rgba(0, 0, 0, 1);
+
+          .link {
+            cursor: pointer;
+            text-decoration-line: underline;
+            color: rgba(71, 145, 255, 1);
+          }
+        }
+      }
+    }
+  }
+
+  >div.decoration1 {
     display: block;
     height: 400px;
     width: 400px;
     position: absolute;
-    z-index: -10;
+    z-index: -1;
     top: 0;
     left: 0;
     transform: translate(-50%, -50%);
@@ -552,43 +844,43 @@ div.wrapper {
     clip-path: polygon(50% 50%, 100% 50%, 100% 100%, 50% 100%);
   }
 
-  div.decoration2 {
+  >div.decoration2 {
     display: block;
     height: 150px;
     width: 150px;
     position: absolute;
-    z-index: -3;
+    z-index: -1;
     bottom: 40px;
     right: 50px;
     border-radius: 50%;
     background-color: rgba(71, 145, 255, 1);
   }
 
-  div.decoration3 {
+  >div.decoration3 {
     display: block;
     height: 100px;
     width: 100px;
     position: absolute;
-    z-index: -4;
+    z-index: -2;
     bottom: 80px;
     right: -20px;
     border-radius: 50%;
     background-color: rgba(30, 111, 255, 1);
   }
 
-  div.decoration4 {
+  >div.decoration4 {
     display: block;
     height: 170px;
     width: 170px;
     position: absolute;
-    z-index: -4;
+    z-index: -3;
     bottom: -20px;
     right: 100px;
     border-radius: 50%;
     background-color: rgba(235, 245, 255, 1);
   }
 
-  div.decoration5 {
+  >div.decoration5 {
     display: block;
     height: calc(108px + 5px);
     width: calc(120px + 7px);
@@ -599,7 +891,7 @@ div.wrapper {
     background-color: rgb(255, 255, 255, 1);
   }
 
-  img[dog-ear] {
+  >img[dog-ear] {
     display: block;
     height: 108px;
     width: 120px;
@@ -609,260 +901,6 @@ div.wrapper {
     right: 0;
     object-fit: contain;
     transform: scale(1.07);
-  }
-
-  .newcon {
-    position: relative;
-    top: 50px;
-    width: 840px;
-    height: 570px;
-
-    .newtitle {
-      position: relative;
-      left: 50%;
-      top: 50%;
-      width: 800px;
-      height: 50px;
-      transform: translate(-50%, -50%);
-      word-wrap: break-word;
-      font-family: "思源黑体";
-      font-size: 36px;
-      font-weight: 600;
-      vertical-align: middle;
-      // width: fit-content;
-      text-align: center;
-      text-decoration-line: underline;
-      text-decoration-color: #1e6fff;
-      text-decoration-thickness: 5px;
-
-      // &::after {
-      //   content: "";
-      //   display: block;
-      //   position: absolute;
-      //   bottom: -2px;
-      //   left: 0;
-      //   height: 4px;
-      //   width: 100%;
-      //   background-color: #1e6fff;
-      //   border-radius: 2px;
-      // }
-    }
-
-    .titlein {
-      position: relative;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    .newintro {
-      .newintro_title {
-        display: block;
-        font-size: 16px;
-        font-weight: 500;
-        color: rgba(30, 111, 255, 1);
-        text-align: left;
-        margin-bottom: 12px;
-      }
-
-      .newintro_con {
-        word-wrap: break-word; //超出页面自动换行
-        width: 840px;
-        height: 50px;
-        overflow: auto;
-      }
-
-      textarea {
-        width: 780px;
-        border: 1px dashed rgba(30, 111, 255, 1);
-        outline: none;
-        resize: none;
-      }
-    }
-
-    .quearea {
-      margin-top: 20px;
-      height: 300px;
-      overflow: auto;
-
-      .questype {
-        display: flex;
-
-        .typetitle {
-          position: relative;
-          font-size: 16px;
-          font-weight: 500;
-          color: rgba(0, 0, 0, 1);
-          text-align: left;
-
-          &::after {
-            content: "";
-            display: block;
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            height: 4px;
-            width: 100%;
-            background-color: #1e6fff;
-            border-radius: 2px;
-          }
-        }
-
-        .typeall {
-          margin-left: 6px;
-          display: flex;
-
-          > span {
-            display: block;
-            cursor: pointer;
-            width: 60px;
-            height: 24px;
-            margin-right: 12px;
-            text-align: center;
-            line-height: 24px;
-            color: rgba(30, 111, 255, 1);
-            font-size: 12px;
-            font-weight: 400;
-            opacity: 1;
-            box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
-          }
-
-          .typeclick {
-            background: rgba(235, 245, 255, 1);
-          }
-        }
-      }
-
-      > ul {
-        margin-top: 14px;
-      }
-    }
-
-    .keep {
-      cursor: pointer;
-      position: absolute;
-      left: 34%;
-      bottom: 10%;
-      transform: translate(-50%);
-      width: 200px;
-      height: 50px;
-      background: #ebf5ff;
-      font-size: 20px;
-      font-weight: 500;
-      color: #8c8c8c;
-      border: 0px;
-    }
-
-    .push {
-      cursor: pointer;
-      position: absolute;
-      left: 63%;
-      bottom: 10%;
-      transform: translate(-50%);
-      width: 200px;
-      height: 50px;
-      background: rgba(30, 111, 255, 1);
-      border-color: rgba(30, 111, 255, 1);
-      font-size: 20px;
-      font-weight: 500;
-      color: rgba(255, 255, 255, 1);
-      border-radius: 2px;
-    }
-  }
-
-  .mask {
-    display: block;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    z-index: 3;
-    top: 0;
-    left: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-
-  .sharefile {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    z-index: 3;
-    transform: translate(-50%, -50%);
-    width: 440px;
-    height: 380px;
-    opacity: 1;
-    background: rgba(255, 255, 255, 1);
-    box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
-
-    .shareword {
-      position: absolute;
-      left: 40px;
-      top: 40px;
-      width: 82px;
-      height: 32px;
-      opacity: 1;
-      /** 文本1 */
-      font-size: 20px;
-      font-weight: 500;
-      letter-spacing: 0px;
-      line-height: 28px;
-      color: rgba(0, 0, 0, 1);
-      text-align: left;
-      vertical-align: top;
-    }
-
-    .close {
-      cursor: pointer;
-      position: absolute;
-      right: 49px;
-      top: 35px;
-      width: 10px;
-      height: 10px;
-      opacity: 1;
-      color: rgba(30, 111, 255, 1);
-      font-size: 25px;
-    }
-
-    .barcode {
-      position: absolute;
-      top: 122px;
-      left: 177px;
-      width: 180px;
-      height: 180px;
-    }
-
-    .sharequick {
-      position: absolute;
-      left: 83px;
-      bottom: 54px;
-      width: 300px;
-      height: 24px;
-      opacity: 1;
-      /** 文本1 */
-      font-size: 14px;
-      font-weight: 400;
-      letter-spacing: 0px;
-      line-height: 22px;
-      color: rgba(0, 0, 0, 1);
-
-      .link {
-        cursor: pointer;
-        text-decoration-line: underline;
-        color: rgba(71, 145, 255, 1);
-      }
-    }
-  }
-
-  input[type="text"] {
-    /* 清除原有input样式 */
-    -web-kit-appearance: none;
-    -moz-appearance: none;
-    outline: 0;
-    /* 设置我们要的样式 */
-    border: 1px dashed rgba(30, 111, 255, 1);
-    width: fit-content;
-    height: auto;
-    font-size: 36px;
-    font-weight: 500;
   }
 }
 </style>
