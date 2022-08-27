@@ -52,7 +52,7 @@ for (let i in surveyObj.value.questionInfoMap) {
     obj.progressPartbcg = '#ccc';
     obj.series = optionDetail[start].length;
     obj.font = optionDetail[start];
-    obj.questionId = surveyObj.value.optionMap[i][1].questionId;
+    obj.questionId = surveyObj.value.optionMap[i][0].questionId;
     obj.optionId = optionId[start];
     obj.seleted = 0;
     start++;
