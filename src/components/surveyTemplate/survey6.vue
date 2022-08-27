@@ -38,22 +38,32 @@
                 <!-- 题目 -->
                 <!-- 第一层循环 item, i -->
                 <div class="main" v-for="(item, i) of survey.questionList" :key="item.id"
-                    :style="item.type===2 ? { height: `${100}px`} :  {height: `${37.5 * item.option.length}px` }">
+                    :style="item.type===2 ? { height: `${80}px`} :  {height: `${37.5 * item.option.length}px` }">
                     <div class="questiontitle" ref="questiontitle"
                         :style="{ border: `${item.titleBorder}px solid red` }">
                         {{ item.questiontitle }}
-                    </div>  -->
+                    </div>  
                     <!-- 第二层循环 elem,index -->
-                   <div v-if="item.type===2">
-                   
-                   </div>
-                   <div v-else>
-                      <div class="ques" v-for="(elem, index) of item.option" :key="index">
-                        <input type="radio" class="input" :name="item.questionId" :value="elem"
-                            @click="seleted(i, index, $event)">
+                   <div v-if="item.type===0">
+                       <div class="ques" v-for="(elem, index) of item.option" :key="index">
+                           <input type="radio" class="input" :name="item.questionId" :value="elem"
+                             @click="seleted(i, index, $event)">
                         <p>{{ elem }}</p>
                       </div>
                    </div>
+
+                   <div v-if="item.type===1">
+                      <div class="ques" v-for="(elem, index) of item.option" :key="index">
+                        <input class="input" type="checkbox" :name="item.id" :value="elem"
+                            @click="seleted(item, i, $event)" ref="input">
+                        <p>{{ elem }}</p>
+                      </div>
+                   </div>
+
+                   <div v-if="item.type===2">
+                    <textarea clos="30" rows="4" class="ques" placeholder="请输入" @blur="getValue(item, $event)"></textarea>
+                   </div>
+  
                 </div>
                 <div class="submit" @click="toFinish()">提交问卷</div>
             </div>
@@ -106,7 +116,7 @@ const survey = reactive(
    ,
    questionList:[{
     // 文本类型的
-    id: 1,
+    questionId: 1,
     type:2,
     questiontitle: '一、我认为我能为团队做出的贡献是：',
     value: 0,
@@ -114,22 +124,65 @@ const survey = reactive(
     progressPartbcg: '#ccc',
 }, {
     // 单选类型的
-    id: 2,
+    questionId: 2,
     type:0,
     questiontitle: '二、我认为我能为团队做出的贡献是：',
     value: 0,
     titleBorder: 0,
-    progressPartbcg: '#ccc',
+       progressPartbcg: '#ccc',
     option: ['aaAAAhaha', 'BBB', 'CCC']
-}, {
+},{
+    // 文本类型的
+    questionId: 1,
+    type:2,
+    questiontitle: '一、我认为我能为团队做出的贡献是：',
+    value: 0,
+    titleBorder: 0,
+    progressPartbcg: '#ccc',
+},  {
     // 多选类型的
-    id: 3,
+    questionId: 3,
     type:1,
     questiontitle: '三、我认为我能为团队做出的贡献是：',
     value: [],
     titleBorder: 0,
     progressPartbcg: '#ccc',
     option: ['111', '222', '333']
+}, {
+    // 多选类型的
+    questionId: 3,
+    type:1,
+    questiontitle: '三、我认为我能为团队做出的贡献是：',
+    value: [],
+    titleBorder: 0,
+    progressPartbcg: '#ccc',
+    option: ['111', '222', '333']
+},{
+    // 多选类型的
+    questionId: 3,
+    type:1,
+    questiontitle: '三、我认为我能为团队做出的贡献是：',
+    value: [],
+    titleBorder: 0,
+    progressPartbcg: '#ccc',
+    option: ['111', '222', '333']
+},{
+    // 文本类型的
+    questionId: 1,
+    type:2,
+    questiontitle: '一、我认为我能为团队做出的贡献是：',
+    value: 0,
+    titleBorder: 0,
+    progressPartbcg: '#ccc',
+}, {
+    // 多选类型的
+    questionId: 4,
+    type:0,
+    questiontitle: '四、我认为我能为团队做出的贡献是：',
+    value: [],
+    titleBorder: 0,
+    progressPartbcg: '#ccc',
+    option: ['www', 'aa', 'www']
 }]
    });
 
@@ -221,7 +274,8 @@ div[wrapper] {
     position: relative;
     top: 0;
     left: 0;
-    z-index: -1;
+    // z-index: -1;
+    z-index: 99;
 }
 
 // 供调用
@@ -381,20 +435,26 @@ div[wrapper] {
     padding-left: 30px;
     overflow: auto;
     flex: 1;
-
+    // background-color: black;
     .main {
         background-color: white;
-        height: 300px;
         width: 1065px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        margin-bottom: 20px;
+        margin-bottom: 25px;
+        // background-color: pink;
 
         .ques {
             display: flex;
+            height: 50%;
+            transform: translateY(-30px) translateX(5px);
+            // background-color: #bfa;
+            
         }
-
+        textarea.ques{
+            transform: translateY(15px);
+        }
         .input {
             display: block;
             width: 16px;
