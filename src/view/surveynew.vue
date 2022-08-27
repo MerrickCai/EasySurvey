@@ -9,11 +9,11 @@
     <img dog-ear src="/tangible.png" />
     <!--装饰品-->
     <div class="container">
-
-
       <div class="title">
         <!-- 新建问卷标题 -->
-        <p class="newtitle" v-show="titleshow" @click="changetitleshow">{{ filetitle.info_title }}</p>
+        <p class="newtitle" v-show="titleshow" @click="changetitleshow">
+          {{ filetitle.info_title }}
+        </p>
         <input type="text" ref="titlein" class="titlein" v-show="!titleshow" v-model="filetitle.info_title"
           @keyup.enter="titleshow = true" @blur="titleshow = true" />
         <!-- 新建问卷介绍 -->
@@ -27,9 +27,7 @@
         </div>
       </div>
 
-
       <div class="quearea">
-
         <div class="questype">
           <span class="typetitle">请选择问卷类型:</span>
           <span class="typeall">
@@ -50,16 +48,12 @@
             </component>
           </keep-alive>
         </div>
-
       </div>
-
 
       <div class="buttonArea">
         <div button keep @click="keepinfor">保存</div>
         <div button push @click="pushfile($event)">发布问卷</div>
       </div>
-
-
 
       <div class="mask" :style="{ display: show }">
         <div class="sharefile">
@@ -69,8 +63,6 @@
           <span class="sharequick">快分享以上二维码或点击复制<a class="link" @click="getlink">链接</a>填答问卷吧！</span>
         </div>
       </div>
-
-
     </div>
   </div>
 </template>
@@ -97,6 +89,7 @@ let typeview = computed(() => typelist[type.value - 1]);
 let scroll = ref(0);
 function updatescroll() {
   scroll.value = scroll.value + 1;
+  console.log(scroll.value);
 }
 provide("changescroll", {
   scroll,
@@ -179,9 +172,8 @@ if (localStorage.getItem("scale")) {
   scalefile = reactive([
     {
       options: [{ detail: "选项", dominate: 20 }],
-      question: { detail: "请输入题目标题" },
+      question: { detail: "请输入题目标题",dominate: 60 },
       id: nanoid(),
-      dominate: 60,
       secscore: 20,
     },
   ]);

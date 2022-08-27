@@ -10,6 +10,8 @@
         >
           <span class="username">{{ item.user.username }}</span>
           <span class="userscore">得分: {{ item.score }}</span>
+          <span class="userdetail">详情</span>
+          <span class="userdel">删除</span>
         </p>
       </el-scrollbar>
     </div>
@@ -481,13 +483,52 @@ function echartnum() {
       --el-scrollbar-hover-bg-color: rgba(71, 145, 255, 1);
 
       .scrollbar-demo-item {
-        justify-content: start;
+        position: relative;
+        &:hover {
+          box-shadow: 0px 8px 30px 0px rgba(73, 107, 158, 0.1);
+        }
+        &:hover .userdetail,
+        &:hover .userdel {
+          display: block;
+        }
+        .username {
+          position: absolute;
+          left: 0px;
+        }
         .userscore {
-          margin-left: 25px;
+          position: absolute;
+          right: 100px;
           font-size: 10px;
           font-weight: 400;
           color: rgba(30, 111, 255, 1);
           text-align: left;
+        }
+        .userdetail {
+          display: none;
+          cursor: pointer;
+          position: absolute;
+          right: 46px;
+          width: 36px;
+          height: 20px;
+          font-size: 10px;
+          font-weight: 400;
+          color: rgba(255, 255, 255, 1);
+          opacity: 1;
+          background: rgba(30, 111, 255, 1);
+        }
+        .userdel {
+          display: none;
+          cursor: pointer;
+          position: absolute;
+          right: 0px;
+          width: 36px;
+          height: 20px;
+          font-size: 10px;
+          font-weight: 400;
+          color: rgba(30, 111, 255, 1);
+          opacity: 1;
+          margin-left: 8px;
+          border: 1px solid rgba(217, 217, 217, 1);
         }
       }
       .el-scrollbar__bar {

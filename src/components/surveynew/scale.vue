@@ -31,7 +31,7 @@
       <span class="score">
         可支配分数
         </span>
-        <input type="number"  class="scoreshow" v-model="quesitem.dominate">
+        <input type="number"  class="scoreshow" v-model="quesitem.question.dominate">
         </div>
     </p>
     <div class="secquesall">
@@ -89,10 +89,9 @@ let { scroll, updatescroll } = inject("changescroll");
 //添加主问题
 function addamount() {
   const quesobj = {
-    question: { detail: "请输入题目标题" },
+    question: { detail: "请输入题目标题", dominate: 60 },
     options: [{ detail: "请输入次级题目标题", dominate: 20 }],
-    id: nanoid(),
-    score: 60,
+    id: nanoid(), 
     secscore: 20,
   };
   props.sreceive(quesobj);
@@ -136,10 +135,9 @@ function secchangeqlshow(index) {
 const value1 = ref(true);
 //添加次级题目
 function addsectitle(i) {
-  const secques = {
+  props.quesitem.options.push({
     detail: "请输入次级题目标题",
-  };
-  props.quesitem.options.push(secques);
+  });
 }
 //删除次级题目
 // let deletesec = ref(null);
@@ -335,7 +333,7 @@ li {
       border: 1px dashed rgba(30, 111, 255, 1);
     }
     .titlecon {
-      width: 600px;
+      width: 500px;
       height: fit-content;
       margin-left: 5px;
     }
@@ -345,7 +343,7 @@ li {
       -moz-appearance: none;
       outline: 0;
       /* 设置我们要的样式 */
-      width: 600px;
+      width: 500px;
       height: 20px;
       opacity: 1;
       text-align: left;
