@@ -1,16 +1,25 @@
 <template>
-    <div wrapper>
-        <!-- 介绍页 -->
-    
-        <div class="wrapper" v-if="currentSurvey.status.begin">
+    <div class="wrapper">
+        <!--装饰品-->
+        <div class="decoration1" v-show="survey.status.begin || survey.status.end"></div>
+        <div class="decoration2" v-show="survey.status.begin || survey.status.end"></div>
+        <div class="decoration3" v-show="survey.status.begin || survey.status.end"></div>
+        <div class="decoration4" v-show="survey.status.begin || survey.status.end"></div>
+        <div class="decoration5"></div>
+        <img dog-ear src="/tangible.png" />
+        <!--装饰品-->
+
+
+        <!-- 问卷介绍部分 -->
+        <div intro v-if="survey.status.begin">
             <h2 class="title">{{ survey.intro.info_title }}</h2>
             <p class="second-title">问卷介绍：</p>
             <p class="para">{{ survey.intro.info_para }}</p>
-            <el-button type="primary" class="btn" @click="toContent()">开始问卷</el-button>
+            <el-button type="primary" class="btn" @click="survey.status.toOngoing()">开始问卷</el-button>
         </div>
 
         <!-- 问卷内容部分 -->
-        <div class="wrapper extrachange" v-if="currentSurvey.status.ongoing">
+        <div class="wrapper extrachange" v-if="survey.status.ongoing">
             <div class="topbox">
                 <h2 class="top_title">{{ survey.intro.info_title }}</h2>
                 <h5 claecss="top_stitle">问卷介绍：</h5>
@@ -38,32 +47,33 @@
                 <!-- 题目 -->
                 <!-- 第一层循环 item, i -->
                 <div class="main" v-for="(item, i) of survey.questionList" :key="item.id"
-                    :style="item.type===2 ? { height: `${80}px`} :  {height: `${37.5 * item.option.length}px` }">
+                    :style="item.type === 2 ? { height: `${80}px` } : { height: `${37.5 * item.option.length}px` }">
                     <div class="questiontitle" ref="questiontitle"
                         :style="{ border: `${item.titleBorder}px solid red` }">
                         {{ item.questiontitle }}
-                    </div>  
+                    </div>
                     <!-- 第二层循环 elem,index -->
-                   <div v-if="item.type===0">
-                       <div class="ques" v-for="(elem, index) of item.option" :key="index">
-                           <input type="radio" class="input" :name="item.questionId" :value="elem"
-                             @click="seleted(i, index, $event)">
-                        <p>{{ elem }}</p>
-                      </div>
-                   </div>
+                    <div v-if="item.type === 0">
+                        <div class="ques" v-for="(elem, index) of item.option" :key="index">
+                            <input type="radio" class="input" :name="item.questionId" :value="elem"
+                                @click="seleted(i, index, $event)">
+                            <p>{{ elem }}</p>
+                        </div>
+                    </div>
 
-                   <div v-if="item.type===1">
-                      <div class="ques" v-for="(elem, index) of item.option" :key="index">
-                        <input class="input" type="checkbox" :name="item.id" :value="elem"
-                            @click="seleted(item, i, $event)" ref="input">
-                        <p>{{ elem }}</p>
-                      </div>
-                   </div>
+                    <div v-if="item.type === 1">
+                        <div class="ques" v-for="(elem, index) of item.option" :key="index">
+                            <input class="input" type="checkbox" :name="item.id" :value="elem"
+                                @click="seleted(item, i, $event)" ref="input">
+                            <p>{{ elem }}</p>
+                        </div>
+                    </div>
 
-                   <div v-if="item.type===2">
-                    <textarea clos="30" rows="4" class="ques" placeholder="请输入" @blur="getValue(item, $event)"></textarea>
-                   </div>
-  
+                    <div v-if="item.type === 2">
+                        <textarea clos="30" rows="4" class="ques" placeholder="请输入"
+                            @blur="getValue(item, $event)"></textarea>
+                    </div>
+
                 </div>
                 <div class="submit" @click="toFinish()">提交问卷</div>
             </div>
@@ -71,7 +81,7 @@
 
 
         <!-- 问卷完成部分 -->
-        <div class="finish-wrapper" v-if="currentSurvey.status.end">
+        <div class="finish-wrapper" v-if="survey.status.end">
             <div class="innerbox">
                 <div class="finish-title">
                     <h2>您已完成</h2>
@@ -82,113 +92,115 @@
             </div>
         </div>
 
+
     </div>
 </template>
 
 <script setup>
+import { ref, reactive } from 'vue'
 
-import axios from 'axios'
-import { ref, reactive, inject} from 'vue';
-// const currentSurvey = inject('currentSurvey');
-const currentSurvey = reactive({
+
+
+const survey = reactive({
     status: {
         begin: true,
         ongoing: false,
         end: false,
+        toOngoing() {
+            this.begin = false
+            this.ongoing = true
+        },
+        toEnd() {
+            this.ongoing = false
+            this.end = true
+        }
     },
-    toOngoing() {
-        this.status.begin = false
-        this.status.ongoing = true
+    intro: {
+        info_title: '混合型问卷',
+        info_para: '单选 多选 文本'
     },
-    toEnd() {
-        this.status.ongoing = false
-        this.status.end = true
-    }
-});
+    questionList: [
+        {
+            // 文本类型
+            questionId: 1,
+            type: 2,
+            questiontitle: '一、我认为我能为团队做出的贡献是：',
+            value: 0,
+            titleBorder: 0,
+            progressPartbcg: '#ccc',
+        },
+        {
+            // 单选类型
+            questionId: 2,
+            type: 0,
+            questiontitle: '二、我认为我能为团队做出的贡献是：',
+            value: 0,
+            titleBorder: 0,
+            progressPartbcg: '#ccc',
+            option: ['aaAAAhaha', 'BBB', 'CCC']
+        },
+        {
+            // 文本类型
+            questionId: 1,
+            type: 2,
+            questiontitle: '一、我认为我能为团队做出的贡献是：',
+            value: 0,
+            titleBorder: 0,
+            progressPartbcg: '#ccc',
+        },
+        {
+            // 多选类型
+            questionId: 3,
+            type: 1,
+            questiontitle: '三、我认为我能为团队做出的贡献是：',
+            value: [],
+            titleBorder: 0,
+            progressPartbcg: '#ccc',
+            option: ['111', '222', '333']
+        },
+        {
+            // 多选类型
+            questionId: 3,
+            type: 1,
+            questiontitle: '三、我认为我能为团队做出的贡献是：',
+            value: [],
+            titleBorder: 0,
+            progressPartbcg: '#ccc',
+            option: ['111', '222', '333']
+        },
+        {
+            // 多选类型
+            questionId: 3,
+            type: 1,
+            questiontitle: '三、我认为我能为团队做出的贡献是：',
+            value: [],
+            titleBorder: 0,
+            progressPartbcg: '#ccc',
+            option: ['111', '222', '333']
+        },
+        {
+            // 文本类型
+            questionId: 1,
+            type: 2,
+            questiontitle: '一、我认为我能为团队做出的贡献是：',
+            value: 0,
+            titleBorder: 0,
+            progressPartbcg: '#ccc',
+        },
+        {
+            // 多选类型
+            questionId: 4,
+            type: 0,
+            questiontitle: '四、我认为我能为团队做出的贡献是：',
+            value: [],
+            titleBorder: 0,
+            progressPartbcg: '#ccc',
+            option: ['www', 'aa', 'www']
+        }
+    ]
+})
 
-// 模拟后台数据
-const survey = reactive(
-    {
-   intro:{
-       info_title:'这是一个混合型的问卷',
-       info_para:'fadgsdgsdgsdggregergregreg'
-   }
-   ,
-   questionList:[{
-    // 文本类型的
-    questionId: 1,
-    type:2,
-    questiontitle: '一、我认为我能为团队做出的贡献是：',
-    value: 0,
-    titleBorder: 0,
-    progressPartbcg: '#ccc',
-}, {
-    // 单选类型的
-    questionId: 2,
-    type:0,
-    questiontitle: '二、我认为我能为团队做出的贡献是：',
-    value: 0,
-    titleBorder: 0,
-       progressPartbcg: '#ccc',
-    option: ['aaAAAhaha', 'BBB', 'CCC']
-},{
-    // 文本类型的
-    questionId: 1,
-    type:2,
-    questiontitle: '一、我认为我能为团队做出的贡献是：',
-    value: 0,
-    titleBorder: 0,
-    progressPartbcg: '#ccc',
-},  {
-    // 多选类型的
-    questionId: 3,
-    type:1,
-    questiontitle: '三、我认为我能为团队做出的贡献是：',
-    value: [],
-    titleBorder: 0,
-    progressPartbcg: '#ccc',
-    option: ['111', '222', '333']
-}, {
-    // 多选类型的
-    questionId: 3,
-    type:1,
-    questiontitle: '三、我认为我能为团队做出的贡献是：',
-    value: [],
-    titleBorder: 0,
-    progressPartbcg: '#ccc',
-    option: ['111', '222', '333']
-},{
-    // 多选类型的
-    questionId: 3,
-    type:1,
-    questiontitle: '三、我认为我能为团队做出的贡献是：',
-    value: [],
-    titleBorder: 0,
-    progressPartbcg: '#ccc',
-    option: ['111', '222', '333']
-},{
-    // 文本类型的
-    questionId: 1,
-    type:2,
-    questiontitle: '一、我认为我能为团队做出的贡献是：',
-    value: 0,
-    titleBorder: 0,
-    progressPartbcg: '#ccc',
-}, {
-    // 多选类型的
-    questionId: 4,
-    type:0,
-    questiontitle: '四、我认为我能为团队做出的贡献是：',
-    value: [],
-    titleBorder: 0,
-    progressPartbcg: '#ccc',
-    option: ['www', 'aa', 'www']
-}]
-   });
 
- function toContent() { 
-    currentSurvey.toOngoing();
-}   
 
 // --- 滚动条部分的变量和方法 ---
 const thumb = ref(null);
@@ -226,6 +238,8 @@ function onScroll(e) {
     bluebcg_height.value = temp;
 }
 
+
+
 // ---提交按钮之后相关的变量和方法---
 // 获取全部questiontitle
 const questiontitle = ref(null);
@@ -234,7 +248,6 @@ const progressPartHeight = 300 / (survey.questionList.length);
 
 // 提交按钮  跳转：答题页==>完成页
 function toFinish() {
-
     let flag = true;
     // 记录未完成的问卷id
     const uncomplete = [];
@@ -260,10 +273,10 @@ function toFinish() {
 }
 
 </script>
-<style scoped lang='less'>
-@a: 1px;
 
-div[wrapper] {
+
+<style scoped lang='less'>
+div.wrapper {
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -274,14 +287,92 @@ div[wrapper] {
     position: relative;
     top: 0;
     left: 0;
-    // z-index: -1;
-    z-index: 99;
+    border-radius: 10px;
+    box-shadow: 0px 5px 10px 0 rgba(73, 107, 158, 0.1);
+    background-color: rgb(255, 255, 255);
+    z-index: 0;
+
+    div.decoration1 {
+        display: block;
+        height: 400px;
+        width: 400px;
+        position: absolute;
+        z-index: -1;
+        top: 0;
+        left: 0;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        background-color: rgba(235, 245, 255, 1);
+        clip-path: polygon(50% 50%, 100% 50%, 100% 100%, 50% 100%);
+    }
+
+    div.decoration2 {
+        display: block;
+        height: 150px;
+        width: 150px;
+        position: absolute;
+        z-index: -1;
+        bottom: 40px;
+        right: 50px;
+        border-radius: 50%;
+        background-color: rgba(71, 145, 255, 1);
+    }
+
+    div.decoration3 {
+        display: block;
+        height: 100px;
+        width: 100px;
+        position: absolute;
+        z-index: -2;
+        bottom: 80px;
+        right: -20px;
+        border-radius: 50%;
+        background-color: rgba(30, 111, 255, 1);
+    }
+
+    div.decoration4 {
+        display: block;
+        height: 170px;
+        width: 170px;
+        position: absolute;
+        z-index: -3;
+        bottom: -20px;
+        right: 100px;
+        border-radius: 50%;
+        background-color: rgba(235, 245, 255, 1);
+    }
+
+    div.decoration5 {
+        display: block;
+        height: calc(108px + 5px);
+        width: calc(120px + 7px);
+        position: absolute;
+        z-index: 1;
+        top: -5px;
+        right: -7px;
+        background-color: rgb(255, 255, 255, 1);
+    }
+
+    img[dog-ear] {
+        display: block;
+        height: 108px;
+        width: 120px;
+        position: absolute;
+        z-index: 2;
+        top: 0;
+        right: 0;
+        object-fit: contain;
+        transform: scale(1.07);
+    }
 }
+
+
+
+@a: 1px;
 
 // 供调用
 .public_title() {
     display: block;
-    font-family: '思源黑体';
     font-size: 36*@a;
     font-weight: 500;
     letter-spacing: 0*@a;
@@ -329,8 +420,10 @@ div[wrapper] {
     z-index: 10;
 }
 
+
+
 // 介绍页面部分
-.wrapper {
+div[intro] {
     width: 100%;
     height: 100%;
     position: relative;
@@ -435,6 +528,7 @@ div[wrapper] {
     padding-left: 30px;
     overflow: auto;
     flex: 1;
+
     // background-color: black;
     .main {
         background-color: white;
@@ -450,11 +544,13 @@ div[wrapper] {
             height: 50%;
             transform: translateY(-30px) translateX(5px);
             // background-color: #bfa;
-            
+
         }
-        textarea.ques{
+
+        textarea.ques {
             transform: translateY(15px);
         }
+
         .input {
             display: block;
             width: 16px;
@@ -506,7 +602,7 @@ div[wrapper] {
         cursor: pointer;
         border-radius: 10px;
         font-size: 20px;
-        color:rgb(255,255,255);
+        color: rgb(255, 255, 255);
 
         &:hover {
             background-color: #4791ff;
