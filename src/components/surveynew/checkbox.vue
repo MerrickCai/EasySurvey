@@ -14,14 +14,14 @@
     </p>
     <p class="questitle">
       <span>{{ checkboxfile.indexOf(quesitem) + 1 }}</span>
-      <span class="titlecon" v-show="questitleshow" @click="changeqlshow">
+      <!-- <span class="titlecon" v-show="questitleshow" @click="changeqlshow">
         {{ quesitem.question.detail }}
-      </span>
+      </span> -->
       <input
         type="text"
         ref="questitle"
-        v-show="!questitleshow"
         v-model="quesitem.question.detail"
+        placeholder="请输入题目标题"
         @blur="questitleshow = true"
         @keyup.enter="questitleshow = true"
       />
@@ -29,14 +29,14 @@
     <el-scrollbar max-height="400px">
       <p class="optionall" v-for="(con, i) in quesitem.options">
         <span class="circle"></span>
-        <span class="option" v-show="!optionshow[i]" @click="optionsshow(i)">
+        <!-- <span class="option" v-show="!optionshow[i]" @click="optionsshow(i)">
           {{ con.detail }}
-        </span>
+        </span> -->
         <input
           type="text"
           ref="optiontitle"
-          v-show="optionshow[i]"
           v-model="con.detail"
+          placeholder="请输入题目标题"
           @blur="optionshow[i] = false"
           @keyup.enter="optionshow[i] = false"
         />
@@ -201,6 +201,9 @@ li {
       height: 20px;
       opacity: 1;
       text-align: left;
+      border: none;
+      margin-left: 5px;
+      margin-top: 3px;
     }
   }
   .el-scrollbar {
@@ -243,10 +246,12 @@ li {
         -moz-appearance: none;
         outline: 0;
         /* 设置我们要的样式 */
-        width: 600px;
+        width: 700px;
         height: 20px;
         opacity: 1;
         text-align: left;
+        border: none;
+        margin-left: 5px;
       }
       .deloption {
         cursor: pointer;

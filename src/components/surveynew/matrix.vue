@@ -15,14 +15,14 @@
     </p>
     <p class="questitle">
       <span>{{ fileword.indexOf(quesitem) + 1 }}</span>
-      <span class="titlecon" v-show="questitleshow" @click="changeqlshow">
+      <!-- <span class="titlecon" v-show="questitleshow" @click="changeqlshow">
         {{ quesitem.question.detail }}
-      </span>
+      </span> -->
       <input
         type="text"
         ref="questitle"
-        v-show="!questitleshow"
         v-model="quesitem.question.detail"
+        placeholder="请输入题目标题"
         @blur="questitleshow = true"
         @keyup.enter="questitleshow = true"
       />
@@ -32,7 +32,7 @@
         v-for="index in quesitem.series"
         class="bar1"
         @click="num = index"
-        :style="{ left: `${(600 / (quesitem.series - 1)) * (index - 1)}px` }"
+        :style="{ left: `${(500 / (quesitem.series - 1)) * (index - 1)}px` }"
       >
         <input type="text" v-model="quesitem.options[index - 1].detail" />
       </div>
@@ -40,7 +40,7 @@
         class="thumb"
         :style="{
           left: `${
-            num === 0 ? -10 : -10 + (600 / (blocknum - 1)) * (num - 1)
+            num === 0 ? -10 : -10 + (500 / (blocknum - 1)) * (num - 1)
           }px`,
         }"
       ></div>
@@ -250,12 +250,15 @@ li {
       height: 20px;
       opacity: 1;
       text-align: left;
+      border: none;
+      margin-left: 5px;
+      margin-top: 3px;
     }
   }
 
   .block {
     @Height: 20px;
-    @Width: 600px;
+    @Width: 500px;
     @barWidth: 5px;
     @barHeight: 30px;
     @thumbSize: @Height+4px;
@@ -345,13 +348,13 @@ li {
     }
     .blocknum {
       position: absolute;
-      left: 670px;
+      left: 550px;
       bottom: 10px;
     }
     svg {
       position: absolute;
       bottom: 10px;
-      left: 748px;
+      left: 625px;
       &:hover + .tip {
         display: block;
       }
@@ -360,7 +363,7 @@ li {
       display: none;
       position: absolute;
       bottom: 43px;
-      left: 660px;
+      left: 540px;
       width: 98px;
       height: 50px;
       padding-top: 10px;

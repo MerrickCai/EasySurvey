@@ -11,19 +11,20 @@
     <div class="container">
       <div class="title">
         <!-- 新建问卷标题 -->
-        <p class="newtitle" v-show="titleshow" @click="changetitleshow">
+        <!-- <p class="newtitle" v-show="titleshow" @click="changetitleshow">
           {{ filetitle.info_title }}
-        </p>
-        <input type="text" ref="titlein" class="titlein" v-show="!titleshow" v-model="filetitle.info_title"
-          @keyup.enter="titleshow = true" @blur="titleshow = true" />
+        </p> -->
+        <input type="text" ref="titlein" class="titlein" v-model="filetitle.info_title" @keyup.enter="titleshow = true"
+          @blur="titleshow = true" placeholder="请输入问卷标题" />
         <!-- 新建问卷介绍 -->
         <div class="newintro">
           <span class="newintro_title">问卷介绍：</span>
-          <p class="newintro_con" v-show="introshow" @click="changeintroshow">
+          <!-- <p class="newintro_con" v-show="introshow" @click="changeintroshow">
             {{ filetitle.info_para }}
-          </p>
-          <textarea cols="30" rows="2" ref="introin" class="introin" v-show="!introshow" v-model="filetitle.info_para"
-            @keyup.enter="introshow = true" @blur="introshow = true"></textarea>
+          </p> -->
+          <textarea cols="30" rows="2" ref="introin" class="introin" v-model="filetitle.info_para"
+            @keyup.enter="introshow = true" @blur="introshow = true"
+            placeholder="为了使问卷调查结果更加清晰，准确，请输入关于问卷的简短介绍以及注意事项，方便填写问卷的人更清晰的认识问卷，字数少于500字"></textarea>
         </div>
       </div>
 
@@ -46,7 +47,8 @@
             <component :is="typeview" :fileword="fileword" :receive="receive" :deleteques="deleteques"
               :scalefile="scalefile" :sreceive="sreceive" :sdeleteques="sdeleteques" :radiofile="radiofile"
               :rreceive="rreceive" :rdeleteques="rdeleteques" :checkboxfile="checkboxfile" :creceive="creceive"
-              :cdeleteques="cdeleteques" :textfile="textfile" :treceive="treceive" :tdeleteques="tdeleteques"  :mixfile="mixfile" :mixreceive="mixreceive" :mixdeleteques="mixdeleteques">
+              :cdeleteques="cdeleteques" :textfile="textfile" :treceive="treceive" :tdeleteques="tdeleteques"
+              :mixfile="mixfile" :mixreceive="mixreceive" :mixdeleteques="mixdeleteques">
             </component>
           </keep-alive>
         </div>
@@ -111,9 +113,9 @@ if (localStorage.getItem("title")) {
   filetitle = reactive(JSON.parse(localStorage.getItem("title")));
 } else {
   filetitle = reactive({
-    info_title: "请输入问卷标题",
+    info_title: "",
     info_para:
-      "为了使问卷调查结果更加清晰，准确，请输入关于问卷的简短介绍以及注意事项，方便填写问卷的人更清晰的认识问卷，字数少于500字",
+      "",
   });
 }
 //存储矩阵问卷信息内容
@@ -123,7 +125,7 @@ if (localStorage.getItem("matrix")) {
 } else {
   fileword = reactive([
     {
-      question: { detail: "请输入题目标题", type: 0 },
+      question: { detail: "", type: 0 },
       options: [
         { detail: "" },
         { detail: "" },
@@ -174,8 +176,8 @@ if (localStorage.getItem("scale")) {
 } else {
   scalefile = reactive([
     {
-      options: [{ detail: "选项", dominate: 20 }],
-      question: { detail: "请输入题目标题",dominate: 60 },
+      options: [{ detail: "", dominate: 20 }],
+      question: { detail: "", dominate: 60 },
       id: nanoid(),
       secscore: 20,
     },
@@ -201,8 +203,8 @@ if (localStorage.getItem("radio")) {
 } else {
   radiofile = reactive([
     {
-      options: [{ detail: "选项" }],
-      question: { detail: "请输入题目标题", type: 0 },
+      options: [{ detail: "" }],
+      question: { detail: "", type: 0 },
       id: nanoid(),
     },
   ]);
@@ -227,8 +229,8 @@ if (localStorage.getItem("checkbox")) {
 } else {
   checkboxfile = reactive([
     {
-      options: [{ detail: "选项" }],
-      question: { detail: "请输入题目标题", type: 1 },
+      options: [{ detail: "" }],
+      question: { detail: "", type: 1 },
       id: nanoid(),
     },
   ]);
@@ -257,8 +259,8 @@ if (localStorage.getItem("text")) {
 } else {
   textfile = reactive([
     {
-      options: [{ detail: "选项" }],
-      question: { detail: "请输入题目标题", type: 2 },
+      options: [{ detail: "" }],
+      question: { detail: "", type: 2 },
       id: nanoid(),
     },
   ]);
@@ -286,8 +288,8 @@ if (localStorage.getItem("mix")) {
 } else {
   mixfile = reactive([
     {
-      options: [{ detail: "选项" }],
-      question: { detail: "请输入题目标题", type: 0 },
+      options: [{ detail: "" }],
+      question: { detail: "", type: 0 },
       id: nanoid(),
     },
   ]);
@@ -322,250 +324,288 @@ function keepinfor() {
   if (type.value == 5) {
     localStorage.setItem("text", JSON.stringify(textfile));
   }
-   if (type.value == 6) {
+  if (type.value == 6) {
     localStorage.setItem("mix", JSON.stringify(mixfile));
   }
   alert("保存成功!");
 }
 //发布问卷
 let show = ref("none");
+let nanswered = reactive([])
 async function pushfile() {
-  if (type.value == 1) {
-    radiofile.forEach((element) => delete element.id);
-    await axios({
-      url: "https://q.denglu1.cn/questions/rebuild",
-      method: "post",
-      withCredentials: true,
-      headers: { "Content-Type": "application/json" },
-      headers: { token: datas.user.token },
-      data: {
-        questionnaire: {
-          userId: datas.user.userId,
-          totalNumber: 100,
-          message: filetitle.info_para,
-          title: filetitle.info_title,
-          count: 0,
-        },
-        questionOptionList: JSON.parse(JSON.stringify(radiofile)),
-      },
-    })
-      .then((response) => {
-        console.log(response);
-        link.value = response.data.data.link;
-        linkqr.value =
-          "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
-          parseInt(link.value);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    localStorage.removeItem("radio");
-    radiofile.splice(0, radiofile.length);
-    console.log(radiofile);
-    radiofile.push({
-      options: [{ detail: "选项" }],
-      question: { detail: "请输入题目标题", type: 1 },
-      id: nanoid(),
-    });
+  //判断input是否填写
+  let isover = false
+  //判断textarea是否填写
+  let isarea = false
+  //判断题目选项是否填写
+  let input = document.getElementsByTagName('input')
+  let typeinput = [].slice.call(input)
+  let textarea = document.getElementsByTagName('textarea')
+
+  //textarea未填写标红
+  if (textarea[0].value == "") {
+    textarea[0].style.borderColor = "red"
+    isarea = false
   }
-  if (type.value == 2) {
-    checkboxfile.forEach((element) => delete element.id);
-    await axios({
-      url: "https://q.denglu1.cn/questions/rebuild",
-      method: "post",
-      withCredentials: true,
-      headers: { "Content-Type": "application/json" },
-      headers: { token: datas.user.token },
-      data: {
-        questionnaire: {
-          userId: datas.user.userId,
-          totalNumber: 100,
-          message: filetitle.info_para,
-          title: filetitle.info_title,
-          count: 1,
-        },
-        questionOptionList: JSON.parse(JSON.stringify(checkboxfile)),
-      },
-    })
-      .then((response) => {
-        console.log(response);
-        link.value = response.data.data.link;
-        linkqr.value =
-          "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
-          parseInt(link.value);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    localStorage.removeItem("checkbox");
-    checkboxfile.splice(0, checkboxfile.length);
-    checkboxfile.push({
-      options: [{ detail: "选项" }],
-      question: { detail: "请输入题目标题", type: 1 },
-      id: nanoid(),
-    });
+  else {
+    textarea[0].style.borderColor = ""
+    isarea = true
   }
-  if (type.value == 3) {
-    fileword.forEach((element) => {
-      delete element.id;
-    });
-    console.log(fileword);
-    await axios({
-      url: "https://q.denglu1.cn/questions/rebuild",
-      method: "post",
-      withCredentials: true,
-      headers: { "Content-Type": "application/json" },
-      headers: { token: datas.user.token },
-      data: {
-        questionnaire: {
-          userId: datas.user.userId,
-          totalNumber: 100,
-          message: filetitle.info_para,
-          title: filetitle.info_title,
-          count: 2,
-        },
-        questionOptionList: JSON.parse(JSON.stringify(fileword)),
-      },
-    })
-      .then((response) => {
-        console.log(response);
-        link.value = response.data.data.link;
-        linkqr.value =
-          "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
-          parseInt(link.value);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    localStorage.removeItem("matrix");
-    fileword.splice(0, fileword.length);
-    fileword.push({
-      options: [{ detail: "选项" }],
-      question: { detail: "请输入题目标题", type: 1 },
-      id: nanoid(),
-    });
+  for (let i = 0; i < input.length; i++) {
+    if (input[i].value == "") {
+      input[i].style.border = "1px solid"
+      input[i].style.borderColor = "red"
+      // input[i].disabled = false
+    }
+    else {
+      input[i].style.border = ""
+      input[i].style.borderColor = ""
+    }
   }
-  if (type.value == 4) {
-    scalefile.forEach((element) => {
-      delete element.id;
-      element.options.forEach((options) => {
-        options.dominate = element.secscore;
-      });
-      // delete element.secscore;
-    });
-    await axios({
-      url: "https://q.denglu1.cn/questions/rebuild",
-      method: "post",
-      withCredentials: true,
-      headers: { "Content-Type": "application/json" },
-      headers: { token: datas.user.token },
-      data: {
-        questionnaire: {
-          userId: datas.user.userId,
-          totalNumber: 100,
-          message: filetitle.info_para,
-          title: filetitle.info_title,
-          count: 3,
+  //判断所有的input是否填写
+  isover = typeinput.every((element) => {
+    return element.value != ""
+  })
+  if (isover == false || isarea == false) alert('请将标红出内容进行填写!')
+  if (isover == true && isarea == true) {
+    console.log(1);
+    console.log(type.value);
+    if (type.value == 1) {
+      radiofile.forEach((element) => delete element.id);
+      await axios({
+        url: "https://q.denglu1.cn/questions/rebuild",
+        method: "post",
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+        headers: { token: datas.user.token },
+        data: {
+          questionnaire: {
+            userId: datas.user.userId,
+            totalNumber: 100,
+            message: filetitle.info_para,
+            title: filetitle.info_title,
+            count: 0,
+          },
+          questionOptionList: JSON.parse(JSON.stringify(radiofile)),
         },
-        questionOptionList: JSON.parse(JSON.stringify(scalefile)),
-      },
-    })
-      .then((response) => {
-        console.log(response);
-        link.value = response.data.data.link;
-        linkqr.value =
-          "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
-          parseInt(link.value);
       })
-      .catch((error) => {
-        console.log(error);
+        .then((response) => {
+          console.log(response);
+          link.value = response.data.data.link;
+          linkqr.value =
+            "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
+            parseInt(link.value);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      localStorage.removeItem("radio");
+      radiofile.splice(0, radiofile.length);
+      radiofile.push({
+        options: [{ detail: "" }],
+        question: { detail: "", type: 1 },
+        id: nanoid(),
       });
-    localStorage.removeItem("scale");
-    scalefile.splice(0, scalefile.length);
-    scalefile.push({
-      question: { detail: "请输入题目标题", type: 1 },
-      options: [{ detail: "请输入次级题目标题", dominate: 20 }],
-      id: nanoid(),
-      dominate: 60,
-      secscore: 20,
-    });
-  }
-  if (type.value == 5) {
-    textfile.forEach((element) => delete element.id);
-    await axios({
-      url: "https://q.denglu1.cn/questions/rebuild",
-      method: "post",
-      withCredentials: true,
-      headers: { "Content-Type": "application/json" },
-      headers: { token: datas.user.token },
-      data: {
-        questionnaire: {
-          userId: datas.user.userId,
-          totalNumber: 100,
-          message: filetitle.info_para,
-          title: filetitle.info_title,
-          count: 4,
+    }
+    if (type.value == 2) {
+      checkboxfile.forEach((element) => delete element.id);
+      await axios({
+        url: "https://q.denglu1.cn/questions/rebuild",
+        method: "post",
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+        headers: { token: datas.user.token },
+        data: {
+          questionnaire: {
+            userId: datas.user.userId,
+            totalNumber: 100,
+            message: filetitle.info_para,
+            title: filetitle.info_title,
+            count: 1,
+          },
+          questionOptionList: JSON.parse(JSON.stringify(checkboxfile)),
         },
-        questionOptionList: JSON.parse(JSON.stringify(textfile)),
-      },
-    })
-      .then((response) => {
-        console.log(response);
-        link.value = response.data.data.link;
-        linkqr.value =
-          "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
-          parseInt(link.value);
       })
-      .catch((error) => {
-        console.log(error);
+        .then((response) => {
+          console.log(response);
+          link.value = response.data.data.link;
+          linkqr.value =
+            "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
+            parseInt(link.value);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      localStorage.removeItem("checkbox");
+      checkboxfile.splice(0, checkboxfile.length);
+      checkboxfile.push({
+        options: [{ detail: "" }],
+        question: { detail: "", type: 1 },
+        id: nanoid(),
       });
-    localStorage.removeItem("text");
-    textfile.splice(0, textfile.length);
-    textfile.push({
-      options: [{ detail: "选项" }],
-      question: { detail: "请输入题目标题", type: 2 },
-      id: nanoid(),
-    });
-  }
-   if (type.value == 6) {
-    textfile.forEach((element) => delete element.id);
-    await axios({
-      url: "https://q.denglu1.cn/questions/rebuild",
-      method: "post",
-      withCredentials: true,
-      headers: { "Content-Type": "application/json" },
-      headers: { token: datas.user.token },
-      data: {
-        questionnaire: {
-          userId: datas.user.userId,
-          totalNumber: 100,
-          message: filetitle.info_para,
-          title: filetitle.info_title,
-          count: 4,
+    }
+    if (type.value == 3) {
+      fileword.forEach((element) => {
+        delete element.id;
+      });
+      console.log(fileword);
+      await axios({
+        url: "https://q.denglu1.cn/questions/rebuild",
+        method: "post",
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+        headers: { token: datas.user.token },
+        data: {
+          questionnaire: {
+            userId: datas.user.userId,
+            totalNumber: 100,
+            message: filetitle.info_para,
+            title: filetitle.info_title,
+            count: 2,
+          },
+          questionOptionList: JSON.parse(JSON.stringify(fileword)),
         },
-        questionOptionList: JSON.parse(JSON.stringify(mixfile)),
-      },
-    })
-      .then((response) => {
-        console.log(response);
-        link.value = response.data.data.link;
-        linkqr.value =
-          "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
-          parseInt(link.value);
       })
-      .catch((error) => {
-        console.log(error);
+        .then((response) => {
+          console.log(response);
+          link.value = response.data.data.link;
+          linkqr.value =
+            "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
+            parseInt(link.value);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      localStorage.removeItem("matrix");
+      fileword.splice(0, fileword.length);
+      fileword.push({
+        options: [{ detail: "" }],
+        question: { detail: "", type: 1 },
+        id: nanoid(),
       });
-    localStorage.removeItem("mix");
-    mixfile.splice(0, mixfile.length);
-    mixfile.push({
-      options: [{ detail: "选项" }],
-      question: { detail: "请输入题目标题", type: 0 },
-      id: nanoid(),
-    });
+    }
+    if (type.value == 4) {
+      scalefile.forEach((element) => {
+        delete element.id;
+        element.options.forEach((options) => {
+          options.dominate = element.secscore;
+        });
+        // delete element.secscore;
+      });
+      await axios({
+        url: "https://q.denglu1.cn/questions/rebuild",
+        method: "post",
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+        headers: { token: datas.user.token },
+        data: {
+          questionnaire: {
+            userId: datas.user.userId,
+            totalNumber: 100,
+            message: filetitle.info_para,
+            title: filetitle.info_title,
+            count: 3,
+          },
+          questionOptionList: JSON.parse(JSON.stringify(scalefile)),
+        },
+      })
+        .then((response) => {
+          console.log(response);
+          link.value = response.data.data.link;
+          linkqr.value =
+            "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
+            parseInt(link.value);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      localStorage.removeItem("scale");
+      scalefile.splice(0, scalefile.length);
+      scalefile.push({
+        question: { detail: "", type: 1 },
+        options: [{ detail: "", dominate: 20 }],
+        id: nanoid(),
+        dominate: 60,
+        secscore: 20,
+      });
+    }
+    if (type.value == 5) {
+      textfile.forEach((element) => delete element.id);
+      await axios({
+        url: "https://q.denglu1.cn/questions/rebuild",
+        method: "post",
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+        headers: { token: datas.user.token },
+        data: {
+          questionnaire: {
+            userId: datas.user.userId,
+            totalNumber: 100,
+            message: filetitle.info_para,
+            title: filetitle.info_title,
+            count: 4,
+          },
+          questionOptionList: JSON.parse(JSON.stringify(textfile)),
+        },
+      })
+        .then((response) => {
+          console.log(response);
+          link.value = response.data.data.link;
+          linkqr.value =
+            "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
+            parseInt(link.value);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      localStorage.removeItem("text");
+      textfile.splice(0, textfile.length);
+      textfile.push({
+        options: [{ detail: "" }],
+        question: { detail: "", type: 2 },
+        id: nanoid(),
+      });
+    }
+    if (type.value == 6) {
+      textfile.forEach((element) => delete element.id);
+      await axios({
+        url: "https://q.denglu1.cn/questions/rebuild",
+        method: "post",
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+        headers: { token: datas.user.token },
+        data: {
+          questionnaire: {
+            userId: datas.user.userId,
+            totalNumber: 100,
+            message: filetitle.info_para,
+            title: filetitle.info_title,
+            count: 4,
+          },
+          questionOptionList: JSON.parse(JSON.stringify(mixfile)),
+        },
+      })
+        .then((response) => {
+          console.log(response);
+          link.value = response.data.data.link;
+          linkqr.value =
+            "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
+            parseInt(link.value);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      localStorage.removeItem("mix");
+      mixfile.splice(0, mixfile.length);
+      mixfile.push({
+        options: [{ detail: "" }],
+        question: { detail: "", type: 0 },
+        id: nanoid(),
+      });
+    }
+    show.value = "block";
+    localStorage.removeItem("title");
   }
-  show.value = "block";
-  localStorage.removeItem("title");
 }
 let link = ref(1);
 let linkqr = ref(
@@ -645,14 +685,28 @@ div.wrapper {
       }
 
       >input.titlein {
+        position: relative;
         display: block;
-        width: auto;
+        width: 500px;
         height: auto;
         font-size: 33px;
         font-weight: bold;
         color: rgb(0, 0, 0);
         outline: 0;
         border: 1px dashed rgba(30, 111, 255, 1);
+        text-align: center;
+
+        &::after {
+          content: "";
+          display: block;
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          height: 4px;
+          width: 100%;
+          background-color: #1e6fff;
+          border-radius: 2px;
+        }
       }
 
       >div.newintro {
@@ -684,6 +738,7 @@ div.wrapper {
           display: block;
           height: auto;
           width: 100%;
+          height: 50px;
           font-size: 15px;
           color: rgb(0, 0, 0);
           outline: none;
