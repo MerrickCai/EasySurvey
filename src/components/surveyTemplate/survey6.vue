@@ -186,6 +186,14 @@ const survey = reactive(
 }]
    });
 
+
+
+
+
+
+
+
+
  function toContent() { 
     currentSurvey.toOngoing();
 }   
