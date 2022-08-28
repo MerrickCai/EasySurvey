@@ -18,7 +18,7 @@
             </div>
             <p class="second-title">问卷介绍：</p>
             <p class="para">{{ survey.intro.info_para }}</p>
-            <div class="btn" @click="survey.status.toOngoing()">
+            <div class="btn" @click="survey.status.toOngoing">
                 <div>开始问卷</div>
             </div>
         </div>
@@ -35,9 +35,9 @@
                     :style="{ backgroundColor: `${item.progressPartbcg}` }">
                 </span>
                 <div class="outer-thumb" ref="thumb">
-                    <div class="bluebcg" ref="bluebcg" :style="{ height: `${bluebcg_height}px` }"></div>
+                    <div class="bluebcg" ref="bluebcg"></div>
                 </div>
-                <div class="text" ref="text">0%</div>
+                <div class="text" ref="text">0 %</div>
             </div>
 
             <!-- 介绍区域 -->
@@ -50,26 +50,27 @@
             </div>
 
             <!-- 答题区域 -->
-            <main ref="content" @scroll="onScroll($event)">
-                <div class="main" v-for="item of survey.questionList" :key="item.questionId">
-
-                    <div class="questiontitle" ref="questiontitle"> {{ item.questiontitle }}</div>
+            <main ref="content" @scroll="onScroll">
+                <div class="main" v-for="(item, i) of survey.questionList" :key="item.questionId">
 
                     <template v-if="item.type === 0">
+                        <div class="questiontitle" ref="questiontitle">{{ `${i + 1}. ${item.questiontitle}（单选）` }}</div>
                         <div class="ques" v-for="(elem, index) of item.option" :key="index">
-                            <input type="radio" :name="item.questionId" :value="elem" />
-                            <p>{{ elem }}</p>
+                            <input type="radio" :id="elem" :value="elem" v-model="item.value" />
+                            <p><label :for="elem">{{ elem }}</label></p>
                         </div>
                     </template>
                     <template v-else-if="item.type === 1">
+                        <div class="questiontitle" ref="questiontitle">{{ `${i + 1}. ${item.questiontitle}（多选）` }}</div>
                         <div class="ques" v-for="(elem, index) of item.option" :key="index">
-                            <input type="checkbox" :name="item.questionId" :value="elem" />
-                            <p>{{ elem }}</p>
+                            <input type="checkbox" :id="elem" :value="elem" v-model="item.value" />
+                            <p><label :for="elem">{{ elem }}</label></p>
                         </div>
                     </template>
                     <template v-else>
+                        <div class="questiontitle" ref="questiontitle">{{ `${i + 1}. ${item.questiontitle}（文本）` }}</div>
                         <div class="ques">
-                            <textarea placeholder="请输入文本"></textarea>
+                            <textarea v-model="item.value" placeholder="请输入文本"></textarea>
                         </div>
                     </template>
 
@@ -77,7 +78,7 @@
             </main>
 
             <!-- 问卷提交按钮 -->
-            <div class="btn" @click="toFinish()">
+            <div class="btn" @click="Finish">
                 <div>提交问卷</div>
             </div>
 
@@ -104,8 +105,9 @@
 
 <script setup>
 import { ref, reactive } from 'vue'
-
-
+import axios from "axios"
+import { useStore } from "../PiniaStores/index.js"
+const datas = useStore()
 
 // --------------------------- 问卷状态，问卷数据 --------------------
 const survey = reactive({
@@ -130,135 +132,127 @@ const survey = reactive({
         {
             questionId: 1,
             type: 2,
-            questiontitle: '一、我认为我能为团队做出的贡献是：',
-            value: 0,
-            titleBorder: 0,
+            questiontitle: '我认为我能为团队做出的贡献是：',
+            value: '',
             progressPartbcg: '#ccc',
-            option: null
         },
         {
             questionId: 2,
             type: 0,
-            questiontitle: '二、我认为我能为团队做出的贡献是：',
+            questiontitle: '我认为我能为团队做出的贡献是：',
             value: 0,
-            titleBorder: 0,
             progressPartbcg: '#ccc',
             option: ['aaAAAhaha', 'BBB', 'CCC']
         },
         {
             questionId: 3,
             type: 1,
-            questiontitle: '三、我认为我能为团队做出的贡献是：',
+            questiontitle: '我认为我能为团队做出的贡献是：',
             value: [],
-            titleBorder: 0,
             progressPartbcg: '#ccc',
             option: ['111', '222', '333']
         },
         {
             questionId: 4,
-            type: 1,
-            questiontitle: '四、我认为我能为团队做出的贡献是：',
-            value: [],
-            titleBorder: 0,
+            type: 0,
+            questiontitle: '我认为我能为团队做出的贡献是：',
+            value: 0,
             progressPartbcg: '#ccc',
-            option: ['111', '222', '333']
+            option: ['aaAAAhaha', 'BBB', 'CCC']
         },
         {
             questionId: 5,
-            type: 1,
-            questiontitle: '五、我认为我能为团队做出的贡献是：',
-            value: [],
-            titleBorder: 0,
-            progressPartbcg: '#ccc',
-            option: ['111', '222', '333']
-        },
-        {
-            questionId: 6,
             type: 2,
-            questiontitle: '六、我认为我能为团队做出的贡献是：',
-            value: 0,
-            titleBorder: 0,
+            questiontitle: '我认为我能为团队做出的贡献是：',
+            value: '',
             progressPartbcg: '#ccc',
-            option: null
-        },
-        {
-            questionId: 7,
-            type: 0,
-            questiontitle: '七、我认为我能为团队做出的贡献是：',
-            value: [],
-            titleBorder: 0,
-            progressPartbcg: '#ccc',
-            option: ['www', 'aa', 'www']
         }
     ]
 })
 // --------------------------- 问卷状态，问卷数据 --------------------
 
-
-
 // ---------------------------   进度条 ---------------------------------------
+//模板引用
 const thumb = ref()
+const bluebcg = ref()
 const text = ref()
 const content = ref()
-const bluebcg = ref()
-const bluebcg_height = ref(0)
+//点击事件
 function scrollTo(e) {
-    console.log(e)
-    const scrollDistence = ref(0);
-    if (scrollDistence.value === 0) {
-        //此为滚动距离scrollTop最大值（e.currentTarget.offsetHeight == e.currentTarget.clientHeight）
-        scrollDistence.value = content.value.scrollHeight - content.value.offsetHeight;
-    }
-    // 此页面滚动条为300px
-    //转换(e.offsetY是鼠标点击进度条的位置[0,300]，进度条总长300px)
-    content.value.scrollTop = (scrollDistence.value) * (e.offsetY / 300) - 8;
-    text.value.innerHTML = `${Math.ceil((e.offsetY / 300) * 100)} %`;
-
+    const scrollMaxDistance = content.value.scrollHeight - content.value.offsetHeight
+    content.value.scrollTop = scrollMaxDistance * (e.offsetY / 300);
+    text.value.innerHTML = `${Math.floor((e.offsetY / 300) * 100)} %`;
 }
+//滚动事件
 function onScroll() {
-    let temp;
-    const scrollDistence = ref(0);
-    if (scrollDistence.value === 0) {
-        scrollDistence.value = content.value.scrollHeight - content.value.offsetHeight;
-    }
-    //转换
-    thumb.value.setAttribute('style', `top: ${(300) * (content.value.scrollTop / scrollDistence.value) - 8}px`);
-    text.value.innerHTML = `${Math.ceil((content.value.scrollTop / scrollDistence.value) * 100)} %`
-    temp = thumb.value.style.top.split("");
-    temp.pop();
-    temp.pop();
-    temp = temp.join("") / 1 + 8;
-    bluebcg_height.value = temp;
+    const scrollMaxDistance = content.value.scrollHeight - content.value.offsetHeight
+    thumb.value.setAttribute('style', `top: ${300 * (content.value.scrollTop / scrollMaxDistance) - 8}px`);
+    text.value.innerHTML = `${Math.ceil((content.value.scrollTop / scrollMaxDistance) * 100)} %`
+    bluebcg.value.style.height = `${300 * (content.value.scrollTop / scrollMaxDistance)}px`
 }
-const questiontitle = ref()
 // ---------------------------   进度条 ---------------------------------------
 
 
 
 // ------------------------- 提交问卷前判断完成度然后提交 ------------------------
-function toFinish() {
-    let flag = true;
-    // 记录未完成的问卷id
-    const uncomplete = [];
-    let queId = 1;
-    bluebcg.value.style.display = 'none';      // 进度条滚动的蓝色背景失效
+//模板引用
+const questiontitle = ref()
+//判断函数
+function Finish() {
+    let flag = true
+    const uncomplete = []
+    let queId = 0
+    bluebcg.value.style.display = 'none'
     survey.questionList.forEach(item => {
-        item.titleBorder = 0;
-        item.progressPartbcg = '#5a9afa';
-        if (item.value === 0) {
-            flag = false;
-            uncomplete.push(queId);
-            item.titleBorder = 1;
-            item.progressPartbcg = 'red';
+        item.progressPartbcg = '#5a9afa'
+        if (item.value === 0 || item.value.length === 0 || item.value === '') {
+            flag = false
+            uncomplete.push(queId)
         }
-        queId++;
-    });
-    let fisrtreturn = uncomplete[0] - 1;
-    if (uncomplete.length) {
-        content.value.scrollTop = questiontitle.value[fisrtreturn].offsetTop;
+        queId++
+    })
+    let fisrtreturn = uncomplete[0]
+    if (uncomplete.length !== 0) {
+        content.value.scrollTop = questiontitle.value[fisrtreturn].offsetTop
     }
-    if (!flag) return
-    sumbit();
+    if (!flag) {
+        return false
+    }
+    else {
+        Submit()
+        survey.status.toEnd()
+    }
+}
+//提交函数
+function Submit() {
+    const questionAnswerList = []
+    survey.questionList.forEach(item => {
+        let questionAnswer = {
+            questionId: item.questionId,
+            type: item.type,
+            text: item.questiontitle,
+            optionList: item.value
+        }
+        questionAnswerList.push(questionAnswer)
+    })
+    axios({
+        url: `https://q.denglu1.cn/questions/commit`,
+        method: 'post',
+        withCredentials: true,
+        headers: { 'Content-Type': 'application/json' },
+        headers: { 'token': datas.user.token },
+        data: {
+            questionnaire_id: 5000,
+            totalNumber: 100,
+            count: 5,           //问卷类型：混合（单选，多选，文本）
+            effectiveNumber: 0,
+            questionAnswerList
+        }
+    }).then((response) => {
+        console.log(response);
+    }).catch((error) => {
+        console.log(error)
+    })
 }
 // ------------------------- 提交问卷前判断完成度然后提交 ------------------------
 </script>
@@ -271,7 +265,7 @@ div.wrapper {
     flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    height: calc(100% - 5px);
     width: 100%;
     position: relative;
     top: 0;
@@ -475,7 +469,7 @@ div[content] {
         width: 8px;
         bottom: 50%;
         transform: translateY(50%);
-        right: 80px;
+        right: 100px;
         border-radius: 5px;
         background-color: rgba(204, 204, 204, 1);
         cursor: pointer;
@@ -525,7 +519,7 @@ div[content] {
                 position: absolute;
                 left: 2px;
                 bottom: 8px;
-                height: 10px;
+                height: 0px;
                 width: 8px;
                 z-index: -9;
                 border-radius: 5px;
@@ -539,7 +533,7 @@ div[content] {
             z-index: 1;
             height: 18px;
             width: 50px;
-            bottom: -22px;
+            bottom: -30px;
             left: -22px;
             color: rgba(30, 111, 255, 1);
             text-align: center;
@@ -704,8 +698,8 @@ div[content] {
             flex-direction: row;
             justify-content: center;
             align-items: center;
-            width: 240px;
-            height: 64px;
+            width: 220px;
+            height: 54px;
             font-size: 20px;
             color: rgba(255, 255, 255, 1);
             background-color: rgba(30, 111, 255, 1);
