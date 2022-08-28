@@ -523,7 +523,44 @@ async function pushfile() {
     textfile.splice(0, textfile.length);
     textfile.push({
       options: [{ detail: "选项" }],
-      question: { detail: "请输入题目标题", type: 1 },
+      question: { detail: "请输入题目标题", type: 2 },
+      id: nanoid(),
+    });
+  }
+   if (type.value == 6) {
+    textfile.forEach((element) => delete element.id);
+    await axios({
+      url: "https://q.denglu1.cn/questions/rebuild",
+      method: "post",
+      withCredentials: true,
+      headers: { "Content-Type": "application/json" },
+      headers: { token: datas.user.token },
+      data: {
+        questionnaire: {
+          userId: datas.user.userId,
+          totalNumber: 100,
+          message: filetitle.info_para,
+          title: filetitle.info_title,
+          count: 4,
+        },
+        questionOptionList: JSON.parse(JSON.stringify(mixfile)),
+      },
+    })
+      .then((response) => {
+        console.log(response);
+        link.value = response.data.data.link;
+        linkqr.value =
+          "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
+          parseInt(link.value);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    localStorage.removeItem("mix");
+    mixfile.splice(0, mixfile.length);
+    mixfile.push({
+      options: [{ detail: "选项" }],
+      question: { detail: "请输入题目标题", type: 0 },
       id: nanoid(),
     });
   }

@@ -103,14 +103,9 @@ const props = defineProps(["quesitem", "mixfile", "mixreceive", "mixdeleteques",
 let titletype=ref('单选')
 function typechange(index) {
     var obj=document.getElementsByTagName('select')
-    console.log(obj);
-    console.log(obj[index]);
-    console.log(obj[index].options[obj[index].selectedIndex]);
-    console.log(obj[index].options[obj[index].selectedIndex].text);
-    console.log(obj[index].selectedIndex);
     //obj.selectedIndex为选中的option的索引,obj.options[obj.selectedIndex].text为选中的文本
     titletype.value=obj[index].options[obj[index].selectedIndex].text
-    console.log(props.mixfile);
+    props.quesitem.question.type=obj[index].selectedIndex
 }
 //鼠标滚轮在添加新题目时滑动到底部
 let { scroll, updatescroll } = inject("changescroll");
