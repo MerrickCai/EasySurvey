@@ -1,53 +1,68 @@
 <template>
-  <div class="echartall">
-    <div class="userlist">
-      <div class="list_title">用户列表</div>
-      <el-scrollbar max-height="400px">
-        <p
-          v-for="item in filenews.context.userWithScores"
-          :key="item"
-          class="scrollbar-demo-item"
-        >
-          <span class="username">{{ item.user.username }}</span>
-          <span class="userscore">得分: {{ item.score }}</span>
-          <span class="userdetail">详情</span>
-          <span class="userdel">删除</span>
-        </p>
-      </el-scrollbar>
+      <div class="echartall">
+      <div class="userlist">
+        <div class="list_title">用户列表</div>
+        <el-scrollbar max-height="400px">
+          <p
+            v-for="item in filenews.context.userWithScores"
+            :key="item"
+            class="scrollbar-demo-item"
+          >
+            <span class="username">{{ item.user.username }}</span>
+            <span class="userscore">得分: {{ item.score }}</span>
+            <span class="userdetail"  @click="showDetail(item.user.id,filenews.context.questionnaire.id)">详情</span>
+            <span class="userdel">删除</span>
+          </p>
+        </el-scrollbar>
+    <!-- 详情页 -->
+        <div class="detail" v-if="showdetail">
+          <span class="cancel" @click="showdetail=false">X</span>
+         <component :is="currentView" :survey-obj="surveydatas.data" ></component>
+        </div>
+      </div>
+      <div class="userarea">
+        <div class="echart_user" id="echart_user"></div>
+        <div id="userpie" class="userpie"></div>
+      </div>
+      <div class="sta_one">
+        <div class="echart_mes" id="echart_mes" ref="echart_mes"></div>
+        <div id="myChartpie" class="myChartpie"></div>
+      </div>
+      <div
+        class="echart_compare"
+        id="echart_compare"
+        @dragover.prevent
+        @drop.prevent="drop($event)"
+      >
+        <img src="/compare.png" alt="" />
+        <span>+</span>
+        <i>快将同类型问卷拖入此处对比问卷吧！</i>
+      </div>
     </div>
-    <div class="userarea">
-      <div class="echart_user" id="echart_user"></div>
-      <div id="userpie" class="userpie"></div>
-    </div>
-    <div class="sta_one">
-      <div class="echart_mes" id="echart_mes" ref="echart_mes"></div>
-      <div id="myChartpie" class="myChartpie"></div>
-    </div>
-    <div
-      class="echart_compare"
-      id="echart_compare"
-      @dragover.prevent
-      @drop.prevent="drop($event)"
-    >
-      <img src="/compare.png" alt="" />
-      <span>+</span>
-      <i>快将同类型问卷拖入此处对比问卷吧！</i>
-    </div>
-  </div>
+
+
+
+
 </template>
 
 <script setup>
+import survey1 from "../surveyTemplate_min/survey1_.min.vue";
+import survey2 from "../surveyTemplate_min/survey2_.min.vue";
+import survey3 from "../surveyTemplate_min/survey3_.min.vue";
+import survey4 from "../surveyTemplate_min/survey4_.min.vue";
+import survey5 from "../surveyTemplate_min/survey5_.min.vue";
+
 import * as echarts from "echarts";
 import draggable from "vuedraggable";
 import emitter from "../../mitt";
-import { onMounted, ref, reactive, watch } from "vue";
+import { onMounted, ref, reactive, watch,computed, nextTick } from "vue";
 //路由
 import { useRouter } from "vue-router";
-const router = useRouter();
 //PiniaStores
 import { useStore } from "../../PiniaStores/index.js";
-const datas = useStore();
 import axios from "axios";
+const datas = useStore();
+const router = useRouter();
 
 const count = ref(5);
 
@@ -67,11 +82,13 @@ emitter.on("filenum", (e) => {
 });
 watch(num, (newnum) => {
   getfile();
+  console.log('问卷信息', filenews);  
 });
 
 let filenews = reactive({
   context: { questionnaire: { totalNumber: 0, effectiveNumber: 0 } },
 });
+let detail = reactive({});
 function getfile() {
   axios({
     url: `https://q.denglu1.cn/user/questionnaireDetail/${parseInt(num.value)}`,
@@ -81,9 +98,11 @@ function getfile() {
     headers: { token: datas.user.token },
   })
     .then((response) => {
-      console.log(response);
+      // console.log(response);
       filenews.context = response.data.data;
-      console.log(filenews.context);
+      detail.context = response.data.data
+      
+      // console.log(filenews.context);
     })
     .catch((error) => {
       console.log(error);
@@ -450,6 +469,58 @@ function echartnum() {
   });
 }
 //第一个echart
+
+
+
+// 详情页
+let showdetail = ref(false);
+const viewId = ref(0)
+const surveyTemplateList = [survey1, survey2, survey3, survey4, survey5]
+const currentView = computed(() => surveyTemplateList[viewId.value - 1]);
+
+let surveydatas = reactive({});
+surveydatas.data = {};
+// 展示详情页
+function showDetail(userId, questionnaireId) {
+  let count = ref(detail.context.questionnaire.count)
+  switch (count.value) {
+          case 0: //单选
+            viewId.value = 3
+            break
+          case 1: //多选
+            viewId.value = 4
+            break
+          case 2: //矩阵
+            viewId.value = 1
+            break
+          case 3: //量表
+            viewId.value = 2
+            break
+          case 4: //文本
+            viewId.value = 5
+            break
+  }
+    // console.log(userId,questionnaireId);
+    
+  axios({
+        url: `https://q.denglu1.cn/user/AnswerDetail/${userId}/${questionnaireId}`,
+        method: 'get',
+        withCredentials: true,
+        headers: { 'token': datas.user.token },
+
+  }).then((response) => {
+    // console.log(response);
+    surveydatas.data = response.data.data;
+       console.log(  surveydatas.data );
+       
+    showdetail.value = true;
+
+      }).catch((error) => {
+        console.log(error)
+      })
+
+}
+
 </script>
 
 <style lang="less" scoped>
@@ -460,6 +531,7 @@ function echartnum() {
   grid-template-rows: 240px 190px;
   grid-auto-flow: column;
   grid-auto-flow: column dense;
+  // transform: translateX(370px);
   .userlist {
     padding: 16px;
     grid-column-start: 1;
@@ -515,6 +587,7 @@ function echartnum() {
           color: rgba(255, 255, 255, 1);
           opacity: 1;
           background: rgba(30, 111, 255, 1);
+          border-radius: 5px;
         }
         .userdel {
           display: none;
@@ -529,6 +602,7 @@ function echartnum() {
           opacity: 1;
           margin-left: 8px;
           border: 1px solid rgba(217, 217, 217, 1);
+          border-radius: 5px;
         }
       }
       .el-scrollbar__bar {
@@ -537,7 +611,34 @@ function echartnum() {
         right: 0;
       }
     }
-  }
+
+
+    // 详情页
+      div.detail{
+        width: 1150px;
+        height: 600px;
+        z-index: 10;
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;;
+        // opacity:.4;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        display: block;
+        // transition: all .5s linear;
+        overflow: auto;
+        .cancel{
+            position: absolute;
+            right: 10px;
+            top: 5px;
+            font-size: 24px;
+            color:black;
+            cursor: pointer;
+        }
+      }
+}
   .userarea {
     position: relative;
     grid-column-start: 8;
@@ -625,4 +726,7 @@ function echartnum() {
     border-radius: 4px;
   }
 }
+
+
+
 </style>

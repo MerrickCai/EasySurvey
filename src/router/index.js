@@ -15,7 +15,7 @@ const routes = [
     {
         path: '/',
         meta: { requireLogin: true },
-        component: statistics
+        component: statistics,
     },
     {
         path: '/login',
@@ -38,10 +38,11 @@ const routes = [
         component: notFound
     },
     {
-        path: '/test', //匹配不到以上路径=>404页面
+        path: '/test', 
         meta: { requireLogin: false },
         component: test
     },
+
 ]
 
 export default createRouter({

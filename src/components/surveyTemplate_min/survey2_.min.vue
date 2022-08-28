@@ -1,36 +1,8 @@
 <template>
 <div wrapper>
-        <!-- 介绍页 -->
-        <div class="wrapper" v-if="currentSurvey.status.begin">
-            <h2 class="title">{{ survey.intro.info_title }}</h2>
-            <p class="second-title">问卷介绍：</p>
-            <p class="para">{{ survey.intro.info_para }}</p>
-            <el-button type="primary" class="btn" @click="toContent()">开始问卷</el-button>
-        </div>
-
-
-
-        <!-- 问卷内容部分 -->
-        <div class="wrapper extrachange" v-if="currentSurvey.status.ongoing">
-            <!--问卷题目和介绍-->
-            <div class="topbox">
-                <h2 class="top_title">{{ survey.intro.info_title }}</h2>
-                <h5 class="top_sectitle">问卷介绍：</h5>
-                <div class="para_wrapper">
-                    <p class="top_para">{{ survey.intro.info_para }}</p>
-                </div>
-            </div>
-            <!--问卷题目和介绍-->
-
             <!-- 进度条 -->
             <div class="zhedang"></div>
             <div class="progress" @click="scrollTo($event)">
-                <div>
-                    <!-- 进度条分段，使得点击提交按钮后进度条可以分段显示红色背景，多少个题目就分多少段 (外面多个div包裹下面的style的last-child才能生效)-->
-                    <div class="progress-part" v-for="item of survey.questionList" :key="item.id"
-                        :style="{ height: `${progressPartHeight}px`, backgroundColor: `${item.progressPartbcg}` }">
-                    </div>
-                </div>
                 <div class="outer-thumb" ref="thumb">
                     <div class="bluebcg" ref="bluebcg" :style="{ height: `${bluebcg_height}px` }"></div>
                 </div>
@@ -42,241 +14,70 @@
             <div class="content" ref="content" @scroll="onScroll($event)">
                 <!-- 题目 -->
                 <!-- 第一层循环 item, i -->
-                <div class="main" v-for="(item, i) of survey.questionList" :key="item.id"
+                <div class="main" v-for="(item, i) of survey.questionList" :key="item.questionId"
                     :style="{ height: `${37.5 * item.question.length}px` }">
-                    <div class="questiontitle" ref="questiontitle"
-                        :style="{ border: `${item.titleBorder}px solid red` }">
+                    <div class="questiontitle">
                         {{ item.questiontitle }}
                         <p class="scoretips">可支配分数
-                            <span class="score">{{ item.score }}</span>
+                            <span class="score">0</span>
                         </p>
                     </div>
                     <!-- 第二层循环 elem,index -->
                     <div class="questionList" v-for="(elem, index) of item.question" :key="index">
                         {{ elem.detail }}
-                        <div class="slide" :style="{ backgroundColor: `${item.bcg}` }">
+                        <div class="slide" :style="{ backgroundColor: `#e5e5e5` }">
                             <!--400为slide的总宽度，根据分数总数来定每次滑块滑多少-->
                             <div class="Gradient"
                                 :style="{ width: `${(elem.value) * (400 / (barArr[i].length - 1))}px` }">
                             </div>
                             <!-- 第三层循环 b,j -->
-                            <div v-for="(b, j) of barArr[i]" :key="i" :class="j % 2 === 0 ? 'doublebar' : 'bar'"
-                                @click="distributeScore(elem, item, j)">
+                            <div v-for="(b, j) of barArr[i]" :key="i" :class="j % 2 === 0 ? 'doublebar' : 'bar'">
                                 <span class="num" v-if="!(j % 2)">{{ j }}</span>
                             </div>
                             <img class="thumb" :style="{ left: `${(elem.value) * (400 / (barArr[i].length - 1))}px` }"
-                                :src="elem.value === 0 ? item.silderSrc : '/blue.png'">
-                            <span class="edit" v-show="!elem.isEdit" @click="editHandle(elem, index)">{{ elem.value
-                            }}<img src="/icon-edit.png"></span>
-                            <input class="editinput" type="text" v-show="elem.isEdit"
-                                @blur="editHandle2(elem, item, $event)" @keydown.enter="editHandle2(elem, item, $event)"
-                                :value="elem.value" ref="myRef">
+                                :src="elem.value === 0 ? '/disable.png' : '/blue.png'">
+                            <span class="edit">{{elem.value}}<img src="/icon-edit.png"></span>
                         </div>
                     </div>
                 </div>
-                <el-button type="primary" class="submit" @click="toFinish()">提交问卷</el-button>
             </div>
-            <!--问卷区域-->
         </div>
 
-        <!-- 问卷完成部分 -->
-        <div class="finish-wrapper" v-if="currentSurvey.status.end">
-            <div class="innerbox">
-                <div class="finish-title">
-                    <h2>您已完成</h2>
-                    <h3>{{ survey.intro.info_title }}</h3>
-                    <p>感谢您的答题，本次问卷已全部结束</p>
-                </div>
-                <el-button type="primary" class="finish-submit">完成答题</el-button>
-            </div>
-        </div>
-    </div>
 </template>
 
 <script setup>
 import { inject, ref, computed, nextTick,onMounted ,reactive} from 'vue';
 import { useStore } from '../../PiniaStores/index.js'
 import axios from 'axios';
-//数据
-const datas = useStore();
-const currentSurvey = inject('currentSurvey')
 
-
-// ------------------接收survey父组件传过来的参数。-------------------------------
+// ------------------接受survey父组件传过来的参数。-------------------------------
 const props = defineProps(['surveyObj']);
 // 从父组件拿到数据
 const surveyObj = computed(() => props.surveyObj)
+// console.log('aaa', surveyObj.value);
 
 
-// 封装一个survey---------------用以在模板和存放提交时候的用户数据------------------（按照PiniStores中的结构模板来封装的）
+// 封装一个survey
 const survey = reactive({});
-// survey的介绍和提交问卷用的信息
-survey.intro = {};  
-survey.effectiveNumber = surveyObj.value.questionnaire.effectiveNumber;
-survey.totalNumber = surveyObj.value.questionnaire.totalNumber;
-survey.count = surveyObj.value.questionnaire.count;
-survey.id = surveyObj.value.questionnaire.id;
-survey.intro.info_title = surveyObj.value.questionnaire.title;
-survey.intro.info_para = surveyObj.value.questionnaire.message;
-
-// survey的问题列表数据
-survey.questionList = []; 
-let optionDetail = [];  //装每一项option的数据
-for (let i in surveyObj.value.optionMap) {
-  let t1 = [];
-  for (let j = 0; j < surveyObj.value.optionMap[i].length; j++){
-      t1.push({
-          detail: surveyObj.value.optionMap[i][j].detail,
-          value: 0,
-          isEdit: false,
-          id:surveyObj.value.optionMap[i][j].id
-      });
-  }
-  optionDetail.push(t1);
-}
-
-let start = 0;  
-// 配置每一道题目
+survey.questionList = [];
 for (let i in surveyObj.value.questionInfoMap) {
-  let item = surveyObj.value.questionInfoMap[i];
-    i/= 1;
     let obj = {};
-    obj.questiontitle = item.info;  //题目
-    obj.value = 0;  
-    obj.titleBorder = 0; 
-    obj.progressPartbcg = '#ccc';
-    obj.question = optionDetail[start];
-    obj.questionId = surveyObj.value.optionMap[i][0].questionId;
-    obj.silderSrc ='/blue.png';
-    obj.score = item.dominate;
-    obj.staticScore = obj.score;
+    obj.questionId = i;
+    obj.questiontitle = surveyObj.value.questionInfoMap[i].info;
+    obj.question = [];
     obj.secscore = surveyObj.value.optionMap[i][0].dominate;
-    start++;
-    survey.questionList.push(obj)
-}
-console.log('封装好的数据', survey);
-// -------------------------------------------------
-
-
-
-
-//------------------ 提交问卷请求---------------
-function sumbit() {
-  // 请求参数里面的问卷信息列表
-    const questionAnswerList = [];
-    const scoreList = [];
-    for (let item of survey.questionList) {
-          let obj = {};
-        obj.questionId = item.questionId;
-        obj.optionList = [];
-          for (let elem of item.question) {
-              let obj2 = {};
-              obj2.id = elem.id;
-              obj.optionList.push(obj2);
-             scoreList.push(elem.value/1);
-           }
-           questionAnswerList.push(obj);
-        }
-//   console.log(questionAnswerList);
-//   console.log(scoreList);
-  
-     axios({
-        url: `https://q.denglu1.cn/questions/commit`,
-        method: 'post',
-        withCredentials: true,
-        headers: { 'Content-Type': 'application/json' },
-        headers: { 'token': datas.user.token },
-        data: {
-          "questionnaire_id": survey.id,
-          "totalNumber": survey.totalNumber,
-          "count":survey.count,   
-          "effectiveNumber":survey.effectiveNumber,  
-           "questionAnswerList": questionAnswerList,
-           "scoreList":scoreList
-        }
-     }).then((response) => {
-        console.log(response);
-       if (response.data.code === 200) {
-        //  console.log(survey);
-          if (response.data.msg === '问卷已收集齐了') {
-              alert('问卷已收集齐了');
-          } else {
-             currentSurvey.toEnd();
-           }
-        } else {
-         alert('提交失败,请勿重复提交');
-        } 
-      }).catch((error) => {
-        console.log(error)
-      })
-}
-
-
-
-
-
-
-
-// -----跳转：介绍页==>答题页--------
-function toContent() { 
-    currentSurvey.toOngoing();
-}
-
-
-
-// -------分配分数相关的变量和方法-------
-// 分配分数
-function distributeScore(elem, item, num) {
-    let newValue = num / 1;
-    let oldValue = elem.value / 1;
-    const staticScore = survey.questionList[0].score;
-    if (item.score <= 0) {
-        if (oldValue < newValue) {
-            return
-        }
+    for (let j in surveyObj.value.answerMap[i]) {        
+        let obj2 = {};
+        obj2.value = surveyObj.value.answerMap[i][j].status;
+        obj2.detail = surveyObj.value.optionMap[i][j].detail;
+        obj.question.push(obj2);
     }
-    if (item.score < (newValue - oldValue)) return;
-    elem.value = num;
-    item.score = item.staticScore;
-    item.question.forEach(e => {
-        item.score -= e.value;
-    });
-    //   按照分数，如果分配完了背景颜色改变
-    if (item.score === 0) {
-        item.bcg = '#e5e5e5';
-        item.silderSrc = '/disable.png';
-    }
-    if (item.score > 0) {
-        item.bcg = '#f5f5f5';
-        item.silderSrc = '/blue.png';
-    }
+    survey.questionList.push(obj);
 }
+console.log(survey);
 
 
 
-
-//----------   次级标题编辑相关的变量和方法  -------------
-// 切换编辑的input框
-const myRef = ref(null);
-// 切换至编辑
-function editHandle(elem, index) {
-    elem.isEdit = true;
-    // 默认获取焦点
-    nextTick(() => {
-        myRef.value[index].focus()
-    });
-
-}
-// 编辑状态保存分数
-function editHandle2(elem, item, e) {
-    elem.isEdit = false;
-    let newValue = e.target.value;
-    if (isNaN(newValue) || newValue < 0 ||  newValue> item.secscore) {
-        alert('分数超出了可选范围');
-        return
-    }
-    distributeScore(elem, item, newValue)
-}
 
 
 
@@ -320,46 +121,6 @@ function onScroll(e) {
 
 
 
-
-
-// -----------点击提交按钮之后相关的变量和方法-------
-// 获取全部questiontitle
-const questiontitle = ref(null);
-// 进度条片段的高度
-const progressPartHeight = 300 / (survey.questionList.length);
-
-// 提交按钮  跳转：答题页==>完成页
-function toFinish() {
-    let flag = true;
-    // 记录未完成的问卷id
-    const uncomplete = [];
-    let queId = 1;
-    bluebcg.value.style.display = 'none';      // 进度条滚动的蓝色背景失效
-    survey.questionList.forEach(item => {
-        item.titleBorder = 0;
-        item.progressPartbcg = '#5a9afa';
-        if (item.score !== 0) {
-            flag = false;
-            uncomplete.push(queId);
-            item.titleBorder = 1;
-            item.progressPartbcg = 'red';
-        }
-        queId++;
-    });
-    // console.log(uncomplete); 
-    // console.log(questiontitle.value[0].offsetTop); 保存对应未完成题目距离顶部的距离
-
-    let fisrtreturn = uncomplete[0] - 1;
-    if (uncomplete.length) {
-        content.value.scrollTop = questiontitle.value[fisrtreturn].offsetTop;
-    }
-    //    console.log(progressPartHeight);
-    if (!flag) return
-    sumbit();
-}
-
-
-
 //--------- 用来给上面的模板计算每次thumb应该移动多少的------
 const barArr = new Array(survey.questionList.length).fill(0).map((item, index) => new Array(survey.questionList[index].secscore + 1));
 
@@ -377,177 +138,25 @@ div[wrapper] {
     align-items: center;
     height: 100%;
     width: 100%;
+    box-sizing: border-box;
     position: relative;
     top: 0;
     left: 0;
     z-index: -1;
-}
-
-// 供调用
-.public_title() {
-    display: block;
-    font-size: 36*@a;
-    font-weight: 500;
-    letter-spacing: 0*@a;
-    line-height: 44*@a;
-    vertical-align: middle;
-    position: relative;
-
-    &::after {
-        content: '';
-        width: 100%;
-        height: 3px;
-        background-color: #1e6fff;
-        position: absolute;
-        bottom: -2px;
-        left: 0;
-    }
-}
-
-// 供调用
-.public_sectitle() {
-    font-family: '思源黑体';
-    font-size: 20*@a;
-    font-weight: 500;
-    letter-spacing: 0*@a;
-    line-height: 24*@a;
-    color: rgba(30, 111, 255, 1);
-    text-align: left;
-    vertical-align: middle;
-}
-
-// 介绍页面部分
-.wrapper {
-    width: 100%;
-    height: 100%;
-    position: relative;
-
-    .title {
-        .public_title();
-        text-align: center;
-        position: absolute;
-        top: 70*@a;
-        left: 0;
-        right: 0;
-        margin: auto;
-        width: 350px;
-        white-space: pre-wrap;
-    }
-
-    .second-title {
-        .public_sectitle();
-        position: absolute;
-        // t304
-        top: 220*@a;
-        left: 203*@a;
-    }
-
-    .para {
-        width: 800px;
-        font-size: 16*@a;
-        font-weight: 400;
-        letter-spacing: 0*@a;
-        line-height: 22*@a;
-        color: rgba(0, 0, 0, 1);
-        text-align: left;
-        vertical-align: middle;
-        position: absolute;
-        top: 260*@a;
-        left: 203*@a;
-        white-space: pre-wrap;
-    }
-
-    .btn {
-        width: 240*@a;
-        height: 64*@a;
-        position: absolute;
-        left: 450*@a;
-        top: 440*@a;
-        background-color: rgba(30, 111, 255, 1);
-        font-size: 20*@a;
-        font-weight: 500;
-        letter-spacing: 0*@a;
-        line-height: 28*@a;
-        color: rgba(255, 255, 255, 1);
-        text-align: left;
-        vertical-align: top;
-        border-radius: 6*@a;
-    }
-
-    .circle1 {
-        width: 170*@a;
-        height: 170*@a;
-        border-radius: 50%;
-        background-color: rgba(235, 245, 255, 1);
-        position: absolute;
-        bottom: -20*@a;
-        right: 94*@a;
-    }
-
-    .circle2 {
-        width: 150*@a;
-        height: 150*@a;
-        border-radius: 50%;
-        background-color: rgba(71, 145, 255, 1);
-        position: absolute;
-        bottom: 40*@a;
-        right: 44*@a;
-        z-index: 2;
-    }
-
-    .circle3 {
-        width: 100*@a;
-        height: 100*@a;
-        border-radius: 50%;
-        background-color: rgba(30, 111, 255, 1);
-        position: absolute;
-        bottom: 80*@a;
-        right: -25.4px;
-    }
+    
 }
 
 
-// 答题内容部分
-// 头部的文字解释
-.topbox {
-    position: absolute;
-    left: 40px;
-    top: 40px;
-    display: flex;
-    flex-direction: column;
-
-    .top_title {
-        .public_title();
-        width: 655px;
-    }
-
-    .top_sectitle {
-        .public_sectitle();
-        font-size: 18px;
-        margin-top: 12px;
-    }
-
-    .para_wrapper {
-        width: 1050px;
-
-        .top_para {
-            font-family: '思源黑体';
-            font-size: 12.4px;
-            line-height: 22px;
-            font-weight: 400;
-        }
-    }
-}
 
 //  遮挡原来的
 .zhedang {
     position: absolute;
-    right: 7px;
-    background-color: white;
+    right: 40px;
     width: 10px;
     height: 500px;
+    background-color: white;
     z-index: 10;
-    bottom: 0;
+    bottom: 70px;
 }
 
 //   滚动条
@@ -556,8 +165,8 @@ div[wrapper] {
     z-index: 1;
     height: 300px;
     width: 8px;
-    bottom: 65px;
-    right: 35px;
+    bottom: 150px;
+    right: 75px;
     border-radius: 5px;
     background-color: rgba(204, 204, 204, 1);
     cursor: pointer;
@@ -630,10 +239,9 @@ div[wrapper] {
 // 问卷题目内容部分
 .content {
     position: absolute;
-    top: 220px;
-    left: 50px;
-    width: 1155px;
-    height: 350px;
+    left: 10px;
+    width: 1100px;
+    height: 450px;
     overflow: auto;
 
     .main {
@@ -644,7 +252,6 @@ div[wrapper] {
         flex-direction: column;
         justify-content: space-between;
         margin-bottom: 38px;
-        // background-color: #bfa;
     }
 
     .questiontitle {
@@ -695,8 +302,8 @@ div[wrapper] {
     }
 
     .questionList {
-        margin-left: 45px;
-        font-size: 14px;
+        // margin-left: 15px;
+        font-size: 12px;
         font-family: '思源黑体';
         position: relative;
         margin-top: 12px;
@@ -710,7 +317,7 @@ div[wrapper] {
             background-color: #f5f5f5;
             box-sizing: border-box;
             position: absolute;
-            right: 30px;
+            right: 100px;
             bottom: 6px;
             display: flex;
             justify-content: space-between;

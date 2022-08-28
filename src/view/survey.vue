@@ -2,10 +2,7 @@
 import { ref, reactive, computed, provide } from "vue"
 import axios from "axios"
 import { useRoute } from "vue-router"
-const route = useRoute()
 import { useStore } from "../PiniaStores/index.js"
-const datas = useStore()
-
 
 
 //问卷模板子组件（共五套）
@@ -19,6 +16,8 @@ import survey2 from "../components/surveyTemplate/survey2.vue"
 import survey3 from "../components/surveyTemplate/survey3.vue"
 import survey4 from "../components/surveyTemplate/survey4.vue"
 import survey5 from "../components/surveyTemplate/survey5.vue"
+const datas = useStore()
+const route = useRoute()
 const surveyTemplateList = [survey1, survey2, survey3, survey4, survey5]
 const viewId = ref(0)
 const currentView = computed(() => surveyTemplateList[viewId.value - 1])
