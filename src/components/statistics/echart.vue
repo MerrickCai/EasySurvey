@@ -430,12 +430,12 @@ function echartnum() {
             myChartpie2.style.display = "block";
           },
         },
-        myTool2: {
-          show: true,
-          title: "切换为横向柱状图",
-          icon: "image:///row.png",
-          onclick: function () {},
-        },
+        // myTool2: {
+        //   show: true,
+        //   title: "切换为横向柱状图",
+        //   icon: "image:///row.png",
+        //   onclick: function () {},
+        // },
       },
     },
     series: [

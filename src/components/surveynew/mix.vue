@@ -17,14 +17,11 @@
     </p>
     <p class="questitle">
       <span>{{ mixfile.indexOf(quesitem) + 1 }}</span>
-      <span class="titlecon" v-show="questitleshow" @click="changeqlshow">
-        {{ quesitem.question.detail }}
-      </span>
       <input
         type="text"
         ref="questitle"
-        v-show="!questitleshow"
         v-model="quesitem.question.detail"
+        placeholder="请输入题目标题"
         @blur="questitleshow = true"
         @keyup.enter="questitleshow = true"
       />
@@ -33,17 +30,17 @@
     <el-scrollbar max-height="400px">
       <p class="optionall" v-for="(con, index) in quesitem.options">
         <span class="circle"></span>
-        <span
+        <!-- <span
           class="option"
           v-show="!optionshow[index]"
           @click="optionsshow(index, con)"
         >
           {{ con.detail }}
-        </span>
+        </span> -->
         <input
           type="text"
           ref="optiontitle"
-          v-show="optionshow[index]"
+          placeholder="请输入题目标题"
           v-model="con.detail"
           @blur="optionshow[index] = false"
           @keyup.enter="optionshow[index] = false"
@@ -66,14 +63,14 @@
      <el-scrollbar max-height="400px">
       <p class="optionall" v-for="(con, i) in quesitem.options">
         <span class="fang"></span>
-        <span class="option" v-show="!optionshow[i]" @click="optionsshow(i)">
+        <!-- <span class="option" v-show="!optionshow[i]" @click="optionsshow(i)">
           {{ con.detail }}
-        </span>
+        </span> -->
         <input
           type="text"
           ref="optiontitle"
-          v-show="optionshow[i]"
           v-model="con.detail"
+          placeholder="请输入题目标题"
           @blur="optionshow[i] = false"
           @keyup.enter="optionshow[i] = false"
         />
@@ -113,8 +110,8 @@ let { scroll, updatescroll } = inject("changescroll");
 function addamount() {
   const quesobj = {
     id: nanoid(),
-    question: { detail: "请输入题目标题", type: 0 },
-    options: [{ detail: "选项" }],
+    question: { detail: "", type: 0 },
+    options: [{ detail: "" }],
   };
   props.mixreceive(quesobj);
 }
@@ -136,14 +133,14 @@ function deleteamount(id) {
 //次级题目
 const value1 = ref(true);
 //题目标题
-let questitle = ref(null);
-let questitleshow = ref(true);
-function changeqlshow() {
-  questitleshow.value = false;
-  nextTick(() => {
-    questitle.value.focus();
-  });
-}
+// let questitle = ref(null);
+// let questitleshow = ref(true);
+// function changeqlshow() {
+//   questitleshow.value = false;
+//   nextTick(() => {
+//     questitle.value.focus();
+//   });
+// }
 //选项题目标题
 let optiontitle = ref([]);
 let optionshow = ref([]);
@@ -156,7 +153,7 @@ function optionsshow(index, con) {
 }
 //添加选项
 function addaoption() {
-  props.quesitem.options.push({ detail: "选项" });
+  props.quesitem.options.push({ detail: "" });
 }
 function deleoption(id, con) {
   console.log(con);
@@ -219,11 +216,11 @@ li {
     &:hover {
       border: 1px dashed rgba(30, 111, 255, 1);
     }
-    .titlecon {
-      width: 700px;
-      height: fit-content;
-      margin-left: 5px;
-    }
+    // .titlecon {
+    //   width: 700px;
+    //   height: fit-content;
+    //   margin-left: 5px;
+    // }
     input[type="text"] {
       /* 清除原有input样式 */
       -web-kit-appearance: none;
@@ -234,6 +231,9 @@ li {
       height: 20px;
       opacity: 1;
       text-align: left;
+      border: none;
+      margin-left: 5px;
+      margin-top: 3px;
     }
   }
   .el-scrollbar {
@@ -284,10 +284,12 @@ li {
         -moz-appearance: none;
         outline: 0;
         /* 设置我们要的样式 */
-        width: 500px;
+        width: 700px;
         height: 20px;
         opacity: 1;
         text-align: left;
+        border: none;
+        margin-left: 5px;
       }
       .deloption {
         cursor: pointer;

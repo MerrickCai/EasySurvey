@@ -16,14 +16,14 @@
     </p>
     <p class="questitle">
       <span>{{ scalefile.indexOf(quesitem) + 1 }}</span>
-      <span class="titlecon" v-show="questitleshow" @click="changeqlshow">
+      <!-- <span class="titlecon" v-show="questitleshow" @click="changeqlshow">
         {{ quesitem.question.detail }}
-      </span>
+      </span> -->
       <input
         type="text"
         ref="questitle"
-        v-show="!questitleshow"
         v-model="quesitem.question.detail"
+         placeholder="请输入题目标题"
         @blur="questitleshow = true"
         @keyup.enter="questitleshow = true"
       />
@@ -38,18 +38,18 @@
     <p class="secques" v-for="(item, i) in quesitem.options">
       <i class="additem" @click="addsectitle(i)">+</i>
       <span>{{ quesitem.options.indexOf(item) + 1 }}</span>
-      <span
+      <!-- <span
         class="secquestitlecon"
         v-show="!secquestitleshow[i]"
         @click="secchangeqlshow(i)"
       >
         {{ item.detail }}
-      </span>
+      </span> -->
       <input
         type="text"
         ref="secquestitle"
-        v-show="secquestitleshow[i]"
         v-model="item.detail"
+         placeholder="请输入题目标题"
         @blur="secquestitleshow[i] = false"
         @keyup.enter="secquestitleshow[i] = false"
       />
@@ -114,7 +114,7 @@ function deleteamount(id) {
 }
 //题目标题
 let questitle = ref(null);
-let questitleshow = ref(true);
+// let questitleshow = ref(true);
 function changeqlshow() {
   questitleshow.value = false;
   nextTick(() => {
@@ -136,7 +136,7 @@ const value1 = ref(true);
 //添加次级题目
 function addsectitle(i) {
   props.quesitem.options.push({
-    detail: "请输入次级题目标题",
+    detail: "",
   });
 }
 //删除次级题目
@@ -281,7 +281,7 @@ li {
         display: none;
         position: absolute;
         left: 170px;
-        top: -37px;
+        top: 3px;
         width: 185px;
         height: 80px;
         padding: 8px;
@@ -294,12 +294,12 @@ li {
         &::after {
           content: "";
           position: absolute;
-          top: 27px;
+          top: 14px;
           left: -9px;
           width: 20px;
           height: 20px;
           background-color: white;
-          clip-path: polygon(50% 0, 100% 0, 0 100%, 50% 0);
+          clip-path: polygon(0 0, 100% 30%, 100% 100%, 0 0);
         }
       }
     }
@@ -323,6 +323,7 @@ li {
   }
   .questitle {
     display: flex;
+    position: relative;
     margin: 5px 40px 5px 39px;
     font-size: 16px;
     font-weight: 500;
@@ -347,8 +348,13 @@ li {
       height: 20px;
       opacity: 1;
       text-align: left;
+      border: none;
+      margin-left: 5px;
+      margin-top: 3px;
     }
     .scorebox {
+      position: absolute;
+      right: 0px;
       display: flex;
       justify-content: space-between;
       width: 100px;
@@ -416,17 +422,19 @@ li {
         -moz-appearance: none;
         outline: 0;
         /* 设置我们要的样式 */
-        width: 600px;
+        width: 500px;
         height: 20px;
         opacity: 1;
         text-align: left;
+        border: none;
+        margin-left: 5px;
       }
       .delrditem {
         cursor: pointer;
         font-style: normal;
         position: absolute;
-        right: 100px;
-        font-size: 25px;
+        right: 50px;
+        font-size: 20px;
         font-weight: 400;
         color: rgba(30, 111, 255, 1);
       }

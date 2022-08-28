@@ -13,14 +13,12 @@
     </p>
     <p class="questitle">
       <span>{{ textfile.indexOf(quesitem) + 1 }}</span>
-      <span class="titlecon" v-show="questitleshow" @click="changeqlshow">
-        {{ quesitem.question.detail }}
-      </span>
+  
       <input
         type="text"
         ref="questitle"
-        v-show="!questitleshow"
         v-model="quesitem.question.detail"
+        placeholder="请输入题目标题"
         @blur="questitleshow = true"
         @keyup.enter="questitleshow = true"
       />
@@ -38,7 +36,7 @@ let { scroll, updatescroll } = inject("changescroll");
 //添加问题
 function addamount() {
   const quesobj = {
-    question: { detail: "请输入题目标题", type: 2 },
+    question: { detail: "", type: 2 },
     id: nanoid(),
   };
   props.treceive(quesobj);
@@ -138,6 +136,9 @@ li {
       height: 20px;
       opacity: 1;
       text-align: left;
+      border: none;
+      margin-left: 5px;
+      margin-top: 3px;
     }
   }
   .quesarea {

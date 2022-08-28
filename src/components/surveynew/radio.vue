@@ -14,14 +14,14 @@
     </p>
     <p class="questitle">
       <span>{{ radiofile.indexOf(quesitem) + 1 }}</span>
-      <span class="titlecon" v-show="questitleshow" @click="changeqlshow">
+      <!-- <span class="titlecon" v-show="questitleshow" @click="changeqlshow">
         {{ quesitem.question.detail }}
-      </span>
+      </span> -->
       <input
         type="text"
         ref="questitle"
-        v-show="!questitleshow"
         v-model="quesitem.question.detail"
+        placeholder="请输入题目标题"
         @blur="questitleshow = true"
         @keyup.enter="questitleshow = true"
       />
@@ -29,18 +29,18 @@
     <el-scrollbar max-height="400px">
       <p class="optionall" v-for="(con, index) in quesitem.options">
         <span class="circle"></span>
-        <span
+        <!-- <span
           class="option"
           v-show="!optionshow[index]"
           @click="optionsshow(index, con)"
         >
           {{ con.detail }}
-        </span>
+        </span> -->
         <input
           type="text"
           ref="optiontitle"
-          v-show="optionshow[index]"
           v-model="con.detail"
+        placeholder="选项"
           @blur="optionshow[index] = false"
           @keyup.enter="optionshow[index] = false"
         />
@@ -70,8 +70,8 @@ let { scroll, updatescroll } = inject("changescroll");
 function addamount() {
   const quesobj = {
     id: nanoid(),
-    question: { detail: "请输入题目标题", type: 0 },
-    options: [{ detail: "选项" }],
+    question: { detail: "", type: 0 },
+    options: [{ detail: "" }],
   };
   props.rreceive(quesobj);
 }
@@ -113,7 +113,7 @@ function optionsshow(index, con) {
 }
 //添加选项
 function addaoption() {
-  props.quesitem.options.push({ detail: "选项" });
+  props.quesitem.options.push({ detail: "" });
 }
 //删除选项
 // let deleteo = ref(null);
@@ -201,6 +201,9 @@ li {
       height: 20px;
       opacity: 1;
       text-align: left;
+      border:none;
+      margin-left:5px;
+      margin-top: 3px;
     }
   }
   .el-scrollbar {
@@ -246,10 +249,15 @@ li {
         -moz-appearance: none;
         outline: 0;
         /* 设置我们要的样式 */
-        width: 600px;
+        display: block;
+        width: 700px;
         height: 20px;
         opacity: 1;
         text-align: left;
+      border:none;
+        margin-left: 5px;
+
+
       }
       .deloption {
         cursor: pointer;

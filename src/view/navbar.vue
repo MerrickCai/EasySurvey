@@ -41,9 +41,8 @@ function logOut() {
             <Transition name="navbar">
                 <div v-show="datas.navShow">
                     <div button @click="router.push('/surveynew')">创建问卷</div>
+                    <div img><img src="/navbar_1.png" @click="router.push('surveyDev')" /></div>
                     <div img avatar @click="router.push('/404404')"><img src="/navbar_3.jpg" /></div>
-                    <div img><img src="/navbar_1.png" @click="router.push('survey/66')"/></div>
-         
                     <div img @click="logOut"><img src="/navbar_2.png" /></div>
                 </div>
             </Transition>
@@ -52,7 +51,7 @@ function logOut() {
 </template>
 
 <style lang="less" scoped>
-@navSpan: 90px;
+@navSpan: 80px;
 @navHeight: 60px;
 
 nav {
