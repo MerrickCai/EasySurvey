@@ -60,6 +60,7 @@
                             <p><label :for="elem">{{ elem }}</label></p>
                         </div>
                     </template>
+
                     <template v-else-if="item.type === 1">
                         <div class="questiontitle" ref="questiontitle">{{ `${i + 1}. ${item.questiontitle}（多选）` }}</div>
                         <div class="ques" v-for="(elem, index) of item.option" :key="index">
@@ -67,6 +68,7 @@
                             <p><label :for="elem">{{ elem }}</label></p>
                         </div>
                     </template>
+
                     <template v-else>
                         <div class="questiontitle" ref="questiontitle">{{ `${i + 1}. ${item.questiontitle}（文本）` }}</div>
                         <div class="ques">
@@ -106,7 +108,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import axios from "axios"
-import { useStore } from "../PiniaStores/index.js"
+import { useStore } from "../../PiniaStores/index.js"
 const datas = useStore()
 
 // --------------------------- 问卷状态，问卷数据 --------------------
@@ -223,7 +225,7 @@ function Finish() {
         survey.status.toEnd()
     }
 }
-//提交函数
+//提交函数(选项数据已经用v-model动态绑定到对应的value了)
 function Submit() {
     const questionAnswerList = []
     survey.questionList.forEach(item => {

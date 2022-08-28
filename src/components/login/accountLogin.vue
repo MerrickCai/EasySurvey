@@ -12,7 +12,7 @@ import axios from "axios";
 function validate(account, password) {
   if (!/^1[0-9]{10}$/.test(account)) {
     //1开头，11位数字
-    alert("请输入正确的手机号");
+    alert("请输入手机号或者学号");
     return false;
   }
   if (!/^[0-9a-zA-Z_!.]{8,20}$/.test(password)) {
@@ -76,16 +76,8 @@ async function login(account, password, remember) {
       <a active @click="viewId = 1">账号登录</a>
     </div>
     <div class="typeArea">
-      <input
-        type="text"
-        v-model="user.account"
-        placeholder="请输入手机号 "
-      />
-      <input
-        type="password"
-        v-model="user.password"
-        placeholder="请输入登录密码"
-      />
+      <input type="text" v-model="user.account" placeholder="请输入手机号或者学号" />
+      <input type="password" v-model="user.password" placeholder="请输入登录密码" />
     </div>
     <div class="functionArea">
       <div remember>
@@ -109,7 +101,7 @@ div.wrapper {
   height: 400px;
   width: 420px;
 
-  > div.selectArea {
+  >div.selectArea {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -117,7 +109,7 @@ div.wrapper {
     height: 80px;
     width: 70%;
 
-    > a {
+    >a {
       display: block;
       position: relative;
       font-size: 19px;
@@ -147,7 +139,7 @@ div.wrapper {
     }
   }
 
-  > div.typeArea {
+  >div.typeArea {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -155,7 +147,7 @@ div.wrapper {
     height: 150px;
     width: 70%;
 
-    > input {
+    >input {
       outline: none;
       height: 45px;
       width: 100%;
@@ -176,7 +168,7 @@ div.wrapper {
     }
   }
 
-  > div.functionArea {
+  >div.functionArea {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -184,14 +176,14 @@ div.wrapper {
     height: 70px;
     width: 70%;
 
-    > div[remember] {
+    >div[remember] {
       display: flex;
       flex-direction: row;
       justify-content: center;
       align-items: center;
       height: 50px;
 
-      > input {
+      >input {
         display: block;
         height: 13px;
         width: 13px;
@@ -226,18 +218,18 @@ div.wrapper {
         }
       }
 
-      > p {
+      >p {
         display: block;
         font-size: 13px;
         color: rgba(217, 217, 217, 1);
 
-        > label {
+        >label {
           cursor: pointer;
         }
       }
     }
 
-    > a {
+    >a {
       flex: 1;
       display: flex;
       flex-direction: row;
@@ -250,7 +242,7 @@ div.wrapper {
     }
   }
 
-  > div[button] {
+  >div[button] {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -258,7 +250,7 @@ div.wrapper {
     height: 100px;
     width: 70%;
 
-    > div {
+    >div {
       display: flex;
       flex-direction: column;
       justify-content: center;
