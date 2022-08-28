@@ -26,7 +26,7 @@
         @keyup.enter="questitleshow = true"
       />
     </p>
-    <div class="radiotype" v-show="titletype=='单选'">
+    <div class="radiotype" v-if="titletype=='单选'">
     <el-scrollbar max-height="400px">
       <p class="optionall" v-for="(con, index) in quesitem.options">
         <span class="circle"></span>
@@ -59,7 +59,7 @@
       </p>
     </el-scrollbar>
     </div>
-    <div class="checkboxtype" v-show="titletype=='多选'">
+    <div class="checkboxtype" v-if="titletype=='多选'">
      <el-scrollbar max-height="400px">
       <p class="optionall" v-for="(con, i) in quesitem.options">
         <span class="fang"></span>
@@ -87,7 +87,7 @@
         <span>添加选项</span>
       </p>
     </el-scrollbar></div>
-    <div class="texttype" v-show="titletype=='文本'">
+    <div class="texttype" v-if="titletype=='文本'">
     <p class="quesarea"></p></div>
 
   </li>

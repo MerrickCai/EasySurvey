@@ -84,6 +84,7 @@ import { useStore } from "../PiniaStores/index.js";
 import axios from "axios";
 import clipboard3 from "vue-clipboard3";
 import QrcodeVue from "qrcode.vue";
+import { ElMessage } from 'element-plus'
 //数据
 const datas = useStore();
 //动态组件视图
@@ -327,7 +328,10 @@ function keepinfor() {
   if (type.value == 6) {
     localStorage.setItem("mix", JSON.stringify(mixfile));
   }
-  alert("保存成功!");
+   ElMessage({
+    message: '保存成功!',
+    type: 'success',
+  })
 }
 //发布问卷
 let show = ref("none");
@@ -341,7 +345,7 @@ async function pushfile() {
   let input = document.getElementsByTagName('input')
   let typeinput = [].slice.call(input)
   let textarea = document.getElementsByTagName('textarea')
-
+console.log( typeinput);
   //textarea未填写标红
   if (textarea[0].value == "") {
     textarea[0].style.borderColor = "red"
@@ -355,7 +359,6 @@ async function pushfile() {
     if (input[i].value == "") {
       input[i].style.border = "1px solid"
       input[i].style.borderColor = "red"
-      // input[i].disabled = false
     }
     else {
       input[i].style.border = ""
@@ -366,7 +369,11 @@ async function pushfile() {
   isover = typeinput.every((element) => {
     return element.value != ""
   })
-  if (isover == false || isarea == false) alert('请将标红出内容进行填写!')
+  if (isover == false || isarea == false){
+    console.log(isover);
+    console.log(isarea);
+    alert('请将标红出内容进行填写!')
+    }
   if (isover == true && isarea == true) {
     console.log(1);
     console.log(type.value);
