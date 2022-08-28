@@ -51,7 +51,7 @@ function logOut() {
 </template>
 
 <style lang="less" scoped>
-@navSpan: 90px;
+@navSpan: 80px;
 @navHeight: 60px;
 
 nav {
