@@ -44,6 +44,8 @@ import { useStore } from "../../PiniaStores/index.js";
 const datas = useStore();
 import axios from "axios";
 import clipboard3 from "vue-clipboard3";
+import { ElMessage, ElMessageBox  } from 'element-plus'
+
 
 
 const emit = defineEmits(["update:clickrotate", "deletefile"]);
@@ -64,8 +66,16 @@ function startDrag(e) {
   e.dataTransfer.effectAllowed = "move";
 }
 function delfile() {
-  if (confirm("确定删除吗")) {
-    axios({
+   ElMessageBox.confirm(
+    '确定删除吗?',
+    '删除题目',
+    {
+      distinguishCancelAndClose: true,
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+    })
+    .then(() => {
+      axios({
       url: `https://q.denglu1.cn/deleteQuestion/${parseInt(props.item.id)}`,
       method: "get",
       withCredentials: true,
@@ -79,7 +89,9 @@ function delfile() {
         console.log(error);
       });
     emit("deletefile", props.index);
-  }
+    })
+    .catch(() => {
+    })
 }
 
 //分享问卷
@@ -87,9 +99,12 @@ const { toClipboard } = clipboard3();
 async function sharefile() {
   try {
     await toClipboard( "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +props.item.id);
-    alert("复制的是:" + "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +props.item.id + "快去分享给其他人作答吧!");
+    ElMessage({
+    message: '链接复制成功!',
+    type: 'success',
+  })
   } catch (error) {
-    alert("复制失败!");
+     ElMessage.error('链接复制失败!')
   }
 }
 </script>

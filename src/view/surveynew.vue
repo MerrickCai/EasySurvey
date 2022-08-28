@@ -84,7 +84,7 @@ import { useStore } from "../PiniaStores/index.js";
 import axios from "axios";
 import clipboard3 from "vue-clipboard3";
 import QrcodeVue from "qrcode.vue";
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox  } from 'element-plus'
 //数据
 const datas = useStore();
 //动态组件视图
@@ -163,11 +163,21 @@ function receive(quesobj) {
 }
 //矩阵问卷删除问题
 function deleteques(id) {
-  if (confirm("确定删除吗")) {
-    fileword.map((i, x) => {
+   ElMessageBox.confirm(
+    '确定删除吗?',
+    '删除题目',
+    {
+      distinguishCancelAndClose: true,
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+    })
+    .then(() => {
+       fileword.map((i, x) => {
       if (i.id == id) fileword.splice(x, 1);
     });
-  }
+    })
+    .catch(() => {
+    })
 }
 
 //存储量表问卷信息内容
@@ -190,11 +200,21 @@ function sreceive(quesobj) {
 }
 //量表问卷删除问题
 function sdeleteques(id) {
-  if (confirm("确定删除吗")) {
-    scalefile.map((i, x) => {
+   ElMessageBox.confirm(
+    '确定删除吗?',
+    '删除题目',
+    {
+      distinguishCancelAndClose: true,
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+    })
+    .then(() => {
+         scalefile.map((i, x) => {
       if (i.id == id) scalefile.splice(x, 1);
     });
-  }
+    })
+    .catch(() => {
+    })
 }
 
 //存储单选问卷信息内容
@@ -216,11 +236,21 @@ function rreceive(quesobj) {
 }
 //单选问卷删除问题
 function rdeleteques(id) {
-  if (confirm("确定删除吗")) {
-    radiofile.map((i, x) => {
+  ElMessageBox.confirm(
+    '确定删除吗?',
+    '删除题目',
+    {
+      distinguishCancelAndClose: true,
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+    })
+    .then(() => {
+      radiofile.map((i, x) => {
       if (i.id == id) radiofile.splice(x, 1);
     });
-  }
+    })
+    .catch(() => {
+    })
 }
 
 //存储多选问卷信息内容
@@ -243,14 +273,21 @@ function creceive(quesobj) {
 }
 //多选问卷删除问题
 function cdeleteques(id) {
-  if (confirm("确定删除吗")) {
-    console.log(checkboxfile);
-    console.log(id);
-    checkboxfile.map((i, x) => {
+   ElMessageBox.confirm(
+    '确定删除吗?',
+    '删除题目',
+    {
+      distinguishCancelAndClose: true,
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+    })
+    .then(() => {
+       checkboxfile.map((i, x) => {
       if (i.id == id) checkboxfile.splice(x, 1);
     });
-    console.log(checkboxfile);
-  }
+    })
+    .catch(() => {
+    })
 }
 
 //存储文本问卷信息内容
@@ -272,13 +309,21 @@ function treceive(quesobj) {
 }
 //文本问卷删除问题
 function tdeleteques(id) {
-  console.log(textfile);
-  if (confirm("确定删除吗")) {
-    textfile.map((i, x) => {
+   ElMessageBox.confirm(
+    '确定删除吗?',
+    '删除题目',
+    {
+      distinguishCancelAndClose: true,
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+    })
+    .then(() => {
+       textfile.map((i, x) => {
       if (i.id == id) textfile.splice(x, 1);
     });
-    console.log(textfile);
-  }
+    })
+    .catch(() => {
+    })
 }
 
 
@@ -301,11 +346,21 @@ function mixreceive(quesobj) {
 }
 //混合问卷删除问题
 function mixdeleteques(id) {
-  if (confirm("确定删除吗")) {
-    mixfile.map((i, x) => {
+   ElMessageBox.confirm(
+    '确定删除吗?',
+    '删除题目',
+    {
+      distinguishCancelAndClose: true,
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+    })
+    .then(() => {
+       mixfile.map((i, x) => {
       if (i.id == id) mixfile.splice(x, 1);
     });
-  }
+    })
+    .catch(() => {
+    })
 }
 //保存问卷
 function keepinfor() {
@@ -372,7 +427,11 @@ console.log( typeinput);
   if (isover == false || isarea == false){
     console.log(isover);
     console.log(isarea);
-    alert('请将标红出内容进行填写!')
+     ElMessage({
+    showClose: true,
+    message: '请将标红处进行填写!',
+    type: 'warning',
+  })
     }
   if (isover == true && isarea == true) {
     console.log(1);
@@ -623,9 +682,12 @@ const { toClipboard } = clipboard3();
 async function getlink() {
   try {
     await toClipboard(linkqr.value);
-    alert("复制的是:" + linkqr.value + "复制成功!");
+     ElMessage({
+    message: '链接复制成功!',
+    type: 'success',
+  })
   } catch (error) {
-    alert("复制失败!");
+     ElMessage.error('链接复制失败!')
   }
 }
 //遮罩
