@@ -36,6 +36,8 @@
             <span :class="{ typeclick: type == 3 }" @click="type = 3">矩阵</span>
             <span :class="{ typeclick: type == 4 }" @click="type = 4">量表</span>
             <span :class="{ typeclick: type == 5 }" @click="type = 5">文本</span>
+            <span :class="{ typeclick: type == 6 }" @click="type = 6">混合</span>
+
           </span>
         </div>
 
@@ -44,7 +46,7 @@
             <component :is="typeview" :fileword="fileword" :receive="receive" :deleteques="deleteques"
               :scalefile="scalefile" :sreceive="sreceive" :sdeleteques="sdeleteques" :radiofile="radiofile"
               :rreceive="rreceive" :rdeleteques="rdeleteques" :checkboxfile="checkboxfile" :creceive="creceive"
-              :cdeleteques="cdeleteques" :textfile="textfile" :treceive="treceive" :tdeleteques="tdeleteques">
+              :cdeleteques="cdeleteques" :textfile="textfile" :treceive="treceive" :tdeleteques="tdeleteques"  :mixfile="mixfile" :mixreceive="mixreceive" :mixdeleteques="mixdeleteques">
             </component>
           </keep-alive>
         </div>
@@ -75,6 +77,7 @@ import checkboxlist from "../components/surveynew/checkboxlist.vue";
 import matrixlist from "../components/surveynew/matrixlist.vue";
 import scalelist from "../components/surveynew/scalelist.vue";
 import textlist from "../components/surveynew/textlist.vue";
+import mixlist from "../components/surveynew/mixlist.vue"
 import { useStore } from "../PiniaStores/index.js";
 import axios from "axios";
 import clipboard3 from "vue-clipboard3";
@@ -83,7 +86,7 @@ import QrcodeVue from "qrcode.vue";
 const datas = useStore();
 //动态组件视图
 let type = ref(1);
-let typelist = [radiolist, checkboxlist, matrixlist, scalelist, textlist];
+let typelist = [radiolist, checkboxlist, matrixlist, scalelist, textlist, mixlist];
 let typeview = computed(() => typelist[type.value - 1]);
 //添加题目滚轮滑到最下方
 let scroll = ref(0);
@@ -274,6 +277,33 @@ function tdeleteques(id) {
     console.log(textfile);
   }
 }
+
+
+//存储混合问卷信息内容
+let mixfile = reactive(null);
+if (localStorage.getItem("mix")) {
+  mixfile = reactive(JSON.parse(localStorage.getItem("mix")));
+} else {
+  mixfile = reactive([
+    {
+      options: [{ detail: "选项" }],
+      question: { detail: "请输入题目标题", type: 0 },
+      id: nanoid(),
+    },
+  ]);
+}
+//混合问卷新增问题
+function mixreceive(quesobj) {
+  mixfile.push(quesobj);
+}
+//混合问卷删除问题
+function mixdeleteques(id) {
+  if (confirm("确定删除吗")) {
+    mixfile.map((i, x) => {
+      if (i.id == id) mixfile.splice(x, 1);
+    });
+  }
+}
 //保存问卷
 function keepinfor() {
   localStorage.setItem("title", JSON.stringify(filetitle));
@@ -291,6 +321,9 @@ function keepinfor() {
   }
   if (type.value == 5) {
     localStorage.setItem("text", JSON.stringify(textfile));
+  }
+   if (type.value == 6) {
+    localStorage.setItem("mix", JSON.stringify(mixfile));
   }
   alert("保存成功!");
 }
@@ -490,7 +523,44 @@ async function pushfile() {
     textfile.splice(0, textfile.length);
     textfile.push({
       options: [{ detail: "选项" }],
-      question: { detail: "请输入题目标题", type: 1 },
+      question: { detail: "请输入题目标题", type: 2 },
+      id: nanoid(),
+    });
+  }
+   if (type.value == 6) {
+    textfile.forEach((element) => delete element.id);
+    await axios({
+      url: "https://q.denglu1.cn/questions/rebuild",
+      method: "post",
+      withCredentials: true,
+      headers: { "Content-Type": "application/json" },
+      headers: { token: datas.user.token },
+      data: {
+        questionnaire: {
+          userId: datas.user.userId,
+          totalNumber: 100,
+          message: filetitle.info_para,
+          title: filetitle.info_title,
+          count: 4,
+        },
+        questionOptionList: JSON.parse(JSON.stringify(mixfile)),
+      },
+    })
+      .then((response) => {
+        console.log(response);
+        link.value = response.data.data.link;
+        linkqr.value =
+          "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
+          parseInt(link.value);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    localStorage.removeItem("mix");
+    mixfile.splice(0, mixfile.length);
+    mixfile.push({
+      options: [{ detail: "选项" }],
+      question: { detail: "请输入题目标题", type: 0 },
       id: nanoid(),
     });
   }
