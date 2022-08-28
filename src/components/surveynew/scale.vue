@@ -281,7 +281,7 @@ li {
         display: none;
         position: absolute;
         left: 170px;
-        top: -37px;
+        top: 3px;
         width: 185px;
         height: 80px;
         padding: 8px;
@@ -294,12 +294,12 @@ li {
         &::after {
           content: "";
           position: absolute;
-          top: 27px;
+          top: 14px;
           left: -9px;
           width: 20px;
           height: 20px;
           background-color: white;
-          clip-path: polygon(50% 0, 100% 0, 0 100%, 50% 0);
+          clip-path: polygon(0 0, 100% 30%, 100% 100%, 0 0);
         }
       }
     }
