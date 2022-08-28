@@ -1,34 +1,71 @@
 <script setup>
-//登陆注册页视图切换
-import { reactive, inject } from 'vue'
-const viewId = inject('viewId')
-//注册逻辑
-const user = reactive({ account: '', password: '', agree: false })
+import axios from "axios"
 import { useStore } from "../../PiniaStores/index.js"
 const datas = useStore()
-import axios from 'axios'
-//表单验证
+import { ElMessage } from 'element-plus'
+
+
+
+//--------------------------- 视图切换 -----------------------------
+import { reactive, inject } from "vue"
+const viewId = inject("viewId")
+//--------------------------- 视图切换 -----------------------------
+
+
+
+//--------------------------- 账号密码规则验证 -----------------------------
 function validate(account, password) {
-    if (!/^1[0-9]{10}$/.test(account)) { //1开头，11位数字
-        alert('请输入正确的手机号')
+    if (!/^[0-9]{10,11}$/.test(account)) { //10-11位纯数字
+        ElMessage({
+            message: '请输入正确的手机号或学号',
+            type: 'warning',
+            duration: 5000,
+            showClose: true,
+            center: true
+        })
         return false
     }
     if (!/^[0-9a-zA-Z_!.]{8,20}$/.test(password)) { //8-20位字母数字+特殊字符（_!.）
-    alert('请输入8-20位仅含数字、字母和部分特殊字符的密码');
+        ElMessage({
+            message: '请输入正确的密码: 8-20位字母数字+特殊字符（_!.）',
+            type: 'warning',
+            duration: 5000,
+            showClose: true,
+            center: true
+        })
         return false
     }
     return true
 }
+//--------------------------- 账号密码规则验证 -----------------------------
+
+
+
+//--------------------------- 登录逻辑-----------------------------
+const user = reactive({ account: '', password: '', agree: false })
 async function register(account, password, agree) {
-    if (!validate(account, password)) { //表单验证
+    if (agree === false) { // 确认用户是否同意《用户隐私协议》
+        ElMessage({
+            message: '请点击同意《用户隐私协议》按钮',
+            type: 'warning',
+            duration: 5000,
+            showClose: true,
+            center: true
+        })
         return false
     }
-    if (agree === false) { //确认用户是否同意《用户隐私协议》
-        alert('请点击同意《用户隐私协议》按钮')
-        return true
+    if (!validate(account, password)) { // 表单验证
+        return false
     }
     if (datas.user.status === true) { //确认用户是否登录
-        alert('您已经登录')
+        ElMessage({
+            message: '您已经登录',
+            type: 'success',
+            duration: 5000,
+            showClose: true,
+            center: true
+        })
+        router.push('/')
         return true
     }
     await axios({
@@ -36,9 +73,16 @@ async function register(account, password, agree) {
         method: 'post',
         withCredentials: true,
         headers: { 'Content-Type': 'application/json' },
-        data: { "phone_number": account, "password": password }
+        data: { phone_number: account, password: password }
     }).then((response) => {
         if (response.data.code === 200) { //注册成功=>意味着登录成功
+            ElMessage({
+                message: '注册成功',
+                type: 'success',
+                duration: 5000,
+                showClose: true,
+                center: true
+            })
             //写入用户数据
             datas.user.status = true
             datas.user.account = account
@@ -52,13 +96,26 @@ async function register(account, password, agree) {
             //跳转填写地区和年龄弹窗
             viewId.value = 3
         } else { //response.data.code === 400=>重复注册
-            alert('请勿重复注册')
+            ElMessage({
+                message: '请勿重复注册',
+                type: 'error',
+                duration: 5000,
+                showClose: true,
+                center: true
+            })
         }
     }).catch((error) => {//注册失败
-        alert('由于网络问题注册失败')
+        ElMessage({
+            message: '由于网络问题注册失败',
+            type: 'error',
+            duration: 5000,
+            showClose: true,
+            center: true
+        })
         console.log(error)
     })
 }
+//--------------------------- 登录逻辑-----------------------------
 </script>
 
 <template>

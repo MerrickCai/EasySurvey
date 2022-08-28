@@ -1,36 +1,62 @@
 <script setup>
-//登陆注册页视图切换
-import { reactive, inject } from "vue";
-const viewId = inject("viewId");
+import axios from "axios"
+import { useStore } from "../../PiniaStores/index.js"
+const datas = useStore()
+import { useRouter } from "vue-router"
+const router = useRouter()
+import { ElMessage } from 'element-plus'
 
-//登录逻辑
-const user = reactive({ account: "", password: "", remember: false });
-import { useStore } from "../../PiniaStores/index.js";
-const datas = useStore();
-import axios from "axios";
-//表单验证
+//--------------------------- 视图切换 -----------------------------
+import { reactive, inject } from "vue"
+const viewId = inject("viewId")
+//--------------------------- 视图切换 -----------------------------
+
+
+
+//--------------------------- 账号密码规则验证 -----------------------------
 function validate(account, password) {
-  if (!/^1[0-9]{10}$/.test(account)) {
-    //1开头，11位数字
-    alert("请输入手机号或者学号");
-    return false;
+  if (!/^[0-9]{10,11}$/.test(account)) { //10-11位纯数字
+    ElMessage({
+      message: '请输入正确的手机号或学号',
+      type: 'warning',
+      duration: 5000,
+      showClose: true,
+      center: true
+    })
+    return false
   }
-  if (!/^[0-9a-zA-Z_!.]{8,20}$/.test(password)) {
-    //8-20位字母数字+特殊字符（_!.）
-    alert('请输入8-20位仅含数字、字母和部分特殊字符的密码');
-    return false;
+  if (!/^[0-9a-zA-Z_!.]{8,20}$/.test(password)) { //8-20位字母数字+特殊字符（_!.）
+    ElMessage({
+      message: '请输入正确的密码: 8-20位字母数字+特殊字符（_!.）',
+      type: 'warning',
+      duration: 5000,
+      showClose: true,
+      center: true
+    })
+    return false
   }
-  return true;
+  return true
 }
+//--------------------------- 账号密码规则验证 -----------------------------
+
+
+
+//--------------------------- 登录逻辑-----------------------------
+const user = reactive({ account: "", password: "", remember: false })
 async function login(account, password, remember) {
-  if (!validate(account, password)) {
-    //表单验证
-    return false;
+  if (!validate(account, password)) { // 表单验证
+    return false
   }
-  if (datas.user.status === true) {
-    //确认用户是否登录
-    alert("您已经登录");
-    return true;
+  if (datas.user.status === true) { //确认用户是否登录
+    ElMessage({
+      message: '您已经登录',
+      type: 'success',
+      duration: 5000,
+      showClose: true,
+      center: true
+    })
+    router.push('/')
+    return true
   }
   await axios({
     url: "https://q.denglu1.cn/user/login",
@@ -40,45 +66,64 @@ async function login(account, password, remember) {
     data: { phone_number: account, password: password },
   })
     .then((response) => {
-      if (response.data.code === 200) {
-        //账号密码正确
+      if (response.data.code === 200) { //账号密码正确
+        ElMessage({
+          message: '登录成功',
+          type: 'success',
+          duration: 5000,
+          showClose: true,
+          center: true
+        })
         //写入用户数据
-        datas.user.status = true;
-        datas.user.account = account;
-        datas.user.password = password;
-        datas.user.userId = response.data.data.userId;
-        datas.user.token = response.data.data.token;
-        datas.user.refreshtoken = response.data.data.refreshtoken;
-        if (remember) {
-          //确认用户是否自动登录
-          localStorage.setItem("account", account);
-          localStorage.setItem("password", password);
+        datas.user.status = true
+        datas.user.account = account
+        datas.user.password = password
+        datas.user.userId = response.data.data.userId
+        datas.user.token = response.data.data.token
+        datas.user.refreshtoken = response.data.data.refreshtoken
+        if (remember) { // 确认用户是否自动登录
+          localStorage.setItem("account", account)
+          localStorage.setItem("password", password)
         }
         //跳转填写地区和年龄弹窗
-        viewId.value = 3;
-      } else {
-        //response.data.code === 401
-        alert("账号密码错误，请重新输入");
+        viewId.value = 3
+      } else { //response.data.code === 401
+        ElMessage({
+          message: '账号密码错误，请重新输入',
+          type: 'error',
+          duration: 5000,
+          showClose: true,
+          center: true
+        })
       }
     })
     .catch((error) => {
-      //登录失败
-      alert("由于网络问题登录失败");
-      console.log(error);
-    });
+      ElMessage({
+        message: '由于网络问题登录失败',
+        type: 'error',
+        duration: 5000,
+        showClose: true,
+        center: true
+      })
+      console.log(error)
+    })
 }
+//--------------------------- 登录逻辑-----------------------------
 </script>
 
 <template>
   <div class="wrapper">
+
     <div class="selectArea">
       <a @click="viewId = 0">微信登录</a>
       <a active @click="viewId = 1">账号登录</a>
     </div>
+
     <div class="typeArea">
       <input type="text" v-model="user.account" placeholder="请输入手机号或者学号" />
       <input type="password" v-model="user.password" placeholder="请输入登录密码" />
     </div>
+
     <div class="functionArea">
       <div remember>
         <input type="checkbox" id="checkbox" v-model="user.remember" />
@@ -86,9 +131,11 @@ async function login(account, password, remember) {
       </div>
       <a @click="viewId = 2">立即注册</a>
     </div>
+
     <div button @click="login(user.account, user.password, user.remember)">
       <div>登录</div>
     </div>
+
   </div>
 </template>
 

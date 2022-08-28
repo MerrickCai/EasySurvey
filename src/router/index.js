@@ -36,7 +36,7 @@ const routes = [
     },
     {
         path: '/surveyComplex',
-        meta: { requireLogin: false },
+        meta: { requireLogin: true },
         component: surveyComplex
     },
     {

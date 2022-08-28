@@ -209,6 +209,7 @@ function Finish() {
         item.progressPartbcg = '#5a9afa'
         if (item.value === 0 || item.value.length === 0 || item.value === '') {
             flag = false
+            item.progressPartbcg = 'rgba(255, 71, 71, 1)'
             uncomplete.push(queId)
         }
         queId++
