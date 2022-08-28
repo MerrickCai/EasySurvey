@@ -42,8 +42,14 @@ function jump() {
     })
     return false
   }
-  if (route.query.redirect) {
-    //判断用户是否从其他页面过来
+  if (route.query.redirect) { //判断用户是否从其他页面过来
+    ElMessage({
+      message: '跳过成功',
+      type: 'warning',
+      duration: 5000,
+      showClose: true,
+      center: true
+    })
     router.push({ path: route.query.redirect })
   } else {
     router.push({ path: "/" })
@@ -106,9 +112,9 @@ function validate(age) {
 //--------------------------- 提交信息 -----------------------------
 const user = reactive({ area: "", age: "" })
 async function upLoad(area, age) {
-  if (!(confirm.area && confirm.age)) { //没填完
+  if (!(confirm.area && confirm.age)) { //用户没填完
     ElMessage({
-      message: '请填写信息',
+      message: '请填写以上信息',
       type: 'warning',
       duration: 5000,
       showClose: true,
@@ -116,8 +122,7 @@ async function upLoad(area, age) {
     })
     return false
   }
-  if (!validate(age)) {
-    //表单验证
+  if (!validate(age)) { //表单验证
     return false
   }
   await axios({
@@ -138,20 +143,18 @@ async function upLoad(area, age) {
       datas.user.area = area[0]
       ElMessage({
         message: '信息获取成功',
-        type: 'error',
+        type: 'success',
         duration: 5000,
         showClose: true,
         center: true
       })
-      if (route.query.redirect) {
-        //判断用户是否从其他页面过来
+      if (route.query.redirect) { //判断用户是否从其他页面过来
         router.push({ path: route.query.redirect })
       } else {
         router.push({ path: "/" })
       }
     })
-    .catch((error) => {
-      //上传失败
+    .catch((error) => {//上传失败
       ElMessage({
         message: '由于网络问题上传失败',
         type: 'error',
@@ -178,11 +181,11 @@ async function upLoad(area, age) {
         <div>所在地区</div>
       </div>
       <div areaSelect>
-        <el-cascader @change="confirm.area = true" v-model="user.area" placeholder="请选择所在地区" :options="area"
+        <el-cascader @change="confirm.area = true" v-model="user.area" placeholder="请选择您所在地区" :options="area"
           :props="props" separator=" " />
       </div>
       <div class="title">
-        <div>您的年龄</div>
+        <div>年龄</div>
       </div>
       <input @change="confirm.age = true" @input="confirm.age = true" type="text" v-model="user.age"
         placeholder="请输入您的年龄" />

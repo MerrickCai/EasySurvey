@@ -11,6 +11,13 @@ function logOut() {
         router.push("/login")
         return false
     }
+    ElMessage({
+        message: '已为您退出登录',
+        type: 'success',
+        duration: 5000,
+        showClose: true,
+        center: true
+      })
     if (localStorage.getItem("account") && localStorage.getItem("password")) { //移除自动登录
         localStorage.removeItem("account")
         localStorage.removeItem("password")
