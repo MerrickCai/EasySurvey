@@ -9,7 +9,7 @@
     <div class="file">
       <div class="creatcontent">
         <div class="filetop">
-          <img src="/share.png" alt="" />
+          <span class="share" @click="sharefile"></span>
           <span class="creat">问卷{{ index + 1 }}</span>
           <span class="delete" @click="delfile">×</span>
         </div>
@@ -43,6 +43,9 @@ import emitter from "../../mitt";
 import { useStore } from "../../PiniaStores/index.js";
 const datas = useStore();
 import axios from "axios";
+import clipboard3 from "vue-clipboard3";
+
+
 const emit = defineEmits(["update:clickrotate", "deletefile"]);
 const props = defineProps(["index", "clickrotate", "item"]);
 
@@ -78,6 +81,17 @@ function delfile() {
     emit("deletefile", props.index);
   }
 }
+
+//分享问卷
+const { toClipboard } = clipboard3();
+async function sharefile() {
+  try {
+    await toClipboard( "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +props.item.id);
+    alert("复制的是:" + "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +props.item.id + "快去分享给其他人作答吧!");
+  } catch (error) {
+    alert("复制失败!");
+  }
+}
 </script>
 
 <style lang="less" scoped>
@@ -102,11 +116,15 @@ function delfile() {
   .filetop {
     display: flex;
 
-    img {
+    .share{
       cursor: pointer;
       position: absolute;
       left: 10px;
       top: 3px;
+      width: 16px;
+      height: 16px;
+      background-image: url(/share.png);
+      background-size: cover;
     }
 
     .creat {
