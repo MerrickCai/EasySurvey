@@ -79,6 +79,11 @@ const currentSurvey = inject('currentSurvey')
 //     return datas.survey.survey4[0];
 // });
 
+onMounted(() => {
+  console.log(4);
+  
+})
+
 // ------------------接收survey父组件传过来的参数。-------------------------------
 const props = defineProps(['surveyObj']);
 // 从父组件拿到数据
@@ -231,8 +236,6 @@ function onScroll(e) {
     bluebcg_height.value = temp;
 }
 
-console.log(11111111);
-
 
 
 // 存储选中的多选按钮的value方法 
@@ -243,10 +246,10 @@ function seleted(item, i, e) {
     // console.log(input.value);  这里获取了整个页面的input的dom数组，所以接下来要找出所对应题目的input的dom
     let start = 0;
     for (let j = 0; j < i; j++) {
-        start += survey.questionList[j].option.length;
+        start += item.option.length;
     }
     // start变量是用来找到起点的
-    console.log(start,start + item.option.length);
+    // console.log(start,start + item.option.length);
     //这个数组保存的就是目前点击的checkbox对应题目的全部input的dom
     const Oneques_input = input.value.slice(start, start + item.option.length);
     
@@ -279,8 +282,6 @@ function toFinish() {
        let queId = 1;  
     survey.questionList.forEach(item => {
         item.titleBorder = 0;
-        console.log('aa',item.value);
-        
         item.progressPartbcg = '#5a9afa';
         if (item.value.length === 0) {
             flag = false;

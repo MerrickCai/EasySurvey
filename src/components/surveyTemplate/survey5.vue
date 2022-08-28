@@ -65,11 +65,11 @@
 
 <script setup>
 import { inject } from 'vue'
-const currentSurvey = inject('currentSurvey')
 import axios from 'axios'
 import { ref, reactive, toRefs, onBeforeMount, onMounted, watchEffect, computed } from 'vue';
 import { useStore } from '../../PiniaStores/index.js'
 const datas = useStore();
+const currentSurvey = inject('currentSurvey')
 
 // const survey = computed(() => {
 //     return datas.survey.survey5[0];

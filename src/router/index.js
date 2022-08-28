@@ -17,7 +17,7 @@ const routes = [
     {
         path: '/',
         meta: { requireLogin: true },
-        component: statistics
+        component: statistics,
     },
     {
         path: '/login',
@@ -43,7 +43,7 @@ const routes = [
         path: '/:path(.*)', //匹配不到以上路径=>404页面
         meta: { requireLogin: false },
         component: notFound
-    }
+    },
 ]
 
 export default createRouter({
