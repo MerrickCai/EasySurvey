@@ -297,7 +297,6 @@ if (localStorage.getItem("text")) {
 } else {
   textfile = reactive([
     {
-      options: [{ detail: "" }],
       question: { detail: "", type: 2 },
       id: nanoid(),
     },
@@ -646,7 +645,7 @@ console.log( typeinput);
             totalNumber: 100,
             message: filetitle.info_para,
             title: filetitle.info_title,
-            count: 4,
+            count: 5,
           },
           questionOptionList: JSON.parse(JSON.stringify(mixfile)),
         },
