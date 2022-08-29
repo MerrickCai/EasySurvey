@@ -1,113 +1,107 @@
 <script setup>
-import { ref, reactive, computed, provide } from "vue"
+import survey1 from "../components/surveyTemplate/survey1.vue"
+import survey2 from "../components/surveyTemplate/survey2.vue"
+import surveyComplex from '../components/surveyTemplate/surveyComplex.vue'
+import { ref, reactive, provide } from "vue"
 import axios from "axios"
 import { useRoute } from "vue-router"
 import { useStore } from "../PiniaStores/index.js"
-
-
-//问卷模板子组件（共六套）
-//矩阵：问卷类型:1，count:2
-//量表：问卷类型:2，count:3
-//单选：问卷类型:3，count:0
-//多选：问卷类型:4，count:1
-//文本：问卷类型:5，count:4
-//文本：问卷类型:6，count:5
-import survey1 from "../components/surveyTemplate/survey1.vue"
-import survey2 from "../components/surveyTemplate/survey2.vue"
-import survey3 from "../components/surveyTemplate/survey3.vue"
-import survey4 from "../components/surveyTemplate/survey4.vue"
-import survey5 from "../components/surveyTemplate/survey5.vue"
-import surveyComplex from '../components/surveyTemplate/surveyComplex.vue';
-const datas = useStore()
 const route = useRoute()
-const surveyTemplateList = [survey1, survey2, survey3, survey4, survey5, surveyComplex];
-const viewId = ref(0)
-const currentView = computed(() => surveyTemplateList[viewId.value - 1])
+const datas = useStore()
 
 
 
-const currentSurvey = reactive({
+//------------------- 问卷模板子组件 -----------------------------
+//矩阵(survey1)：count 2
+//量表(survey2)：count 3
+//普通(surveyComplex)：count 5
+const surveyTemplateList = [survey1, survey2, surveyComplex]
+const currentView = ref()
+//------------------- 问卷模板子组件 -----------------------------
+
+
+
+
+//------------------------- 问卷状态和数据对象 ------------------------
+const Survey = reactive({
   status: {
     begin: true,
     ongoing: false,
     end: false,
+    toOngoing() {
+      this.begin = false
+      this.ongoing = true
+    },
+    toEnd() {
+      this.ongoing = false
+      this.end = true
+    }
   },
-  toOngoing() {
-    this.status.begin = false
-    this.status.ongoing = true
-  },
-  toEnd() {
-    this.status.ongoing = false
-    this.status.end = true
-  },
-  surveyObj: {},
-  getSurvey() {
-    axios({
-      url: `https://q.denglu1.cn/user/fillQuestionnaire/${route.params.questionnaireId}`,
-      method: "get",
-      withCredentials: true,
-      headers: { "Content-Type": "application/json" },
-      headers: { token: datas.user.token },
-    })
-      .then((response) => {
-        this.surveyObj = response.data.data
-        switch (response.data.data.questionnaire.count) {
-          case 0: //单选
-            viewId.value = 3
-            break
-          case 1: //多选
-            viewId.value = 4
-            break
-          case 2: //矩阵
-            viewId.value = 1
-            break
-          case 3: //量表
-            viewId.value = 2
-            break
-          case 4: //文本
-            viewId.value = 5
-            break
-          case 5: // 混合
-          viewId.value = 6
-            
-        }
-        console.log("请求参数",this.surveyObj);
-        
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-  }
+  surveyObj: null,
 })
-currentSurvey.getSurvey()
-provide("currentSurvey", currentSurvey)
+//------------------------- 问卷状态和数据对象 ------------------------
+
+
+
+
+//--------------------- 网络请求获取问卷类型和数据 -------------------------
+axios({
+  url: `https://q.denglu1.cn/user/fillQuestionnaire/${route.params.questionnaireId}`,
+  method: "get",
+  withCredentials: true,
+  headers: { "Content-Type": "application/json" },
+  headers: { token: datas.user.token },
+})
+  .then((response) => {
+    switch (response.data.data.questionnaire.count) {
+      case 2: // 矩阵
+        currentView.value = surveyTemplateList[0]
+        Survey.surveyObj = response.data.data
+        break
+      case 3: // 量表
+        currentView.value = surveyTemplateList[1]
+        Survey.surveyObj = response.data.data
+        break
+      case 5: // 普通
+        currentView.value = surveyTemplateList[2]
+        Survey.surveyObj = response.data.data
+        break;
+    }
+  })
+  .catch((error) => {
+    console.log(error)
+  })
+//--------------------- 网络请求获取问卷类型和数据 -------------------------
+
+
+
+
+
+//--------------------- provide问卷对象给问卷模板子组件 -------------------------
+provide("Survey", Survey)
+//--------------------- provide问卷对象给问卷模板子组件 -------------------------
 </script>
 
 <template>
-  <div class="wrapper">
-    <!--装饰品-->
-    <div class="decoration1" v-show="currentSurvey.status.begin || currentSurvey.status.end"></div>
-    <div class="decoration2" v-show="currentSurvey.status.begin || currentSurvey.status.end"></div>
-    <div class="decoration3" v-show="currentSurvey.status.begin || currentSurvey.status.end"></div>
-    <div class="decoration4" v-show="currentSurvey.status.begin || currentSurvey.status.end"></div>
+  <div wrapper>
+    <div class="decoration1" v-show="Survey.status.begin || Survey.status.end"></div>
+    <div class="decoration2" v-show="Survey.status.begin || Survey.status.end"></div>
+    <div class="decoration3" v-show="Survey.status.begin || Survey.status.end"></div>
+    <div class="decoration4" v-show="Survey.status.begin || Survey.status.end"></div>
     <div class="decoration5"></div>
     <img dog-ear src="/tangible.png" />
-    <!--装饰品-->
-
-    <!--动态组件-->
-    <component :is="currentView" :survey-obj="currentSurvey.surveyObj"></component>
-    <!--动态组件-->
+    <component :is="currentView"></component>
   </div>
 </template>
 
 <style lang="less" scoped>
-div.wrapper {
+div[wrapper] {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: calc(100% - 5px);
   width: 100%;
   position: relative;
   top: 0;
@@ -117,7 +111,7 @@ div.wrapper {
   background-color: rgb(255, 255, 255);
   z-index: 0;
 
-  div.decoration1 {
+  >div.decoration1 {
     display: block;
     height: 400px;
     width: 400px;
@@ -131,7 +125,7 @@ div.wrapper {
     clip-path: polygon(50% 50%, 100% 50%, 100% 100%, 50% 100%);
   }
 
-  div.decoration2 {
+  >div.decoration2 {
     display: block;
     height: 150px;
     width: 150px;
@@ -143,7 +137,7 @@ div.wrapper {
     background-color: rgba(71, 145, 255, 1);
   }
 
-  div.decoration3 {
+  >div.decoration3 {
     display: block;
     height: 100px;
     width: 100px;
@@ -155,7 +149,7 @@ div.wrapper {
     background-color: rgba(30, 111, 255, 1);
   }
 
-  div.decoration4 {
+  >div.decoration4 {
     display: block;
     height: 170px;
     width: 170px;
@@ -167,7 +161,7 @@ div.wrapper {
     background-color: rgba(235, 245, 255, 1);
   }
 
-  div.decoration5 {
+  >div.decoration5 {
     display: block;
     height: calc(108px + 5px);
     width: calc(120px + 7px);
@@ -178,7 +172,7 @@ div.wrapper {
     background-color: rgb(255, 255, 255, 1);
   }
 
-  img[dog-ear] {
+  >img[dog-ear] {
     display: block;
     height: 108px;
     width: 120px;

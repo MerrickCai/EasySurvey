@@ -49,7 +49,7 @@ function logOut() {
             <Transition name="navbar">
                 <div v-show="datas.navShow">
                     <div button @click="router.push('/surveynew')">创建问卷</div>
-                    <div img @click="router.push('/survey/85')"><img src="/navbar_1.png" /></div>
+                    <div img @click="router.push('/survey/90')"><img src="/navbar_1.png" /></div>
                     <div img avatar @click="router.push('/surveyComplex')"><img src="/navbar_3.jpg" /></div>
                     <div img @click="logOut"><img src="/navbar_2.png" /></div>
                 </div>

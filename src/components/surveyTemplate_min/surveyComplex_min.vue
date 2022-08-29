@@ -1,7 +1,8 @@
 <template>
     <div class="wrapper">
+
         <!-- 问卷内容 -->
-        <div content >
+        <div content>
             <!-- 进度条 -->
             <div class="shadow"></div>
             <div class="progress" @click="scrollTo($event)">
@@ -10,6 +11,7 @@
                 </div>
                 <div class="text" ref="text">0 %</div>
             </div>
+
             <!-- 答题区域 -->
             <main ref="content" @scroll="onScroll">
                 <div class="main" v-for="(item, i) of survey.questionList" :key="item.questionId"
@@ -18,104 +20,88 @@
                     <template v-if="item.type === 0">
                         <div class="questiontitle" ref="questiontitle">{{  `${i + 1}. ${item.questiontitle}（单选）`  }}</div>
                         <div class="ques" v-for="(elem, index) of item.option" :key="index">
-                            <input type="radio" :id="elem" :value="elem"  v-model="item.value" />
-                            <p><label :for="elem">{{  elem  }}</label></p>
+                            <input type="radio"  ref='option1'   :id="elem.id" :value="elem.detail" disabled />
+                            <p><label :for="elem.id">{{  elem.detail  }}</label></p>
                         </div>
                     </template>
 
                     <template v-else-if="item.type === 1">
-                        <div class="questiontitle" ref="questiontitle">{{  `${i + 1}. ${item.questiontitle}（多选）`  }}</div>
+                        <div class="questiontitle">{{  `${i + 1}. ${item.questiontitle}（多选）`  }}</div>
                         <div class="ques" v-for="(elem, index) of item.option" :key="index">
-                            <input type="checkbox" :id="elem" :value="elem" v-model="item.value" />
-                            <p><label :for="elem">{{  elem  }}</label></p>
+                            <input type="checkbox"  ref='option2'    :id="elem.id" :value="elem.detail"  disabled/>
+                            <p><label :for="elem.id">{{  elem.detail  }}</label></p>
                         </div>
                     </template>
 
                     <template v-else>
                         <div class="questiontitle" ref="questiontitle">{{  `${i + 1}. ${item.questiontitle}（文本）`  }}</div>
                         <div class="ques">
-                            <textarea v-model="item.value" placeholder="请输入文本"></textarea>
+                            <textarea  placeholder="请输入文本" :value="item.value" disabled></textarea>
                         </div>
                     </template>
-
                 </div>
             </main>
-       </div>
+        </div>
     </div>
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive,computed,inject ,onMounted} from 'vue'
 import axios from "axios"
 
+// ------------------接受survey父组件传过来的参数。-------------------------------
+const props = defineProps(['surveyObj']);
+// 从父组件拿到数据
+const surveyObj = computed(() => props.surveyObj)
 
-// --------------------------- 问卷状态，问卷数据 --------------------
-const survey = reactive({
-    status: {
-        begin: true,
-        ongoing: false,
-        end: false,
-        toOngoing() {
-            this.begin = false
-            this.ongoing = true
-        },
-        toEnd() {
-            this.ongoing = false
-            this.end = true
+
+// 封装一个survey
+const survey = reactive({});
+survey.questionList = [];
+for (let i in surveyObj.value.questionInfoMap) {
+    let obj = {};
+    obj.questionId = i;
+    obj.type = surveyObj.value.questionInfoMap[i].type
+    obj.questiontitle = surveyObj.value.questionInfoMap[i].info
+    if (obj.type === 2) {
+        obj.value = surveyObj.value.answerMap[i][0].text_answer;
+        survey.questionList.push(obj);
+        continue;
+    }
+    obj.option = [];
+    for (let j in surveyObj.value.optionMap[i]) { 
+    obj.option.push({
+        id: surveyObj.value.optionMap[i][j].id,
+        detail: surveyObj.value.optionMap[i][j].detail
+      })
+    }
+    survey.questionList.push(obj);
+}
+survey.seleted = [];
+for (let i in surveyObj.value.answerMap) {
+    for (let j in surveyObj.value.answerMap[i]) {
+        if(surveyObj.value.answerMap[i][j].optionId!==-1)
+      survey.seleted.push(surveyObj.value.answerMap[i][j].optionId);    
+    }
+}
+console.log(survey);
+
+const option1= ref(null);
+const option2 = ref(null);
+onMounted(() => {
+
+    console.log(option1,option2);
+    
+    option1.value.forEach(item => {
+     if (survey.seleted.includes(item.id/1)) {
+         item.checked = true;
         }
-    },
-    intro: {
-        info_title: '混合型问卷',
-        info_para: '单选 多选 文本'
-    },
-    questionList: [ //type：单选0 多选1 文本2
-        {
-            questionId: 1,
-            type: 2,
-            questiontitle: '我认为我能为团队做出的贡献是：',
-            value: '',
-            progressPartbcg: '#ccc',
-            outlineColor: 'rgba(255,255,255,0)'
-        },
-        {
-            questionId: 2,
-            type: 0,
-            questiontitle: '我认为我能为团队做出的贡献是：',
-            value: 0,
-            progressPartbcg: '#ccc',
-            outlineColor: 'rgba(255,255,255,0)',
-            option: ['aaAAAhaha', 'BBB', 'CCC']
-        },
-        {
-            questionId: 3,
-            type: 1,
-            questiontitle: '我认为我能为团队做出的贡献是：',
-            value: [],
-            progressPartbcg: '#ccc',
-            outlineColor: 'rgba(255,255,255,0)',
-            option: ['111', '222', '333']
-        },
-        {
-            questionId: 4,
-            type: 0,
-            questiontitle: '我认为我能为团队做出的贡献是：',
-            value: 0,
-            progressPartbcg: '#ccc',
-            outlineColor: 'rgba(255,255,255,0)',
-            option: ['aaAAAhaha', 'BBB', 'CCC']
-        },
-        {
-            questionId: 5,
-            type: 2,
-            questiontitle: '我认为我能为团队做出的贡献是：',
-            value: '',
-            progressPartbcg: '#ccc',
-            outlineColor: 'rgba(255,255,255,0)'
-        }
-    ]
+    })
+    option2.value.forEach(item => {
+     if (survey.seleted.includes(item.id/1)) {
+         item.checked = true;
+        }})
 })
-// --------------------------- 问卷状态，问卷数据 --------------------
-
 
 
 // ---------------------------   进度条 ---------------------------------------
@@ -138,6 +124,8 @@ function onScroll() {
     bluebcg.value.style.height = `${300 * (content.value.scrollTop / scrollMaxDistance)}px`
 }
 // ---------------------------   进度条 ---------------------------------------
+
+
 
 </script>
 
@@ -333,7 +321,6 @@ div[content] {
     width: 100%;
     height: 100%;
     position: relative;
-
     >div.shadow {
         position: absolute;
         bottom: 0;
@@ -501,9 +488,8 @@ div[content] {
         width: 100%;
         height: auto;
         padding-left: 20px;
-        padding-top:5px;
         overflow: auto;
-
+        margin-top:100px;
         >div.main {
             display: flex;
             flex-direction: column;
@@ -511,7 +497,6 @@ div[content] {
             height: auto;
             margin-bottom: 10px;
             padding:5px;
-
             >div.questiontitle {
                 display: block;
                 height: auto;

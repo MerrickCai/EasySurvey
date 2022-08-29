@@ -513,7 +513,7 @@ function showDetail(userId, questionnaireId) {
   }).then((response) => {
     // console.log(response);
     surveydatas.data = response.data.data;
-       console.log(  surveydatas.data );
+       console.log('参数',  surveydatas.data );
        
     showdetail.value = true;
 
@@ -657,6 +657,7 @@ function deluser(userid,fileid,index) {
             font-size: 24px;
             color:black;
             cursor: pointer;
+            z-index: 9999;
         }
       }
 }
