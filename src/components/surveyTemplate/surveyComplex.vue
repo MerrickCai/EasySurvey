@@ -3,25 +3,25 @@
 
 
         <!--问卷介绍 -->
-        <div intro v-if="survey.status.begin">
+        <div intro v-if="Survey.status.begin">
             <div class="titleArea">
-                <h2>{{  survey.surveyObj.intro.info_title  }}</h2>
+                <h2>{{  Survey.surveyObj.intro.info_title  }}</h2>
             </div>
             <p class="second-title">问卷介绍：</p>
-            <p class="para">{{  survey.surveyObj.intro.info_para  }}</p>
-            <div class="btn" @click="survey.status.toOngoing">
+            <p class="para">{{  Survey.surveyObj.intro.info_para  }}</p>
+            <div class="btn" @click="Survey.status.toOngoing()">
                 <div>开始问卷</div>
             </div>
         </div>
 
 
         <!-- 问卷内容 -->
-        <div content v-if="survey.status.ongoing">
+        <div content v-if="Survey.status.ongoing">
 
             <!-- 进度条 -->
             <div class="shadow"></div>
             <div class="progress" @click="scrollTo($event)">
-                <span class="progress-part" v-for="item of survey.surveyObj.questionList" :key="item.questionId"
+                <span class="progress-part" v-for="item of Survey.surveyObj.questionList" :key="item.questionId"
                     :style="{ backgroundColor: `${item.progressPartbcg}` }">
                 </span>
                 <div class="outer-thumb" ref="thumb">
@@ -33,15 +33,15 @@
             <!-- 介绍区域 -->
             <div class="intro">
                 <div class="titleArea">
-                    <h2>{{  survey.surveyObj.intro.info_title  }}</h2>
+                    <h2>{{  Survey.surveyObj.intro.info_title  }}</h2>
                 </div>
                 <p class="second-title">问卷介绍：</p>
-                <p class="para">{{  survey.surveyObj.intro.info_para  }}</p>
+                <p class="para">{{  Survey.surveyObj.intro.info_para  }}</p>
             </div>
 
             <!-- 答题区域 -->
             <main ref="content" @scroll="onScroll">
-                <div class="main" v-for="(item, i) of survey.surveyObj.questionList" :key="item.questionId"
+                <div class="main" v-for="(item, i) of Survey.surveyObj.questionList" :key="item.questionId"
                     :style="{ outline: `${item.outlineColor} 1px  solid` }">
                     <template v-if="item.type === 0">
                         <div class="questiontitle" ref="questiontitle">{{  `${i + 1}. ${item.questiontitle}（单选）`  }}</div>
@@ -75,10 +75,10 @@
 
 
         <!-- 问卷完成 -->
-        <div finish v-if="survey.status.end">
+        <div finish v-if="Survey.status.end">
             <div class="content">
                 <h2>您已完成</h2>
-                <h3>{{  survey.surveyObj.intro.info_title  }}</h3>
+                <h3>{{  Survey.surveyObj.intro.info_title  }}</h3>
                 <p>感谢您的答题，本次问卷已全部结束</p>
             </div>
             <div class="btn">
@@ -99,9 +99,9 @@ const datas = useStore()
 
 
 
-// --------------------------- 问卷状态，问卷数据 --------------------
-const survey = inject('survey')
-// --------------------------- 问卷状态，问卷数据 --------------------
+// --------------------------- 获取父组件传入的问卷状态和数据 --------------------
+const Survey = inject('Survey')
+// --------------------------- 获取父组件传入的问卷状态和数据 --------------------
 
 // ---------------------------   进度条 ---------------------------------------
 //模板引用
@@ -135,7 +135,7 @@ function Finish() {
     const uncomplete = []
     let queId = 0
     bluebcg.value.style.display = 'none'
-    survey.surveyObj.questionList.forEach(item => {
+    Survey.surveyObj.questionList.forEach(item => {
         item.progressPartbcg = '#5a9afa'
         if (item.value === 0 || item.value.length === 0 || item.value === '') {
             flag = false
@@ -154,7 +154,7 @@ function Finish() {
     }
     else {
         Submit()
-        survey.status.toEnd()
+        Survey.status.toEnd()
     }
 }
 // ------------------------- 提交问卷前判断完成度 ------------------------
@@ -165,7 +165,7 @@ function Finish() {
 // 选项数据已经用v-model动态绑定到对应的value了
 function Submit() {
     const questionAnswerList = []
-    survey.surveyObj.questionList.forEach(item => {
+    Survey.surveyObj.questionList.forEach(item => {
         let questionAnswer = {
             questionId: item.questionId,
             type: item.type,
