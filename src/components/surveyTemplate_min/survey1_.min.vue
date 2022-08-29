@@ -68,9 +68,7 @@ function onScroll(e) {
     "style",
     `top: ${400 * (e.currentTarget.scrollTop / scrollDistence.value)}px`
   );
-  text.value.innerHTML = `${Math.ceil(
-    ((e.currentTarget.scrollTop - 1) / scrollDistence.value) * 100
-  )} %`;
+  text.value.innerHTML = `${Math.ceil((content.value.scrollTop / scrollDistence.value) * 100) > 100 ? 100 : Math.ceil((content.value.scrollTop / scrollDistence.value) * 100)} %`
   // 中转变量
   let temp = thumb.value.style.top.split("");
   temp.pop();

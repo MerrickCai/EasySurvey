@@ -1,7 +1,7 @@
 <template>
     <div wrapper>
         <!-- 问卷内容部分 -->
-        <div class="wrapper extrachange">
+        <div class="wrapper ">
             <!-- 进度条 -->
             <div class="zhedang"></div>
             <div class="progress" @click="scrollTo($event)">
@@ -43,10 +43,12 @@ survey.questionList = [];
 for (let i in  surveyObj.value.questionInfoMap) {
     let obj = {};
     obj.questionId = i;
-    obj.questiontitle = surveyObj.value.questionInfoMap[i][0].info;
+    obj.questiontitle = surveyObj.value.questionInfoMap[i].info;
     obj.value = surveyObj.value.answerMap[i][0].text_answer;
+    survey.questionList.push(obj)
 }
 
+console.log(survey);
 
 
 
@@ -79,7 +81,7 @@ function onScroll(e) {
     }
     //转换
     thumb.value.setAttribute('style', `top: ${(300) * (content.value.scrollTop / scrollDistence.value) - 8}px`);
-    text.value.innerHTML = `${Math.ceil((content.value.scrollTop / scrollDistence.value) * 100)} %`
+    text.value.innerHTML = `${Math.ceil((content.value.scrollTop / scrollDistence.value) * 100) > 100 ? 100 : Math.ceil((content.value.scrollTop / scrollDistence.value) * 100)} %`
     temp = thumb.value.style.top.split("");
     temp.pop();
     temp.pop();
@@ -98,7 +100,7 @@ div[wrapper] {
     justify-content: center;
     align-items: center;
     height: 100%;
-    width: 100%;
+    width: 90%;
     position: relative;
     top: 0;
     left: 0;
@@ -220,58 +222,24 @@ div[wrapper] {
 
 }
 
-// 答题内容部分
-// 头部的文字解释
-.topbox {
-    position: absolute;
-    left: 40px;
-    top: 40px;
-    display: flex;
-    flex-direction: column;
-
-    .top_title {
-        .public_title();
-        width: 625px;
-    }
-
-    .top_sectitle {
-        .public_sectitle();
-        font-size: 18px;
-        margin-top: 12px;
-    }
-
-    .para_wrapper {
-        width: 1050px;
-
-        .top_para {
-            font-family: '思源黑体';
-            font-size: 12.4px;
-            line-height: 22px;
-            font-weight: 400;
-        }
-    }
-}
-
 
 
 // 问卷题目内容部分
 .content {
     position: absolute;
-    top: 220px;
-    left: 50px;
-    width: 1155px;
-    height: 350px;
+    top: 80px;
+    left: 100px;
+    width: 985px;
+    height: 400px;
     overflow: auto;
-
     .main {
         background-color: white;
         height: 300px;
-        width: 1065px;
+        width: 805px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         margin-bottom: 50px;
-
         .ques {
             display: flex;
         }
@@ -343,13 +311,6 @@ div[wrapper] {
 }
 
 
-
-
-// 对最外层wrapper的微调
-div.extrachange {
-    width: 1210px;
-    z-index: 10;
-}
 
 
 // 完成问卷页面的样式
@@ -444,12 +405,12 @@ div.extrachange {
 //  遮挡原来的
 .zhedang {
     position: absolute;
-    right: 7px;
+    right: -50px;
     background-color: white;
     width: 10px;
     height: 500px;
     z-index: 10;
-    bottom: 0;
+    bottom: 20px;
 }
 
 //   滚动条
@@ -458,8 +419,8 @@ div.extrachange {
     z-index: 1;
     height: 300px;
     width: 8px;
-    bottom: 65px;
-    right: 35px;
+    bottom: 175px;
+    right: 105px;
     border-radius: 5px;
     background-color: rgba(204, 204, 204, 1);
     cursor: pointer;
@@ -505,27 +466,13 @@ div.extrachange {
         z-index: 1;
         height: 18px;
         width: 50px;
-        bottom: -20px;
-        left: -22px;
+        bottom: -23px;
+        left: -19px;
         color: rgba(30, 111, 255, 1);
         text-align: center;
         font-size: 16px;
         line-height: 18px;
     }
 
-    // 进度条分段
-    .progress-part {
-        width: 8px;
-        pointer-events: none;
-
-        //    border-radius: 5px;   
-        &:first-child {
-            border-radius: 5px 5px 0 0;
-        }
-
-        &:last-child {
-            border-radius: 0 0 5px 5px;
-        }
-    }
 }
 </style>

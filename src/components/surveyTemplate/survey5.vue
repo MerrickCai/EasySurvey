@@ -126,36 +126,36 @@ function sumbit() {
     console.log(survey);
     console.log(questionAnswerList);
     
-    //  axios({
-    //     url: `https://q.denglu1.cn/questions/commit`,
-    //     method: 'post',
-    //     withCredentials: true,
-    //     headers: { 'Content-Type': 'application/json' },
-    //     headers: { 'token': datas.user.token },
-    //     data: {
-    //       "questionnaire_id": survey.id,
-    //       "totalNumber": survey.totalNumber,
-    //       "count":survey.count,    
-    //       "effectiveNumber": survey.effectiveNumber,  
-    //       "questionAnswerList": questionAnswerList
-    //     }
-    //  }).then((response) => {
-    //     console.log(response);
-    //     if (response.data.code === 200) {
-    //     //  console.log(survey);
-    //       if (response.data.msg === '问卷已收集齐了') {
-    //           alert('问卷已收集齐了');
-    //       } else {
-    //         console.log(survey);
-    //     // currentSurvey.toEnd();
+     axios({
+        url: `https://q.denglu1.cn/questions/commit`,
+        method: 'post',
+        withCredentials: true,
+        headers: { 'Content-Type': 'application/json' },
+        headers: { 'token': datas.user.token },
+        data: {
+          "questionnaire_id": survey.id,
+          "totalNumber": survey.totalNumber,
+          "count":survey.count,    
+          "effectiveNumber": survey.effectiveNumber,  
+          "questionAnswerList": questionAnswerList
+        }
+     }).then((response) => {
+        console.log(response);
+        if (response.data.code === 200) {
+        //  console.log(survey);
+          if (response.data.msg === '问卷已收集齐了') {
+              alert('问卷已收集齐了');
+          } else {
+            console.log(survey);
+        // currentSurvey.toEnd();
             
-    //        }
-    //     } else {
-    //      alert('提交失败,请勿重复提交');
-    //     } 
-    //   }).catch((error) => {
-    //     console.log(error)
-    //   })
+           }
+        } else {
+         alert('提交失败,请勿重复提交');
+        } 
+      }).catch((error) => {
+        console.log(error)
+      })
 }
 // 以上是提交问卷请求的内容------------------------------------------------------
 
