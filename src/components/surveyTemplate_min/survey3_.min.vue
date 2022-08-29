@@ -14,7 +14,7 @@
             <div class="content" ref="content" @scroll="onScroll($event)">
                 <!-- 题目 -->
                 <!-- 第一层循环 item, i -->
-                <div class="main" v-for="(item, i) of survey.questionList" :key="item.id"
+                <div class="main" v-for="(item, i) of survey.questionList" :key="item.questionId"
                     :style="{ height: `${37.5 * item.option.length}px` }">
                     <div class="questiontitle">
                         {{ item.questiontitle }}
@@ -286,15 +286,18 @@ div[wrapper] {
 
 // 问卷题目内容部分
 .content {
-    width: 100%;
-    height: 400px;
-    padding-left: 50px;
+    top: 80px;
+    width: 1055px;
+    height: 450px;
     overflow: auto;
+    position: absolute;
     flex: 1;
+    left: 40px;
+    // background-color: pink;
     .main {
         background-color: white;
         height: 300px;
-        width: 1065px;
+        width: 855px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -459,13 +462,13 @@ div[wrapper] {
 //  遮挡原来的
 .zhedang {
     position: absolute;
-    right: 2px;
+    right: 55px;
     background-color: white;
     // background-color: pink;
     width: 10px;
     height: 500px;
     z-index: 10;
-    bottom: 0;
+    bottom: 20px;
 }
 
 //   滚动条

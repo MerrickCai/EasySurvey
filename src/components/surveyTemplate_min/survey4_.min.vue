@@ -1,7 +1,7 @@
 <template>
     <div wrapper>
         <!-- 问卷内容部分 -->
-        <div class="wrapper extrachange" v-if="currentSurvey.status.ongoing">
+        <div class="wrapper extrachange">
             <!-- 进度条 -->
             <div class="zhedang"></div>
             <div class="progress" @click="scrollTo($event)">
@@ -14,15 +14,15 @@
             <div class="content" ref="content" @scroll="onScroll($event)">
                 <!-- 题目 -->
                 <!-- 第一层循环 item, i -->
-                <div class="main" v-for="(item, i) of survey.questionList" :key="item.id"
+                <div class="main" v-for="(item, i) of survey.questionList" :key="item.questionId"
                     :style="{ height: `${37.5 * item.option.length}px` }">
                     <div class="questiontitle">
                         {{ item.questiontitle }}
                     </div>
                     <!-- 第二层循环 elem,index -->
                     <div class="ques" v-for="(elem, index) of item.option" :key="index">
-                        <input class="input" type="checkbox" :name="item.id" :value="elem">
-                        <p>{{ elem }}</p>
+                        <input class="input" type="checkbox" :name="item.id" :value="elem"  :id="elem.optionId"  disabled ref="option">
+                        <p>{{ elem.detail }}</p>
                     </div>
                 </div>
             </div>
@@ -33,129 +33,49 @@
 <script setup>
 import axios from 'axios'
 import { ref, reactive, toRefs, onBeforeMount, onMounted, watchEffect, computed ,inject} from 'vue';
-import { useStore } from '../../PiniaStores/index.js'
-const datas = useStore();
-const currentSurvey = inject('currentSurvey')
-
-// const survey = computed(() => {
-//     return datas.survey.survey4[0];
-// });
 
 
-
-// ------------------接收survey父组件传过来的参数。-------------------------------
+// ------------------接受survey父组件传过来的参数。-------------------------------
 const props = defineProps(['surveyObj']);
 // 从父组件拿到数据
 const surveyObj = computed(() => props.surveyObj)
 
-// 封装一个survey---------------用以在模板和存放提交时候的用户数据------------------（按照PiniStores中的结构模板来封装的）
+
+// 封装一个survey
 const survey = reactive({});
-// survey的介绍和提交问卷用的信息
-survey.intro = {};  
-survey.effectiveNumber = surveyObj.value.questionnaire.effectiveNumber;
-survey.totalNumber = surveyObj.value.questionnaire.totalNumber;
-survey.count = surveyObj.value.questionnaire.count;
-survey.id = surveyObj.value.questionnaire.id;
-survey.intro.info_title = surveyObj.value.questionnaire.title;
-survey.intro.info_para = surveyObj.value.questionnaire.message;
-
-// survey的问题列表数据
-survey.questionList = []; 
-let optionDetail = [];  //装全部的选项的文字描述（如比较符合....这些）
-let optionId = [];   //装全部选项对应的ID
-for (let i in surveyObj.value.optionMap) {
-  let t1 = [];
-  let t2 = [];
-  for (let j = 0; j < surveyObj.value.optionMap[i].length; j++){
-    t1.push(surveyObj.value.optionMap[i][j].detail);
-    t2.push(surveyObj.value.optionMap[i][j].id);
-  }
-  optionDetail.push(t1);
-  optionId.push(t2)
-}
-
-let start = 0;  
-// 配置每一道题目
+survey.questionList = [];
 for (let i in surveyObj.value.questionInfoMap) {
-  let item = surveyObj.value.questionInfoMap[i];
-    i/= 1;
     let obj = {};
-    obj.questiontitle = item.info;  //题目
-    obj.type = item.type;
-    obj.value = [];  
-    obj.titleBorder = 0; 
-    obj.progressPartbcg = '#ccc';
-    obj.option = optionDetail[start];
-    obj.questionId = surveyObj.value.optionMap[i][0].questionId;
-    obj.optionId = optionId[start];
-    // obj.seleted = 0;
-    start++;
+    obj.questionId = i;
+    obj.questiontitle = surveyObj.value.questionInfoMap[i].info;
+    obj.option  = [];
+    for (let j in surveyObj.value.optionMap[i]) {
+        obj.option.push({
+           optionId:surveyObj.value.optionMap[i][j].id,
+           detail:surveyObj.value.optionMap[i][j].detail
+        });
+    }
     survey.questionList.push(obj)
 }
-console.log('封装好的数据', survey);
-// -------------------------------------------------
-
-
-
-
-//------------------ 提交问卷请求---------------
-function sumbit() {
-  // 请求参数里面的问卷信息列表
-    const questionAnswerList = [];
-    for (let item of survey.questionList) {
-    let obj = {};
-           obj.questionId = item.questionId;
-           obj.type = item.type;
-           obj.optionList = []
-        for (let elem of item.value) {
-            let obj2 = {};
-            obj2.id = elem.id;
-            obj2.detail = elem.value;
-            obj.optionList.push(obj2);
-        }
-           questionAnswerList.push(obj)
+survey.seleted = [];
+for (let i in surveyObj.value.answerMap) {
+    for (let j in surveyObj.value.answerMap[i]) {
+      survey.seleted.push(surveyObj.value.answerMap[i][j].optionId);    
     }
-    // console.log(survey);
-    
-     axios({
-        url: `https://q.denglu1.cn/questions/commit`,
-        method: 'post',
-        withCredentials: true,
-        headers: { 'Content-Type': 'application/json' },
-        headers: { 'token': datas.user.token },
-        data: {
-          "questionnaire_id": survey.id,
-          "totalNumber": survey.totalNumber,
-          "count":survey.count,    
-          "effectiveNumber":survey.effectiveNumber,  
-          "questionAnswerList": questionAnswerList,
-        }
-     }).then((response) => {
-        console.log(response);
-        if (response.data.code === 200) {
-        //  console.log(survey);
-          if (response.data.msg === '问卷已收集齐了') {
-              alert('问卷已收集齐了');
-           } else {
-             currentSurvey.toEnd();
-           }
-        } else {
-         alert('提交失败,请勿重复提交');
-        } 
-      }).catch((error) => {
-        console.log(error)
-      })
 }
-// 以上是提交问卷请求的内容------------------------------------------------------
+console.log(survey);
 
 
+const option= ref(null);
+onMounted(() => {
+    option.value.forEach(item => {
+     if (survey.seleted.includes(item.id/1)) {
+         item.checked = true;
+   }    
+})
+})
 
 
-
-// -----跳转：介绍页==>答题页--------
-function toContent() { 
-    currentSurvey.toOngoing();
-}
 
 
 // --- 滚动条部分的变量和方法 ---
@@ -177,8 +97,10 @@ function scrollTo(e) {
     }
     // 此页面滚动条为300px
     //转换(e.offsetY是鼠标点击进度条的位置[0,300]，进度条总长300px)
-    content.value.scrollTop = (scrollDistence.value) * (e.offsetY / 300) - 8;
+    content.value.scrollTop = (scrollDistence.value) * (e.offsetY / 300) ;
     text.value.innerHTML = `${Math.ceil((e.offsetY / 300) * 100)} %`;
+    console.log(content.value.scrollTop, scrollDistence.value);
+    
 
 }
 function onScroll(e) {
@@ -186,7 +108,7 @@ function onScroll(e) {
         scrollDistence.value = content.value.scrollHeight - content.value.offsetHeight;
     }
     //转换
-    thumb.value.setAttribute('style', `top: ${(300) * (content.value.scrollTop / scrollDistence.value) - 8}px`);
+    thumb.value.setAttribute('style', `top: ${(300) * (content.value.scrollTop / scrollDistence.value) }px`);
     text.value.innerHTML = `${Math.ceil((content.value.scrollTop / scrollDistence.value) * 100)} %`
     temp = thumb.value.style.top.split("");
     temp.pop();
@@ -195,68 +117,6 @@ function onScroll(e) {
     bluebcg_height.value = temp;
 }
 
-
-
-// 存储选中的多选按钮的value方法 
-const input = ref(null)
-function seleted(item, i, e) {
-    // 思路是获取每个题目下的input框的dom的数据，然后forEach，如果seleted属性为true就push就item.value保存下来，这个item.value保存的就是用户选了那些。
-    // 这里的难点是如果获取每个题目下的全部input框的dom组成的数组
-    // console.log(input.value);  这里获取了整个页面的input的dom数组，所以接下来要找出所对应题目的input的dom
-    let start = 0;
-    for (let j = 0; j < i; j++) {
-        start += item.option.length;
-    }
-    // start变量是用来找到起点的
-    // console.log(start,start + item.option.length);
-    //这个数组保存的就是目前点击的checkbox对应题目的全部input的dom
-    const Oneques_input = input.value.slice(start, start + item.option.length);
-    
-    survey.questionList[i].value = [];
-    Oneques_input.forEach((elem,index) => {
-        // input的dom的checked属性保存了是否被选中 
-        // console.log(elem.checked);
-        if (elem.checked){
-            survey.questionList[i].value.push({
-                value: elem.value,
-                id: survey.questionList[i].optionId[survey.questionList[i].option.indexOf(elem.value)]
-            });
-        }
-    })
-    console.log(survey.questionList[i].value);
-}
-
-
-// ---提交按钮之后相关的变量和方法---
-// 获取全部questiontitle
-const questiontitle = ref(null);
-// 进度条片段的高度
-const progressPartHeight = 300 / (survey.questionList.length);
-
-// 提交按钮  跳转：答题页==>完成页
-function toFinish() {
-       let flag = true;
-    const uncomplete = [];   // 记录未完成的问卷id
-    bluebcg.value.style.display = 'none';  // 滚动的蓝色背景失效
-       let queId = 1;  
-    survey.questionList.forEach(item => {
-        item.titleBorder = 0;
-        item.progressPartbcg = '#5a9afa';
-        if (item.value.length === 0) {
-            flag = false;
-            uncomplete.push(queId);
-            item.titleBorder = 1;
-            item.progressPartbcg = 'red';
-        }
-        queId++;
-    });
-    let fisrtreturn = uncomplete[0] - 1;
-    if (uncomplete.length) {
-        content.value.scrollTop = questiontitle.value[fisrtreturn].offsetTop;
-    }
-    if (!flag) return
-    sumbit();
-}
 
 </script>
 
@@ -334,8 +194,7 @@ div[wrapper] {
     width: 100%;
     height: 100%;
     position: relative;
-
-
+    overflow: hidden;
     .title {
         .public_title();
         text-align: center;
@@ -429,12 +288,11 @@ div[wrapper] {
 // 问卷题目内容部分
 .content {
     position: absolute;
-    top: 220px;
+    top: 80px;
     left: 50px;
     width: 1155px;
-    height: 350px;
+    height: 450px;
     overflow: auto;
-
     .main {
         background-color: white;
         height: 300px;
@@ -622,8 +480,8 @@ div.extrachange {
     z-index: 1;
     height: 300px;
     width: 8px;
-    bottom: 65px;
-    right: 35px;
+    bottom: 145px;
+    right:105px;
     border-radius: 5px;
     background-color: rgba(204, 204, 204, 1);
     cursor: pointer;
@@ -639,7 +497,6 @@ div.extrachange {
         border-radius: 5px;
         background-color: rgba(255, 255, 255, 1);
         cursor: pointer;
-
         // 为了使白色按钮盖过蓝色背景   
         &::before {
             content: '';
@@ -655,7 +512,7 @@ div.extrachange {
             background-color: #4791ff;
             width: 8px;
             position: absolute;
-            bottom: 8px;
+            bottom: 2px;
             height: 200px;
             left: 2px;
             z-index: -9;
