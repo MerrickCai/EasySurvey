@@ -3,9 +3,9 @@ import navbar from "./view/navbar.vue"
 import axios from "axios"
 import { useRouter } from "vue-router"
 import { useStore } from "./PiniaStores/index.js"
+import { ElMessage } from 'element-plus'
 const router = useRouter()
 const datas = useStore()
-import { ElMessage } from 'element-plus'
 
 
 //全局前置守卫（帮助用户自动登录）
