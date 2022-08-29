@@ -73,7 +73,7 @@
 </template>
 
 <script setup>
-import { ref, nextTick, onMounted, onBeforeUpdate, watch, reactive } from "vue";
+import { ref, nextTick, onMounted, onBeforeUpdate, watch, reactive,inject } from "vue";
 import emitter from "../../mitt";
 import { useStore } from "../../PiniaStores/index.js";
 const datas = useStore();
@@ -91,6 +91,15 @@ watch(num, (newnum) => {
 let filenews = reactive({
   context: { questionnaire: { totalNumber: 0, effectiveNumber: 0 } },
 });
+
+//修改有效问卷数
+const reload = inject('reload')
+emitter.on("change",()=>{
+  // filenews.context.questionnaire.effectiveNumber-=1
+  // console.log(filenews.context.questionnaire.effectiveNumber);
+  reload()
+})
+
 function getfile() {
   axios({
     url: `https://q.denglu1.cn/user/questionnaireDetail/${parseInt(num.value)}`,

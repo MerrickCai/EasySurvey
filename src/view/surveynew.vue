@@ -2,9 +2,6 @@
   <div class="wrapper">
     <!--装饰品-->
     <div class="decoration1"></div>
-    <div class="decoration2"></div>
-    <div class="decoration3"></div>
-    <div class="decoration4"></div>
     <div class="decoration5"></div>
     <img dog-ear src="/tangible.png" />
     <!--装饰品-->
@@ -32,12 +29,12 @@
         <div class="questype">
           <span class="typetitle">请选择问卷类型:</span>
           <span class="typeall">
-            <span :class="{ typeclick: type == 1 }" @click="type = 1">单选</span>
-            <span :class="{ typeclick: type == 2 }" @click="type = 2">多选</span>
+            <span :class="{ typeclick: type == 6 }" @click="type = 6">普通问卷</span>
+            <!-- <span :class="{ typeclick: type == 1 }" @click="type = 1">单选</span>
+            <span :class="{ typeclick: type == 2 }" @click="type = 2">多选</span> -->
             <span :class="{ typeclick: type == 3 }" @click="type = 3">矩阵</span>
             <span :class="{ typeclick: type == 4 }" @click="type = 4">量表</span>
-            <span :class="{ typeclick: type == 5 }" @click="type = 5">文本</span>
-            <span :class="{ typeclick: type == 6 }" @click="type = 6">混合</span>
+            <!-- <span :class="{ typeclick: type == 5 }" @click="type = 5">文本</span> -->
 
           </span>
         </div>
@@ -88,7 +85,7 @@ import { ElMessage, ElMessageBox  } from 'element-plus'
 //数据
 const datas = useStore();
 //动态组件视图
-let type = ref(1);
+let type = ref(6);
 let typelist = [radiolist, checkboxlist, matrixlist, scalelist, textlist, mixlist];
 let typeview = computed(() => typelist[type.value - 1]);
 //添加题目滚轮滑到最下方
@@ -1029,41 +1026,6 @@ div.wrapper {
     clip-path: polygon(50% 50%, 100% 50%, 100% 100%, 50% 100%);
   }
 
-  >div.decoration2 {
-    display: block;
-    height: 150px;
-    width: 150px;
-    position: absolute;
-    z-index: -1;
-    bottom: 40px;
-    right: 50px;
-    border-radius: 50%;
-    background-color: rgba(71, 145, 255, 1);
-  }
-
-  >div.decoration3 {
-    display: block;
-    height: 100px;
-    width: 100px;
-    position: absolute;
-    z-index: -2;
-    bottom: 80px;
-    right: -20px;
-    border-radius: 50%;
-    background-color: rgba(30, 111, 255, 1);
-  }
-
-  >div.decoration4 {
-    display: block;
-    height: 170px;
-    width: 170px;
-    position: absolute;
-    z-index: -3;
-    bottom: -20px;
-    right: 100px;
-    border-radius: 50%;
-    background-color: rgba(235, 245, 255, 1);
-  }
 
   >div.decoration5 {
     display: block;

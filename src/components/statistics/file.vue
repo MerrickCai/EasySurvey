@@ -38,7 +38,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref ,watch,inject} from "vue";
 import emitter from "../../mitt";
 import { useStore } from "../../PiniaStores/index.js";
 const datas = useStore();
@@ -51,13 +51,21 @@ import { ElMessage, ElMessageBox  } from 'element-plus'
 const emit = defineEmits(["update:clickrotate", "deletefile"]);
 const props = defineProps(["index", "clickrotate", "item"]);
 
+//修改有效问卷数
+const reload = inject('reload')
+emitter.on("change",()=>{
+  console.log(1);
+  reload()
+})
+
 //点击文件夹阴影旋转
 let shadow = ref("shadow");
 let shadowclick = ref("shadowclick");
 
-function filerotate(e, index) {
+function filerotate(e,index) {
   //修改父组件传来的clickrotate
   emit("update:clickrotate", index);
+  //传被点击问卷id
   emitter.emit("filenum", props.item.id);
 }
 //拖拽文件
@@ -88,6 +96,7 @@ function delfile() {
       .catch((error) => {
         console.log(error);
       });
+      //传递删除信号给父组件，更新dom
     emit("deletefile", props.index);
     })
     .catch(() => {

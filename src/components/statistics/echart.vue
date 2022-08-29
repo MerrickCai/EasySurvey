@@ -4,14 +4,14 @@
         <div class="list_title">用户列表</div>
         <el-scrollbar max-height="400px">
           <p
-            v-for="item in filenews.context.userWithScores"
-            :key="item"
+            v-for="(item,index) in filenews.context.userWithScores"
+            :key="item.user"
             class="scrollbar-demo-item"
           >
             <span class="username">{{ item.user.username }}</span>
             <span class="userscore">得分: {{ item.score }}</span>
             <span class="userdetail"  @click="showDetail(item.user.id,filenews.context.questionnaire.id)">详情</span>
-            <span class="userdel">删除</span>
+            <span class="userdel" @click="deluser(item.user.id,filenews.context.questionnaire.id,index)">删除</span>
           </p>
         </el-scrollbar>
     <!-- 详情页 -->
@@ -130,7 +130,6 @@ function echartupdate() {
       province.push(piedata);
     }
   }
-  console.log(province);
   userChart.setOption({
     title: { text: "用户群体" },
     tooltip: {},
@@ -524,6 +523,25 @@ function showDetail(userId, questionnaireId) {
 
 }
 
+
+//删除用户作答
+function deluser(userid,fileid,index) {
+   axios({
+    url: `https://q.denglu1.cn/deleteUserAnswer/${userid}/${fileid}`,
+    method: "get",
+    withCredentials: true,
+    headers: { "Content-Type": "application/json" },
+    headers: { token: datas.user.token },
+  })
+    .then((response) => {
+      console.log(response);
+      filenews.context.userWithScores.splice(index,1)
+      emitter.emit("change")
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
 </script>
 
 <style lang="less" scoped>
