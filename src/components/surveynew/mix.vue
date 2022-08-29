@@ -98,6 +98,7 @@ import { ref, nextTick, inject, reactive } from "vue";
 import { nanoid } from "nanoid";
 const props = defineProps(["quesitem", "mixfile", "mixreceive", "mixdeleteques","index"]);
 let titletype=ref('单选')
+//存储选项
 var option=[]
 function typechange(index) {
     
@@ -112,11 +113,9 @@ function typechange(index) {
       })
      delete props.quesitem.options
     }
-    console.log(option);
     if((obj[index].selectedIndex==0||obj[index].selectedIndex==1)&&!props.quesitem.options){
       props.quesitem.options=option
     }
-    console.log(props.quesitem);
 }
 //鼠标滚轮在添加新题目时滑动到底部
 let { scroll, updatescroll } = inject("changescroll");
