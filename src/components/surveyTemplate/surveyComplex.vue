@@ -1,28 +1,18 @@
 <template>
     <div class="wrapper">
-        <!-- 装饰品 -->
-        <div class="decoration1" v-show="survey.status.begin || survey.status.end"></div>
-        <div class="decoration2" v-show="survey.status.begin || survey.status.end"></div>
-        <div class="decoration3" v-show="survey.status.begin || survey.status.end"></div>
-        <div class="decoration4" v-show="survey.status.begin || survey.status.end"></div>
-        <div class="decoration5"></div>
-        <img dog-ear src="/tangible.png" />
-        <!-- 装饰品 -->
-
 
 
         <!--问卷介绍 -->
         <div intro v-if="survey.status.begin">
             <div class="titleArea">
-                <h2>{{  survey.intro.info_title  }}</h2>
+                <h2>{{  survey.surveyObj.intro.info_title  }}</h2>
             </div>
             <p class="second-title">问卷介绍：</p>
-            <p class="para">{{  survey.intro.info_para  }}</p>
+            <p class="para">{{  survey.surveyObj.intro.info_para  }}</p>
             <div class="btn" @click="survey.status.toOngoing">
                 <div>开始问卷</div>
             </div>
         </div>
-
 
 
         <!-- 问卷内容 -->
@@ -31,7 +21,7 @@
             <!-- 进度条 -->
             <div class="shadow"></div>
             <div class="progress" @click="scrollTo($event)">
-                <span class="progress-part" v-for="item of survey.questionList" :key="item.questionId"
+                <span class="progress-part" v-for="item of survey.surveyObj.questionList" :key="item.questionId"
                     :style="{ backgroundColor: `${item.progressPartbcg}` }">
                 </span>
                 <div class="outer-thumb" ref="thumb">
@@ -43,25 +33,23 @@
             <!-- 介绍区域 -->
             <div class="intro">
                 <div class="titleArea">
-                    <h2>{{  survey.intro.info_title  }}</h2>
+                    <h2>{{  survey.surveyObj.intro.info_title  }}</h2>
                 </div>
                 <p class="second-title">问卷介绍：</p>
-                <p class="para">{{  survey.intro.info_para  }}</p>
+                <p class="para">{{  survey.surveyObj.intro.info_para  }}</p>
             </div>
 
             <!-- 答题区域 -->
             <main ref="content" @scroll="onScroll">
-                <div class="main" v-for="(item, i) of survey.questionList" :key="item.questionId"
+                <div class="main" v-for="(item, i) of survey.surveyObj.questionList" :key="item.questionId"
                     :style="{ outline: `${item.outlineColor} 1px  solid` }">
-
                     <template v-if="item.type === 0">
                         <div class="questiontitle" ref="questiontitle">{{  `${i + 1}. ${item.questiontitle}（单选）`  }}</div>
                         <div class="ques" v-for="(elem, index) of item.option" :key="index">
-                            <input type="radio" :id="elem" :value="elem"  v-model="item.value" />
+                            <input type="radio" :id="elem" :value="elem" v-model="item.value" />
                             <p><label :for="elem">{{  elem  }}</label></p>
                         </div>
                     </template>
-
                     <template v-else-if="item.type === 1">
                         <div class="questiontitle" ref="questiontitle">{{  `${i + 1}. ${item.questiontitle}（多选）`  }}</div>
                         <div class="ques" v-for="(elem, index) of item.option" :key="index">
@@ -69,14 +57,12 @@
                             <p><label :for="elem">{{  elem  }}</label></p>
                         </div>
                     </template>
-
                     <template v-else>
                         <div class="questiontitle" ref="questiontitle">{{  `${i + 1}. ${item.questiontitle}（文本）`  }}</div>
                         <div class="ques">
                             <textarea v-model="item.value" placeholder="请输入文本"></textarea>
                         </div>
                     </template>
-
                 </div>
             </main>
 
@@ -88,12 +74,11 @@
         </div>
 
 
-
         <!-- 问卷完成 -->
         <div finish v-if="survey.status.end">
             <div class="content">
                 <h2>您已完成</h2>
-                <h3>{{  survey.intro.info_title  }}</h3>
+                <h3>{{  survey.surveyObj.intro.info_title  }}</h3>
                 <p>感谢您的答题，本次问卷已全部结束</p>
             </div>
             <div class="btn">
@@ -102,88 +87,20 @@
         </div>
 
 
-
     </div>
 </template>
 
 <script setup>
-import { ref, reactive,computed } from 'vue'
+import { ElMessage } from 'element-plus'
+import { ref, inject } from 'vue'
 import axios from "axios"
 import { useStore } from "../../PiniaStores/index.js"
 const datas = useStore()
 
-// --------------------------- 问卷状态，问卷数据 --------------------
-const props = defineProps(['surveyObj']);
-// 从父组件拿到数据
-const surveyObj = computed(() => props.surveyObj)
-console.log(surveyObj.value);
 
-// 封装一个survey---------------用以在模板和存放提交时候的用户数据------------------（按照PiniStores中的结构模板来封装的）
-// const survey = reactive({});
-const survey = reactive({
-    status: {
-        begin: true,
-        ongoing: false,
-        end: false,
-        toOngoing() {
-            this.begin = false
-            this.ongoing = true
-        },
-        toEnd() {
-            this.ongoing = false
-            this.end = true
-        }
-    },
-    intro: {
-        info_title: '混合型问卷',
-        info_para: '单选 多选 文本'
-    },
-    questionList: [ //type：单选0 多选1 文本2
-        {
-            questionId: 1,
-            type: 2,
-            questiontitle: '我认为我能为团队做出的贡献是：',
-            value: '',
-            progressPartbcg: '#ccc',
-            outlineColor: 'rgba(255,255,255,0)'
-        },
-        {
-            questionId: 2,
-            type: 0,
-            questiontitle: '我认为我能为团队做出的贡献是：',
-            value: 0,
-            progressPartbcg: '#ccc',
-            outlineColor: 'rgba(255,255,255,0)',
-            option: ['aaAAAhaha', 'BBB', 'CCC']
-        },
-        {
-            questionId: 3,
-            type: 1,
-            questiontitle: '我认为我能为团队做出的贡献是：',
-            value: [],
-            progressPartbcg: '#ccc',
-            outlineColor: 'rgba(255,255,255,0)',
-            option: ['111', '222', '333']
-        },
-        {
-            questionId: 4,
-            type: 0,
-            questiontitle: '我认为我能为团队做出的贡献是：',
-            value: 0,
-            progressPartbcg: '#ccc',
-            outlineColor: 'rgba(255,255,255,0)',
-            option: ['aaAAAhaha', 'BBB', 'CCC']
-        },
-        {
-            questionId: 5,
-            type: 2,
-            questiontitle: '我认为我能为团队做出的贡献是：',
-            value: '',
-            progressPartbcg: '#ccc',
-            outlineColor: 'rgba(255,255,255,0)'
-        }
-    ]
-})
+
+// --------------------------- 问卷状态，问卷数据 --------------------
+const survey = inject('survey')
 // --------------------------- 问卷状态，问卷数据 --------------------
 
 // ---------------------------   进度条 ---------------------------------------
@@ -209,7 +126,7 @@ function onScroll() {
 
 
 
-// ------------------------- 提交问卷前判断完成度然后提交 ------------------------
+// ------------------------- 提交问卷前判断完成度 ------------------------
 //模板引用
 const questiontitle = ref()
 //判断函数
@@ -218,7 +135,7 @@ function Finish() {
     const uncomplete = []
     let queId = 0
     bluebcg.value.style.display = 'none'
-    survey.questionList.forEach(item => {
+    survey.surveyObj.questionList.forEach(item => {
         item.progressPartbcg = '#5a9afa'
         if (item.value === 0 || item.value.length === 0 || item.value === '') {
             flag = false
@@ -240,15 +157,20 @@ function Finish() {
         survey.status.toEnd()
     }
 }
-//提交函数(选项数据已经用v-model动态绑定到对应的value了)
+// ------------------------- 提交问卷前判断完成度 ------------------------
+
+
+
+//-------------------------------- 提交函数---------------------------------------
+// 选项数据已经用v-model动态绑定到对应的value了
 function Submit() {
     const questionAnswerList = []
-    survey.questionList.forEach(item => {
+    survey.surveyObj.questionList.forEach(item => {
         let questionAnswer = {
             questionId: item.questionId,
             type: item.type,
             text: item.questiontitle,
-            optionList: item.value
+            optionList: item.value //这里要修改一下
         }
         questionAnswerList.push(questionAnswer)
     })
@@ -261,109 +183,32 @@ function Submit() {
         data: {
             questionnaire_id: 5000,
             totalNumber: 100,
-            count: 5,           //问卷类型：混合（单选，多选，文本）
+            count: 5,           //问卷类型：混合
             effectiveNumber: 0,
             questionAnswerList
         }
     }).then((response) => {
-        console.log(response);
+        ElMessage({
+            message: '提交问卷成功',
+            type: 'success',
+            duration: 5000,
+            showClose: true,
+            center: true
+        })
+        console.log(response)
     }).catch((error) => {
         console.log(error)
     })
 }
-// ------------------------- 提交问卷前判断完成度然后提交 ------------------------
+//-------------------------------- 提交函数---------------------------------------
 </script>
 
 
 <style scoped lang='less'>
 div.wrapper {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    justify-content: center;
-    align-items: center;
-    height: calc(100% - 5px);
+    display: block;
+    height: 100%;
     width: 100%;
-    position: relative;
-    top: 0;
-    left: 0;
-    border-radius: 10px;
-    box-shadow: 0px 5px 10px 0 rgba(73, 107, 158, 0.1);
-    background-color: rgb(255, 255, 255);
-    z-index: 0;
-
-    >div.decoration1 {
-        display: block;
-        height: 400px;
-        width: 400px;
-        position: absolute;
-        z-index: -1;
-        top: 0;
-        left: 0;
-        transform: translate(-50%, -50%);
-        border-radius: 50%;
-        background-color: rgba(235, 245, 255, 1);
-        clip-path: polygon(50% 50%, 100% 50%, 100% 100%, 50% 100%);
-    }
-
-    >div.decoration2 {
-        display: block;
-        height: 150px;
-        width: 150px;
-        position: absolute;
-        z-index: -1;
-        bottom: 40px;
-        right: 50px;
-        border-radius: 50%;
-        background-color: rgba(71, 145, 255, 1);
-    }
-
-    >div.decoration3 {
-        display: block;
-        height: 100px;
-        width: 100px;
-        position: absolute;
-        z-index: -2;
-        bottom: 80px;
-        right: -20px;
-        border-radius: 50%;
-        background-color: rgba(30, 111, 255, 1);
-    }
-
-    >div.decoration4 {
-        display: block;
-        height: 170px;
-        width: 170px;
-        position: absolute;
-        z-index: -3;
-        bottom: -20px;
-        right: 100px;
-        border-radius: 50%;
-        background-color: rgba(235, 245, 255, 1);
-    }
-
-    >div.decoration5 {
-        display: block;
-        height: calc(108px + 5px);
-        width: calc(120px + 7px);
-        position: absolute;
-        z-index: 1;
-        top: -5px;
-        right: -7px;
-        background-color: rgb(255, 255, 255, 1);
-    }
-
-    >img[dog-ear] {
-        display: block;
-        height: 108px;
-        width: 120px;
-        position: absolute;
-        z-index: 2;
-        top: 0;
-        right: 0;
-        object-fit: contain;
-        transform: scale(1.07);
-    }
 }
 
 // 问卷介绍
@@ -634,7 +479,7 @@ div[content] {
         width: 100%;
         height: auto;
         padding-left: 20px;
-        padding-top:5px;
+        padding-top: 5px;
         overflow: auto;
 
         >div.main {
@@ -643,7 +488,7 @@ div[content] {
             width: calc(100% - 140px);
             height: auto;
             margin-bottom: 10px;
-            padding:5px;
+            padding: 5px;
 
             >div.questiontitle {
                 display: block;

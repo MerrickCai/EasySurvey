@@ -1,64 +1,64 @@
 <script setup>
-//问卷填写的状态（问卷介绍，填写问卷，填写结束）
-import axios from "axios";
-import { ref, onMounted, inject, computed ,reactive} from "vue";
-import { useStore } from "../../PiniaStores/index.js";
-const currentSurvey = inject("currentSurvey");
-const datas = useStore();
+
+import axios from "axios"
+import { ref,inject, computed ,reactive} from "vue"
+import { useStore } from "../../PiniaStores/index.js"
+const currentSurvey = inject("currentSurvey")
+const datas = useStore()
 
 // ------------------接受survey父组件传过来的参数。-------------------------------
-const props = defineProps(['surveyObj']);
+const props = defineProps(['surveyObj'])
 // 从父组件拿到数据
 const surveyObj = computed(() => props.surveyObj)
 
 
 
 // 封装一个survey---------------用以在模板和存放提交时候的用户数据------------------（按照PiniStores中的结构模板来封装的）
-const survey = reactive({});
+const survey = reactive({})
 // survey的介绍和提交问卷用的信息
-survey.intro = {};  
-survey.effectiveNumber = surveyObj.value.questionnaire.effectiveNumber;
-survey.totalNumber = surveyObj.value.questionnaire.totalNumber;
-survey.count = surveyObj.value.questionnaire.count;
-survey.id = surveyObj.value.questionnaire.id;
-survey.intro.title = surveyObj.value.questionnaire.title;
-survey.intro.intro_content = surveyObj.value.questionnaire.message;
+survey.intro = {}  
+survey.effectiveNumber = surveyObj.value.questionnaire.effectiveNumber
+survey.totalNumber = surveyObj.value.questionnaire.totalNumber
+survey.count = surveyObj.value.questionnaire.count
+survey.id = surveyObj.value.questionnaire.id
+survey.intro.title = surveyObj.value.questionnaire.title
+survey.intro.intro_content = surveyObj.value.questionnaire.message
 
 // survey的问题列表数据
-survey.quesList = []; 
-let optionDetail = [];  //装全部的选项的文字描述（如比较符合....这些）
-let optionId = [];   //装全部选项对应的ID
+survey.quesList = [] 
+let optionDetail = []  //装全部的选项的文字描述（如比较符合....这些）
+let optionId = []   //装全部选项对应的ID
 for (let i in surveyObj.value.optionMap) {
-  let t1 = [];
-  let t2 = [];
+  let t1 = []
+  let t2 = []
   for (let j = 0; j < surveyObj.value.optionMap[i].length; j++){
-    t1.push(surveyObj.value.optionMap[i][j].detail);
-    t2.push(surveyObj.value.optionMap[i][j].id);
+    t1.push(surveyObj.value.optionMap[i][j].detail)
+    t2.push(surveyObj.value.optionMap[i][j].id)
   }
-  optionDetail.push(t1);
+  optionDetail.push(t1)
   optionId.push(t2)
 }
 
-let start = 0; //  因为optionDetail和optionId是数组，是以0开始的，所以在赋值给每一项的时候索引要从0开始。
+let start = 0 //  因为optionDetail和optionId是数组，是以0开始的，所以在赋值给每一项的时候索引要从0开始。
 // 配置每一道题目
 for (let i in surveyObj.value.questionInfoMap) {
-  let item = surveyObj.value.questionInfoMap[i];
-    i/= 1;
-    let obj = {};
-    obj.ques = item.info;  //题目
-    obj.type = item.type;
-    obj.value = 0;  
-    obj.titleBorder = 0; 
-    obj.progressPartbcg = '#ccc';
-    obj.series = optionDetail[start].length;
-    obj.font = optionDetail[start];
-    obj.questionId = surveyObj.value.optionMap[i][0].questionId;
-    obj.optionId = optionId[start];
-    obj.seleted = 0;
-    start++;
+  let item = surveyObj.value.questionInfoMap[i]
+    i/= 1
+    let obj = {}
+    obj.ques = item.info  //题目
+    obj.type = item.type
+    obj.value = 0  
+    obj.titleBorder = 0 
+    obj.progressPartbcg = '#ccc'
+    obj.series = optionDetail[start].length
+    obj.font = optionDetail[start]
+    obj.questionId = surveyObj.value.optionMap[i][0].questionId
+    obj.optionId = optionId[start]
+    obj.seleted = 0
+    start++
     survey.quesList.push(obj)
 }
-console.log('封装好的数据', survey);
+console.log('封装好的数据', survey)
 // -------------------------------------------------
 
 
@@ -67,18 +67,18 @@ console.log('封装好的数据', survey);
 //------------------ 提交问卷请求，在toFinish函数里面被调用---------------
 function sumbit() {
   // 请求参数里面的问卷信息列表
-   const questionAnswerList = [];
+   const questionAnswerList = []
   for(let item of survey.quesList) {
-       let obj = {};
-    obj.questionId = item.questionId; 
-    obj.type = item.type;
+       let obj = {}
+    obj.questionId = item.questionId 
+    obj.type = item.type
     obj.optionList = [{
          id: item.seleted,
          detail:item.font[item.value-1]
     }]
-    questionAnswerList.push(obj);
+    questionAnswerList.push(obj)
   }
-  console.log(questionAnswerList);
+  console.log(questionAnswerList)
   
      axios({
         url: `https://q.denglu1.cn/questions/commit`,
@@ -94,16 +94,16 @@ function sumbit() {
           "questionAnswerList":questionAnswerList,
         }
      }).then((response) => {
-        // console.log(response);
+        // console.log(response)
        if (response.data.code === 200) {
-        //  console.log(survey);
+        //  console.log(survey)
           if (response.data.msg === '问卷已收集齐了') {
-              alert('问卷已收集齐了');
+              alert('问卷已收集齐了')
           } else {
-             currentSurvey.toEnd();
+             currentSurvey.toEnd()
            }
         } else {
-         alert('提交失败,请勿重复提交');
+         alert('提交失败,请勿重复提交')
         } 
       }).catch((error) => {
         console.log(error)
@@ -117,49 +117,49 @@ function sumbit() {
 
 
 // -------------滚动条--------------
-const thumb = ref(null);
-const text = ref(null);
-const content = ref(null);
+const thumb = ref(null)
+const text = ref(null)
+const content = ref(null)
 // 滚动条蓝色背景
-let bluebcg_height = ref(0);
+let bluebcg_height = ref(0)
 // 滚动条的蓝色背景的dom
-const bluebcg = ref(null);
+const bluebcg = ref(null)
 //点击滚动条触发滚动
 function scrollTo(e) {
-  const scrollDistence = ref(0);
+  const scrollDistence = ref(0)
   if (scrollDistence.value === 0) {
     //此为滚动距离scrollTop最大值（e.currentTarget.offsetHeight == e.currentTarget.clientHeight）
     scrollDistence.value =
-      content.value.scrollHeight - content.value.offsetHeight;
+      content.value.scrollHeight - content.value.offsetHeight
   }
 
   //转换(e.offsetY是鼠标点击进度条的位置[0,400]，进度条总长400px)
-  content.value.scrollTop = scrollDistence.value * (e.offsetY / 400) - 8;
-  text.innerHTML = `${Math.ceil((e.offsetY / 400) * 100)} %`;
+  content.value.scrollTop = scrollDistence.value * (e.offsetY / 400) - 8
+  text.innerHTML = `${Math.ceil((e.offsetY / 400) * 100)} %`
 }
 //监听滚动事件
 function onScroll(e) {
-  const scrollDistence = ref(0);
+  const scrollDistence = ref(0)
   if (scrollDistence.value === 0) {
     scrollDistence.value =
-      e.currentTarget.scrollHeight - e.currentTarget.offsetHeight;
+      e.currentTarget.scrollHeight - e.currentTarget.offsetHeight
   }
   scrollDistence.value =
-    e.currentTarget.scrollHeight - e.currentTarget.offsetHeight;
+    e.currentTarget.scrollHeight - e.currentTarget.offsetHeight
   //转换
   thumb.value.setAttribute(
     "style",
     `top: ${400 * (e.currentTarget.scrollTop / scrollDistence.value)}px`
-  );
+  )
   text.value.innerHTML = `${Math.ceil(
     ((e.currentTarget.scrollTop - 1) / scrollDistence.value) * 100
-  )} %`;
+  )} %`
   // 中转变量
-  let temp = thumb.value.style.top.split("");
-  temp.pop();
-  temp.pop();
-  temp = temp.join("") / 1;
-  bluebcg_height.value = temp;
+  let temp = thumb.value.style.top.split("")
+  temp.pop()
+  temp.pop()
+  temp = temp.join("") / 1
+  bluebcg_height.value = temp
 
 }
 
@@ -169,35 +169,35 @@ function onScroll(e) {
 
 // ------提交按钮之后相关的变量和方法------
 // 获取全部questiontitle
-const ques = ref(null);
+const ques = ref(null)
 // 进度条片段的高度
-const progressPartHeight = 400 /survey.quesList.length;
+const progressPartHeight = 400 /survey.quesList.length
 
 // 提交按钮  跳转：答题页==>完成页
 function toFinish() {
-  let flag = true;
+  let flag = true
   // 记录未完成的问卷id
-  const uncomplete = [];
+  const uncomplete = []
   // 滚动的蓝色背景失效
-  bluebcg.value.style.display = "none";
-  let queId = 1;
+  bluebcg.value.style.display = "none"
+  let queId = 1
  survey.quesList.forEach((item) => {
-    item.titleBorder = 0;
-    item.progressPartbcg = "#5a9afa";
+    item.titleBorder = 0
+    item.progressPartbcg = "#5a9afa"
     if (item.value === 0) {
-      flag = false;
-      uncomplete.push(queId);
-      item.titleBorder = 1;
-      item.progressPartbcg = "red";
+      flag = false
+      uncomplete.push(queId)
+      item.titleBorder = 1
+      item.progressPartbcg = "red"
    }
-    queId++;
-  });
-  let fisrtreturn = uncomplete[0] - 1;
+    queId++
+  })
+  let fisrtreturn = uncomplete[0] - 1
   if (uncomplete.length) {
-    content.value.scrollTop = ques.value[fisrtreturn].offsetTop;
+    content.value.scrollTop = ques.value[fisrtreturn].offsetTop
   }
-  if (!flag) return;
-   sumbit();
+  if (!flag) return
+   sumbit()
 }
 
 
@@ -208,7 +208,7 @@ const barArr = new Array(survey.quesList.length)
   .fill(0)
   .map((item, index) =>
     new Array(survey.quesList[index].series).fill(0)
-);
+)
 
 
 </script>
@@ -224,7 +224,7 @@ const barArr = new Array(survey.quesList.length)
           <span intro_title>问卷介绍：</span>
           <span v-html="survey.intro.intro_content"  intro_content></span>
         </p>
-        <p button @click="currentSurvey.toOngoing();">开始问卷 </p>
+        <p button @click="currentSurvey.toOngoing()">开始问卷 </p>
       </div>
     </template>
 

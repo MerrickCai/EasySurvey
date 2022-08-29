@@ -10,8 +10,6 @@ const surveynew = () => import('../view/surveynew.vue')
 const survey = () => import('../view/survey.vue')
 //404页
 const notFound = () => import('../view/notFound.vue')
-//混合类型页
-const surveyComplex = () => import('../components/surveyTemplate/surveyComplex.vue')
 
 const routes = [
     {
@@ -33,11 +31,6 @@ const routes = [
         path: '/survey/:questionnaireId',
         meta: { requireLogin: true },
         component: survey
-    },
-    {
-        path: '/surveyComplex',
-        meta: { requireLogin: true },
-        component: surveyComplex
     },
     {
         path: '/:path(.*)', //匹配不到以上路径=>404页面
