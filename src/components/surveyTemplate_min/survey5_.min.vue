@@ -1,7 +1,5 @@
 <template>
     <div wrapper>
-
-
         <!-- 问卷内容部分 -->
         <div class="wrapper extrachange">
             <!-- 进度条 -->
@@ -45,6 +43,11 @@ const survey = reactive({});
 survey.questionList = [];
 
 
+
+
+
+
+
 // --- 滚动条部分的变量和方法 ---
 const thumb = ref(null);
 const text = ref(null);
@@ -81,8 +84,6 @@ function onScroll(e) {
     temp = temp.join("") / 1 + 8;
     bluebcg_height.value = temp;
 }
-
-
 
 </script>
 

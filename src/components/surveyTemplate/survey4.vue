@@ -44,8 +44,7 @@
                     </div>
                     <!-- 第二层循环 elem,index -->
                     <div class="ques" v-for="(elem, index) of item.option" :key="index">
-                        <input class="input" type="checkbox" :name="item.id" :value="elem"
-                            @click="seleted(item, i, $event)" ref="input">
+                        <input class="input" type="checkbox" :value="{id:item.optionId[index] , detail:elem}" v-model=item.value  @click="showw(item)"  ref="input">
                         <p>{{ elem }}</p>
                     </div>
                 </div>
@@ -146,12 +145,12 @@ function sumbit() {
         for (let elem of item.value) {
             let obj2 = {};
             obj2.id = elem.id;
-            obj2.detail = elem.value;
+            obj2.detail = elem.detail;
             obj.optionList.push(obj2);
         }
            questionAnswerList.push(obj)
     }
-    // console.log(survey);
+    console.log(survey);
     
      axios({
         url: `https://q.denglu1.cn/questions/commit`,
@@ -231,37 +230,17 @@ function onScroll(e) {
     bluebcg_height.value = temp;
 }
 
-console.log(11111111);
 
-
-
-// 存储选中的多选按钮的value方法 
-const input = ref(null)
-function seleted(item, i, e) {
-    // 思路是获取每个题目下的input框的dom的数据，然后forEach，如果seleted属性为true就push就item.value保存下来，这个item.value保存的就是用户选了那些。
-    // 这里的难点是如果获取每个题目下的全部input框的dom组成的数组
-    // console.log(input.value);  这里获取了整个页面的input的dom数组，所以接下来要找出所对应题目的input的dom
-    let start = 0;
-    for (let j = 0; j < i; j++) {
-        start += survey.questionList[j].option.length;
-    }
-    // start变量是用来找到起点的
-    console.log(start,start + item.option.length);
-    //这个数组保存的就是目前点击的checkbox对应题目的全部input的dom
-    const Oneques_input = input.value.slice(start, start + item.option.length);
+function showw(item) {
+    setTimeout(() => {
+        item.value.sort((a, b) => {
+            return a.id - b.id;
+        })
+    console.log(item.value);
+    },100)
+    // console.log(survey);
     
-    survey.questionList[i].value = [];
-    Oneques_input.forEach((elem,index) => {
-        // input的dom的checked属性保存了是否被选中 
-        // console.log(elem.checked);
-        if (elem.checked){
-            survey.questionList[i].value.push({
-                value: elem.value,
-                id: survey.questionList[i].optionId[survey.questionList[i].option.indexOf(elem.value)]
-            });
-        }
-    })
-    console.log(survey.questionList[i].value);
+    
 }
 
 

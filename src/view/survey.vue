@@ -41,7 +41,8 @@ const currentSurvey = reactive({
   surveyObj: {},
   getSurvey() {
     axios({
-      url: `https://q.denglu1.cn/user/fillQuestionnaire/${route.params.questionnaireId}`,
+      url: `https://q.denglu1.cn/user/fillQuestionnaire/${83}`,
+      // url: `https://q.denglu1.cn/user/fillQuestionnaire/${route.params.questionnaireId}`,
       method: "get",
       withCredentials: true,
       headers: { "Content-Type": "application/json" },

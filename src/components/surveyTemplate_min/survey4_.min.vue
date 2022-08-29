@@ -1,32 +1,10 @@
 <template>
     <div wrapper>
-        <!-- 介绍页 -->
-        <div class="wrapper" v-if="currentSurvey.status.begin">
-            <h2 class="title">{{ survey.intro.info_title }}</h2>
-            <p class="second-title">问卷介绍：</p>
-            <p class="para">{{ survey.intro.info_para }}</p>
-            <el-button type="primary" class="btn" @click="toContent()">开始问卷</el-button>
-        </div>
-
         <!-- 问卷内容部分 -->
         <div class="wrapper extrachange" v-if="currentSurvey.status.ongoing">
-            <div class="topbox">
-                <h2 class="top_title">{{ survey.intro.info_title }}</h2>
-                <h5 class="top_sectitle">问卷介绍：</h5>
-                <div class="para_wrapper">
-                    <p class="top_para">{{ survey.intro.info_para }}</p>
-                </div>
-            </div>
-
             <!-- 进度条 -->
             <div class="zhedang"></div>
             <div class="progress" @click="scrollTo($event)">
-                <div>
-                    <!-- 进度条分段，使得点击提交按钮后进度条可以分段显示红色背景，多少个题目就分多少段 (外面多个div包裹下面的style的last-child才能生效)-->
-                    <div class="progress-part" v-for="item of survey.questionList" :key="item.id"
-                        :style="{ height: `${progressPartHeight}px`, backgroundColor: `${item.progressPartbcg}` }">
-                    </div>
-                </div>
                 <div class="outer-thumb" ref="thumb">
                     <div class="bluebcg" ref="bluebcg" :style="{ height: `${bluebcg_height}px` }"></div>
                 </div>
@@ -38,31 +16,15 @@
                 <!-- 第一层循环 item, i -->
                 <div class="main" v-for="(item, i) of survey.questionList" :key="item.id"
                     :style="{ height: `${37.5 * item.option.length}px` }">
-                    <div class="questiontitle" ref="questiontitle"
-                        :style="{ border: `${item.titleBorder}px solid red` }">
+                    <div class="questiontitle">
                         {{ item.questiontitle }}
                     </div>
                     <!-- 第二层循环 elem,index -->
                     <div class="ques" v-for="(elem, index) of item.option" :key="index">
-                        <input class="input" type="checkbox" :name="item.id" :value="elem"
-                            @click="seleted(item, i, $event)" ref="input">
+                        <input class="input" type="checkbox" :name="item.id" :value="elem">
                         <p>{{ elem }}</p>
                     </div>
                 </div>
-                <el-button type="primary" class="submit" @click=" toFinish();">提交问卷</el-button>
-            </div>
-        </div>
-
-
-        <!-- 问卷完成部分 -->
-        <div class="finish-wrapper" v-if="currentSurvey.status.end">
-            <div class="innerbox">
-                <div class="finish-title">
-                    <h2>您已完成</h2>
-                    <h3>{{ survey.intro.info_title }}</h3>
-                    <p>感谢您的答题，本次问卷已全部结束</p>
-                </div>
-                <el-button type="primary" class="finish-submit">完成答题</el-button>
             </div>
         </div>
     </div>
@@ -79,10 +41,7 @@ const currentSurvey = inject('currentSurvey')
 //     return datas.survey.survey4[0];
 // });
 
-onMounted(() => {
-  console.log(4);
-  
-})
+
 
 // ------------------接收survey父组件传过来的参数。-------------------------------
 const props = defineProps(['surveyObj']);
