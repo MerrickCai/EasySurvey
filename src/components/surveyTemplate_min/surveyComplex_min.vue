@@ -1,54 +1,15 @@
 <template>
     <div class="wrapper">
-        <!-- 装饰品 -->
-        <div class="decoration1" v-show="survey.status.begin || survey.status.end"></div>
-        <div class="decoration2" v-show="survey.status.begin || survey.status.end"></div>
-        <div class="decoration3" v-show="survey.status.begin || survey.status.end"></div>
-        <div class="decoration4" v-show="survey.status.begin || survey.status.end"></div>
-        <div class="decoration5"></div>
-        <img dog-ear src="/tangible.png" />
-        <!-- 装饰品 -->
-
-
-
-        <!--问卷介绍 -->
-        <div intro v-if="survey.status.begin">
-            <div class="titleArea">
-                <h2>{{  survey.intro.info_title  }}</h2>
-            </div>
-            <p class="second-title">问卷介绍：</p>
-            <p class="para">{{  survey.intro.info_para  }}</p>
-            <div class="btn" @click="survey.status.toOngoing">
-                <div>开始问卷</div>
-            </div>
-        </div>
-
-
-
         <!-- 问卷内容 -->
-        <div content v-if="survey.status.ongoing">
-
+        <div content >
             <!-- 进度条 -->
             <div class="shadow"></div>
             <div class="progress" @click="scrollTo($event)">
-                <span class="progress-part" v-for="item of survey.questionList" :key="item.questionId"
-                    :style="{ backgroundColor: `${item.progressPartbcg}` }">
-                </span>
                 <div class="outer-thumb" ref="thumb">
                     <div class="bluebcg" ref="bluebcg"></div>
                 </div>
                 <div class="text" ref="text">0 %</div>
             </div>
-
-            <!-- 介绍区域 -->
-            <div class="intro">
-                <div class="titleArea">
-                    <h2>{{  survey.intro.info_title  }}</h2>
-                </div>
-                <p class="second-title">问卷介绍：</p>
-                <p class="para">{{  survey.intro.info_para  }}</p>
-            </div>
-
             <!-- 答题区域 -->
             <main ref="content" @scroll="onScroll">
                 <div class="main" v-for="(item, i) of survey.questionList" :key="item.questionId"
@@ -79,47 +40,16 @@
 
                 </div>
             </main>
-
-            <!-- 问卷提交按钮 -->
-            <div class="btn" @click="Finish">
-                <div>提交问卷</div>
-            </div>
-
-        </div>
-
-
-
-        <!-- 问卷完成 -->
-        <div finish v-if="survey.status.end">
-            <div class="content">
-                <h2>您已完成</h2>
-                <h3>{{  survey.intro.info_title  }}</h3>
-                <p>感谢您的答题，本次问卷已全部结束</p>
-            </div>
-            <div class="btn">
-                <div>完成答题</div>
-            </div>
-        </div>
-
-
-
+       </div>
     </div>
 </template>
 
 <script setup>
-import { ref, reactive,computed } from 'vue'
+import { ref, reactive } from 'vue'
 import axios from "axios"
-import { useStore } from "../../PiniaStores/index.js"
-const datas = useStore()
+
 
 // --------------------------- 问卷状态，问卷数据 --------------------
-const props = defineProps(['surveyObj']);
-// 从父组件拿到数据
-const surveyObj = computed(() => props.surveyObj)
-console.log(surveyObj.value);
-
-// 封装一个survey---------------用以在模板和存放提交时候的用户数据------------------（按照PiniStores中的结构模板来封装的）
-// const survey = reactive({});
 const survey = reactive({
     status: {
         begin: true,
@@ -186,6 +116,8 @@ const survey = reactive({
 })
 // --------------------------- 问卷状态，问卷数据 --------------------
 
+
+
 // ---------------------------   进度条 ---------------------------------------
 //模板引用
 const thumb = ref()
@@ -207,71 +139,6 @@ function onScroll() {
 }
 // ---------------------------   进度条 ---------------------------------------
 
-
-
-// ------------------------- 提交问卷前判断完成度然后提交 ------------------------
-//模板引用
-const questiontitle = ref()
-//判断函数
-function Finish() {
-    let flag = true
-    const uncomplete = []
-    let queId = 0
-    bluebcg.value.style.display = 'none'
-    survey.questionList.forEach(item => {
-        item.progressPartbcg = '#5a9afa'
-        if (item.value === 0 || item.value.length === 0 || item.value === '') {
-            flag = false
-            item.progressPartbcg = 'rgba(255, 71, 71, 1)'
-            item.outlineColor = 'rgba(240,0,0,1)'
-            uncomplete.push(queId)
-        }
-        queId++
-    })
-    let fisrtreturn = uncomplete[0]
-    if (uncomplete.length !== 0) {
-        content.value.scrollTop = questiontitle.value[fisrtreturn].offsetTop
-    }
-    if (!flag) {
-        return false
-    }
-    else {
-        Submit()
-        survey.status.toEnd()
-    }
-}
-//提交函数(选项数据已经用v-model动态绑定到对应的value了)
-function Submit() {
-    const questionAnswerList = []
-    survey.questionList.forEach(item => {
-        let questionAnswer = {
-            questionId: item.questionId,
-            type: item.type,
-            text: item.questiontitle,
-            optionList: item.value
-        }
-        questionAnswerList.push(questionAnswer)
-    })
-    axios({
-        url: `https://q.denglu1.cn/questions/commit`,
-        method: 'post',
-        withCredentials: true,
-        headers: { 'Content-Type': 'application/json' },
-        headers: { 'token': datas.user.token },
-        data: {
-            questionnaire_id: 5000,
-            totalNumber: 100,
-            count: 5,           //问卷类型：混合（单选，多选，文本）
-            effectiveNumber: 0,
-            questionAnswerList
-        }
-    }).then((response) => {
-        console.log(response);
-    }).catch((error) => {
-        console.log(error)
-    })
-}
-// ------------------------- 提交问卷前判断完成度然后提交 ------------------------
 </script>
 
 

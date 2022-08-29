@@ -16,9 +16,10 @@ import survey2 from "../components/surveyTemplate/survey2.vue"
 import survey3 from "../components/surveyTemplate/survey3.vue"
 import survey4 from "../components/surveyTemplate/survey4.vue"
 import survey5 from "../components/surveyTemplate/survey5.vue"
+import surveyComplex from '../components/surveyTemplate/surveyComplex.vue';
 const datas = useStore()
 const route = useRoute()
-const surveyTemplateList = [survey1, survey2, survey3, survey4, survey5]
+const surveyTemplateList = [survey1, survey2, survey3, survey4, survey5, surveyComplex];
 const viewId = ref(0)
 const currentView = computed(() => surveyTemplateList[viewId.value - 1])
 
@@ -41,8 +42,7 @@ const currentSurvey = reactive({
   surveyObj: {},
   getSurvey() {
     axios({
-      url: `https://q.denglu1.cn/user/fillQuestionnaire/${83}`,
-      // url: `https://q.denglu1.cn/user/fillQuestionnaire/${route.params.questionnaireId}`,
+      url: `https://q.denglu1.cn/user/fillQuestionnaire/${route.params.questionnaireId}`,
       method: "get",
       withCredentials: true,
       headers: { "Content-Type": "application/json" },
@@ -66,6 +66,9 @@ const currentSurvey = reactive({
           case 4: //文本
             viewId.value = 5
             break
+          case 5: // 混合
+          viewId.value = 6
+            
         }
         console.log("请求参数",this.surveyObj);
         
