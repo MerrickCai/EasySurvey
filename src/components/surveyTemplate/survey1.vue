@@ -1,22 +1,108 @@
-<script setup>
+<template>
+  <div wrapper>
 
+    <!--问卷介绍-->
+    <template v-if="Survey.status.begin">
+      <div class="survey_intro">
+        <p title>{{  survey.intro.title  }}</p>
+        <p intro>
+          <span intro_title>问卷介绍：</span>
+          <span v-html="survey.intro.intro_content" intro_content></span>
+        </p>
+        <p button @click="Survey.status.toOngoing()">开始问卷 </p>
+      </div>
+    </template>
+
+
+    <!--问卷填写-->
+    <template v-if="Survey.status.ongoing">
+      <div class="survey">
+        <p title>{{  survey.intro.title  }}</p>
+        <div class="scrollbar_shadow"></div>
+        <!-- 进度条 -->
+        <div class="progress" @click="scrollTo($event)">
+          <div>
+            <!-- 进度条分段，使得点击提交按钮后进度条可以分段显示红色背景，多少个题目就分多少段 (外面多个div包裹下面的style的last-child才能生效)-->
+            <div class="progress-part" v-for="(item, index) of survey.quesList" :key="item.id" :style="{
+              height: `${progressPartHeight}px`,
+              backgroundColor: `${item.progressPartbcg}`,
+            }"></div>
+          </div>
+          <div class="thumb" ref="thumb">
+            <div class="bluebcg" ref="bluebcg" :style="{ height: `${bluebcg_height}px` }"></div>
+          </div>
+          <div class="text" ref="text">0%</div>
+        </div>
+        <div class="survey_area" @scroll="onScroll($event)" ref="content">
+          <p intro>
+            <span intro_title>问卷介绍：</span>
+            <span v-html="survey.intro.intro_content" intro_content></span>
+          </p>
+          <div class="ques">
+            <div v-for="(item, index) of survey.quesList" ref="ques"
+              :style="{ border: `${item.titleBorder}px solid red` }">
+              <div>
+                <span></span><span>{{  item.ques  }}</span>
+              </div>
+              <!-- 总宽度为600-->
+              <div :style="{ backgroundColor: `${item.value === 0 ? 'rgba(245, 245, 245, 1)' : 'rgb(229,229,229)'}`, }">
+                <!-- bar -->
+                <div v-for="(b, i) of barArr[index]" class="bar"
+                  @click="item.value = i + 1; item.seleted = item.optionId[i]; ">
+                  <div class="font">
+                    {{  survey.quesList[index].font[i]  }}
+                  </div>
+                </div>
+                <div class="thumb"
+                  :style="{ left: `${item.value === 0 ? -12 : -12 + ((item.value - 1) * 600) / (barArr[index].length - 1)}px`, }">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="submitBtn" @click="toFinish()">提交问卷</div>
+        </div>
+      </div>
+    </template>
+
+
+    <!-- 问卷完成部分 -->
+    <div class="finish-wrapper" v-if="Survey.status.end">
+      <div class="innerbox">
+        <div class="finish-title">
+          <h2>您已完成</h2>
+          <h3>{{  survey.intro.title  }}</h3>
+          <p>感谢您的答题，本次问卷已全部结束</p>
+        </div>
+        <el-button type="primary" class="finish-submit">完成答题</el-button>
+      </div>
+    </div>
+
+
+  </div>
+</template>
+
+<script setup>
+import { ElMessage } from 'element-plus'
+import { ref, inject, reactive } from 'vue'
 import axios from "axios"
-import { ref,inject, computed ,reactive} from "vue"
 import { useStore } from "../../PiniaStores/index.js"
-const currentSurvey = inject("currentSurvey")
 const datas = useStore()
 
-// ------------------接受survey父组件传过来的参数。-------------------------------
-const props = defineProps(['surveyObj'])
-// 从父组件拿到数据
-const surveyObj = computed(() => props.surveyObj)
+
+
+// --------------------------- 获取父组件传入的问卷状态和数据 --------------------
+const Survey = inject('Survey')
+const surveyObj = ref(Survey.surveyObj)
+// --------------------------- 获取父组件传入的问卷状态和数据 --------------------
 
 
 
-// 封装一个survey---------------用以在模板和存放提交时候的用户数据------------------（按照PiniStores中的结构模板来封装的）
+
+// --------------------------- 封装一个survey=>用以在模板和存放提交时候的用户数据 ------------------
 const survey = reactive({})
+
 // survey的介绍和提交问卷用的信息
-survey.intro = {}  
+survey.intro = {}
 survey.effectiveNumber = surveyObj.value.questionnaire.effectiveNumber
 survey.totalNumber = surveyObj.value.questionnaire.totalNumber
 survey.count = surveyObj.value.questionnaire.count
@@ -25,98 +111,106 @@ survey.intro.title = surveyObj.value.questionnaire.title
 survey.intro.intro_content = surveyObj.value.questionnaire.message
 
 // survey的问题列表数据
-survey.quesList = [] 
+survey.quesList = []
 let optionDetail = []  //装全部的选项的文字描述（如比较符合....这些）
 let optionId = []   //装全部选项对应的ID
 for (let i in surveyObj.value.optionMap) {
   let t1 = []
   let t2 = []
-  for (let j = 0; j < surveyObj.value.optionMap[i].length; j++){
+  for (let j = 0; j < surveyObj.value.optionMap[i].length; j++) {
     t1.push(surveyObj.value.optionMap[i][j].detail)
     t2.push(surveyObj.value.optionMap[i][j].id)
   }
   optionDetail.push(t1)
   optionId.push(t2)
 }
-
-let start = 0 //  因为optionDetail和optionId是数组，是以0开始的，所以在赋值给每一项的时候索引要从0开始。
+//  因为optionDetail和optionId是数组，是以0开始的，所以在赋值给每一项的时候索引要从0开始
+let start = 0
 // 配置每一道题目
 for (let i in surveyObj.value.questionInfoMap) {
   let item = surveyObj.value.questionInfoMap[i]
-    i/= 1
-    let obj = {}
-    obj.ques = item.info  //题目
-    obj.type = item.type
-    obj.value = 0  
-    obj.titleBorder = 0 
-    obj.progressPartbcg = '#ccc'
-    obj.series = optionDetail[start].length
-    obj.font = optionDetail[start]
-    obj.questionId = surveyObj.value.optionMap[i][0].questionId
-    obj.optionId = optionId[start]
-    obj.seleted = 0
-    start++
-    survey.quesList.push(obj)
+  i /= 1
+  let obj = {}
+  obj.ques = item.info  //题目
+  obj.type = item.type
+  obj.value = 0
+  obj.titleBorder = 0
+  obj.progressPartbcg = '#ccc'
+  obj.series = optionDetail[start].length
+  obj.font = optionDetail[start]
+  obj.questionId = surveyObj.value.optionMap[i][0].questionId
+  obj.optionId = optionId[start]
+  obj.seleted = 0
+  start++
+  survey.quesList.push(obj)
 }
 console.log('封装好的数据', survey)
-// -------------------------------------------------
+// --------------------------- 封装一个survey=>用以在模板和存放提交时候的用户数据 ------------------
 
 
 
 
-//------------------ 提交问卷请求，在toFinish函数里面被调用---------------
+//-------------------------------- 提交函数---------------------------------------
 function sumbit() {
   // 请求参数里面的问卷信息列表
-   const questionAnswerList = []
-  for(let item of survey.quesList) {
-       let obj = {}
-    obj.questionId = item.questionId 
+  const questionAnswerList = []
+  for (let item of survey.quesList) {
+    let obj = {}
+    obj.questionId = item.questionId
     obj.type = item.type
     obj.optionList = [{
-         id: item.seleted,
-         detail:item.font[item.value-1]
+      id: item.seleted,
+      detail: item.font[item.value - 1]
     }]
     questionAnswerList.push(obj)
   }
-  console.log(questionAnswerList)
-  
-     axios({
-        url: `https://q.denglu1.cn/questions/commit`,
-        method: 'post',
-        withCredentials: true,
-        headers: { 'Content-Type': 'application/json' },
-        headers: { 'token': datas.user.token },
-        data: {
-          "questionnaire_id": survey.id,
-          "totalNumber": survey.totalNumber,
-          "count":survey.count,   
-          "effectiveNumber":survey.effectiveNumber,  
-          "questionAnswerList":questionAnswerList,
-        }
-     }).then((response) => {
-        // console.log(response)
-       if (response.data.code === 200) {
-        //  console.log(survey)
-          if (response.data.msg === '问卷已收集齐了') {
-              alert('问卷已收集齐了')
-          } else {
-             currentSurvey.toEnd()
-           }
-        } else {
-         alert('提交失败,请勿重复提交')
-        } 
-      }).catch((error) => {
-        console.log(error)
+  axios({
+    url: `https://q.denglu1.cn/questions/commit`,
+    method: 'post',
+    withCredentials: true,
+    headers: { 'Content-Type': 'application/json' },
+    headers: { 'token': datas.user.token },
+    data: {
+      "questionnaire_id": survey.id,
+      "totalNumber": survey.totalNumber,
+      "count": survey.count,
+      "effectiveNumber": survey.effectiveNumber,
+      "questionAnswerList": questionAnswerList,
+    }
+  }).then((response) => {
+    if (response.data.code === 200) {
+      if (response.data.msg === '问卷已收集齐了') {
+        ElMessage({
+          message: '问卷已收集齐了',
+          type: 'warning',
+          duration: 5000,
+          showClose: true,
+          center: true
+        })
+      } else {
+        Survey.status.toEnd()
+      }
+    } else {
+      ElMessage({
+        message: '提交失败,请勿重复提交',
+        type: 'error',
+        duration: 5000,
+        showClose: true,
+        center: true
       })
+    }
+  }).catch((error) => {
+    console.log(error)
+  })
 }
+//-------------------------------- 提交函数---------------------------------------
 
 
 
 
 
 
-
-// -------------滚动条--------------
+// ---------------------------   进度条 ---------------------------------------
 const thumb = ref(null)
 const text = ref(null)
 const content = ref(null)
@@ -157,18 +251,19 @@ function onScroll(e) {
   temp.pop()
   temp = temp.join("") / 1
   bluebcg_height.value = temp
-
 }
+// ---------------------------   进度条 ---------------------------------------
 
 
 
 
 
-// ------提交按钮之后相关的变量和方法------
+// ------------------------- 提交问卷前判断完成度 ------------------------
+// 提交按钮之后相关的变量和方法
 // 获取全部questiontitle
 const ques = ref(null)
 // 进度条片段的高度
-const progressPartHeight = 400 /survey.quesList.length
+const progressPartHeight = 400 / survey.quesList.length
 
 // 提交按钮  跳转：答题页==>完成页
 function toFinish() {
@@ -178,7 +273,7 @@ function toFinish() {
   // 滚动的蓝色背景失效
   bluebcg.value.style.display = "none"
   let queId = 1
- survey.quesList.forEach((item) => {
+  survey.quesList.forEach((item) => {
     item.titleBorder = 0
     item.progressPartbcg = "#5a9afa"
     if (item.value === 0) {
@@ -186,7 +281,7 @@ function toFinish() {
       uncomplete.push(queId)
       item.titleBorder = 1
       item.progressPartbcg = "red"
-   }
+    }
     queId++
   })
   let fisrtreturn = uncomplete[0] - 1
@@ -194,101 +289,20 @@ function toFinish() {
     content.value.scrollTop = ques.value[fisrtreturn].offsetTop
   }
   if (!flag) return
-   sumbit()
+  sumbit()
 }
+// ------------------------- 提交问卷前判断完成度 ------------------------
 
 
 
-
-// ----------用来判断滑块每次该滑动多远的距离----------
+// ---------------------------用来判断滑块每次该滑动多远的距离------------------------------
 const barArr = new Array(survey.quesList.length)
   .fill(0)
   .map((item, index) =>
     new Array(survey.quesList[index].series).fill(0)
-)
-
-
+  )
+  // ---------------------------用来判断滑块每次该滑动多远的距离------------------------------
 </script>
-
-<template>
-  <div wrapper>
-
-    <!--问卷介绍-->
-    <template v-if="currentSurvey.status.begin">
-      <div class="survey_intro">
-        <p title>{{ survey.intro.title }}</p>
-        <p intro>
-          <span intro_title>问卷介绍：</span>
-          <span v-html="survey.intro.intro_content"  intro_content></span>
-        </p>
-        <p button @click="currentSurvey.toOngoing()">开始问卷 </p>
-      </div>
-    </template>
-
-
-    <!--问卷填写-->
-    <template v-if="currentSurvey.status.ongoing">
-      <div class="survey">
-        <p title>{{ survey.intro.title }}</p>
-        <div class="scrollbar_shadow"></div>
-        <!-- 进度条 -->
-        <div class="progress" @click="scrollTo($event)">
-          <div>
-            <!-- 进度条分段，使得点击提交按钮后进度条可以分段显示红色背景，多少个题目就分多少段 (外面多个div包裹下面的style的last-child才能生效)-->
-            <div class="progress-part" v-for="(item, index) of survey.quesList" :key="item.id" :style="{
-              height: `${progressPartHeight}px`,
-              backgroundColor: `${item.progressPartbcg}`,
-            }"></div>
-          </div>
-          <div class="thumb" ref="thumb">
-            <div class="bluebcg" ref="bluebcg" :style="{ height: `${bluebcg_height}px` }"></div>
-          </div>
-          <div class="text" ref="text">0%</div>
-        </div>
-        <div class="survey_area" @scroll="onScroll($event)" ref="content">
-          <p intro>
-            <span intro_title>问卷介绍：</span>
-            <span v-html="survey.intro.intro_content" intro_content></span>
-          </p>
-          <div class="ques">
-            <div v-for="(item, index) of survey.quesList" ref="ques"
-              :style="{ border: `${item.titleBorder}px solid red` }">
-              <div>
-                <span></span><span>{{ item.ques }}</span>
-              </div>
-              <!-- 总宽度为600-->
-              <div :style="{backgroundColor: `${item.value === 0 ? 'rgba(245, 245, 245, 1)' : 'rgb(229,229,229)'}`,}">
-                <!-- bar -->
-                <div v-for="(b, i) of barArr[index]" class="bar"  @click="item.value = i + 1; item.seleted=item.optionId[i]; ">
-                  <div class="font">
-                    {{ survey.quesList[index].font[i] }}
-                  </div>
-                </div>
-                <div class="thumb" :style="{left: `${item.value === 0 ? -12 : -12 + ((item.value - 1) * 600) / (barArr[index].length - 1)}px`, }"></div>
-              </div>
-            </div>
-          </div> 
-          <div class="submitBtn" @click="toFinish()">提交问卷</div>
-        </div>
-      </div>
-    </template>
-
-
-    <!-- 问卷完成部分 -->
-    <div class="finish-wrapper" v-if="currentSurvey.status.end">
-      <div class="innerbox">
-        <div class="finish-title">
-          <h2>您已完成</h2>
-          <h3>{{ survey.intro.title }}</h3>
-          <p>感谢您的答题，本次问卷已全部结束</p>
-        </div>
-        <el-button type="primary" class="finish-submit">完成答题</el-button>
-      </div>
-    </div>
-
-
-  </div>
-</template>
 
 <style lang="less" scoped>
 div[wrapper] {

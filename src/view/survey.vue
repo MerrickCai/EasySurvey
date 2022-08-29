@@ -23,7 +23,7 @@ const currentView = ref()
 
 
 //------------------------- 问卷状态和数据对象 ------------------------
-const survey = reactive({
+const Survey = reactive({
   status: {
     begin: true,
     ongoing: false,
@@ -56,16 +56,16 @@ axios({
     switch (response.data.data.questionnaire.count) {
       case 2: // 矩阵
         currentView.value = surveyTemplateList[0]
-        survey.surveyObj = response.data.data
+        Survey.surveyObj = response.data.data
         break
       case 3: // 量表
         currentView.value = surveyTemplateList[1]
-        survey.surveyObj = response.data.data
+        Survey.surveyObj = response.data.data
         break
       case 5: // 普通
         currentView.value = surveyTemplateList[2]
-        survey.surveyObj = response.data.data
-        break
+        Survey.surveyObj = response.data.data
+        break;
     }
   })
   .catch((error) => {
@@ -78,16 +78,16 @@ axios({
 
 
 //--------------------- provide问卷对象给问卷模板子组件 -------------------------
-provide("survey", survey)
+provide("Survey", Survey)
 //--------------------- provide问卷对象给问卷模板子组件 -------------------------
 </script>
 
 <template>
   <div wrapper>
-    <div class="decoration1" v-show="survey.status.begin || survey.status.end"></div>
-    <div class="decoration2" v-show="survey.status.begin || survey.status.end"></div>
-    <div class="decoration3" v-show="survey.status.begin || survey.status.end"></div>
-    <div class="decoration4" v-show="survey.status.begin || survey.status.end"></div>
+    <div class="decoration1" v-show="Survey.status.begin || Survey.status.end"></div>
+    <div class="decoration2" v-show="Survey.status.begin || Survey.status.end"></div>
+    <div class="decoration3" v-show="Survey.status.begin || Survey.status.end"></div>
+    <div class="decoration4" v-show="Survey.status.begin || Survey.status.end"></div>
     <div class="decoration5"></div>
     <img dog-ear src="/tangible.png" />
     <component :is="currentView"></component>

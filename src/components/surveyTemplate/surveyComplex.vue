@@ -2,25 +2,26 @@
     <div class="wrapper">
 
         <!--问卷介绍 -->
-        <div intro v-if="currentSurvey.status.begin">
+
+        <div intro v-if="Survey.status.begin">
             <div class="titleArea">
-                <h2>{{  survey.surveyObj.intro.info_title  }}</h2>
+                <h2>{{  survey.intro.info_title  }}</h2>
             </div>
             <p class="second-title">问卷介绍：</p>
             <p class="para">{{  survey.intro.info_para  }}</p>
-            <div class="btn" @click="currentSurvey.toOngoing">
+            <div class="btn" @click="Survey.status.toOngoing()">
                 <div>开始问卷</div>
             </div>
         </div>
 
 
         <!-- 问卷内容 -->
-        <div content v-if="currentSurvey.status.ongoing">
 
+        <div content v-if="Survey.status.ongoing">
             <!-- 进度条 -->
             <div class="shadow"></div>
             <div class="progress" @click="scrollTo($event)">
-                <span class="progress-part" v-for="item of survey.surveyObj.questionList" :key="item.questionId"
+                <span class="progress-part" v-for="item of survey.questionList" :key="item.questionId"
                     :style="{ backgroundColor: `${item.progressPartbcg}` }">
                 </span>
                 <div class="outer-thumb" ref="thumb">
@@ -32,15 +33,15 @@
             <!-- 介绍区域 -->
             <div class="intro">
                 <div class="titleArea">
-                    <h2>{{  survey.surveyObj.intro.info_title  }}</h2>
+                    <h2>{{  survey.intro.info_title  }}</h2>
                 </div>
                 <p class="second-title">问卷介绍：</p>
-                <p class="para">{{  survey.surveyObj.intro.info_para  }}</p>
+                <p class="para">{{  survey.intro.info_para  }}</p>
             </div>
 
             <!-- 答题区域 -->
             <main ref="content" @scroll="onScroll">
-                <div class="main" v-for="(item, i) of survey.surveyObj.questionList" :key="item.questionId"
+                <div class="main" v-for="(item, i) of survey.questionList" :key="item.questionId"
                     :style="{ outline: `${item.outlineColor} 1px  solid` }">
                     <template v-if="item.type === 0">
                         <div class="questiontitle" ref="questiontitle">{{  `${i + 1}. ${item.questiontitle}（单选）`  }}</div>
@@ -73,10 +74,11 @@
         </div>
 
         <!-- 问卷完成 -->
-        <div finish v-if="currentSurvey.status.end">
+
+        <div finish v-if="Survey.status.end">
             <div class="content">
                 <h2>您已完成</h2>
-                <h3>{{  survey.surveyObj.intro.info_title  }}</h3>
+                <h3>{{  survey.intro.info_title  }}</h3>
                 <p>感谢您的答题，本次问卷已全部结束</p>
             </div>
             <div class="btn">
@@ -96,12 +98,12 @@ import axios from "axios"
 import { useStore } from "../../PiniaStores/index.js"
 import { map } from 'lodash';
 const datas = useStore()
-<<<<<<< HEAD
-const currentSurvey = inject('currentSurvey')
-// ------------------接收survey父组件传过来的参数。-------------------------------
-const props = defineProps(['surveyObj']);
+const Survey = inject('Survey')
+// --------------------------- 获取父组件传入的问卷状态和数据 --------------------
+
 // 从父组件拿到数据
-const surveyObj = computed(() => props.surveyObj)
+const surveyObj = ref(Survey.surveyObj)
+console.log(surveyObj);
 
 // 封装一个survey---------------用以在模板和存放提交时候的用户数据------------------（按照PiniStores中的结构模板来封装的）
 const survey = reactive({});
@@ -144,14 +146,10 @@ for (let i in surveyObj.value.questionInfoMap) {
 }
 // console.log(survey);
 
-=======
 
 
 
-// --------------------------- 问卷状态，问卷数据 --------------------
-const survey = inject('survey')
-// --------------------------- 问卷状态，问卷数据 --------------------
->>>>>>> 23bd1aace93a1802b8b3636c26cf2545482d0ddb
+
 
 // ---------------------------   进度条 ---------------------------------------
 //模板引用
@@ -185,7 +183,7 @@ function Finish() {
     const uncomplete = []
     let queId = 0
     bluebcg.value.style.display = 'none'
-    survey.surveyObj.questionList.forEach(item => {
+    survey.questionList.forEach(item => {
         item.progressPartbcg = '#5a9afa'
         if (item.value === 0 || item.value.length === 0 || item.value === '') {
             flag = false
@@ -211,9 +209,7 @@ function Finish() {
 
 
 //-------------------------------- 提交函数---------------------------------------
-// 选项数据已经用v-model动态绑定到对应的value了
 function Submit() {
-<<<<<<< HEAD
     const questionAnswerList = [];
     survey.questionList.forEach(item => {
         let questionAnswer = {
@@ -235,21 +231,11 @@ function Submit() {
                     id: hash.get(e)
                 })
           })
-=======
-    const questionAnswerList = []
-    survey.surveyObj.questionList.forEach(item => {
-        let questionAnswer = {
-            questionId: item.questionId,
-            type: item.type,
-            text: item.questiontitle,
-            optionList: item.value //这里要修改一下
->>>>>>> 23bd1aace93a1802b8b3636c26cf2545482d0ddb
         }
         questionAnswerList.push(questionAnswer)
     })
     // console.log(survey);
     // console.log(questionAnswerList);
-    
     axios({
         url: `https://q.denglu1.cn/questions/commit`,
         method: 'post',
@@ -257,7 +243,6 @@ function Submit() {
         headers: { 'Content-Type': 'application/json' },
         headers: { 'token': datas.user.token },
         data: {
-<<<<<<< HEAD
             questionnaire_id: survey.id,
             totalNumber: survey.totalNumber,
             count: survey.count,           //问卷类型：混合（单选，多选，文本）
@@ -266,24 +251,8 @@ function Submit() {
         }
     }).then((response) => {
         console.log(response);
-        currentSurvey.toEnd()
-=======
-            questionnaire_id: 5000,
-            totalNumber: 100,
-            count: 5,           //问卷类型：混合
-            effectiveNumber: 0,
-            questionAnswerList
-        }
-    }).then((response) => {
-        ElMessage({
-            message: '提交问卷成功',
-            type: 'success',
-            duration: 5000,
-            showClose: true,
-            center: true
-        })
-        console.log(response)
->>>>>>> 23bd1aace93a1802b8b3636c26cf2545482d0ddb
+        Survey.status.toEnd()
+
     }).catch((error) => {
         console.log(error)
     })
