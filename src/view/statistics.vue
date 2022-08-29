@@ -10,14 +10,6 @@
 import CreateFile from "../components/statistics/CreateFile.vue";
 import target from "../components/statistics/target.vue";
 import echart from "../components/statistics/echart.vue";
-import { ref, provide, nextTick } from 'vue-demi'
-const isRouterActive = ref(true)
-provide('reload', () => {
-  isRouterActive.value = false
-  nextTick(() => {
-    isRouterActive.value = true
-  })
-})
 </script>
 
 <style lang="less" scoped>

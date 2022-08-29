@@ -93,11 +93,8 @@ let filenews = reactive({
 });
 
 //修改有效问卷数
-const reload = inject('reload')
 emitter.on("change",()=>{
-  // filenews.context.questionnaire.effectiveNumber-=1
-  // console.log(filenews.context.questionnaire.effectiveNumber);
-  reload()
+  filenews.context.questionnaire.effectiveNumber-=1
 })
 
 function getfile() {

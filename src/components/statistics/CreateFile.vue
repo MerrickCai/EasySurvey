@@ -51,6 +51,13 @@ const router = useRouter();
 import { useStore } from "../../PiniaStores/index.js";
 const datas = useStore();
 import axios from "axios";
+import emitter from "../../mitt";
+
+
+
+emitter.on("change",()=>{
+  fileall[0][clickrotate.value].effectiveNumber-=1
+})
 
 let fileall = reactive([]);
 

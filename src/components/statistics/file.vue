@@ -53,10 +53,7 @@ const props = defineProps(["index", "clickrotate", "item"]);
 
 //修改有效问卷数
 const reload = inject('reload')
-emitter.on("change",()=>{
-  console.log(1);
-  reload()
-})
+
 
 //点击文件夹阴影旋转
 let shadow = ref("shadow");
