@@ -1,25 +1,4 @@
 <script setup>
-import { useStore } from '../PiniaStores/index.js'
-const datas = useStore()
-
-//顶部导航栏组件的展示
-datas.navShow = false
-import { onBeforeRouteLeave } from 'vue-router'
-onBeforeRouteLeave(() => {
-   datas.navShow = true
-})
-
-//动态组件
-import { ref, computed, provide } from 'vue'
-import accountLogin from '../components/login/accountLogin.vue'
-import wechatLogin from '../components/login/wechatLogin.vue'
-import register from '../components/login/register.vue'
-import popUp from '../components/login/popUp.vue'
-const viewList = [wechatLogin, accountLogin, register, popUp]
-const viewId = ref(1)
-const currentView = computed(() => viewList[viewId.value])
-provide('viewId', viewId)
-
 //随机背景图
 const background = {
    url: ['/login_cloud.png', '/login_mountain.png', 'login_mount.jpg'],
@@ -31,6 +10,18 @@ const background = {
    }
 }
 const background_url = background.geturl()
+
+
+//动态组件
+import { ref, computed, provide } from 'vue'
+import accountLogin from '../components/login/accountLogin.vue'
+import wechatLogin from '../components/login/wechatLogin.vue'
+import register from '../components/login/register.vue'
+import popUp from '../components/login/popUp.vue'
+const viewList = [wechatLogin, accountLogin, register, popUp]
+const viewId = ref(1)
+const currentView = computed(() => viewList[viewId.value])
+provide('viewId', viewId)
 </script>
 
 <template>

@@ -1,23 +1,31 @@
 <script setup>
-import navbar from "./view/navbar.vue";
+import navbar from "./view/navbar.vue"
+import axios from "axios"
+import { useRouter } from "vue-router"
+import { useStore } from "./PiniaStores/index.js"
+import { ElMessage } from 'element-plus'
+const router = useRouter()
+const datas = useStore()
+
+
 //全局前置守卫（帮助用户自动登录）
-import { useRouter } from "vue-router";
-import { useStore } from "./PiniaStores/index.js";
-import axios from "axios";
-const router = useRouter();
-const datas = useStore();
 router.beforeEach(async (to, from) => {
   if (to.path === "/login") {
+    //顶部导航栏组件的展示
+    datas.navShow = false
     //判断是否进入登录注册页面=>防止死循环
-    return true;
+    return true
+  } else {
+    //顶部导航栏组件的展示
+    datas.navShow = true
   }
   if (to.meta.requireLogin === false) {
     //确认页面是否需要登录
-    return true;
+    return true
   }
   if (datas.user.status === true) {
     //确认用户是否登录
-    return true;
+    return true
   }
   // 如果 localStorage 储存了用户登录数据，帮用户自动登录
   if (localStorage.getItem("account") && localStorage.getItem("password")) {
@@ -31,32 +39,45 @@ router.beforeEach(async (to, from) => {
           phone_number: localStorage.getItem("account"),
           password: localStorage.getItem("password"),
         },
-      });
-      console.log("用户选择记住密码，本次为自动登录");
+      })
+      ElMessage({
+        message: '记住密码，自动登录成功',
+        type: 'success',
+        duration: 5000,
+        showClose: true,
+        center: true
+      })
       //写入用户数据
-      datas.user.status = true;
-      datas.user.account = localStorage.getItem("account");
-      datas.user.password = localStorage.getItem("password");
-      datas.user.userId = response.data.data.userId;
-      datas.user.token = response.data.data.token;
-      datas.user.refreshtoken = response.data.data.refreshtoken;
-      return true;
+      datas.user.status = true
+      datas.user.account = localStorage.getItem("account")
+      datas.user.password = localStorage.getItem("password")
+      datas.user.userId = response.data.data.userId
+      datas.user.token = response.data.data.token
+      datas.user.refreshtoken = response.data.data.refreshtoken
+      return true
     } catch (error) {
-      console.log("用户选择记住密码，本次为自动登录，但是登录失败");
-      datas.navShow = false;
+      ElMessage({
+        message: '记住密码，自动登录失败',
+        type: 'error',
+        duration: 5000,
+        showClose: true,
+        center: true
+      })
+      // 跳转登录注册页面
+      datas.navShow = false
       return {
         path: "/login",
         query: { redirect: to.fullPath },
-      };
+      }
     }
   }
   // 跳转登录注册页面
-  datas.navShow = false;
+  datas.navShow = false
   return {
     path: "/login",
     query: { redirect: to.fullPath },
-  };
-});
+  }
+})
 </script>
 
 <template>
@@ -96,6 +117,7 @@ main {
 
     >.mainView-enter-from,
     >.mainView-leave-to {
+      transform: translateX(20px);
       filter: opacity(0);
     }
   }

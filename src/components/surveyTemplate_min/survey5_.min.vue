@@ -1,7 +1,5 @@
 <template>
     <div wrapper>
-
-
         <!-- 问卷内容部分 -->
         <div class="wrapper extrachange">
             <!-- 进度条 -->
@@ -16,11 +14,11 @@
             <div class="content" ref="content" @scroll="onScroll($event)">
                 <!-- 题目 -->
                 <!-- 第一层循环 item, i -->
-                <div class="main" v-for="(item, i) of survey.questionList" :key="item.id" :style="{ height: `${100}px` }">
-                    <div class="questiontitle" ref="questiontitle">
+                <div class="main" v-for="(item, i) of survey.questionList" :key="item.questionId" :style="{ height: `${100}px` }">
+                    <div class="questiontitle">
                         {{ item.questiontitle }}
                     </div>
-                    <textarea clos="20" rows="7" class="inputtext"></textarea>
+                    <textarea clos="20" rows="7" class="inputtext" disabled  :value="item.value"></textarea>
                 </div>
             </div>
         </div>
@@ -31,7 +29,6 @@
 <script setup>
 import axios from 'axios'
 import { ref, reactive, toRefs, onBeforeMount, onMounted, watchEffect, computed } from 'vue';
-import { useStore } from '../../PiniaStores/index.js'
 
 
 // ------------------接受survey父组件传过来的参数。-------------------------------
@@ -43,6 +40,14 @@ const surveyObj = computed(() => props.surveyObj)
 // 封装一个survey
 const survey = reactive({});
 survey.questionList = [];
+for (let i in  surveyObj.value.questionInfoMap) {
+    let obj = {};
+    obj.questionId = i;
+    obj.questiontitle = surveyObj.value.questionInfoMap[i][0].info;
+    obj.value = surveyObj.value.answerMap[i][0].text_answer;
+}
+
+
 
 
 // --- 滚动条部分的变量和方法 ---
@@ -81,8 +86,6 @@ function onScroll(e) {
     temp = temp.join("") / 1 + 8;
     bluebcg_height.value = temp;
 }
-
-
 
 </script>
 

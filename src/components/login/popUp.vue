@@ -1,9 +1,16 @@
 <script setup>
 import { onMounted, reactive, ref, computed, watch } from "vue"
+import axios from "axios"
+import { useStore } from "../../PiniaStores/index.js"
+import { useRouter, useRoute } from "vue-router"
+const datas = useStore()
+const router = useRouter()
+const route = useRoute()
+import { ElMessage } from 'element-plus'
 
 
 
-//跳过逻辑
+//---------------------------跳过逻辑 -----------------------------
 const count = ref(5)
 const countShow = computed(() => {
   if (count.value !== 0) {
@@ -26,20 +33,32 @@ onMounted(() => {
 })
 function jump() {
   if (count.value !== 0) { //判断倒计时是否结束
-    alert('请稍后跳过')
+    ElMessage({
+      message: '请稍后跳过',
+      type: 'warning',
+      duration: 5000,
+      showClose: true,
+      center: true
+    })
     return false
   }
-  if (route.query.redirect) {
-    //判断用户是否从其他页面过来
-    router.push({ path: route.query.redirect });
+  if (route.query.redirect) { //判断用户是否从其他页面过来
+    ElMessage({
+      message: '跳过成功',
+      type: 'success',
+      duration: 5000,
+      showClose: true,
+      center: true
+    })
+    router.push({ path: route.query.redirect })
   } else {
-    router.push({ path: "/" });
+    router.push({ path: "/" })
   }
 }
+//--------------------------- 跳过按钮逻辑 -----------------------------
 
 
-
-//确定按键变色
+//--------------------------- 确定按钮变色逻辑 -----------------------------
 const confirmStyle = reactive({
   bgColor: 'rgba(235, 245, 255, 1)',
   color: 'rgba(140, 140, 140, 1)',
@@ -56,46 +75,85 @@ watch(confirm, (n, o) => {
     confirmStyle.cursor = 'pointer'
   }
 })
+//--------------------------- 确定按钮变色逻辑 -----------------------------
 
 
 
-
-//地区数据
-import area from "../../PiniaStores/area.js";
+//--------------------------- 地区数据 -----------------------------
+import area from "../../PiniaStores/area.js"
 const props = {
   expandTrigger: "hover",
   children: "childs",
   value: "name",
   label: "name",
-};
-
-
-
-//信息上传交互提交逻辑
-const user = reactive({ area: "", age: "" });
-import { useRouter, useRoute } from "vue-router";
-const router = useRouter();
-const route = useRoute();
-import axios from "axios";
-import { useStore } from "../../PiniaStores/index.js";
-const datas = useStore();
-//表单验证
-function validate(age) {
-  if (!/^[0-9]{1,3}$/.test(age)) {
-    //1-3位数字
-    alert("请输入正确的年龄");
-    return false;
-  }
-  return true;
 }
-async function upLoad(area, age) {
-  if (!(confirm.area && confirm.age)) { //没填完
-    alert('请填写信息')
+//--------------------------- 地区数据 -----------------------------
+
+
+
+//--------------------------- 账号密码规则验证 -----------------------------
+function validate(age) {
+  if (!/^[0-9]{1,3}$/.test(age)) { //1-3位数字
+    ElMessage({
+      message: '请输入正确的年龄',
+      type: 'warning',
+      duration: 5000,
+      showClose: true,
+      center: true
+    })
     return false
   }
-  if (!validate(age)) {
-    //表单验证
-    return false;
+  return true
+}
+//--------------------------- 账号密码规则验证 -----------------------------
+
+
+//--------------------------- 检查用户之前填写的地区年龄 -----------------------------
+const title = reactive({
+  p1: '为了保证问卷质量',
+  p2: '我们希望获知您的如下信息'
+})
+const user = reactive({ area: ['广东省', '广州市', '番禺区'], age: "" })
+axios({
+  url: `https://q.denglu1.cn/user/getUserMessage/${datas.user.userId}`,
+  method: "get",
+  withCredentials: true,
+  headers: { "Content-Type": "application/json" },
+  headers: { token: datas.user.token },
+}).then((response) => {
+  const data = response.data.data
+  if (data.province && data.age) {
+    //改标题
+    title.p1 = '系统已自动保存您上次填写信息'
+    title.p2 = '请检查是否有误'
+    //改默认内容
+    // user.area.push(data.province)   ------  等后台将data.province改成数组形式
+    user.age = data.age
+    console.log(user.area)
+    //默认已经填完
+    confirm.area = true
+    confirm.age = true
+  }
+}).catch((error) => {
+  console.log(error)
+})
+//--------------------------- 检查用户之前填写的地区年龄 -----------------------------
+
+
+//--------------------------- 提交信息 -----------------------------
+async function upLoad(area, age) {
+  if (!(confirm.area && confirm.age)) { //用户没填完
+    ElMessage({
+      message: '请填写以上信息',
+      type: 'warning',
+      duration: 5000,
+      showClose: true,
+      center: true
+    })
+    return false
+  }
+  if (!validate(age)) { //表单验证
+    return false
   }
   await axios({
     url: "https://q.denglu1.cn/user/updateMessage",
@@ -111,47 +169,63 @@ async function upLoad(area, age) {
   })
     .then((response) => {
       //写入用户数据
-      datas.user.age = age;
-      datas.user.area = area[0];
-      if (route.query.redirect) {
-        //判断用户是否从其他页面过来
-        router.push({ path: route.query.redirect });
+      datas.user.age = age
+      datas.user.area = area[0]
+      ElMessage({
+        message: '信息获取成功',
+        type: 'success',
+        duration: 5000,
+        showClose: true,
+        center: true
+      })
+      if (route.query.redirect) { //判断用户是否从其他页面过来
+        router.push({ path: route.query.redirect })
       } else {
-        router.push({ path: "/" });
+        router.push({ path: "/" })
       }
     })
-    .catch((error) => {
-      //上传失败
-      alert("由于网络问题上传失败");
-      console.log(error);
-    });
+    .catch((error) => {//上传失败
+      ElMessage({
+        message: '由于网络问题上传失败',
+        type: 'error',
+        duration: 5000,
+        showClose: true,
+        center: true
+      })
+      console.log(error)
+    })
 }
+//--------------------------- 提交信息 -----------------------------
 </script>
 
 <template>
   <div class="wrapper">
+
     <div class="titleArea">
-      <p>为了保证问卷质量</p>
-      <p>我们希望获知您的如下信息</p>
+      <p>{{ title.p1 }}</p>
+      <p>{{ title.p2 }}</p>
     </div>
+
     <div class="typeArea">
       <div class="title">
         <div>所在地区</div>
       </div>
       <div areaSelect>
-        <el-cascader @change="confirm.area = true" v-model="user.area" placeholder="请选择所在地区" :options="area"
+        <el-cascader @change="confirm.area = true" v-model="user.area" placeholder="请选择您所在地区" :options="area"
           :props="props" separator=" " />
       </div>
       <div class="title">
-        <div>您的年龄</div>
+        <div>年龄</div>
       </div>
       <input @change="confirm.age = true" @input="confirm.age = true" type="text" v-model="user.age"
         placeholder="请输入您的年龄" />
     </div>
+
     <div button>
       <div jump @click="jump">跳过{{ countShow }}</div>
       <div confirm @click="upLoad(user.area, user.age)">确认</div>
     </div>
+
   </div>
 </template>
 

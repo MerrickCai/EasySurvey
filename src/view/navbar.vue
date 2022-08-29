@@ -1,33 +1,41 @@
 <script setup>
-import { useRouter, useRoute } from "vue-router";
-const router = useRouter();
-const route = useRoute();
-import { useStore } from "../PiniaStores/index.js";
-const datas = useStore();
+import { useRouter, useRoute } from "vue-router"
+import { useStore } from "../PiniaStores/index.js"
+import { ElMessage } from 'element-plus'
+const router = useRouter()
+const route = useRoute()
+const datas = useStore()
+
+// 退出登录
 function logOut() {
-    if (datas.user.status === false) {
-        alert("您尚未登录");
-        return false;
+    if (datas.user.status === false) { //用户在不需要登录的页面
+        router.push("/login")
+        return false
     }
-    if (localStorage.getItem("account") && localStorage.getItem("password")) {
-        //移除自动登录
-        localStorage.removeItem("account");
-        localStorage.removeItem("password");
+    ElMessage({
+        message: '已为您退出登录',
+        type: 'success',
+        duration: 5000,
+        showClose: true,
+        center: true
+      })
+    if (localStorage.getItem("account") && localStorage.getItem("password")) { //移除自动登录
+        localStorage.removeItem("account")
+        localStorage.removeItem("password")
     }
     //清空暂存用户数据
-    datas.user.status = false;
-    datas.user.account = 0;
-    datas.user.password = 0;
-    datas.user.userId = 0;
-    datas.user.token = 0;
-    datas.user.refreshtoken = 0;
+    datas.user.status = false
+    datas.user.account = 0
+    datas.user.password = 0
+    datas.user.userId = 0
+    datas.user.token = 0
+    datas.user.refreshtoken = 0
     // 跳转登录注册页面
-    datas.navShow = false;
-    console.log(route);
+    datas.navShow = false
     router.push({
         path: "/login",
         query: { redirect: route.fullPath },
-    });
+    })
 }
 </script>
 
@@ -41,8 +49,8 @@ function logOut() {
             <Transition name="navbar">
                 <div v-show="datas.navShow">
                     <div button @click="router.push('/surveynew')">创建问卷</div>
-                    <div img><img src="/navbar_1.png" @click="router.push('surveyDev')" /></div>
-                    <div img avatar @click="router.push('/404404')"><img src="/navbar_3.jpg" /></div>
+                    <div img @click="router.push('/survey/85')"><img src="/navbar_1.png" /></div>
+                    <div img avatar @click="router.push('/surveyComplex')"><img src="/navbar_3.jpg" /></div>
                     <div img @click="logOut"><img src="/navbar_2.png" /></div>
                 </div>
             </Transition>

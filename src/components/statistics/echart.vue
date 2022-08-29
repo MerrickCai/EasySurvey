@@ -51,6 +51,7 @@ import survey2 from "../surveyTemplate_min/survey2_.min.vue";
 import survey3 from "../surveyTemplate_min/survey3_.min.vue";
 import survey4 from "../surveyTemplate_min/survey4_.min.vue";
 import survey5 from "../surveyTemplate_min/survey5_.min.vue";
+import surveyComplex from '../surveyTemplate_min/surveyComplex_min.vue';
 
 import * as echarts from "echarts";
 import draggable from "vuedraggable";
@@ -475,7 +476,7 @@ function echartnum() {
 // 详情页
 let showdetail = ref(false);
 const viewId = ref(0)
-const surveyTemplateList = [survey1, survey2, survey3, survey4, survey5]
+const surveyTemplateList = [survey1, survey2, survey3, survey4, survey5, surveyComplex];
 const currentView = computed(() => surveyTemplateList[viewId.value - 1]);
 
 let surveydatas = reactive({});
@@ -499,6 +500,8 @@ function showDetail(userId, questionnaireId) {
           case 4: //文本
             viewId.value = 5
             break
+          case 5: //混合
+            viewId.value = 6 
   }
     // console.log(userId,questionnaireId);
     

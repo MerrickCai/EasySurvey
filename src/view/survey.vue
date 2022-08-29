@@ -5,20 +5,22 @@ import { useRoute } from "vue-router"
 import { useStore } from "../PiniaStores/index.js"
 
 
-//问卷模板子组件（共五套）
+//问卷模板子组件（共六套）
 //矩阵：问卷类型:1，count:2
 //量表：问卷类型:2，count:3
 //单选：问卷类型:3，count:0
 //多选：问卷类型:4，count:1
 //文本：问卷类型:5，count:4
+//文本：问卷类型:6，count:5
 import survey1 from "../components/surveyTemplate/survey1.vue"
 import survey2 from "../components/surveyTemplate/survey2.vue"
 import survey3 from "../components/surveyTemplate/survey3.vue"
 import survey4 from "../components/surveyTemplate/survey4.vue"
 import survey5 from "../components/surveyTemplate/survey5.vue"
+import surveyComplex from '../components/surveyTemplate/surveyComplex.vue';
 const datas = useStore()
 const route = useRoute()
-const surveyTemplateList = [survey1, survey2, survey3, survey4, survey5]
+const surveyTemplateList = [survey1, survey2, survey3, survey4, survey5, surveyComplex];
 const viewId = ref(0)
 const currentView = computed(() => surveyTemplateList[viewId.value - 1])
 
@@ -65,6 +67,9 @@ const currentSurvey = reactive({
           case 4: //文本
             viewId.value = 5
             break
+          case 5: // 混合
+          viewId.value = 6
+            
         }
         console.log("请求参数",this.surveyObj);
         

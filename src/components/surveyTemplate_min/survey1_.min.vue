@@ -155,13 +155,12 @@ div.survey {
   width: 100%;
   padding: 20px 0 0 15px;
   position: relative;
-
   >div.scrollbar_shadow {
     position: absolute;
     height: 620px;
     width: 10px;
     bottom: 0px;
-    right: 0;
+    right: 135px;
     z-index: 1;
     background-color: rgba(255, 255, 255, 1);
   }
@@ -271,11 +270,11 @@ div.survey {
     justify-content: flex-start;
     align-items: flex-start;
     height: auto;
-    width: 100%;
-    overflow: auto;
+    width: 1000px;
+    overflow-x: hidden;
+    overflow-y: auto;
     position: relative;
     background-color: white;
-
     >p[intro] {
       display: block;
       height: auto;

@@ -1,19 +1,23 @@
 <script setup>
-//登陆注册页视图切换
+//视图切换
 import { inject } from 'vue'
 const viewId = inject('viewId')
 </script>
 
 <template>
    <div class="wrapper">
+
       <div class="selectArea">
          <a active @click="viewId = 0">微信登录</a>
          <a @click="viewId = 1">账号登录</a>
       </div>
+
       <div img>
          <img src='/login_icon1.png' alt="微信扫码登录" />
       </div>
+
       <div class="buttom">使用微信扫一扫登录</div>
+      
    </div>
 </template>
 

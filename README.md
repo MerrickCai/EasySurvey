@@ -7,7 +7,9 @@
 
 ## 技术栈
 
-- 构建工具：[Vite](https://cn.vitejs.dev/)
+- 架构
+
+    - 构建工具：[Vite](https://cn.vitejs.dev/)
 
     - JS框架：[Vue](https://cn.vuejs.org/)
 
@@ -15,15 +17,19 @@
 
     - 状态管理：[Pinia](https://pinia.web3doc.top/)
 
-- 网络请求：[Axios](https://www.axios-http.cn/)
+- 工具
 
-- UI库：[Element Plus](https://element-plus.gitee.io/zh-CN/)
+    - 网络请求：[Axios](https://www.axios-http.cn/)
 
-- 数据可视化：[ECharts](https://echarts.apache.org/zh/index.html)
+    - UI库：[Element Plus](https://element-plus.gitee.io/zh-CN/)
 
-- 代码托管：[Coding](https://coding.net/)
+    - 数据可视化：[ECharts](https://echarts.apache.org/zh/index.html)
 
-- 网站部署上线：[腾讯云](https://cloud.tencent.com/)
+- Devops
+
+    - 代码托管：[Coding](https://coding.net/)
+
+    - 网站部署上线：[腾讯云](https://cloud.tencent.com/)
 
 ## 开发
 
