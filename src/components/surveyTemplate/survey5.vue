@@ -69,6 +69,7 @@ import axios from 'axios'
 import { ref, reactive, toRefs, onBeforeMount, onMounted, watchEffect, computed } from 'vue';
 import { useStore } from '../../PiniaStores/index.js'
 const datas = useStore();
+// currentSurvey用以状态管理
 const currentSurvey = inject('currentSurvey')
 
 // const survey = computed(() => {

@@ -1,10 +1,10 @@
 <template>
     <div class="wrapper">
         <!-- 装饰品 -->
-        <div class="decoration1" v-show="survey.status.begin || survey.status.end"></div>
-        <div class="decoration2" v-show="survey.status.begin || survey.status.end"></div>
-        <div class="decoration3" v-show="survey.status.begin || survey.status.end"></div>
-        <div class="decoration4" v-show="survey.status.begin || survey.status.end"></div>
+        <div class="decoration1" v-show="currentSurvey.status.begin || currentSurvey.status.end"></div>
+        <div class="decoration2" v-show="currentSurvey.status.begin || currentSurvey.status.end"></div>
+        <div class="decoration3" v-show="currentSurvey.status.begin || currentSurvey.status.end"></div>
+        <div class="decoration4" v-show="currentSurvey.status.begin || currentSurvey.status.end"></div>
         <div class="decoration5"></div>
         <img dog-ear src="/tangible.png" />
         <!-- 装饰品 -->
@@ -12,13 +12,13 @@
 
 
         <!--问卷介绍 -->
-        <div intro v-if="survey.status.begin">
+        <div intro v-if="currentSurvey.status.begin">
             <div class="titleArea">
                 <h2>{{  survey.intro.info_title  }}</h2>
             </div>
             <p class="second-title">问卷介绍：</p>
             <p class="para">{{  survey.intro.info_para  }}</p>
-            <div class="btn" @click="survey.status.toOngoing">
+            <div class="btn" @click="currentSurvey.toOngoing">
                 <div>开始问卷</div>
             </div>
         </div>
@@ -26,7 +26,7 @@
 
 
         <!-- 问卷内容 -->
-        <div content v-if="survey.status.ongoing">
+        <div content v-if="currentSurvey.status.ongoing">
 
             <!-- 进度条 -->
             <div class="shadow"></div>
@@ -57,16 +57,16 @@
                     <template v-if="item.type === 0">
                         <div class="questiontitle" ref="questiontitle">{{  `${i + 1}. ${item.questiontitle}（单选）`  }}</div>
                         <div class="ques" v-for="(elem, index) of item.option" :key="index">
-                            <input type="radio" :id="elem" :value="elem"  v-model="item.value" />
-                            <p><label :for="elem">{{  elem  }}</label></p>
+                            <input type="radio" :id="elem.id" :value="elem.detail"  v-model="item.value" />
+                            <p><label :for="elem.id">{{  elem.detail  }}</label></p>
                         </div>
                     </template>
 
                     <template v-else-if="item.type === 1">
                         <div class="questiontitle" ref="questiontitle">{{  `${i + 1}. ${item.questiontitle}（多选）`  }}</div>
                         <div class="ques" v-for="(elem, index) of item.option" :key="index">
-                            <input type="checkbox" :id="elem" :value="elem" v-model="item.value" />
-                            <p><label :for="elem">{{  elem  }}</label></p>
+                            <input type="checkbox" :id="elem.id" :value="elem.detail" v-model="item.value" />
+                            <p><label :for="elem.id">{{  elem.detail  }}</label></p>
                         </div>
                     </template>
 
@@ -87,10 +87,8 @@
 
         </div>
 
-
-
         <!-- 问卷完成 -->
-        <div finish v-if="survey.status.end">
+        <div finish v-if="currentSurvey.status.end">
             <div class="content">
                 <h2>您已完成</h2>
                 <h3>{{  survey.intro.info_title  }}</h3>
@@ -107,84 +105,58 @@
 </template>
 
 <script setup>
-import { ref, reactive,computed } from 'vue'
+import { ref, reactive,computed,inject } from 'vue'
 import axios from "axios"
 import { useStore } from "../../PiniaStores/index.js"
+import { map } from 'lodash';
 const datas = useStore()
-
-// --------------------------- 问卷状态，问卷数据 --------------------
+const currentSurvey = inject('currentSurvey')
+// ------------------接收survey父组件传过来的参数。-------------------------------
 const props = defineProps(['surveyObj']);
 // 从父组件拿到数据
 const surveyObj = computed(() => props.surveyObj)
-console.log(surveyObj.value);
 
 // 封装一个survey---------------用以在模板和存放提交时候的用户数据------------------（按照PiniStores中的结构模板来封装的）
-// const survey = reactive({});
-const survey = reactive({
-    status: {
-        begin: true,
-        ongoing: false,
-        end: false,
-        toOngoing() {
-            this.begin = false
-            this.ongoing = true
-        },
-        toEnd() {
-            this.ongoing = false
-            this.end = true
-        }
-    },
-    intro: {
-        info_title: '混合型问卷',
-        info_para: '单选 多选 文本'
-    },
-    questionList: [ //type：单选0 多选1 文本2
-        {
-            questionId: 1,
-            type: 2,
-            questiontitle: '我认为我能为团队做出的贡献是：',
-            value: '',
-            progressPartbcg: '#ccc',
-            outlineColor: 'rgba(255,255,255,0)'
-        },
-        {
-            questionId: 2,
-            type: 0,
-            questiontitle: '我认为我能为团队做出的贡献是：',
-            value: 0,
-            progressPartbcg: '#ccc',
-            outlineColor: 'rgba(255,255,255,0)',
-            option: ['aaAAAhaha', 'BBB', 'CCC']
-        },
-        {
-            questionId: 3,
-            type: 1,
-            questiontitle: '我认为我能为团队做出的贡献是：',
-            value: [],
-            progressPartbcg: '#ccc',
-            outlineColor: 'rgba(255,255,255,0)',
-            option: ['111', '222', '333']
-        },
-        {
-            questionId: 4,
-            type: 0,
-            questiontitle: '我认为我能为团队做出的贡献是：',
-            value: 0,
-            progressPartbcg: '#ccc',
-            outlineColor: 'rgba(255,255,255,0)',
-            option: ['aaAAAhaha', 'BBB', 'CCC']
-        },
-        {
-            questionId: 5,
-            type: 2,
-            questiontitle: '我认为我能为团队做出的贡献是：',
-            value: '',
-            progressPartbcg: '#ccc',
-            outlineColor: 'rgba(255,255,255,0)'
-        }
-    ]
-})
-// --------------------------- 问卷状态，问卷数据 --------------------
+const survey = reactive({});
+// survey的介绍和提交问卷用的信息
+survey.intro = {};  
+survey.intro.info_title = surveyObj.value.questionnaire.title;
+survey.intro.info_para = surveyObj.value.questionnaire.message;
+survey.effectiveNumber = surveyObj.value.questionnaire.effectiveNumber;
+survey.totalNumber = surveyObj.value.questionnaire.totalNumber;
+survey.count = surveyObj.value.questionnaire.count;
+survey.id = surveyObj.value.questionnaire.id;
+let hash = new Map();
+survey.questionList = [];
+for (let i in surveyObj.value.questionInfoMap) {
+    let obj = {};
+    obj.questionId = i;
+    obj.type = surveyObj.value.questionInfoMap[i].type;
+    obj.questiontitle = surveyObj.value.questionInfoMap[i].info;
+    switch (obj.type) {
+        case 0: obj.value = 0; break; 
+        case 1: obj.value = []; break; 
+        case 2: obj.value = ""; break; 
+    }
+    obj.progressPartbcg = '#ccc';
+    obj.outlineColor = 'rgba(255,255,255,0)';
+    if (obj.type === 2) {
+        survey.questionList.push(obj);
+       continue;
+    }
+        
+    obj.option = [];
+    for (let j in surveyObj.value.optionMap[i]) {
+        let obj2 = {};
+        hash.set(surveyObj.value.optionMap[i][j].detail, surveyObj.value.optionMap[i][j].id);
+        obj2.id = surveyObj.value.optionMap[i][j].id;
+        obj2.detail = surveyObj.value.optionMap[i][j].detail;
+        obj.option.push(obj2);
+    }
+    survey.questionList.push(obj);
+}
+// console.log(survey);
+
 
 // ---------------------------   进度条 ---------------------------------------
 //模板引用
@@ -237,21 +209,37 @@ function Finish() {
     }
     else {
         Submit()
-        survey.status.toEnd()
     }
 }
 //提交函数(选项数据已经用v-model动态绑定到对应的value了)
 function Submit() {
-    const questionAnswerList = []
+    const questionAnswerList = [];
     survey.questionList.forEach(item => {
         let questionAnswer = {
-            questionId: item.questionId,
-            type: item.type,
-            text: item.questiontitle,
-            optionList: item.value
+               questionId: item.questionId,
+                type: item.type,
+        };
+        if (item.type === 2) {
+            questionAnswer.text = item.value;
+        } else if(item.type===0) {
+            questionAnswer.optionList = [{
+                detail: item.value,
+                id:hash.get(item.value)
+            }];
+        } else {
+            questionAnswer.optionList = [];  
+            item.value.forEach(e => {
+                questionAnswer.optionList.push({
+                    detail: e,
+                    id: hash.get(e)
+                })
+          })
         }
         questionAnswerList.push(questionAnswer)
     })
+    // console.log(survey);
+    // console.log(questionAnswerList);
+    
     axios({
         url: `https://q.denglu1.cn/questions/commit`,
         method: 'post',
@@ -259,14 +247,15 @@ function Submit() {
         headers: { 'Content-Type': 'application/json' },
         headers: { 'token': datas.user.token },
         data: {
-            questionnaire_id: 5000,
-            totalNumber: 100,
-            count: 5,           //问卷类型：混合（单选，多选，文本）
-            effectiveNumber: 0,
+            questionnaire_id: survey.id,
+            totalNumber: survey.totalNumber,
+            count: survey.count,           //问卷类型：混合（单选，多选，文本）
+            effectiveNumber: survey.effectiveNumber,
             questionAnswerList
         }
     }).then((response) => {
         console.log(response);
+        currentSurvey.toEnd()
     }).catch((error) => {
         console.log(error)
     })
