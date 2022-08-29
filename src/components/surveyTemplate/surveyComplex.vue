@@ -14,10 +14,10 @@
         <!--问卷介绍 -->
         <div intro v-if="survey.status.begin">
             <div class="titleArea">
-                <h2>{{ survey.intro.info_title }}</h2>
+                <h2>{{  survey.intro.info_title  }}</h2>
             </div>
             <p class="second-title">问卷介绍：</p>
-            <p class="para">{{ survey.intro.info_para }}</p>
+            <p class="para">{{  survey.intro.info_para  }}</p>
             <div class="btn" @click="survey.status.toOngoing">
                 <div>开始问卷</div>
             </div>
@@ -43,34 +43,35 @@
             <!-- 介绍区域 -->
             <div class="intro">
                 <div class="titleArea">
-                    <h2>{{ survey.intro.info_title }}</h2>
+                    <h2>{{  survey.intro.info_title  }}</h2>
                 </div>
                 <p class="second-title">问卷介绍：</p>
-                <p class="para">{{ survey.intro.info_para }}</p>
+                <p class="para">{{  survey.intro.info_para  }}</p>
             </div>
 
             <!-- 答题区域 -->
             <main ref="content" @scroll="onScroll">
-                <div class="main" v-for="(item, i) of survey.questionList" :key="item.questionId">
+                <div class="main" v-for="(item, i) of survey.questionList" :key="item.questionId"
+                    :style="{ outline: `${item.outlineColor} 1px  solid` }">
 
                     <template v-if="item.type === 0">
-                        <div class="questiontitle" ref="questiontitle">{{ `${i + 1}. ${item.questiontitle}（单选）` }}</div>
+                        <div class="questiontitle" ref="questiontitle">{{  `${i + 1}. ${item.questiontitle}（单选）`  }}</div>
                         <div class="ques" v-for="(elem, index) of item.option" :key="index">
                             <input type="radio" :id="elem" :value="elem" v-model="item.value" />
-                            <p><label :for="elem">{{ elem }}</label></p>
+                            <p><label :for="elem">{{  elem  }}</label></p>
                         </div>
                     </template>
 
                     <template v-else-if="item.type === 1">
-                        <div class="questiontitle" ref="questiontitle">{{ `${i + 1}. ${item.questiontitle}（多选）` }}</div>
+                        <div class="questiontitle" ref="questiontitle">{{  `${i + 1}. ${item.questiontitle}（多选）`  }}</div>
                         <div class="ques" v-for="(elem, index) of item.option" :key="index">
                             <input type="checkbox" :id="elem" :value="elem" v-model="item.value" />
-                            <p><label :for="elem">{{ elem }}</label></p>
+                            <p><label :for="elem">{{  elem  }}</label></p>
                         </div>
                     </template>
 
                     <template v-else>
-                        <div class="questiontitle" ref="questiontitle">{{ `${i + 1}. ${item.questiontitle}（文本）` }}</div>
+                        <div class="questiontitle" ref="questiontitle">{{  `${i + 1}. ${item.questiontitle}（文本）`  }}</div>
                         <div class="ques">
                             <textarea v-model="item.value" placeholder="请输入文本"></textarea>
                         </div>
@@ -92,7 +93,7 @@
         <div finish v-if="survey.status.end">
             <div class="content">
                 <h2>您已完成</h2>
-                <h3>{{ survey.intro.info_title }}</h3>
+                <h3>{{  survey.intro.info_title  }}</h3>
                 <p>感谢您的答题，本次问卷已全部结束</p>
             </div>
             <div class="btn">
@@ -137,6 +138,7 @@ const survey = reactive({
             questiontitle: '我认为我能为团队做出的贡献是：',
             value: '',
             progressPartbcg: '#ccc',
+            outlineColor: 'rgba(255,255,255,0)'
         },
         {
             questionId: 2,
@@ -144,6 +146,7 @@ const survey = reactive({
             questiontitle: '我认为我能为团队做出的贡献是：',
             value: 0,
             progressPartbcg: '#ccc',
+            outlineColor: 'rgba(255,255,255,0)',
             option: ['aaAAAhaha', 'BBB', 'CCC']
         },
         {
@@ -152,6 +155,7 @@ const survey = reactive({
             questiontitle: '我认为我能为团队做出的贡献是：',
             value: [],
             progressPartbcg: '#ccc',
+            outlineColor: 'rgba(255,255,255,0)',
             option: ['111', '222', '333']
         },
         {
@@ -160,6 +164,7 @@ const survey = reactive({
             questiontitle: '我认为我能为团队做出的贡献是：',
             value: 0,
             progressPartbcg: '#ccc',
+            outlineColor: 'rgba(255,255,255,0)',
             option: ['aaAAAhaha', 'BBB', 'CCC']
         },
         {
@@ -168,6 +173,7 @@ const survey = reactive({
             questiontitle: '我认为我能为团队做出的贡献是：',
             value: '',
             progressPartbcg: '#ccc',
+            outlineColor: 'rgba(255,255,255,0)'
         }
     ]
 })
@@ -210,6 +216,7 @@ function Finish() {
         if (item.value === 0 || item.value.length === 0 || item.value === '') {
             flag = false
             item.progressPartbcg = 'rgba(255, 71, 71, 1)'
+            item.outlineColor = 'rgba(240,0,0,1)'
             uncomplete.push(queId)
         }
         queId++
@@ -620,6 +627,7 @@ div[content] {
         width: 100%;
         height: auto;
         padding-left: 20px;
+        padding-top:5px;
         overflow: auto;
 
         >div.main {
@@ -628,6 +636,7 @@ div[content] {
             width: calc(100% - 140px);
             height: auto;
             margin-bottom: 10px;
+            padding:5px;
 
             >div.questiontitle {
                 display: block;
