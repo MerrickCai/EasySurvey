@@ -58,7 +58,7 @@ router.beforeEach(async (to, from) => {
     } catch (error) {
       ElMessage({
         message: '记住密码，自动登录失败',
-        type: 'success',
+        type: 'error',
         duration: 5000,
         showClose: true,
         center: true

@@ -128,8 +128,8 @@ async function register(account, password, agree) {
             </div>
         </div>
         <div class="typeArea">
-            <input type="text" v-model="user.account" placeholder="请输入用户名 / 手机号 / Email" />
-            <input type="password" v-model="user.password" placeholder="设置密码（8-20位字母、数字或特殊符号）" />
+            <input type="text" v-model="user.account" placeholder="请输入手机号或学号" />
+            <input type="password" v-model="user.password" placeholder="请输入密码：8-20位字母数字+特殊字符（_!.）" />
         </div>
         <div class="functionArea">
             <input type="checkbox" v-model="user.agree" />
@@ -217,6 +217,7 @@ async function register(account, password, agree) {
             background-color: rgb(255, 255, 255);
             text-indent: 12px;
             font-size: 13px;
+            color: rgba(30, 111, 255, 1);
 
             &:nth-child(1) {
                 margin-bottom: 15px;

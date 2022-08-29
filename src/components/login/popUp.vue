@@ -45,7 +45,7 @@ function jump() {
   if (route.query.redirect) { //判断用户是否从其他页面过来
     ElMessage({
       message: '跳过成功',
-      type: 'warning',
+      type: 'success',
       duration: 5000,
       showClose: true,
       center: true
@@ -108,9 +108,39 @@ function validate(age) {
 //--------------------------- 账号密码规则验证 -----------------------------
 
 
+//--------------------------- 检查用户之前填写的地区年龄 -----------------------------
+const title = reactive({
+  p1: '为了保证问卷质量',
+  p2: '我们希望获知您的如下信息'
+})
+const user = reactive({ area: ['广东省', '广州市', '番禺区'], age: "" })
+axios({
+  url: `https://q.denglu1.cn/user/getUserMessage/${datas.user.userId}`,
+  method: "get",
+  withCredentials: true,
+  headers: { "Content-Type": "application/json" },
+  headers: { token: datas.user.token },
+}).then((response) => {
+  const data = response.data.data
+  if (data.province && data.age) {
+    //改标题
+    title.p1 = '系统已自动保存您上次填写信息'
+    title.p2 = '请检查是否有误'
+    //改默认内容
+    // user.area.push(data.province)   ------  等后台将data.province改成数组形式
+    user.age = data.age
+    console.log(user.area)
+    //默认已经填完
+    confirm.area = true
+    confirm.age = true
+  }
+}).catch((error) => {
+  console.log(error)
+})
+//--------------------------- 检查用户之前填写的地区年龄 -----------------------------
+
 
 //--------------------------- 提交信息 -----------------------------
-const user = reactive({ area: "", age: "" })
 async function upLoad(area, age) {
   if (!(confirm.area && confirm.age)) { //用户没填完
     ElMessage({
@@ -172,8 +202,8 @@ async function upLoad(area, age) {
   <div class="wrapper">
 
     <div class="titleArea">
-      <p>为了保证问卷质量</p>
-      <p>我们希望获知您的如下信息</p>
+      <p>{{ title.p1 }}</p>
+      <p>{{ title.p2 }}</p>
     </div>
 
     <div class="typeArea">
