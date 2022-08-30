@@ -19,7 +19,7 @@
 
         <div content v-if="Survey.status.ongoing">
             <!-- 进度条 -->
-            <div class="shadow"></div>
+            <!-- <div class="shadow"></div> -->
             <div class="progress" @click="scrollTo($event)">
                 <span class="progress-part" v-for="item of survey.questionList" :key="item.questionId"
                     :style="{ backgroundColor: `${item.progressPartbcg}` }">
@@ -540,7 +540,10 @@ div[content] {
         padding-left: 20px;
         padding-top: 5px;
         overflow: auto;
-
+        scrollbar-width: none; /* Firefox */
+       &::-webkit-scrollbar {
+           display: none; /* Chrome Safari */
+       }
         >div.main {
             display: flex;
             flex-direction: column;

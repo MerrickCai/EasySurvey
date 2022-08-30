@@ -4,7 +4,7 @@
         <!-- 问卷内容 -->
         <div content>
             <!-- 进度条 -->
-            <div class="shadow"></div>
+            <!-- <div class="shadow"></div> -->
             <div class="progress" @click="scrollTo($event)">
                 <div class="outer-thumb" ref="thumb">
                     <div class="bluebcg" ref="bluebcg"></div>
@@ -490,6 +490,10 @@ div[content] {
         padding-left: 20px;
         overflow: auto;
         margin-top:100px;
+        scrollbar-width: none; /* Firefox */
+        &::-webkit-scrollbar {
+           display: none; /* Chrome Safari */
+       }
         >div.main {
             display: flex;
             flex-direction: column;
