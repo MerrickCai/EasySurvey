@@ -8,7 +8,7 @@
             :key="item.user"
             class="scrollbar-demo-item"
           >
-            <span class="username">{{ item.user.username }}</span>
+            <span class="username">{{ item.user.phone_number }}</span>
             <span class="userscore">得分: {{ item.score }}</span>
             <span class="userdetail"  @click="showDetail(item.user.id,filenews.context.questionnaire.id)">详情</span>
             <span class="userdel" @click="deluser(item.user.id,filenews.context.questionnaire.id,index)">删除</span>
