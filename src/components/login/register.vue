@@ -41,7 +41,7 @@ function validate(account, password) {
 
 
 
-//--------------------------- 登录逻辑-----------------------------
+//--------------------------- 注册逻辑-----------------------------
 const user = reactive({ account: '', password: '', agree: false })
 async function register(account, password, agree) {
     if (agree === false) { // 确认用户是否同意《用户隐私协议》
@@ -87,9 +87,19 @@ async function register(account, password, agree) {
             datas.user.status = true
             datas.user.account = account
             datas.user.password = password
-            datas.user.userId = response.data.data.userId
-            datas.user.token = response.data.data.token
-            datas.user.refreshtoken = response.data.data.refreshtoken
+            //注册完帮助用户登录
+            axios({
+                url: "https://q.denglu1.cn/user/login",
+                method: "post",
+                withCredentials: true,
+                headers: { "Content-Type": "application/json" },
+                data: { phone_number: account, password: password },
+            }).then((response) => {
+                //写入用户数据
+                datas.user.userId = response.data.data.userId
+                datas.user.token = response.data.data.token
+                datas.user.refreshtoken = response.data.data.refreshtoken
+            })
             //默认记住账号密码到本地
             localStorage.setItem('account', account)
             localStorage.setItem('password', password)
@@ -115,7 +125,7 @@ async function register(account, password, agree) {
         console.log(error)
     })
 }
-//--------------------------- 登录逻辑-----------------------------
+//--------------------------- 注册逻辑-----------------------------
 </script>
 
 <template>
