@@ -6,7 +6,9 @@ const router = useRouter()
 const route = useRoute()
 const datas = useStore()
 
-// 退出登录
+
+
+// ----------------------------------- 退出登录 ----------------------------------
 function logOut() {
     if (datas.user.status === false) { //用户在不需要登录的页面
         router.push("/login")
@@ -15,7 +17,7 @@ function logOut() {
     ElMessage({
         message: '已为您退出登录',
         type: 'success',
-        duration: 5000,
+        duration: 4000,
         showClose: true,
         center: true
       })
@@ -37,6 +39,22 @@ function logOut() {
         query: { redirect: route.fullPath },
     })
 }
+// ----------------------------------- 退出登录 ----------------------------------
+
+
+
+
+// ----------------------------------- 开发中通知 ----------------------------------
+function devpop(){
+    ElMessage({
+        message: '开发中',
+        type: 'warning',
+        duration: 4000,
+        showClose: true,
+        center: true
+      })
+}
+// ----------------------------------- 开发中通知 ----------------------------------
 </script>
 
 <template>
@@ -49,8 +67,8 @@ function logOut() {
             <Transition name="navbar">
                 <div v-show="datas.navShow">
                     <div button @click="router.push('/surveynew')">创建问卷</div>
-                    <div img ><img src="/navbar_1.png"/></div>
-                    <div img avatar @click="router.push('/surveyComplex')"><img src="/navbar_3.jpg" /></div>
+                    <div img @click="devpop"><img src="/navbar_1.png"/></div>
+                    <div img avatar @click="devpop"><img src="/navbar_3.jpg" /></div>
                     <div img @click="logOut"><img src="/navbar_2.png" /></div>
                 </div>
             </Transition>

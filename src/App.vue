@@ -43,7 +43,7 @@ router.beforeEach(async (to, from) => {
       ElMessage({
         message: '记住密码，自动登录成功',
         type: 'success',
-        duration: 5000,
+        duration: 4000,
         showClose: true,
         center: true
       })
@@ -59,7 +59,7 @@ router.beforeEach(async (to, from) => {
       ElMessage({
         message: '记住密码，自动登录失败',
         type: 'error',
-        duration: 5000,
+        duration: 4000,
         showClose: true,
         center: true
       })

@@ -206,7 +206,7 @@ function sumbit() {
                 ElMessage({
                     message: '问卷已收集齐了',
                     type: 'warning',
-                    duration: 5000,
+                    duration: 4000,
                     showClose: true,
                     center: true
                 })
@@ -217,7 +217,7 @@ function sumbit() {
             ElMessage({
                 message: '提交失败,请勿重复提交',
                 type: 'error',
-                duration: 5000,
+                duration: 4000,
                 showClose: true,
                 center: true
             })
