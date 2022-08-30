@@ -15,7 +15,7 @@ export default [
                 // slider的背景颜色
                 bcg: '#f5f5f5',
                 //滑块的样式
-                silderSrc: '/blue.png',
+                silderSrc: '/img/blue.png',
                 titleBorder: 0,
                 progressPartbcg: '#ccc',
                 secscore:10,
@@ -70,7 +70,7 @@ export default [
                 // slider的背景颜色
                 bcg: '#f5f5f5',
                 //滑块的样式
-                silderSrc: '/blue.png',
+                silderSrc: '/img/blue.png',
                 titleBorder: 0,
                 progressPartbcg: '#ccc',
                 secscore:5,
@@ -126,7 +126,7 @@ export default [
                 // slider的背景颜色
                 bcg: '#f5f5f5',
                 //滑块的样式
-                silderSrc: '/blue.png',
+                silderSrc: '/img/blue.png',
                 titleBorder: 0,
                 progressPartbcg: '#ccc',
                 secscore:5,
@@ -183,7 +183,7 @@ export default [
                 // slider的背景颜色
                 bcg: '#f5f5f5',
                 //滑块的样式
-                silderSrc: '/blue.png',
+                silderSrc: '/img/blue.png',
                 titleBorder: 0,
                 progressPartbcg: '#ccc',
                 secscore:5,
@@ -242,7 +242,7 @@ export default [
                 // slider的背景颜色
                 bcg: '#f5f5f5',
                 //滑块的样式
-                silderSrc: '/blue.png',
+                silderSrc: '/img/blue.png',
                 titleBorder: 0,
                 progressPartbcg: '#ccc',
                 secscore:5,
@@ -299,7 +299,7 @@ export default [
                 // slider的背景颜色
                 bcg: '#f5f5f5',
                 //滑块的样式
-                silderSrc: '/blue.png',
+                silderSrc: '/img/blue.png',
                 titleBorder: 0,
                 progressPartbcg: '#ccc',
                 secscore:5,
@@ -356,7 +356,7 @@ export default [
                 // slider的背景颜色
                 bcg: '#f5f5f5',
                 //滑块的样式
-                silderSrc: '/blue.png',
+                silderSrc: '/img/blue.png',
                 titleBorder: 0,
                 progressPartbcg: '#ccc',
                 secscore:5,

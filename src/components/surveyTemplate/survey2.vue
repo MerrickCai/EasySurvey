@@ -66,9 +66,9 @@
                                 <span class="num" v-if="!(j % 2)">{{  j  }}</span>
                             </div>
                             <img class="thumb" :style="{ left: `${(elem.value) * (400 / (barArr[i].length - 1))}px` }"
-                                :src="elem.value === 0 ? item.silderSrc : '/blue.png'">
+                                :src="elem.value === 0 ? item.silderSrc : '/img/blue.png'">
                             <span class="edit" v-show="!elem.isEdit" @click="editHandle(elem, index)">{{  elem.value 
-                                }}<img src="/icon-edit.png"></span>
+                                }}<img src="/img/icon-edit.png"></span>
                             <input class="editinput" type="text" v-show="elem.isEdit"
                                 @blur="editHandle2(elem, item, $event)" @keydown.enter="editHandle2(elem, item, $event)"
                                 :value="elem.value" ref="myRef">
@@ -154,7 +154,7 @@ for (let i in surveyObj.value.questionInfoMap) {
     obj.progressPartbcg = '#ccc';
     obj.question = optionDetail[start];
     obj.questionId = surveyObj.value.optionMap[i][0].questionId;
-    obj.silderSrc = '/blue.png';
+    obj.silderSrc = '/img/blue.png';
     obj.score = item.dominate;
     obj.staticScore = obj.score;
     obj.secscore = surveyObj.value.optionMap[i][0].dominate;
@@ -251,11 +251,11 @@ function distributeScore(elem, item, num) {
     //   按照分数，如果分配完了背景颜色改变
     if (item.score === 0) {
         item.bcg = '#e5e5e5';
-        item.silderSrc = '/disable.png';
+        item.silderSrc = '/img/disable.png';
     }
     if (item.score > 0) {
         item.bcg = '#f5f5f5';
-        item.silderSrc = '/blue.png';
+        item.silderSrc = '/img/blue.png';
     }
 }
 // -----------------------------分配分数相关的变量和方法-----------------------------

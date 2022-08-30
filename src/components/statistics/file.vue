@@ -144,7 +144,7 @@ async function sharefile() {
       top: 3px;
       width: 16px;
       height: 16px;
-      background-image: url(/share.png);
+      background-image: url(/img/share.png);
       background-size: cover;
     }
 

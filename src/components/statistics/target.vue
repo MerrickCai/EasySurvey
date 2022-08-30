@@ -22,7 +22,7 @@
             <img
               class="change"
               style="display: inline"
-              src="/revise.png"
+              src="/img/revise.png"
               alt=""
               @click="ChangePlanShow"
             />
@@ -47,7 +47,7 @@
             <img
               class="change"
               style="display: inline"
-              src="/revise.png"
+              src="/img/revise.png"
               alt=""
               @click="ChangeMoneyShow"
             />
