@@ -38,22 +38,19 @@
 </template>
 
 <script setup>
-import { ref ,watch,inject} from "vue";
+  import axios from "axios";
+import clipboard3 from "vue-clipboard3";
+import { ElMessage, ElMessageBox  } from 'element-plus'
+import { ref} from "vue";
 import emitter from "../../mitt";
 import { useStore } from "../../PiniaStores/index.js";
 const datas = useStore();
-import axios from "axios";
-import clipboard3 from "vue-clipboard3";
-import { ElMessage, ElMessageBox  } from 'element-plus'
+
 
 
 
 const emit = defineEmits(["update:clickrotate", "deletefile"]);
 const props = defineProps(["index", "clickrotate", "item"]);
-
-//修改有效问卷数
-const reload = inject('reload')
-
 
 //点击文件夹阴影旋转
 let shadow = ref("shadow");

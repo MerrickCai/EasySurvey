@@ -73,11 +73,11 @@
 </template>
 
 <script setup>
-import { ref, nextTick, onMounted, onBeforeUpdate, watch, reactive,inject } from "vue";
+import axios from "axios";
+import { ref, nextTick, watch, reactive } from "vue";
 import emitter from "../../mitt";
 import { useStore } from "../../PiniaStores/index.js";
 const datas = useStore();
-import axios from "axios";
 
 //接收确定是哪一份问卷
 let num = ref("");

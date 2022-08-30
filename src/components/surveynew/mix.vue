@@ -250,7 +250,7 @@ li {
     }
   }
   .el-scrollbar {
-    width: 720px;
+    width: 800px;
     height: 130px;
 
     --el-scrollbar-opacity: 0.3;
