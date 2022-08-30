@@ -1,7 +1,7 @@
 <template>
 <div wrapper>
             <!-- 进度条 -->
-            <div class="zhedang"></div>
+            <!-- <div class="zhedang"></div> -->
             <div class="progress" @click="scrollTo($event)">
                 <div class="outer-thumb" ref="thumb">
                     <div class="bluebcg" ref="bluebcg" :style="{ height: `${bluebcg_height}px` }"></div>
@@ -35,8 +35,8 @@
                                 <span class="num" v-if="!(j % 2)">{{ j }}</span>
                             </div>
                             <img class="thumb" :style="{ left: `${(elem.value) * (400 / (barArr[i].length - 1))}px` }"
-                                :src="elem.value === 0 ? '/disable.png' : '/blue.png'">
-                            <span class="edit">{{elem.value}}<img src="/icon-edit.png"></span>
+                                :src="elem.value === 0 ? '/img/disable.png' : '/img/blue.png'">
+                            <span class="edit">{{elem.value}}<img src="/img/icon-edit.png"></span>
                         </div>
                     </div>
                 </div>
@@ -243,7 +243,10 @@ div[wrapper] {
     width: 1100px;
     height: 450px;
     overflow: auto;
-
+    scrollbar-width: none; /* Firefox */
+       &::-webkit-scrollbar {
+           display: none; /* Chrome Safari */
+       }
     .main {
         background-color: white;
         height: 300px;

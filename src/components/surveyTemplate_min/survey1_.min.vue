@@ -19,7 +19,7 @@ for (let i in surveyObj.value.answerMap) {
   obj.questionId = i;
   obj.answerValue = surveyObj.value.answerMap[i][0].optionId
   obj.optionList = surveyObj.value.optionMap[i]
-  obj.value = obj.answerValue - surveyObj.value.optionMap[i][0].id;
+  obj.value = obj.answerValue - surveyObj.value.optionMap[i][0].id +1 ;
   obj.font = [];
   for (let elem of obj.optionList) {
     obj.font.push(elem.detail);
@@ -95,7 +95,7 @@ const barArr = new Array(survey.quesList.length)
 <template>
   <div wrapper>
       <div class="survey">
-        <div class="scrollbar_shadow"></div>
+        <!-- <div class="scrollbar_shadow"></div> -->
         <!-- 进度条 -->
         <div class="progress" @click="scrollTo($event)">
           <div class="thumb" ref="thumb">
@@ -273,6 +273,10 @@ div.survey {
     overflow-y: auto;
     position: relative;
     background-color: white;
+    scrollbar-width: none; /* Firefox */
+       &::-webkit-scrollbar {
+           display: none; /* Chrome Safari */
+       }
     >p[intro] {
       display: block;
       height: auto;
