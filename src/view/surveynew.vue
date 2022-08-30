@@ -3,7 +3,7 @@
     <!--装饰品-->
     <div class="decoration1"></div>
     <div class="decoration5"></div>
-    <img dog-ear src="/tangible.png" />
+    <img dog-ear src="/img/tangible.png" />
     <!--装饰品-->
     <div class="container">
       <div class="title">

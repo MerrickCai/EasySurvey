@@ -132,7 +132,7 @@ async function register(account, password, agree) {
     <div class="wrapper">
         <div class="title">用户注册</div>
         <div class="imgUpload">
-            <img src="/circle.png" alt="默认头像" />
+            <img src="/img/circle.png" alt="默认头像" />
             <div button>
                 <div>+上传头像</div>
             </div>

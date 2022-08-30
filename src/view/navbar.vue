@@ -60,7 +60,7 @@ function devpop(){
 <template>
     <nav>
         <div logo @click="router.push('/')">
-            <img src="/logo.png" />
+            <img src="/img/logo.png" />
             <div>问卷易</div>
         </div>
         <div links>
@@ -70,6 +70,7 @@ function devpop(){
                     <div img @click="devpop" ><img src="/navbar_1.png"/></div>
                     <div img avatar @click="devpop"><img src="/navbar_3.jpg" /></div>
                     <div img @click="logOut"><img src="/navbar_2.png" /></div>
+
                 </div>
             </Transition>
         </div>

@@ -1,7 +1,7 @@
 <script setup>
 //随机背景图
 const background = {
-   url: ['/login_cloud.png', '/login_mountain.png', 'login_mount.jpg'],
+   url: ['/img/login_cloud.png', '/img/login_mountain.png', '/img/login_mount.jpg'],
    random(x, y) {//随机返回[x,y]的数字
       return Math.floor(Math.random() * (y - x + 1)) + x
    },
