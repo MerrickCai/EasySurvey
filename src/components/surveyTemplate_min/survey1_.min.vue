@@ -19,7 +19,7 @@ for (let i in surveyObj.value.answerMap) {
   obj.questionId = i;
   obj.answerValue = surveyObj.value.answerMap[i][0].optionId
   obj.optionList = surveyObj.value.optionMap[i]
-  obj.value = surveyObj.value.optionMap[i][surveyObj.value.optionMap[i].length - 1].id - obj.answerValue;
+  obj.value = obj.answerValue - surveyObj.value.optionMap[i][0].id;
   obj.font = [];
   for (let elem of obj.optionList) {
     obj.font.push(elem.detail);

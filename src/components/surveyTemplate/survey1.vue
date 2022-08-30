@@ -73,7 +73,7 @@
           <h3>{{  survey.intro.title  }}</h3>
           <p>感谢您的答题，本次问卷已全部结束</p>
         </div>
-        <el-button type="primary" class="finish-submit">完成答题</el-button>
+        <el-button type="primary" class="finish-submit"  @click="router.push('/')">完成答题</el-button>
       </div>
     </div>
 
@@ -86,6 +86,8 @@ import { ElMessage } from 'element-plus'
 import { ref, inject, reactive } from 'vue'
 import axios from "axios"
 import { useStore } from "../../PiniaStores/index.js"
+import { useRouter } from "vue-router"
+const router = useRouter()
 const datas = useStore()
 
 
@@ -183,7 +185,7 @@ function sumbit() {
         ElMessage({
           message: '问卷已收集齐了',
           type: 'warning',
-          duration: 5000,
+          duration: 4000,
           showClose: true,
           center: true
         })
@@ -194,7 +196,7 @@ function sumbit() {
       ElMessage({
         message: '提交失败,请勿重复提交',
         type: 'error',
-        duration: 5000,
+        duration: 4000,
         showClose: true,
         center: true
       })

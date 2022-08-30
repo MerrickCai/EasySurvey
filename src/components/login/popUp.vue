@@ -36,7 +36,7 @@ function jump() {
     ElMessage({
       message: '请稍后跳过',
       type: 'warning',
-      duration: 5000,
+      duration: 4000,
       showClose: true,
       center: true
     })
@@ -46,7 +46,7 @@ function jump() {
     ElMessage({
       message: '跳过成功',
       type: 'success',
-      duration: 5000,
+      duration: 4000,
       showClose: true,
       center: true
     })
@@ -97,7 +97,7 @@ function validate(age) {
     ElMessage({
       message: '请输入正确的年龄',
       type: 'warning',
-      duration: 5000,
+      duration: 4000,
       showClose: true,
       center: true
     })
@@ -146,7 +146,7 @@ async function upLoad(area, age) {
     ElMessage({
       message: '请填写以上信息',
       type: 'warning',
-      duration: 5000,
+      duration: 4000,
       showClose: true,
       center: true
     })
@@ -174,7 +174,7 @@ async function upLoad(area, age) {
       ElMessage({
         message: '信息获取成功',
         type: 'success',
-        duration: 5000,
+        duration: 4000,
         showClose: true,
         center: true
       })
@@ -188,7 +188,7 @@ async function upLoad(area, age) {
       ElMessage({
         message: '由于网络问题上传失败',
         type: 'error',
-        duration: 5000,
+        duration: 4000,
         showClose: true,
         center: true
       })
