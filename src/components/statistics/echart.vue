@@ -525,7 +525,8 @@ function showDetail(userId, questionnaireId) {
 
 
 //删除用户作答
-function deluser(userid,fileid,index) {
+function deluser(userid, fileid, index) {
+  if (!confirm('是否要删除该用户的作答记录？')) return;
    axios({
     url: `https://q.denglu1.cn/deleteUserAnswer/${userid}/${fileid}`,
     method: "get",

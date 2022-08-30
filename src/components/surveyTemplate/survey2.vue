@@ -88,7 +88,7 @@
                     <h3>{{  survey.intro.info_title  }}</h3>
                     <p>感谢您的答题，本次问卷已全部结束</p>
                 </div>
-                <el-button type="primary" class="finish-submit">完成答题</el-button>
+                <el-button type="primary" class="finish-submit"   @click="router.push('/')">完成答题</el-button>
             </div>
         </div>
     </div>
@@ -99,6 +99,8 @@ import { ElMessage } from 'element-plus'
 import { ref, inject, reactive, computed, nextTick } from 'vue'
 import axios from "axios"
 import { useStore } from "../../PiniaStores/index.js"
+import { useRouter } from "vue-router"
+const router = useRouter()
 const datas = useStore()
 
 

@@ -81,7 +81,7 @@
                 <h3>{{  survey.intro.info_title  }}</h3>
                 <p>感谢您的答题，本次问卷已全部结束</p>
             </div>
-            <div class="btn">
+            <div class="btn"   @click="router.push('/')">
                 <div>完成答题</div>
             </div>
         </div>
@@ -97,6 +97,8 @@ import { ElMessage } from 'element-plus'
 import axios from "axios"
 import { useStore } from "../../PiniaStores/index.js"
 import { map } from 'lodash';
+import { useRouter } from "vue-router"
+const router = useRouter()
 const datas = useStore()
 const Survey = inject('Survey')
 // --------------------------- 获取父组件传入的问卷状态和数据 --------------------
