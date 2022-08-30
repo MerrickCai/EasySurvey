@@ -18,7 +18,7 @@
     <template v-if="Survey.status.ongoing">
       <div class="survey">
         <p title>{{  survey.intro.title  }}</p>
-        <div class="scrollbar_shadow"></div>
+        <!-- <div class="scrollbar_shadow"></div> -->
         <!-- 进度条 -->
         <div class="progress" @click="scrollTo($event)">
           <div>
@@ -451,7 +451,10 @@ div.survey {
     overflow: auto;
     position: relative;
     background-color: white;
-
+    scrollbar-width: none; /* Firefox */
+    &::-webkit-scrollbar {
+       display: none; /* Chrome Safari */
+     }
     >p[intro] {
       display: block;
       height: auto;

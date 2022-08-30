@@ -24,7 +24,7 @@
             <!--问卷题目和介绍-->
 
             <!-- 进度条 -->
-            <div class="zhedang"></div>
+            <!-- <div class="zhedang"></div> -->
             <div class="progress" @click="scrollTo($event)">
                 <div>
                     <!-- 进度条分段，使得点击提交按钮后进度条可以分段显示红色背景，多少个题目就分多少段 (外面多个div包裹下面的style的last-child才能生效)-->
@@ -647,7 +647,10 @@ div[wrapper] {
     width: 1155px;
     height: 350px;
     overflow: auto;
-
+    scrollbar-width: none; /* Firefox */
+    &::-webkit-scrollbar {
+       display: none; /* Chrome Safari */
+     }
     .main {
         background-color: white;
         height: 300px;
