@@ -41,7 +41,7 @@
   import axios from "axios";
 import clipboard3 from "vue-clipboard3";
 import { ElMessage, ElMessageBox  } from 'element-plus'
-import { ref} from "vue";
+import { ref ,watch,inject} from "vue";
 import emitter from "../../mitt";
 import { useStore } from "../../PiniaStores/index.js";
 const datas = useStore();
