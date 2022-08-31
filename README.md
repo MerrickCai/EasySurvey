@@ -1,7 +1,7 @@
 
 # 问卷调查网站
 
-- 网址：[https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/](https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/)
+- 网址：[https://q.denglu1.cn/](https://q.denglu1.cn/)
 
 - 仓库开源地址：[https://merrick-frontend.coding.net/public/survey/survey/git/files](https://merrick-frontend.coding.net/public/survey/survey/git/files)
 

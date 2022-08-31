@@ -66,6 +66,7 @@ async function login(account, password, remember) {
     data: { phone_number: account, password: password },
   })
     .then((response) => {
+      console.log(response)
       if (response.data.code === 200) { //账号密码正确
         ElMessage({
           message: '登录成功',
