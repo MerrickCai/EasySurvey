@@ -29,7 +29,7 @@
 
     - 代码托管：[Coding](https://coding.net/)
 
-    - 网站部署上线：[腾讯云](https://cloud.tencent.com/)
+    - 网站部署：腾讯云服务器（Nginx）
 
 ## 开发
 
