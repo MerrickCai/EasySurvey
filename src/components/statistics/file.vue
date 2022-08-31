@@ -101,7 +101,7 @@ function delfile() {
 const { toClipboard } = clipboard3();
 async function sharefile() {
   try {
-    await toClipboard( "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +props.item.id);
+    await toClipboard( "https://q.denglu1.cn/#/survey/" +props.item.id);
     ElMessage({
     message: '链接复制成功!',
     type: 'success',

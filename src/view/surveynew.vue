@@ -454,7 +454,7 @@ console.log( typeinput);
           console.log(response);
           link.value = response.data.data.link;
           linkqr.value =
-            "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
+            "https://q.denglu1.cn/#/survey/" +
             parseInt(link.value);
         })
         .catch((error) => {
@@ -491,7 +491,7 @@ console.log( typeinput);
           console.log(response);
           link.value = response.data.data.link;
           linkqr.value =
-            "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
+            "https://q.denglu1.cn/#/survey/" +
             parseInt(link.value);
         })
         .catch((error) => {
@@ -531,7 +531,7 @@ console.log( typeinput);
           console.log(response);
           link.value = response.data.data.link;
           linkqr.value =
-            "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
+            "https://q.denglu1.cn/#/survey/" +
             parseInt(link.value);
         })
         .catch((error) => {
@@ -574,7 +574,7 @@ console.log( typeinput);
           console.log(response);
           link.value = response.data.data.link;
           linkqr.value =
-            "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
+            "https://q.denglu1.cn/#/survey/" +
             parseInt(link.value);
         })
         .catch((error) => {
@@ -613,7 +613,7 @@ console.log( typeinput);
           console.log(response);
           link.value = response.data.data.link;
           linkqr.value =
-            "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
+            "https://q.denglu1.cn/#/survey/" +
             parseInt(link.value);
         })
         .catch((error) => {
@@ -650,7 +650,7 @@ console.log( typeinput);
           console.log(response);
           link.value = response.data.data.link;
           linkqr.value =
-            "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
+            "https://q.denglu1.cn/#/survey/" +
             parseInt(link.value);
         })
         .catch((error) => {
@@ -670,7 +670,7 @@ console.log( typeinput);
 }
 let link = ref(1);
 let linkqr = ref(
-  "https://survey-2gjmv1kn3ae2d26e-1258864451.ap-shanghai.app.tcloudbase.com/#/survey/" +
+  "https://q.denglu1.cn/#/survey/" +
   parseInt(link.value)
 );
 const { toClipboard } = clipboard3();
