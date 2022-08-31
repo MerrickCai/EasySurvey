@@ -92,7 +92,6 @@ let typeview = computed(() => typelist[type.value - 1]);
 let scroll = ref(0);
 function updatescroll() {
   scroll.value = scroll.value + 1;
-  console.log(scroll.value);
 }
 provide("changescroll", {
   scroll,

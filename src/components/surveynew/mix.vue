@@ -2,7 +2,7 @@
   <li>
     <p class="itemnav">
       <select name="" class="type" @change="typechange(index)">
-        <option selected>单选</option>
+        <option>单选</option>
         <option>多选</option>
         <option>文本</option>
       </select>
@@ -94,15 +94,23 @@
 </template>
 
 <script setup>
-import { ref, nextTick, inject, reactive } from "vue";
+import { ref, nextTick, inject, reactive, onMounted } from "vue";
 import { nanoid } from "nanoid";
 const props = defineProps(["quesitem", "mixfile", "mixreceive", "mixdeleteques","index"]);
 let titletype=ref('单选')
+//
+onMounted(()=>{
+  var selecttype=document.getElementsByTagName('select')
+  selecttype[props.index].options[props.quesitem.question.type].selected=true
+  titletype.value=selecttype[props.index].options[props.quesitem.question.type].text
+})
+
 //存储选项
 var option=[]
 function typechange(index) {
     
     var obj=document.getElementsByTagName('select')
+    console.log(obj);
     //obj.selectedIndex为选中的option的索引,obj.options[obj.selectedIndex].text为选中的文本
     titletype.value=obj[index].options[obj[index].selectedIndex].text
     props.quesitem.question.type=obj[index].selectedIndex
