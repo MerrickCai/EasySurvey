@@ -252,45 +252,45 @@ function Submit() {
                     id
                 })
             })
-            
+
         }
         questionAnswerList.push(questionAnswer)
     })
     console.log('用于提交的questionAnswerList', questionAnswerList)
-    // axios({
-    //     url: `https://q.denglu1.cn/questions/commit`,
-    //     method: 'post',
-    //     withCredentials: true,
-    //     headers: { 'Content-Type': 'application/json' },
-    //     headers: { 'token': datas.user.token },
-    //     data: {
-    //         questionnaire_id: survey.id,
-    //         totalNumber: survey.totalNumber,
-    //         count: survey.count,           //问卷类型：混合（单选，多选，文本）
-    //         effectiveNumber: survey.effectiveNumber,
-    //         questionAnswerList
-    //     }
-    // }).then((response) => {
-    //     console.log('提交完成返回response', response);
-    //     ElMessage({
-    //         message: '记住密码，自动登录成功',
-    //         type: 'success',
-    //         duration: 4000,
-    //         showClose: true,
-    //         center: true
-    //     })
-    //     Survey.status.toEnd()
+    axios({
+        url: `https://q.denglu1.cn/questions/commit`,
+        method: 'post',
+        withCredentials: true,
+        headers: { 'Content-Type': 'application/json' },
+        headers: { 'token': datas.user.token },
+        data: {
+            questionnaire_id: survey.id,
+            totalNumber: survey.totalNumber,
+            count: survey.count,           //问卷类型：混合（单选，多选，文本）
+            effectiveNumber: survey.effectiveNumber,
+            questionAnswerList
+        }
+    }).then((response) => {
+        console.log('提交完成返回response', response);
+        ElMessage({
+            message: '记住密码，自动登录成功',
+            type: 'success',
+            duration: 4000,
+            showClose: true,
+            center: true
+        })
+        Survey.status.toEnd()
 
-    // }).catch((error) => {
-    //     ElMessage({
-    //         message: '请勿重复提交',
-    //         type: 'error',
-    //         duration: 4000,
-    //         showClose: true,
-    //         center: true
-    //     })
-    //     console.log('提交出错',error)
-    // })
+    }).catch((error) => {
+        ElMessage({
+            message: '请勿重复提交',
+            type: 'error',
+            duration: 4000,
+            showClose: true,
+            center: true
+        })
+        console.log('提交出错',error)
+    })
 }
 //-------------------------------- 提交函数---------------------------------------
 </script>
