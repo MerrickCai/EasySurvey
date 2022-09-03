@@ -236,8 +236,9 @@ function Submit() {
         }
         questionAnswerList.push(questionAnswer)
     })
-    // console.log(survey);
-    // console.log(questionAnswerList);
+    console.log(survey);
+    console.log(questionAnswerList);
+    
     axios({
         url: `https://q.denglu1.cn/questions/commit`,
         method: 'post',
