@@ -114,27 +114,26 @@ function echartupdate() {
   let userChart = echarts.init(document.getElementById("echart_user"));
   let userChartpie = echarts.init(document.getElementById("userpie"));
   let province = reactive([]);
+  let pro=reactive([])
+  let pronum=reactive([])
   const provincenum = new Map();
   if (filenews.context.userWithScores != null) {
     for (let i = 0; i < filenews.context.userWithScores.length; i++) {
       if (provincenum.has(filenews.context.userWithScores[i].user.province)) {
-        provincenum[filenews.context.userWithScores[i].user.province]++;
-        console.log(provincenum[filenews.context.userWithScores[i].user.province]);
+        provincenum.set(filenews.context.userWithScores[i].user.province,provincenum.get(filenews.context.userWithScores[i].user.province)+1)
       } else {
-        // provincenum[filenews.context.userWithScores[i].user.province] = 1;
         provincenum.set(filenews.context.userWithScores[i].user.province,1)
       }
-      console.log(provincenum.has(filenews.context.userWithScores[i].user.province));
-      console.log(filenews.context.userWithScores[i].user.province);
+
     }
-    console.log(provincenum);
-    for (let i = 0; i < Object.keys(provincenum).length; i++) {
+    for (let value of provincenum.keys()) {
       let piedata = {};
-      piedata["name"] = Object.keys(provincenum)[i];
-      piedata["value"] = Object.values(provincenum)[i];
+      piedata["name"] = value;
+      piedata["value"] = provincenum.get( value);
       province.push(piedata);
+      pro.push(value)
+      pronum.push(provincenum.get(value))
     }
-    console.log(province);
   }
   userChart.setOption({
     title: { text: "用户群体" },
@@ -189,7 +188,7 @@ function echartupdate() {
       },
     },
     xAxis: {
-      data: Object.keys(provincenum),
+      data: pro,
       axisLabel: {
         rotate: 45,
       },
@@ -199,7 +198,7 @@ function echartupdate() {
       {
         name: "个数",
         type: "bar",
-        data: Object.values(provincenum),
+        data: pronum,
         label: {
           show: true,
           position: "top",
