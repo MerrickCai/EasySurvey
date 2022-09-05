@@ -99,7 +99,7 @@ function getfile() {
     headers: { token: datas.user.token },
   })
     .then((response) => {
-      // console.log(response);
+      console.log(response);
       filenews.context = response.data.data;
       detail.context = response.data.data
       
@@ -119,16 +119,22 @@ function echartupdate() {
     for (let i = 0; i < filenews.context.userWithScores.length; i++) {
       if (provincenum.has(filenews.context.userWithScores[i].user.province)) {
         provincenum[filenews.context.userWithScores[i].user.province]++;
+        console.log(provincenum[filenews.context.userWithScores[i].user.province]);
       } else {
-        provincenum[filenews.context.userWithScores[i].user.province] = 1;
+        // provincenum[filenews.context.userWithScores[i].user.province] = 1;
+        provincenum.set(filenews.context.userWithScores[i].user.province,1)
       }
+      console.log(provincenum.has(filenews.context.userWithScores[i].user.province));
+      console.log(filenews.context.userWithScores[i].user.province);
     }
+    console.log(provincenum);
     for (let i = 0; i < Object.keys(provincenum).length; i++) {
       let piedata = {};
       piedata["name"] = Object.keys(provincenum)[i];
       piedata["value"] = Object.values(provincenum)[i];
       province.push(piedata);
     }
+    console.log(province);
   }
   userChart.setOption({
     title: { text: "用户群体" },

@@ -1,5 +1,6 @@
 <template>
   <li>
+    <!-- 题目最上方 -->
     <p class="itemnav">
       <select name="" class="type" @change="typechange(index)">
         <option>单选</option>
@@ -15,41 +16,27 @@
         >×</i
       >
     </p>
+    <!-- 主题目 -->
     <p class="questitle">
       <span>{{ mixfile.indexOf(quesitem) + 1 }}</span>
       <input
         type="text"
-        ref="questitle"
         v-model="quesitem.question.detail"
         placeholder="请输入题目标题"
-        @blur="questitleshow = true"
-        @keyup.enter="questitleshow = true"
       />
     </p>
+    <!-- 次级单选 -->
     <div class="radiotype" v-if="titletype=='单选'">
-    <el-scrollbar max-height="400px">
       <p class="optionall" v-for="(con, index) in quesitem.options">
         <span class="circle"></span>
-        <!-- <span
-          class="option"
-          v-show="!optionshow[index]"
-          @click="optionsshow(index, con)"
-        >
-          {{ con.detail }}
-        </span> -->
         <input
           type="text"
-          ref="optiontitle"
           placeholder="请输入题目标题"
           v-model="con.detail"
-          @blur="optionshow[index] = false"
-          @keyup.enter="optionshow[index] = false"
         />
         <i
           class="deloption"
           @click="deleoption(index, con)"
-          ref="deleteo"
-          @mousemove="opcursorfail"
           >×</i
         >
       </p>
@@ -57,28 +44,19 @@
         <i class="additem" @click="addaoption()">+</i>
         <span>添加选项</span>
       </p>
-    </el-scrollbar>
     </div>
+    <!-- 次级多选 -->
     <div class="checkboxtype" v-if="titletype=='多选'">
-     <el-scrollbar max-height="400px">
       <p class="optionall" v-for="(con, i) in quesitem.options">
         <span class="fang"></span>
-        <!-- <span class="option" v-show="!optionshow[i]" @click="optionsshow(i)">
-          {{ con.detail }}
-        </span> -->
         <input
           type="text"
-          ref="optiontitle"
           v-model="con.detail"
           placeholder="请输入题目标题"
-          @blur="optionshow[i] = false"
-          @keyup.enter="optionshow[i] = false"
         />
         <i
           class="deloption"
           @click="deleoption(i)"
-          ref="deleteo"
-          @mousemove="opcursorfail"
           >×</i
         >
       </p>
@@ -86,7 +64,8 @@
         <i class="additem" @click="addaoption()">+</i>
         <span>添加选项</span>
       </p>
-    </el-scrollbar></div>
+  </div>
+  <!-- 次级文本 -->
     <div class="texttype" v-if="titletype=='文本'">
     <p class="quesarea"></p></div>
 
@@ -100,8 +79,12 @@ const props = defineProps(["quesitem", "mixfile", "mixreceive", "mixdeleteques",
 let titletype=ref('单选')
 //
 onMounted(()=>{
+  // 用于保存了题目后再次切换回创建问卷单选和多选的类型不会出错
+
   var selecttype=document.getElementsByTagName('select')
+  //使下拉框处的选项按题目的type类型定义
   selecttype[props.index].options[props.quesitem.question.type].selected=true
+  //使创建的问卷类型的次级选项显现
   titletype.value=selecttype[props.index].options[props.quesitem.question.type].text
 })
 
@@ -110,12 +93,13 @@ var option=[]
 function typechange(index) {
     
     var obj=document.getElementsByTagName('select')
-    console.log(obj);
     //obj.selectedIndex为选中的option的索引,obj.options[obj.selectedIndex].text为选中的文本
     titletype.value=obj[index].options[obj[index].selectedIndex].text
     props.quesitem.question.type=obj[index].selectedIndex
+    // 问卷类型为文本类型,删去次级选项的键值
     if(obj[index].selectedIndex==2) {
       option.splice(0,option.length)
+      //储存主题目中单选和多选原写下的题目，使得切换到文本再切换回去后不会丢失
       props.quesitem.options.forEach((item)=>{
         option.push(JSON.parse(JSON.stringify(item)))
       })
@@ -151,37 +135,17 @@ function deleteamount(id) {
     props.mixdeleteques(id);
   }
 }
-//次级题目
-const value1 = ref(true);
-//题目标题
-// let questitle = ref(null);
-// let questitleshow = ref(true);
-// function changeqlshow() {
-//   questitleshow.value = false;
-//   nextTick(() => {
-//     questitle.value.focus();
-//   });
-// }
-//选项题目标题
-let optiontitle = ref([]);
-let optionshow = ref([]);
 
-function optionsshow(index, con) {
-  optionshow.value[index] = true;
-  nextTick(() => {
-    optiontitle.value[index].focus();
-  });
-}
-//添加选项
+//添加次级选项
 function addaoption() {
   props.quesitem.options.push({ detail: "" });
 }
+// 删除次级选项
 function deleoption(id, con) {
-  console.log(con);
   if (props.quesitem.options.length != 1) {
     props.quesitem.options.splice(id, 1);
   }
-  console.log(props.quesitem);
+
 }
 </script>
 
@@ -257,21 +221,6 @@ li {
       margin-top: 3px;
     }
   }
-  .el-scrollbar {
-    width: 800px;
-    height: 130px;
-
-    --el-scrollbar-opacity: 0.3;
-    --el-scrollbar-bg-color: rgba(71, 145, 255, 1);
-    --el-scrollbar-hover-opacity: 0.5;
-    --el-scrollbar-hover-bg-color: rgba(71, 145, 255, 1);
-
-    .el-scrollbar__bar {
-      width: 8px;
-      position: absolute;
-      right: 0;
-    }
-
     .optionall {
       display: flex;
       height: 20px;
@@ -320,7 +269,7 @@ li {
         font-style: normal;
       }
     }
-  }
+  
   .addoption {
     display: flex;
     .additem {

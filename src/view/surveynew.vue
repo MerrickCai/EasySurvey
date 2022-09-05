@@ -8,24 +8,17 @@
     <div class="container">
       <div class="title">
         <!-- 新建问卷标题 -->
-        <!-- <p class="newtitle" v-show="titleshow" @click="changetitleshow">
-          {{ filetitle.info_title }}
-        </p> -->
-        <input type="text" ref="titlein" class="titlein" v-model="filetitle.info_title" @keyup.enter="titleshow = true"
-          @blur="titleshow = true" placeholder="请输入问卷标题" />
+        <input type="text" class="titlein" v-model="filetitle.info_title" 
+          placeholder="请输入问卷标题" />
         <!-- 新建问卷介绍 -->
         <div class="newintro">
           <span class="newintro_title">问卷介绍：</span>
-          <!-- <p class="newintro_con" v-show="introshow" @click="changeintroshow">
-            {{ filetitle.info_para }}
-          </p> -->
-          <textarea cols="30" rows="2" ref="introin" class="introin" v-model="filetitle.info_para"
-            @keyup.enter="introshow = true" @blur="introshow = true"
+          <textarea cols="30" rows="5"  class="introin" v-model="filetitle.info_para"
             placeholder="为了使问卷调查结果更加清晰，准确，请输入关于问卷的简短介绍以及注意事项，方便填写问卷的人更清晰的认识问卷，字数少于500字"></textarea>
         </div>
       </div>
-
       <div class="quearea">
+      <!-- 问卷类型选择标签 -->
         <div class="questype">
           <span class="typetitle">请选择问卷类型:</span>
           <span class="typeall">
@@ -35,7 +28,6 @@
             <span :class="{ typeclick: type == 3 }" @click="type = 3">矩阵</span>
             <span :class="{ typeclick: type == 4 }" @click="type = 4">量表</span>
             <!-- <span :class="{ typeclick: type == 5 }" @click="type = 5">文本</span> -->
-
           </span>
         </div>
 
@@ -134,24 +126,6 @@ if (localStorage.getItem("matrix")) {
       series: 5,
     },
   ]);
-}
-//问卷标题修改
-let titleshow = ref(true);
-let titlein = ref(null);
-function changetitleshow() {
-  titleshow.value = false;
-  nextTick(() => {
-    titlein.value.focus();
-  });
-}
-//问卷介绍修改
-let introshow = ref(true);
-let introin = ref(null);
-function changeintroshow() {
-  introshow.value = false;
-  nextTick(() => {
-    introin.value.focus();
-  });
 }
 //矩阵问卷新增问题
 function receive(quesobj) {
@@ -385,7 +359,6 @@ function keepinfor() {
 }
 //发布问卷
 let show = ref("none");
-let nanswered = reactive([])
 async function pushfile() {
   //判断input是否填写
   let isover = false
@@ -393,9 +366,9 @@ async function pushfile() {
   let isarea = false
   //判断题目选项是否填写
   let input = document.getElementsByTagName('input')
+  // 将伪数组转换为数组
   let typeinput = [].slice.call(input)
   let textarea = document.getElementsByTagName('textarea')
-console.log( typeinput);
   //textarea未填写标红
   if (textarea[0].value == "") {
     textarea[0].style.borderColor = "red"
@@ -420,8 +393,6 @@ console.log( typeinput);
     return element.value != ""
   })
   if (isover == false || isarea == false){
-    console.log(isover);
-    console.log(isarea);
      ElMessage({
     showClose: true,
     message: '请将标红处进行填写!',
@@ -429,8 +400,6 @@ console.log( typeinput);
   })
     }
   if (isover == true && isarea == true) {
-    console.log(1);
-    console.log(type.value);
     if (type.value == 1) {
       radiofile.forEach((element) => delete element.id);
       await axios({
@@ -664,15 +633,20 @@ console.log( typeinput);
         id: nanoid(),
       });
     }
+    //填完一份问卷后将题目介绍清空
+  filetitle.info_title=""
+  filetitle.info_para=""
     show.value = "block";
     localStorage.removeItem("title");
   }
 }
 let link = ref(1);
+// 链接
 let linkqr = ref(
   "https://q.denglu1.cn/#/survey/" +
   parseInt(link.value)
 );
+//二维码
 const { toClipboard } = clipboard3();
 async function getlink() {
   try {
@@ -802,7 +776,7 @@ div.wrapper {
           display: block;
           height: auto;
           width: 100%;
-          height: 50px;
+          height: 100px;
           font-size: 15px;
           color: rgb(0, 0, 0);
           outline: none;
