@@ -21,7 +21,6 @@
 
     <template v-if="titletype=='单选'">
       <div class="quesbox radiotype">
-        <el-scrollbar>
           <p class="optionall" v-for="(con, index) in quesitem.options">
             <span class="circle"></span>
             <input type="text" ref="optiontitle" placeholder="请输入选项内容" v-model="con.detail"
@@ -32,7 +31,6 @@
             <i class="additem" @click="addaoption()">+</i>
             <span>添加选项</span>
           </p>
-        </el-scrollbar>
       </div>
     </template>
 
@@ -60,8 +58,6 @@
         <p class="quesarea"></p>
       </div>
     </template>
-
->>>>>>> main
 
   </li>
 </template>
