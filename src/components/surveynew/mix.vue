@@ -19,11 +19,12 @@
     <!-- 主题目 -->
     <p class="questitle">
       <span>{{ mixfile.indexOf(quesitem) + 1 }}</span>
-      <input
-        type="text"
+      <textarea
+      type="text"
         v-model="quesitem.question.detail"
-        placeholder="请输入题目标题"
-      />
+        placeholder="请输入题目标题">
+       
+      </textarea>
     </p>
     <!-- 次级单选 -->
     <div class="radiotype" v-if="titletype=='单选'">
@@ -206,20 +207,34 @@ li {
     //   height: fit-content;
     //   margin-left: 5px;
     // }
-    input[type="text"] {
-      /* 清除原有input样式 */
+    // input[type="text"] {
+    //   /* 清除原有input样式 */
+    //   -web-kit-appearance: none;
+    //   -moz-appearance: none;
+    //   outline: 0;
+    //   /* 设置我们要的样式 */
+    //   width: 700px;
+    //   height: 20px;
+    //   opacity: 1;
+    //   text-align: left;
+    //   border: none;
+    //   margin-left: 5px;
+    //   margin-top: 3px;
+    // }
+    textarea {
       -web-kit-appearance: none;
-      -moz-appearance: none;
       outline: 0;
-      /* 设置我们要的样式 */
+
       width: 700px;
-      height: 20px;
+      // height: 20px;
       opacity: 1;
       text-align: left;
       border: none;
       margin-left: 5px;
       margin-top: 3px;
-    }
+      resize: none;
+      // overflow: hidden;
+}
   }
     .optionall {
       display: flex;
@@ -251,7 +266,7 @@ li {
       input[type="text"] {
         /* 清除原有input样式 */
         -web-kit-appearance: none;
-        -moz-appearance: none;
+        // -moz-appearance: none;
         outline: 0;
         /* 设置我们要的样式 */
         width: 700px;
