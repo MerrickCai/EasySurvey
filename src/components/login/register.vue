@@ -25,9 +25,10 @@ function validate(account, password) {
         })
         return false
     }
-    if (!/^[0-9a-zA-Z_!.]{8,20}$/.test(password)) { //8-20位字母数字+特殊字符（_!.）
+    // 8-20位字母数字+特殊字符
+    if (!/^[0-9a-zA-Z~!@#$%^&*()_+`\-={}:";'<>?,.\/]{8,20}$/.test(password)) {
         ElMessage({
-            message: '请输入正确的密码: 8-20位字母数字+特殊字符（_!.）',
+            message: '请输入正确的密码: 8-20位字母数字+特殊字符',
             type: 'warning',
             duration: 4000,
             showClose: true,
@@ -139,7 +140,7 @@ async function register(account, password, agree) {
         </div>
         <div class="typeArea">
             <input type="text" v-model="user.account" placeholder="请输入手机号或学号" />
-            <input type="password" v-model="user.password" placeholder="请输入密码：8-20位字母数字+特殊字符（_!.）" />
+            <input type="password" v-model="user.password" placeholder="请输入密码：8-20位字母数字+特殊字符" />
         </div>
         <div class="functionArea">
             <input type="checkbox" v-model="user.agree" />
