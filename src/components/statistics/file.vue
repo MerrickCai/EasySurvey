@@ -42,8 +42,8 @@
 import clipboard3 from "vue-clipboard3";
 import { ElMessage, ElMessageBox  } from 'element-plus'
 import { ref ,watch,inject} from "vue";
-import emitter from "../../mitt";
-import { useStore } from "../../PiniaStores/index.js";
+import emitter from "../../mitt/mitt.js";
+import { useStore } from "../../Stores/index.js";
 const datas = useStore();
 
 

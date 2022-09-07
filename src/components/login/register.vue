@@ -1,6 +1,6 @@
 <script setup>
 import axios from "axios"
-import { useStore } from "../../PiniaStores/index.js"
+import { useStore } from "../../Stores/index.js"
 const datas = useStore()
 import { ElMessage } from 'element-plus'
 

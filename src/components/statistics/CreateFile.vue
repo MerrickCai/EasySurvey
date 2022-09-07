@@ -48,10 +48,10 @@ import file from "./file.vue";
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
-import { useStore } from "../../PiniaStores/index.js";
+import { useStore } from "../../Stores/index.js";
 const datas = useStore();
 import axios from "axios";
-import emitter from "../../mitt";
+import emitter from "../../mitt/mitt.js";
 
 
 

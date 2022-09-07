@@ -94,7 +94,7 @@
 import { ref, reactive, inject } from 'vue'
 import { ElMessage } from 'element-plus'
 import axios from "axios"
-import { useStore } from "../../PiniaStores/index.js"
+import { useStore } from "../../Stores/index.js"
 import { useRouter } from "vue-router"
 const router = useRouter()
 const datas = useStore()
@@ -171,7 +171,7 @@ function scrollTo(e) {
 function onScroll() {
     const scrollMaxDistance = content.value.scrollHeight - content.value.offsetHeight
     thumb.value.setAttribute('style', `top: ${300 * (content.value.scrollTop / scrollMaxDistance) - 8}px`);
-    text.value.innerHTML = `${Math.ceil((content.value.scrollTop / scrollMaxDistance) * 100)} %`
+    text.value.innerHTML = `${Math.floor((content.value.scrollTop / scrollMaxDistance) * 100)} %`
     bluebcg.value.style.height = `${300 * (content.value.scrollTop / scrollMaxDistance)}px`
 }
 // ---------------------------   进度条 ---------------------------------------
