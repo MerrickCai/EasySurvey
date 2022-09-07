@@ -20,6 +20,7 @@
     <p class="questitle">
       <span>{{ mixfile.indexOf(quesitem) + 1 }}</span>
       <textarea
+      ref="titletextarea"
       type="text"
         v-model="quesitem.question.detail"
         placeholder="请输入题目标题">
@@ -74,11 +75,10 @@
 </template>
 
 <script setup>
-import { ref, nextTick, inject, reactive, onMounted } from "vue";
+import { ref, nextTick, inject, reactive, onMounted,watch } from "vue";
 import { nanoid } from "nanoid";
 const props = defineProps(["quesitem", "mixfile", "mixreceive", "mixdeleteques","index"]);
 let titletype=ref('单选')
-//
 onMounted(()=>{
   // 用于保存了题目后再次切换回创建问卷单选和多选的类型不会出错
 
@@ -202,11 +202,6 @@ li {
     &:hover {
       border: 1px dashed rgba(30, 111, 255, 1);
     }
-    // .titlecon {
-    //   width: 700px;
-    //   height: fit-content;
-    //   margin-left: 5px;
-    // }
     // input[type="text"] {
     //   /* 清除原有input样式 */
     //   -web-kit-appearance: none;
@@ -226,7 +221,7 @@ li {
       outline: 0;
 
       width: 700px;
-      // height: 20px;
+      height: 20px;
       opacity: 1;
       text-align: left;
       border: none;
