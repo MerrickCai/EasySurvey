@@ -1,12 +1,14 @@
 <template>
   <div class="wrapper">
-    <!--装饰品-->
+
     <div class="decoration1"></div>
     <div class="decoration5"></div>
     <img dog-ear src="/img/tangible.png" />
-    <!--装饰品-->
+
+
     <div class="container">
       <div class="title">
+
         <!-- 新建问卷标题 -->
         <input type="text" class="titlein" v-model="filetitle.info_title" 
           placeholder="请输入问卷标题" />
@@ -23,11 +25,8 @@
           <span class="typetitle">请选择问卷类型:</span>
           <span class="typeall">
             <span :class="{ typeclick: type == 6 }" @click="type = 6">普通问卷</span>
-            <!-- <span :class="{ typeclick: type == 1 }" @click="type = 1">单选</span>
-            <span :class="{ typeclick: type == 2 }" @click="type = 2">多选</span> -->
             <span :class="{ typeclick: type == 3 }" @click="type = 3">矩阵</span>
             <span :class="{ typeclick: type == 4 }" @click="type = 4">量表</span>
-            <!-- <span :class="{ typeclick: type == 5 }" @click="type = 5">文本</span> -->
           </span>
         </div>
 
@@ -56,6 +55,9 @@
           <span class="sharequick">快分享以上二维码或点击复制<a class="link" @click="getlink">链接</a>填答问卷吧！</span>
         </div>
       </div>
+
+
+      
     </div>
   </div>
 </template>
@@ -69,11 +71,11 @@ import matrixlist from "../components/surveynew/matrixlist.vue";
 import scalelist from "../components/surveynew/scalelist.vue";
 import textlist from "../components/surveynew/textlist.vue";
 import mixlist from "../components/surveynew/mixlist.vue"
-import { useStore } from "../PiniaStores/index.js";
+import { useStore } from "../Stores/index.js";
 import axios from "axios";
 import clipboard3 from "vue-clipboard3";
 import QrcodeVue from "qrcode.vue";
-import { ElMessage, ElMessageBox  } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 //数据
 const datas = useStore();
 //动态组件视图
@@ -133,7 +135,7 @@ function receive(quesobj) {
 }
 //矩阵问卷删除问题
 function deleteques(id) {
-   ElMessageBox.confirm(
+  ElMessageBox.confirm(
     '确定删除吗?',
     '删除题目',
     {
@@ -142,9 +144,9 @@ function deleteques(id) {
       cancelButtonText: '取消',
     })
     .then(() => {
-       fileword.map((i, x) => {
-      if (i.id == id) fileword.splice(x, 1);
-    });
+      fileword.map((i, x) => {
+        if (i.id == id) fileword.splice(x, 1);
+      });
     })
     .catch(() => {
     })
@@ -170,7 +172,7 @@ function sreceive(quesobj) {
 }
 //量表问卷删除问题
 function sdeleteques(id) {
-   ElMessageBox.confirm(
+  ElMessageBox.confirm(
     '确定删除吗?',
     '删除题目',
     {
@@ -179,9 +181,9 @@ function sdeleteques(id) {
       cancelButtonText: '取消',
     })
     .then(() => {
-         scalefile.map((i, x) => {
-      if (i.id == id) scalefile.splice(x, 1);
-    });
+      scalefile.map((i, x) => {
+        if (i.id == id) scalefile.splice(x, 1);
+      });
     })
     .catch(() => {
     })
@@ -216,8 +218,8 @@ function rdeleteques(id) {
     })
     .then(() => {
       radiofile.map((i, x) => {
-      if (i.id == id) radiofile.splice(x, 1);
-    });
+        if (i.id == id) radiofile.splice(x, 1);
+      });
     })
     .catch(() => {
     })
@@ -243,7 +245,7 @@ function creceive(quesobj) {
 }
 //多选问卷删除问题
 function cdeleteques(id) {
-   ElMessageBox.confirm(
+  ElMessageBox.confirm(
     '确定删除吗?',
     '删除题目',
     {
@@ -252,9 +254,9 @@ function cdeleteques(id) {
       cancelButtonText: '取消',
     })
     .then(() => {
-       checkboxfile.map((i, x) => {
-      if (i.id == id) checkboxfile.splice(x, 1);
-    });
+      checkboxfile.map((i, x) => {
+        if (i.id == id) checkboxfile.splice(x, 1);
+      });
     })
     .catch(() => {
     })
@@ -278,7 +280,7 @@ function treceive(quesobj) {
 }
 //文本问卷删除问题
 function tdeleteques(id) {
-   ElMessageBox.confirm(
+  ElMessageBox.confirm(
     '确定删除吗?',
     '删除题目',
     {
@@ -287,9 +289,9 @@ function tdeleteques(id) {
       cancelButtonText: '取消',
     })
     .then(() => {
-       textfile.map((i, x) => {
-      if (i.id == id) textfile.splice(x, 1);
-    });
+      textfile.map((i, x) => {
+        if (i.id == id) textfile.splice(x, 1);
+      });
     })
     .catch(() => {
     })
@@ -315,7 +317,7 @@ function mixreceive(quesobj) {
 }
 //混合问卷删除问题
 function mixdeleteques(id) {
-   ElMessageBox.confirm(
+  ElMessageBox.confirm(
     '确定删除吗?',
     '删除题目',
     {
@@ -324,9 +326,9 @@ function mixdeleteques(id) {
       cancelButtonText: '取消',
     })
     .then(() => {
-       mixfile.map((i, x) => {
-      if (i.id == id) mixfile.splice(x, 1);
-    });
+      mixfile.map((i, x) => {
+        if (i.id == id) mixfile.splice(x, 1);
+      });
     })
     .catch(() => {
     })
@@ -352,7 +354,7 @@ function keepinfor() {
   if (type.value == 6) {
     localStorage.setItem("mix", JSON.stringify(mixfile));
   }
-   ElMessage({
+  ElMessage({
     message: '保存成功!',
     type: 'success',
   })
@@ -651,12 +653,12 @@ const { toClipboard } = clipboard3();
 async function getlink() {
   try {
     await toClipboard(linkqr.value);
-     ElMessage({
-    message: '链接复制成功!',
-    type: 'success',
-  })
+    ElMessage({
+      message: '链接复制成功!',
+      type: 'success',
+    })
   } catch (error) {
-     ElMessage.error('链接复制失败!')
+    ElMessage.error('链接复制失败!')
   }
 }
 //遮罩

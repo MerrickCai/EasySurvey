@@ -2,7 +2,7 @@
 import navbar from "./view/navbar.vue"
 import axios from "axios"
 import { useRouter } from "vue-router"
-import { useStore } from "./PiniaStores/index.js"
+import { useStore } from "./Stores/index.js"
 import { ElMessage } from 'element-plus'
 const router = useRouter()
 const datas = useStore()

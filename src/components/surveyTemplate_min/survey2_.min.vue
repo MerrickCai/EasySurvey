@@ -47,7 +47,7 @@
 
 <script setup>
 import { inject, ref, computed, nextTick,onMounted ,reactive} from 'vue';
-import { useStore } from '../../PiniaStores/index.js'
+import { useStore } from '../../Stores/index.js'
 import axios from 'axios';
 
 // ------------------接受survey父组件传过来的参数。-------------------------------

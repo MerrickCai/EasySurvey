@@ -55,12 +55,12 @@ import surveyComplex from '../surveyTemplate_min/surveyComplex_min.vue';
 
 import * as echarts from "echarts";
 import draggable from "vuedraggable";
-import emitter from "../../mitt";
+import emitter from "../../mitt/mitt.js";
 import { onMounted, ref, reactive, watch,computed, nextTick } from "vue";
 //路由
 import { useRouter } from "vue-router";
-//PiniaStores
-import { useStore } from "../../PiniaStores/index.js";
+//Stores
+import { useStore } from "../../Stores/index.js";
 import axios from "axios";
 const datas = useStore();
 const router = useRouter();

@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, reactive, ref, computed, watch } from "vue"
 import axios from "axios"
-import { useStore } from "../../PiniaStores/index.js"
+import { useStore } from "../../Stores/index.js"
 import { useRouter, useRoute } from "vue-router"
 const datas = useStore()
 const router = useRouter()
@@ -80,7 +80,7 @@ watch(confirm, (n, o) => {
 
 
 //--------------------------- 地区数据 -----------------------------
-import area from "../../PiniaStores/area.js"
+import area from "../../Stores/area.js"
 const props = {
   expandTrigger: "hover",
   children: "childs",

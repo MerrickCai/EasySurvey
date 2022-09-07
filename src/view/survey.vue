@@ -5,7 +5,7 @@ import surveyComplex from '../components/surveyTemplate/surveyComplex.vue'
 import { ref, reactive, provide } from "vue"
 import axios from "axios"
 import { useRoute } from "vue-router"
-import { useStore } from "../PiniaStores/index.js"
+import { useStore } from "../Stores/index.js"
 const route = useRoute()
 const datas = useStore()
 
