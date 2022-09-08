@@ -36,12 +36,12 @@ router.beforeEach(async (to, from) => {
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
         data: {
-          phone_number: localStorage.getItem("account"),
-          password: localStorage.getItem("password"),
+          phone_number: atob(localStorage.getItem("account")),
+          password: atob(localStorage.getItem("password")),
         },
       })
       ElMessage({
-        message: '记住密码，自动登录成功',
+        message: '记住密码，为您自动登录',
         type: 'success',
         duration: 4000,
         showClose: true,
@@ -49,8 +49,8 @@ router.beforeEach(async (to, from) => {
       })
       //写入用户数据
       datas.user.status = true
-      datas.user.account = localStorage.getItem("account")
-      datas.user.password = localStorage.getItem("password")
+      datas.user.account = atob(localStorage.getItem("account"))
+      datas.user.password = atob(localStorage.getItem("password"))
       datas.user.userId = response.data.data.userId
       datas.user.token = response.data.data.token
       datas.user.refreshtoken = response.data.data.refreshtoken

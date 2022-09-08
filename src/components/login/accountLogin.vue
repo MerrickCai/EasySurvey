@@ -84,8 +84,8 @@ async function login(account, password, remember) {
         datas.user.token = response.data.data.token
         datas.user.refreshtoken = response.data.data.refreshtoken
         if (remember) { // 确认用户是否自动登录
-          localStorage.setItem("account", account)
-          localStorage.setItem("password", password)
+            localStorage.setItem('account', btoa(account))
+            localStorage.setItem('password', btoa(password))
         }
         //跳转填写地区和年龄弹窗
         viewId.value = 3
@@ -111,13 +111,28 @@ async function login(account, password, remember) {
     })
 }
 //--------------------------- 登录逻辑-----------------------------
+
+
+
+
+//------------------------------ 开发中 ------------------------------------
+function Dev(str) {
+    ElMessage({
+        message: `${str}开发中`,
+        type: 'warning',
+        duration: 4000,
+        showClose: true,
+        center: true
+    })
+}
+//------------------------------ 开发中 ------------------------------------
 </script>
 
 <template>
   <div class="wrapper">
 
     <div class="selectArea">
-      <a @click="viewId = 0">微信登录</a>
+      <a @click="Dev('微信登录')">微信登录</a>
       <a active @click="viewId = 1">账号登录</a>
     </div>
 

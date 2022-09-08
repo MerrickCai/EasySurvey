@@ -218,8 +218,18 @@ function sumbit() {
       "questionAnswerList": questionAnswerList,
     }
   }).then((response) => {
+    console.log('提交完成返回的response', response);
     if (response.data.code === 200) {
-      if (response.data.msg === '问卷已收集齐了') {
+      if (response.data.msg === '提交成功！') {
+        ElMessage({
+          message: '提交成功',
+          type: 'success',
+          duration: 4000,
+          showClose: true,
+          center: true
+        })
+        Survey.status.toEnd()
+      } else {
         ElMessage({
           message: '问卷已收集齐了',
           type: 'warning',
@@ -227,12 +237,10 @@ function sumbit() {
           showClose: true,
           center: true
         })
-      } else {
-        Survey.status.toEnd()
       }
     } else {
       ElMessage({
-        message: '提交失败,请勿重复提交',
+        message: '请勿重复提交',
         type: 'error',
         duration: 4000,
         showClose: true,
@@ -240,7 +248,14 @@ function sumbit() {
       })
     }
   }).catch((error) => {
-    console.log(error)
+    ElMessage({
+      message: '由于网络问题提交出错',
+      type: 'error',
+      duration: 4000,
+      showClose: true,
+      center: true
+    })
+    console.log('提交出错', error)
   })
 }
 //-------------------------------- 提交函数---------------------------------------

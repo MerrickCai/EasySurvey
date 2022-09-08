@@ -14,7 +14,7 @@ const viewId = inject("viewId")
 
 
 //--------------------------- 账号密码规则验证 -----------------------------
-function validate(account, password,passwordConfirm) {
+function validate(account, password, passwordConfirm) {
     if (!/^[0-9]{10,11}$/.test(account)) { //10-11位纯数字
         ElMessage({
             message: '请输入正确的手机号或学号',
@@ -36,7 +36,7 @@ function validate(account, password,passwordConfirm) {
         })
         return false
     }
-    if (password!==passwordConfirm) {
+    if (password !== passwordConfirm) {
         ElMessage({
             message: '两次输入的密码不一致，请重新输入',
             type: 'warning',
@@ -112,8 +112,8 @@ async function register(account, password, passwordConfirm, agree) {
                 datas.user.refreshtoken = response.data.data.refreshtoken
             })
             //默认记住账号密码到本地
-            localStorage.setItem('account', account)
-            localStorage.setItem('password', password)
+            localStorage.setItem('account', btoa(account))
+            localStorage.setItem('password', btoa(password))
             //跳转填写地区和年龄弹窗
             viewId.value = 3
         } else { //response.data.code === 400=>重复注册
@@ -137,6 +137,19 @@ async function register(account, password, passwordConfirm, agree) {
     })
 }
 //--------------------------- 注册逻辑-----------------------------
+
+
+//------------------------------ 开发中 ------------------------------------
+function Dev(str) {
+    ElMessage({
+        message: `${str}开发中`,
+        type: 'warning',
+        duration: 4000,
+        showClose: true,
+        center: true
+    })
+}
+//------------------------------ 开发中 ------------------------------------
 </script>
 
 <template>
@@ -145,7 +158,7 @@ async function register(account, password, passwordConfirm, agree) {
         <div class="imgUpload">
             <img src="/img/circle.png" alt="默认头像" />
             <div button>
-                <div>+上传头像</div>
+                <div @click="Dev('上传头像')">+上传头像</div>
             </div>
         </div>
         <div class="typeArea">
