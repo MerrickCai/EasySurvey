@@ -23,9 +23,9 @@
       <div class="quesbox radiotype">
           <p class="optionall" v-for="(con, index) in quesitem.options">
             <span class="circle"></span>
-            <input type="text" ref="optiontitle" placeholder="请输入选项内容" v-model="con.detail"
-              @blur="optionshow[index] = false" @keyup.enter="optionshow[index] = false" />
-            <i class="deloption" @click="deleoption(index, con)" ref="deleteo" @mousemove="opcursorfail">×</i>
+            <el-input type="textarea" autosize placeholder="请输入选项内容" v-model="con.detail"
+             />
+            <i class="deloption" @click="deleoption(index, con)" ref="deleteo" >×</i>
           </p>
           <p class="addoption">
             <i class="additem" @click="addaoption()">+</i>
@@ -37,18 +37,16 @@
 
     <template v-else-if="titletype=='多选'">
       <div class="quesbox checkboxtype">
-        <el-scrollbar>
           <p class="optionall" v-for="(con, i) in quesitem.options">
             <span class="fang"></span>
-            <input type="text" ref="optiontitle" v-model="con.detail" placeholder="请输入选项内容"
-              @blur="optionshow[i] = false" @keyup.enter="optionshow[i] = false" />
-            <i class="deloption" @click="deleoption(i)" ref="deleteo" @mousemove="opcursorfail">×</i>
+            <el-input type="textarea" autosize v-model="con.detail" placeholder="请输入选项内容"
+               />
+            <i class="deloption" @click="deleoption(i)" ref="deleteo">×</i>
           </p>
           <p class="addoption">
             <i class="additem" @click="addaoption()">+</i>
             <span>添加选项</span>
           </p>
-        </el-scrollbar>
       </div>
     </template>
 
@@ -189,6 +187,10 @@ li {
     height: auto;
     width: 100%;
     padding: 5px;
+    border: 1px solid transparent; 
+    &:hover {
+      border: 1px dashed rgba(30, 111, 255, 1); 
+    }
 
     span {
       font-size: 16px;
@@ -210,12 +212,8 @@ li {
         outline: none;
         resize: none;
         border: none;
-        padding: 5px;
+        padding: 0;
         box-shadow: none;
-
-        &:focus {
-          box-shadow: 0 0 0 1px rgba(71, 145, 255, 1);
-        }
       }
     }
   }
@@ -256,18 +254,22 @@ li {
         color: rgba(0, 0, 0, 1);
       }
 
-      input[type="text"] {
-        /* 清除原有input样式 */
-        -web-kit-appearance: none;
-        // -moz-appearance: none;
-        outline: 0;
-        /* 设置我们要的样式 */
+      >div.el-textarea {
         width: 700px;
-        height: 20px;
+        :deep(textarea) {
+          width: 700px;
+        height: auto;
         opacity: 1;
         text-align: left;
         border: none;
-        margin-left: 5px;
+        outline: none;
+        resize: none;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        margin: 0;
+        }
+      
       }
 
       .deloption {

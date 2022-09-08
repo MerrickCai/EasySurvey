@@ -18,8 +18,9 @@
       <!-- <span class="titlecon" v-show="questitleshow" @click="changeqlshow">
         {{ quesitem.question.detail }}
       </span> -->
-      <input
-        type="text"
+      <el-input
+        type="textarea"
+        autosize
         ref="questitle"
         v-model="quesitem.question.detail"
         placeholder="请输入题目标题"
@@ -240,19 +241,22 @@ li {
       height: fit-content;
       margin-left: 5px;
     }
-    input[type="text"] {
-      /* 清除原有input样式 */
-      -web-kit-appearance: none;
-      -moz-appearance: none;
-      outline: 0;
-      /* 设置我们要的样式 */
-      width: 700px;
-      height: 20px;
+    >div.el-textarea {
+      display: block;
+      :deep(textarea) {
+        width: 700px;
+      height: auto;
       opacity: 1;
       text-align: left;
       border: none;
       margin-left: 5px;
       margin-top: 3px;
+      outline: none;
+      resize: none;
+      box-shadow: none;
+      padding: 0;
+      }
+
     }
   }
 
@@ -266,7 +270,6 @@ li {
     input[type="number"] {
       /* 清除原有input样式 */
       -web-kit-appearance: none;
-      -moz-appearance: none;
       outline: 0;
       /* 设置我们要的样式 */
       width: 60px;
@@ -277,7 +280,9 @@ li {
     }
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
-      -webkit-appearance: none;
+      -webkit-appearance: none !important;  
+        appearance: none !important;
+    	margin: 0; 
     }
     display: block;
     height: @Height;
@@ -305,7 +310,6 @@ li {
       input[type="text"] {
         /* 清除原有input样式 */
         -web-kit-appearance: none;
-        -moz-appearance: none;
         outline: 0;
         /* 设置我们要的样式 */
         width: 80px;
