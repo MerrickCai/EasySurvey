@@ -196,7 +196,7 @@ function sumbit() {
             "totalNumber": survey.totalNumber,
             "count": survey.count,
             "effectiveNumber": survey.effectiveNumber,
-            "questionAnswerList": questionAnswerList,
+            questionAnswerList,
             "scoreList": scoreList
         }
     }).then((response) => {

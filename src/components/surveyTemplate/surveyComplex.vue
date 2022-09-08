@@ -5,10 +5,10 @@
 
         <div intro v-if="Survey.status.begin">
             <div class="titleArea">
-                <h2>{{  survey.intro.info_title  }}</h2>
+                <h2>{{ survey.intro.info_title }}</h2>
             </div>
             <p class="second-title">问卷介绍：</p>
-            <p class="para">{{  survey.intro.info_para  }}</p>
+            <p class="para">{{ survey.intro.info_para }}</p>
             <div class="btn" @click="Survey.status.toOngoing()">
                 <div>开始问卷</div>
             </div>
@@ -33,10 +33,10 @@
             <!-- 介绍区域 -->
             <div class="intro">
                 <div class="titleArea">
-                    <h2>{{  survey.intro.info_title  }}</h2>
+                    <h2>{{ survey.intro.info_title }}</h2>
                 </div>
                 <p class="second-title">问卷介绍：</p>
-                <p class="para">{{  survey.intro.info_para  }}</p>
+                <p class="para">{{ survey.intro.info_para }}</p>
             </div>
 
             <!-- 答题区域 -->
@@ -44,21 +44,21 @@
                 <div class="main" v-for="(item, i) of survey.questionList" :key="item.questionId"
                     :style="{ outline: `${item.outlineColor} 1px  solid` }">
                     <template v-if="item.type === 0">
-                        <div class="questiontitle" ref="questiontitle">{{  `${i + 1}. ${item.questiontitle}（单选）`  }}</div>
+                        <div class="questiontitle" ref="questiontitle">{{ `${i + 1}. ${item.questiontitle}（单选）` }}</div>
                         <div class="ques" v-for="(elem, index) of item.option" :key="index">
-                            <input type="radio" :id="elem.id" :value="elem.detail"  v-model="item.value" />
-                            <p><label :for="elem.id">{{  elem.detail  }}</label></p>
+                            <input type="radio" :id="elem.id" :value="elem.detail" v-model="item.value" />
+                            <p><label :for="elem.id">{{ elem.detail }}</label></p>
                         </div>
                     </template>
                     <template v-else-if="item.type === 1">
-                        <div class="questiontitle" ref="questiontitle">{{  `${i + 1}. ${item.questiontitle}（多选）`  }}</div>
+                        <div class="questiontitle" ref="questiontitle">{{ `${i + 1}. ${item.questiontitle}（多选）` }}</div>
                         <div class="ques" v-for="(elem, index) of item.option" :key="index">
                             <input type="checkbox" :id="elem.id" :value="elem.detail" v-model="item.value" />
-                            <p><label :for="elem.id">{{  elem.detail  }}</label></p>
+                            <p><label :for="elem.id">{{ elem.detail }}</label></p>
                         </div>
                     </template>
                     <template v-else>
-                        <div class="questiontitle" ref="questiontitle">{{  `${i + 1}. ${item.questiontitle}（文本）`  }}</div>
+                        <div class="questiontitle" ref="questiontitle">{{ `${i + 1}. ${item.questiontitle}（文本）` }}</div>
                         <div class="ques">
                             <textarea v-model="item.value" placeholder="请输入文本"></textarea>
                         </div>
@@ -78,10 +78,10 @@
         <div finish v-if="Survey.status.end">
             <div class="content">
                 <h2>您已完成</h2>
-                <h3>{{  survey.intro.info_title  }}</h3>
+                <h3>{{ survey.intro.info_title }}</h3>
                 <p>感谢您的答题，本次问卷已全部结束</p>
             </div>
-            <div class="btn"   @click="router.push('/')">
+            <div class="btn" @click="router.push('/')">
                 <div>完成答题</div>
             </div>
         </div>
@@ -91,33 +91,36 @@
 </template>
 
 <script setup>
-import { ref, reactive,computed,inject } from 'vue'
+import { ref, reactive, inject } from 'vue'
 import { ElMessage } from 'element-plus'
-
 import axios from "axios"
 import { useStore } from "../../PiniaStores/index.js"
-import { map } from 'lodash';
 import { useRouter } from "vue-router"
 const router = useRouter()
 const datas = useStore()
-const Survey = inject('Survey')
-// --------------------------- 获取父组件传入的问卷状态和数据 --------------------
 
+
+
+// --------------------------- 获取父组件传入的问卷状态和数据 --------------------
+const Survey = inject('Survey')
 // 从父组件拿到数据
 const surveyObj = ref(Survey.surveyObj)
-console.log(surveyObj);
+console.log('父组件网络请求的数据', surveyObj)
+// --------------------------- 获取父组件传入的问卷状态和数据 --------------------
 
-// 封装一个survey---------------用以在模板和存放提交时候的用户数据------------------（按照PiniStores中的结构模板来封装的）
+
+
+
+// 封装一个survey---------------用以在模板和存放提交时候的用户数据------------------
 const survey = reactive({});
 // survey的介绍和提交问卷用的信息
-survey.intro = {};  
+survey.intro = {};
 survey.intro.info_title = surveyObj.value.questionnaire.title;
 survey.intro.info_para = surveyObj.value.questionnaire.message;
 survey.effectiveNumber = surveyObj.value.questionnaire.effectiveNumber;
 survey.totalNumber = surveyObj.value.questionnaire.totalNumber;
 survey.count = surveyObj.value.questionnaire.count;
 survey.id = surveyObj.value.questionnaire.id;
-let hash = new Map();
 survey.questionList = [];
 for (let i in surveyObj.value.questionInfoMap) {
     let obj = {};
@@ -125,28 +128,27 @@ for (let i in surveyObj.value.questionInfoMap) {
     obj.type = surveyObj.value.questionInfoMap[i].type;
     obj.questiontitle = surveyObj.value.questionInfoMap[i].info;
     switch (obj.type) {
-        case 0: obj.value = 0; break; 
-        case 1: obj.value = []; break; 
-        case 2: obj.value = ""; break; 
+        case 0: obj.value = 0; break;
+        case 1: obj.value = []; break;
+        case 2: obj.value = ""; break;
     }
     obj.progressPartbcg = '#ccc';
     obj.outlineColor = 'rgba(255,255,255,0)';
     if (obj.type === 2) {
         survey.questionList.push(obj);
-       continue;
+        continue;
     }
-        
     obj.option = [];
     for (let j in surveyObj.value.optionMap[i]) {
         let obj2 = {};
-        hash.set(surveyObj.value.optionMap[i][j].detail, surveyObj.value.optionMap[i][j].id);
         obj2.id = surveyObj.value.optionMap[i][j].id;
         obj2.detail = surveyObj.value.optionMap[i][j].detail;
         obj.option.push(obj2);
     }
     survey.questionList.push(obj);
 }
-// console.log(survey);
+console.log('封装好的数据', survey)
+// 封装一个survey---------------用以在模板和存放提交时候的用户数据------------------
 
 
 
@@ -215,30 +217,47 @@ function Submit() {
     const questionAnswerList = [];
     survey.questionList.forEach(item => {
         let questionAnswer = {
-               questionId: item.questionId,
-                type: item.type,
+            questionId: item.questionId,
+            type: item.type,
         };
-        if (item.type === 2) {
-            questionAnswer.text = item.value;
-        } else if(item.type===0) {
-            questionAnswer.optionList = [{
-                detail: item.value,
-                id:hash.get(item.value)
-            }];
-        } else {
-            questionAnswer.optionList = [];  
+        if (item.type === 2) {//文本
+
+            questionAnswer.text = item.value
+
+        } else if (item.type === 0) { //单选
+
+            let detail = item.value
+            let id
+            for (let i = 0; i < item.option.length; i++) {
+                if (item.option[i].detail === detail) {
+                    id = item.option[i].id
+                    break
+                }
+            }
+            questionAnswer.optionList = [{ detail, id }]
+
+        } else { //多选 item.type===1
+
+            questionAnswer.optionList = []
             item.value.forEach(e => {
+                let id
+                for (let i = 0; i < item.option.length; i++) {
+                    if (item.option[i].detail === e) {
+                        id = item.option[i].id
+                        break
+                    }
+                }
                 questionAnswer.optionList.push({
                     detail: e,
-                    id: hash.get(e)
+                    id
                 })
-          })
+            })
+
         }
         questionAnswerList.push(questionAnswer)
     })
-    console.log(survey);
-    console.log(questionAnswerList);
-    
+
+    console.log('用于提交的questionAnswerList', questionAnswerList)
     axios({
         url: `https://q.denglu1.cn/questions/commit`,
         method: 'post',
@@ -253,11 +272,25 @@ function Submit() {
             questionAnswerList
         }
     }).then((response) => {
-        console.log(response);
+        console.log('提交完成返回response', response);
+        ElMessage({
+            message: '记住密码，自动登录成功',
+            type: 'success',
+            duration: 4000,
+            showClose: true,
+            center: true
+        })
         Survey.status.toEnd()
 
     }).catch((error) => {
-        console.log(error)
+        ElMessage({
+            message: '请勿重复提交',
+            type: 'error',
+            duration: 4000,
+            showClose: true,
+            center: true
+        })
+        console.log('提交出错',error)
     })
 }
 //-------------------------------- 提交函数---------------------------------------
@@ -541,10 +574,14 @@ div[content] {
         padding-left: 20px;
         padding-top: 5px;
         overflow: auto;
-        scrollbar-width: none; /* Firefox */
-       &::-webkit-scrollbar {
-           display: none; /* Chrome Safari */
-       }
+        scrollbar-width: none;
+
+        /* Firefox */
+        &::-webkit-scrollbar {
+            display: none;
+            /* Chrome Safari */
+        }
+
         >div.main {
             display: flex;
             flex-direction: column;
