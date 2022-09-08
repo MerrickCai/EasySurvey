@@ -25,8 +25,8 @@ function validate(account, password) {
     })
     return false
   }
-    // 8-20位字母数字+特殊字符
-    if (!/^[0-9a-zA-Z~!@#$%^&*()_+`\-={}:";'<>?,.\/]{8,20}$/.test(password)) {
+  // 8-20位字母数字+特殊字符
+  if (!/^[0-9a-zA-Z~!@#$%^&*()_+`\-={}:";'<>?,.\/]{8,20}$/.test(password)) {
     ElMessage({
       message: '请输入正确的密码: 8-20位字母数字+特殊字符',
       type: 'warning',
@@ -149,6 +149,10 @@ div.wrapper {
   align-items: center;
   height: 400px;
   width: 420px;
+
+  @media (max-width:800px) {
+    width: 100%;
+  }
 
   >div.selectArea {
     display: flex;

@@ -13,11 +13,11 @@ const background_url = background.geturl()
 
 
 //动态组件
-import { ref, computed, provide } from 'vue'
-import accountLogin from '../components/login/accountLogin.vue'
-import wechatLogin from '../components/login/wechatLogin.vue'
-import register from '../components/login/register.vue'
-import popUp from '../components/login/popUp.vue'
+import { ref, computed, provide } from 'vue';
+import accountLogin from '../components/login/accountLogin.vue';
+import wechatLogin from '../components/login/wechatLogin.vue';
+import register from '../components/login/register.vue';
+import popUp from '../components/login/popUp.vue';
 const viewList = [wechatLogin, accountLogin, register, popUp]
 const viewId = ref(1)
 const currentView = computed(() => viewList[viewId.value])
@@ -44,7 +44,7 @@ provide('viewId', viewId)
 </template>
 
 <style lang="less" scoped>
-@navSpan: 90px;
+@navSpan: 70px;
 
 div.background {
    position: fixed;
@@ -53,6 +53,10 @@ div.background {
    z-index: -10;
    width: 100%;
    height: 100%;
+
+   @media (max-width:800px) {
+      display: none;
+   }
 
    >img {
       width: 100%;
@@ -68,7 +72,6 @@ div[wrapper] {
    align-items: center;
    height: 100%;
    width: 100%;
-
    >main {
       display: block;
       width: auto;
@@ -77,6 +80,12 @@ div[wrapper] {
       box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
       border-radius: 10px;
       margin-top: -@navSpan;
+
+      @media (max-width:800px) {
+         box-shadow: none;
+         border-radius: 0;
+         width: 100%;
+      }
 
       .fade-enter-active,
       .navbar-leave-active {

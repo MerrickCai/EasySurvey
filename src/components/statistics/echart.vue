@@ -1,9 +1,12 @@
 <template>
-  <div class="echartall">
+
+      <div class="echartall">
     <!-- 用户列表 -->
-    <div class="userlist">
-      <div class="list_title">用户列表</div>
-      <template v-if="usershow">
+
+      <div class="userlist">
+        <div class="list_title">用户列表</div>
+        <template v-if="usershow">
+        <el-button class="exportData" type="primary" @click="exportData()">导出问卷信息</el-button>
         <el-scrollbar max-height="400px">
           <p v-for="(item,index) in filenews.context.userWithScores" :key="item.user" class="scrollbar-demo-item">
             <span class="username">{{ item.user.phone_number }}</span>
@@ -148,6 +151,7 @@ watch(num, (newnum) => {
 let filenews = reactive({
   context: { questionnaire: { totalNumber: 0, effectiveNumber: 0 } },
 });
+
 let detail = reactive({});
 function getfile() {
   axios({
@@ -617,6 +621,23 @@ function deluser(userid, fileid, index) {
       console.log(error);
     });
 }
+
+
+// 导出excel表格
+function exportData() {
+  axios({
+    url: `https://q.denglu1.cn/deleteUserAnswer/${filenews.context.questionnaire.title.id}/${filenews.context.questionnaire.title}`,
+    method: 'get',
+    withCredentials: true
+  }).then((response) => {
+    console.log(filenews.context.questionnaire.id);
+    console.log(filenews.context.questionnaire.title);
+    
+    console.log(response);
+  }).catch((error) => {
+      console.log(error);
+    });;
+}
 </script>
 
 <style lang="less" scoped>
@@ -630,6 +651,7 @@ function deluser(userid, fileid, index) {
 
   // transform: translateX(370px);
   .userlist {
+    position: relative;
     padding: 16px;
     grid-column-start: 1;
     grid-column-end: 8;
@@ -760,6 +782,7 @@ function deluser(userid, fileid, index) {
           background: rgba(240, 240, 240, 1);
         }
       }
+
     }
 
     // 详情页
@@ -792,6 +815,16 @@ function deluser(userid, fileid, index) {
     }
   }
 
+
+    // 导出excel按钮
+      .exportData{
+        width: 100px;
+        height: 30px;
+        top: 15px;
+        right: 20px;
+        position: absolute;
+      }
+}
   .userarea {
     position: relative;
     grid-column-start: 8;
@@ -963,5 +996,5 @@ function deluser(userid, fileid, index) {
     text-align: center;
     border-radius: 4px;
   }
-}
+
 </style>

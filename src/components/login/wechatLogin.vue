@@ -29,7 +29,9 @@ div.wrapper {
    align-items: center;
    height: 400px;
    width: 420px;
-
+   @media (max-width:800px) {
+    width: 100%;
+  }
    >div.selectArea {
       display: flex;
       flex-direction: row;

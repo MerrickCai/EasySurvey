@@ -14,7 +14,7 @@ const viewId = inject("viewId")
 
 
 //--------------------------- 账号密码规则验证 -----------------------------
-function validate(account, password) {
+function validate(account, password,passwordConfirm) {
     if (!/^[0-9]{10,11}$/.test(account)) { //10-11位纯数字
         ElMessage({
             message: '请输入正确的手机号或学号',
@@ -36,6 +36,16 @@ function validate(account, password) {
         })
         return false
     }
+    if (password!==passwordConfirm) {
+        ElMessage({
+            message: '两次输入的密码不一致，请重新输入',
+            type: 'warning',
+            duration: 4000,
+            showClose: true,
+            center: true
+        })
+        return false
+    }
     return true
 }
 //--------------------------- 账号密码规则验证 -----------------------------
@@ -43,8 +53,8 @@ function validate(account, password) {
 
 
 //--------------------------- 注册逻辑-----------------------------
-const user = reactive({ account: '', password: '', agree: false })
-async function register(account, password, agree) {
+const user = reactive({ account: '', password: '', passwordConfirm: '', agree: false })
+async function register(account, password, passwordConfirm, agree) {
     if (agree === false) { // 确认用户是否同意《用户隐私协议》
         ElMessage({
             message: '请点击同意《用户隐私协议》按钮',
@@ -55,7 +65,7 @@ async function register(account, password, agree) {
         })
         return false
     }
-    if (!validate(account, password)) { // 表单验证
+    if (!validate(account, password, passwordConfirm)) { // 表单验证
         return false
     }
     if (datas.user.status === true) { //确认用户是否登录
@@ -141,13 +151,14 @@ async function register(account, password, agree) {
         <div class="typeArea">
             <input type="text" v-model="user.account" placeholder="请输入手机号或学号" />
             <input type="password" v-model="user.password" placeholder="请输入密码：8-20位字母数字+特殊字符" />
+            <input type="password" v-model="user.passwordConfirm" placeholder="确认密码" />
         </div>
         <div class="functionArea">
             <input type="checkbox" v-model="user.agree" />
             <div>我同意<span>《用户隐私协议》</span>和<span>《隐私条款》</span></div>
         </div>
         <div button>
-            <div @click="register(user.account, user.password, user.agree)">创建用户</div>
+            <div @click="register(user.account, user.password,user.passwordConfirm, user.agree)">创建用户</div>
         </div>
         <div class="buttom">已有账号？<span @click="viewId = 1">立即登录</span></div>
     </div>
@@ -161,6 +172,10 @@ async function register(account, password, agree) {
     align-items: center;
     height: 450px;
     width: 420px;
+
+    @media (max-width:800px) {
+        width: 100%;
+    }
 
     >div.title {
         display: flex;
@@ -179,7 +194,7 @@ async function register(account, password, agree) {
         flex-direction: row;
         justify-content: flex-start;
         align-items: center;
-        height: 100px;
+        height: 70px;
         width: 70%;
 
         >img {
@@ -215,13 +230,13 @@ async function register(account, password, agree) {
         flex-direction: column;
         justify-content: flex-end;
         align-items: center;
-        height: 110px;
+        height: 170px;
         width: 70%;
         color: rgba(30, 111, 255, 1);
 
         >input {
             outline: none;
-            height: 45px;
+            height: 44px;
             width: 100%;
             border-radius: 10px;
             border: solid 1px rgba(217, 217, 217, 1);
@@ -231,7 +246,11 @@ async function register(account, password, agree) {
             color: rgba(30, 111, 255, 1);
 
             &:nth-child(1) {
-                margin-bottom: 15px;
+                margin-bottom: 19px;
+            }
+
+            &:nth-child(2) {
+                margin-bottom: 19px;
             }
 
             &::placeholder {
@@ -245,7 +264,7 @@ async function register(account, password, agree) {
         flex-direction: row;
         justify-content: flex-start;
         align-items: center;
-        height: 50px;
+        height: 40px;
         width: 70%;
 
         >input {
@@ -300,7 +319,7 @@ async function register(account, password, agree) {
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        height: 80px;
+        height: 60px;
         width: 70%;
 
         >div {

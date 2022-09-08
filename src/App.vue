@@ -96,7 +96,7 @@ router.beforeEach(async (to, from) => {
 </template>
 
 <style lang="less" scoped>
-@navSpan: 80px;
+@navSpan: 70px;
 
 main {
   display: block;

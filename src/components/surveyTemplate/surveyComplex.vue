@@ -35,30 +35,30 @@
                 <div class="titleArea">
                     <h2>{{ survey.intro.info_title }}</h2>
                 </div>
-                <p class="second-title">问卷介绍：</p>
-                <p class="para">{{ survey.intro.info_para }}</p>
             </div>
 
             <!-- 答题区域 -->
             <main ref="content" @scroll="onScroll">
+                <p class="second-title">问卷介绍：</p>
+                <p class="para">{{ survey.intro.info_para }}</p>
                 <div class="main" v-for="(item, i) of survey.questionList" :key="item.questionId"
-                    :style="{ outline: `${item.outlineColor} 1px  solid` }">
+                    :style="{ outline: `${item.outlineColor} 1px  solid` }" ref="questiontitle">
                     <template v-if="item.type === 0">
-                        <div class="questiontitle" ref="questiontitle">{{ `${i + 1}. ${item.questiontitle}（单选）` }}</div>
+                        <div class="questiontitle">{{ `${i + 1}. ${item.questiontitle}（单选）` }}</div>
                         <div class="ques" v-for="(elem, index) of item.option" :key="index">
                             <input type="radio" :id="elem.id" :value="elem.detail" v-model="item.value" />
                             <p><label :for="elem.id">{{ elem.detail }}</label></p>
                         </div>
                     </template>
                     <template v-else-if="item.type === 1">
-                        <div class="questiontitle" ref="questiontitle">{{ `${i + 1}. ${item.questiontitle}（多选）` }}</div>
+                        <div class="questiontitle">{{ `${i + 1}. ${item.questiontitle}（多选）` }}</div>
                         <div class="ques" v-for="(elem, index) of item.option" :key="index">
                             <input type="checkbox" :id="elem.id" :value="elem.detail" v-model="item.value" />
                             <p><label :for="elem.id">{{ elem.detail }}</label></p>
                         </div>
                     </template>
                     <template v-else>
-                        <div class="questiontitle" ref="questiontitle">{{ `${i + 1}. ${item.questiontitle}（文本）` }}</div>
+                        <div class="questiontitle">{{ `${i + 1}. ${item.questiontitle}（文本）` }}</div>
                         <div class="ques">
                             <textarea v-model="item.value" placeholder="请输入文本"></textarea>
                         </div>
@@ -199,7 +199,14 @@ function Finish() {
     })
     let fisrtreturn = uncomplete[0]
     if (uncomplete.length !== 0) {
-        content.value.scrollTop = questiontitle.value[fisrtreturn].offsetTop
+        ElMessage({
+            message: '请完成整张问卷',
+            type: 'warn',
+            duration: 4000,
+            showClose: true,
+            center: true
+        })
+        content.value.scrollTop = questiontitle.value[fisrtreturn].offsetTop - 2
     }
     if (!flag) {
         return false
@@ -256,6 +263,7 @@ function Submit() {
         }
         questionAnswerList.push(questionAnswer)
     })
+
     console.log('用于提交的questionAnswerList', questionAnswerList)
     axios({
         url: `https://q.denglu1.cn/questions/commit`,
@@ -273,7 +281,7 @@ function Submit() {
     }).then((response) => {
         console.log('提交完成返回response', response);
         ElMessage({
-            message: '记住密码，自动登录成功',
+            message: '提交成功',
             type: 'success',
             duration: 4000,
             showClose: true,
@@ -289,7 +297,7 @@ function Submit() {
             showClose: true,
             center: true
         })
-        console.log('提交出错',error)
+        console.log('提交出错', error)
     })
 }
 //-------------------------------- 提交函数---------------------------------------
@@ -314,7 +322,6 @@ div[intro] {
     height: 100%;
     position: relative;
 
-
     >div.titleArea {
         display: flex;
         flex-direction: column;
@@ -322,13 +329,13 @@ div[intro] {
         justify-content: center;
         align-items: center;
         height: 30%;
-        width: auto;
+        width: 80%;
 
         >h2 {
             display: block;
             height: auto;
             width: auto;
-            font-size: 36px;
+            font-size: 30px;
             font-weight: bold;
             position: relative;
 
@@ -412,6 +419,10 @@ div[content] {
         width: 10px;
         background-color: white;
         z-index: 10;
+
+        @media (max-width:800px) {
+            display: none;
+        }
     }
 
     >div.progress {
@@ -427,6 +438,10 @@ div[content] {
         border-radius: 5px;
         background-color: rgba(204, 204, 204, 1);
         cursor: pointer;
+
+        @media (max-width:800px) {
+            display: none;
+        }
 
         >span.progress-part {
             flex: 1 1 0;
@@ -506,6 +521,12 @@ div[content] {
         height: auto;
         padding: 10px 0 10px 20px;
 
+        @media (max-width:800px) {
+            width: 100%;
+            padding: 10px;
+            align-items: center;
+        }
+
         >div.titleArea {
             display: flex;
             flex-direction: column;
@@ -536,29 +557,6 @@ div[content] {
                 }
             }
         }
-
-        >p.second-title {
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-start;
-            align-items: flex-end;
-            height: auto;
-            width: 70%;
-            margin: 5px 0;
-            font-size: 20px;
-            color: rgba(30, 111, 255, 1);
-        }
-
-        >p.para {
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-start;
-            align-items: flex-start;
-            height: auto;
-            width: 70%;
-            font-size: 20px;
-            color: rgba(0, 0, 0, 1);
-        }
     }
 
     >main {
@@ -574,11 +572,47 @@ div[content] {
         padding-top: 5px;
         overflow: auto;
         scrollbar-width: none;
+        position: relative;
+
+        @media (max-width:800px) {
+            padding: 0 10px;
+        }
 
         /* Firefox */
         &::-webkit-scrollbar {
             display: none;
             /* Chrome Safari */
+        }
+
+        >p.second-title {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: flex-end;
+            height: auto;
+            width: calc(100% - 140px);
+            font-size: 20px;
+            color: rgba(30, 111, 255, 1);
+
+            @media (max-width:800px) {
+                width: 100%;
+            }
+        }
+
+        >p.para {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: flex-start;
+            height: auto;
+            width: calc(100% - 140px);
+            margin: 5px 0;
+            font-size: 18px;
+            color: rgba(0, 0, 0, 1);
+
+            @media (max-width:800px) {
+                width: 100%;
+            }
         }
 
         >div.main {
@@ -588,6 +622,10 @@ div[content] {
             height: auto;
             margin-bottom: 10px;
             padding: 5px;
+
+            @media (max-width:800px) {
+                width: 100%;
+            }
 
             >div.questiontitle {
                 display: block;
