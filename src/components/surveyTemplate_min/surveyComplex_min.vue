@@ -150,7 +150,6 @@ div.wrapper {
     box-shadow: 0px 5px 10px 0 rgba(73, 107, 158, 0.1);
     background-color: rgb(255, 255, 255);
     z-index: 0;
-
     >div.decoration1 {
         display: block;
         height: 400px;
