@@ -1,7 +1,7 @@
 <script setup>
 import survey1 from "../components/surveyTemplate/survey1.vue"
 import survey2 from "../components/surveyTemplate/survey2.vue"
-import surveyComplex from '../components/surveyTemplate/surveyComplex.vue'
+import survey_mix from '../components/surveyTemplate/survey_mix.vue'
 import { ref, reactive, provide } from "vue"
 import axios from "axios"
 import { useRoute } from "vue-router"
@@ -14,8 +14,8 @@ const datas = useStore()
 //------------------- 问卷模板子组件 -----------------------------
 //矩阵(survey1)：count 2
 //量表(survey2)：count 3
-//普通(surveyComplex)：count 5
-const surveyTemplateList = [survey1, survey2, surveyComplex]
+//普通(survey_mix)：count 5
+const surveyTemplateList = [survey1, survey2, survey_mix]
 const currentView = ref()
 //------------------- 问卷模板子组件 -----------------------------
 
@@ -108,7 +108,7 @@ div[wrapper] {
   top: 0;
   left: 0;
   border-radius: 10px;
-  box-shadow: 0px 5px 10px 0 rgba(73, 107, 158, 0.2);
+  box-shadow: 0px 5px 10px 0 rgba(73, 107, 158, 0.1);
   background-color: rgb(255, 255, 255);
   z-index: 0;
 
@@ -123,7 +123,7 @@ div[wrapper] {
     height: 400px;
     width: 400px;
     position: absolute;
-    z-index: 2;
+    z-index: -1;
     top: 0;
     left: 0;
     transform: translate(-50%, -50%);
@@ -141,7 +141,7 @@ div[wrapper] {
     height: 150px;
     width: 150px;
     position: absolute;
-    z-index: 3;
+    z-index: -1;
     bottom: 40px;
     right: 50px;
     border-radius: 50%;
@@ -157,7 +157,7 @@ div[wrapper] {
     height: 100px;
     width: 100px;
     position: absolute;
-    z-index: 2;
+    z-index: -2;
     bottom: 80px;
     right: -20px;
     border-radius: 50%;
@@ -173,7 +173,7 @@ div[wrapper] {
     height: 170px;
     width: 170px;
     position: absolute;
-    z-index: 2;
+    z-index: -2;
     bottom: -20px;
     right: 100px;
     border-radius: 50%;

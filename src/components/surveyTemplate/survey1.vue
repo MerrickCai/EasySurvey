@@ -1,79 +1,92 @@
 <template>
-  <div wrapper>
+  <div class="wrapper">
 
-    <!--问卷介绍-->
-    <template v-if="Survey.status.begin">
-      <div class="survey_intro">
-        <p title>{{  survey.intro.title  }}</p>
-        <p intro>
-          <span intro_title>问卷介绍：</span>
-          <span v-html="survey.intro.intro_content" intro_content></span>
-        </p>
-        <p button @click="Survey.status.toOngoing()">开始问卷 </p>
+
+    <!--问卷介绍 -->
+    <div intro v-if="Survey.status.begin">
+      <div class="titleArea">
+        <h2>{{ survey.intro.title }}</h2>
       </div>
-    </template>
+      <p class="second-title">问卷介绍：</p>
+      <p class="para" v-html="survey.intro.intro_content"></p>
+      <div class="btn" @click="Survey.status.toOngoing()">
+        <div>开始问卷</div>
+      </div>
+    </div>
 
 
-    <!--问卷填写-->
-    <template v-if="Survey.status.ongoing">
-      <div class="survey">
-        <p title>{{  survey.intro.title  }}</p>
-        <!-- <div class="scrollbar_shadow"></div> -->
-        <!-- 进度条 -->
-        <div class="progress" @click="scrollTo($event)">
-          <div>
-            <!-- 进度条分段，使得点击提交按钮后进度条可以分段显示红色背景，多少个题目就分多少段 (外面多个div包裹下面的style的last-child才能生效)-->
-            <div class="progress-part" v-for="(item, index) of survey.quesList" :key="item.id" :style="{
-              height: `${progressPartHeight}px`,
-              backgroundColor: `${item.progressPartbcg}`,
-            }"></div>
-          </div>
-          <div class="thumb" ref="thumb">
-            <div class="bluebcg" ref="bluebcg" :style="{ height: `${bluebcg_height}px` }"></div>
-          </div>
-          <div class="text" ref="text">0%</div>
+
+    <!-- 问卷填写 -->
+    <div content v-if="Survey.status.ongoing">
+
+      <!-- 进度条 -->
+      <div class="shadow"></div>
+      <div class="progress" @click="scrollTo($event)">
+        <span class="progress-part" v-for="item of survey.quesList" :key="item.questionId"
+          :style="{ backgroundColor: `${item.progressPartbcg}` }">
+        </span>
+        <div class="outer-thumb" ref="thumb">
+          <div class="bluebcg" ref="bluebcg"></div>
         </div>
-        <div class="survey_area" @scroll="onScroll($event)" ref="content">
-          <p intro>
-            <span intro_title>问卷介绍：</span>
-            <span v-html="survey.intro.intro_content" intro_content></span>
-          </p>
-          <div class="ques">
-            <div v-for="(item, index) of survey.quesList" ref="ques"
-              :style="{ border: `${item.titleBorder}px solid red` }">
-              <div>
-                <span></span><span>{{  item.ques  }}</span>
-              </div>
-              <!-- 总宽度为600-->
-              <div :style="{ backgroundColor: `${item.value === 0 ? 'rgba(245, 245, 245, 1)' : 'rgb(229,229,229)'}`, }">
-                <!-- bar -->
-                <div v-for="(b, i) of barArr[index]" class="bar"
-                  @click="item.value = i + 1; item.seleted = item.optionId[i]; ">
-                  <div class="font">
-                    {{  survey.quesList[index].font[i]  }}
-                  </div>
-                </div>
-                <div class="thumb"
-                  :style="{ left: `${item.value === 0 ? -12 : -12 + ((item.value - 1) * 600) / (barArr[index].length - 1)}px`, }">
-                </div>
+        <div class="text" ref="text">0 %</div>
+      </div>
+
+      <!-- 介绍区域 -->
+      <div class="intro">
+        <div class="titleArea">
+          <h2>{{ survey.intro.title }}</h2>
+        </div>
+      </div>
+
+      <!-- 答题区域 -->
+      <main ref="content" @scroll="onScroll">
+        <p class="second-title">问卷介绍：</p>
+        <p class="para" v-html="survey.intro.intro_content"></p>
+
+
+        <div class="main" v-for="(item, index) of survey.quesList" ref="ques"
+          :style="{ border: `${item.titleBorder}px solid red` }">
+
+          <div class="questiontitle">{{ `${index + 1}. ${item.ques}` }}</div>
+
+          <!-- 总宽度为600-->
+          <div class="ques"
+            :style="{ backgroundColor: `${item.value === 0 ? 'rgba(245, 245, 245, 1)' : 'rgb(229,229,229)'}`, }">
+            <!-- bar -->
+            <div v-for="(b, i) of barArr[index]" class="bar"
+              @click="item.value = i + 1; item.seleted = item.optionId[i]; ">
+              <div class="font">
+                {{ survey.quesList[index].font[i] }}
               </div>
             </div>
+            <div class="thumb"
+              :style="{ left: `${item.value === 0 ? -12 : -12 + ((item.value - 1) * 600) / (barArr[index].length - 1)}px`, }">
+            </div>
           </div>
-          <div class="submitBtn" @click="toFinish()">提交问卷</div>
+
         </div>
+
+
+      </main>
+
+
+      <!-- 问卷提交按钮 -->
+      <div class="btn" @click="Finish">
+        <div>提交问卷</div>
       </div>
-    </template>
+
+    </div>
 
 
-    <!-- 问卷完成部分 -->
-    <div class="finish-wrapper" v-if="Survey.status.end">
-      <div class="innerbox">
-        <div class="finish-title">
-          <h2>您已完成</h2>
-          <h3>{{  survey.intro.title  }}</h3>
-          <p>感谢您的答题，本次问卷已全部结束</p>
-        </div>
-        <el-button type="primary" class="finish-submit"  @click="router.push('/')">完成答题</el-button>
+    <!-- 问卷完成 -->
+    <div finish v-if="Survey.status.end">
+      <div class="content">
+        <h2>您已完成</h2>
+        <h3>{{ survey.intro.title }}</h3>
+        <p>感谢您的答题，本次问卷已全部结束</p>
+      </div>
+      <div class="btn" @click="router.push('/')">
+        <div>完成答题</div>
       </div>
     </div>
 
@@ -82,8 +95,8 @@
 </template>
 
 <script setup>
+import { ref, reactive, inject } from 'vue'
 import { ElMessage } from 'element-plus'
-import { ref, inject, reactive } from 'vue'
 import axios from "axios"
 import { useStore } from "../../Stores/index.js"
 import { useRouter } from "vue-router"
@@ -94,15 +107,16 @@ const datas = useStore()
 
 // --------------------------- 获取父组件传入的问卷状态和数据 --------------------
 const Survey = inject('Survey')
+// 从父组件拿到数据
 const surveyObj = ref(Survey.surveyObj)
+console.log('父组件网络请求的数据', surveyObj)
 // --------------------------- 获取父组件传入的问卷状态和数据 --------------------
 
 
 
 
-// --------------------------- 封装一个survey=>用以在模板和存放提交时候的用户数据 ------------------
+// 封装一个survey---------------用以在模板和存放提交时候的用户数据------------------
 const survey = reactive({})
-
 // survey的介绍和提交问卷用的信息
 survey.intro = {}
 survey.effectiveNumber = surveyObj.value.questionnaire.effectiveNumber
@@ -147,8 +161,32 @@ for (let i in surveyObj.value.questionInfoMap) {
   survey.quesList.push(obj)
 }
 console.log('封装好的数据', survey)
-// --------------------------- 封装一个survey=>用以在模板和存放提交时候的用户数据 ------------------
+// 封装一个survey---------------用以在模板和存放提交时候的用户数据------------------
 
+
+
+
+
+// ---------------------------   进度条 ---------------------------------------
+//模板引用
+const thumb = ref()
+const bluebcg = ref()
+const text = ref()
+const content = ref()
+//点击事件
+function scrollTo(e) {
+  const scrollMaxDistance = content.value.scrollHeight - content.value.offsetHeight
+  content.value.scrollTop = scrollMaxDistance * (e.offsetY / 250);
+  text.value.innerHTML = `${Math.floor((e.offsetY / 250) * 100)} %`;
+}
+//滚动事件
+function onScroll() {
+  const scrollMaxDistance = content.value.scrollHeight - content.value.offsetHeight
+  thumb.value.setAttribute('style', `top: ${250 * (content.value.scrollTop / scrollMaxDistance) - 8}px`);
+  text.value.innerHTML = `${Math.floor((content.value.scrollTop / scrollMaxDistance) * 100)} %`
+  bluebcg.value.style.height = `${250 * (content.value.scrollTop / scrollMaxDistance)}px`
+}
+// ---------------------------   进度条 ---------------------------------------
 
 
 
@@ -208,92 +246,47 @@ function sumbit() {
 //-------------------------------- 提交函数---------------------------------------
 
 
-
-
-
-
-// ---------------------------   进度条 ---------------------------------------
-const thumb = ref(null)
-const text = ref(null)
-const content = ref(null)
-// 滚动条蓝色背景
-let bluebcg_height = ref(0)
-// 滚动条的蓝色背景的dom
-const bluebcg = ref(null)
-//点击滚动条触发滚动
-function scrollTo(e) {
-  const scrollDistence = ref(0)
-  if (scrollDistence.value === 0) {
-    //此为滚动距离scrollTop最大值（e.currentTarget.offsetHeight == e.currentTarget.clientHeight）
-    scrollDistence.value =
-      content.value.scrollHeight - content.value.offsetHeight
-  }
-
-  //转换(e.offsetY是鼠标点击进度条的位置[0,400]，进度条总长400px)
-  content.value.scrollTop = scrollDistence.value * (e.offsetY / 400) - 8
-  text.innerHTML = `${Math.ceil((e.offsetY / 400) * 100)} %`
-}
-//监听滚动事件
-function onScroll(e) {
-  const scrollDistence = ref(0)
-  if (scrollDistence.value === 0) {
-    scrollDistence.value =
-      e.currentTarget.scrollHeight - e.currentTarget.offsetHeight
-  }
-  scrollDistence.value =
-    e.currentTarget.scrollHeight - e.currentTarget.offsetHeight
-  //转换
-  thumb.value.setAttribute(
-    "style",
-    `top: ${400 * (e.currentTarget.scrollTop / scrollDistence.value)}px`);
-  text.value.innerHTML = `${Math.ceil((content.value.scrollTop / scrollDistence.value) * 100) > 100 ? 100 : Math.ceil((content.value.scrollTop / scrollDistence.value) * 100)} %`
-  // 中转变量
-  let temp = thumb.value.style.top.split("")
-  temp.pop()
-  temp.pop()
-  temp = temp.join("") / 1
-  bluebcg_height.value = temp
-}
-// ---------------------------   进度条 ---------------------------------------
-
-
-
-
-
 // ------------------------- 提交问卷前判断完成度 ------------------------
-// 提交按钮之后相关的变量和方法
-// 获取全部questiontitle
-const ques = ref(null)
-// 进度条片段的高度
-const progressPartHeight = 400 / survey.quesList.length
-
-// 提交按钮  跳转：答题页==>完成页
-function toFinish() {
+//模板引用
+const ques = ref()
+//判断函数
+function Finish() {
   let flag = true
-  // 记录未完成的问卷id
   const uncomplete = []
-  // 滚动的蓝色背景失效
-  bluebcg.value.style.display = "none"
-  let queId = 1
-  survey.quesList.forEach((item) => {
+  let queId = 0
+  bluebcg.value.style.display = 'none'
+  survey.quesList.forEach(item => {
     item.titleBorder = 0
     item.progressPartbcg = "#5a9afa"
     if (item.value === 0) {
       flag = false
-      uncomplete.push(queId)
       item.titleBorder = 1
       item.progressPartbcg = "red"
+      uncomplete.push(queId)
     }
     queId++
   })
-  let fisrtreturn = uncomplete[0] - 1
-  if (uncomplete.length) {
-    content.value.scrollTop = ques.value[fisrtreturn].offsetTop
+  let fisrtreturn = uncomplete[0]
+  if (uncomplete.length !== 0) {
+    ElMessage({
+      message: '请完成整张问卷',
+      type: 'warning',
+      duration: 4000,
+      showClose: true,
+      center: true
+    })
+    content.value.scrollTop = ques.value[fisrtreturn].offsetTop - 2
   }
-  if (!flag) return
-  sumbit()
+  if (!flag) {
+    return false
+  }
+  else {
+    sumbit()
+  }
 }
 // ------------------------- 提交问卷前判断完成度 ------------------------
+
+
 
 
 
@@ -307,44 +300,159 @@ const barArr = new Array(survey.quesList.length)
 </script>
 
 <style lang="less" scoped>
-div[wrapper] {
+div.wrapper {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+// 问卷介绍
+div[intro] {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
-  height: 100%;
   width: 100%;
+  height: 100%;
   position: relative;
-  top: 0;
-  left: 0;
-  z-index: -1;
+
+  >div.titleArea {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    height: 30%;
+    width: 80%;
+
+    >h2 {
+      display: block;
+      height: auto;
+      width: auto;
+      font-size: 30px;
+      font-weight: bold;
+      position: relative;
+
+      &::after {
+        content: '';
+        display: block;
+        height: 4px;
+        width: 100%;
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        background-color: #1e6fff;
+        border-radius: 10px;
+      }
+    }
+  }
+
+  >p.second-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-end;
+    height: auto;
+    width: 70%;
+    margin: 20px 0;
+    font-size: 20px;
+    color: rgba(30, 111, 255, 1);
+  }
+
+  >p.para {
+    display: block;
+    height: auto;
+    width: 70%;
+    font-size: 18px;
+    color: rgba(0, 0, 0, 1);
+  }
+
+  >div.btn {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 30%;
+    width: auto;
+
+    >div {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      width: 240px;
+      height: 64px;
+      font-size: 20px;
+      color: rgba(255, 255, 255, 1);
+      background-color: rgba(30, 111, 255, 1);
+      border-radius: 10px;
+      cursor: pointer;
+    }
+  }
 }
 
-div.survey {
+// 问卷填写
+div[content] {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: flex-start;
-  height: 100%;
   width: 100%;
-  padding: 20px 0 0 15px;
+  height: 100%;
   position: relative;
 
-  >div.scrollbar_shadow {
+  >div.shadow {
     position: absolute;
-    height: 620px;
-    width: 10px;
-    bottom: 0px;
+    bottom: 0;
     right: 0;
+    height: calc(100% - 80px);
+    width: 20px;
+    background-color: white;
     z-index: 1;
-    background-color: rgba(255, 255, 255, 1);
+
+    @media (max-width:800px) {
+      display: none;
+    }
   }
 
   >div.progress {
-    >div.thumb {
-      content: "";
+    position: absolute;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    height: 250px;
+    width: 8px;
+    bottom: 50%;
+    transform: translateY(50%);
+    right: 100px;
+    border-radius: 5px;
+    background-color: rgba(204, 204, 204, 1);
+    cursor: pointer;
+
+    @media (max-width:800px) {
+      display: none;
+    }
+
+    >span.progress-part {
+      flex: 1 1 0;
+      display: block;
+      height: auto;
+      width: 8px;
+      pointer-events: none;
+
+      &:nth-of-type(1) {
+        border-radius: 5px 5px 0 0;
+      }
+
+      &:nth-last-of-type(1) {
+        border-radius: 0 0 5px 5px;
+      }
+    }
+
+    >div.outer-thumb {
+      content: '';
       position: absolute;
       z-index: 2;
       height: 12px;
@@ -352,33 +460,32 @@ div.survey {
       top: 0;
       left: -2px;
       border-radius: 5px;
-      transform: translateY(-10px);
       background-color: rgba(255, 255, 255, 1);
+      box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.25);
       cursor: pointer;
 
       &::before {
-        content: "";
+        content: '';
         width: 100%;
         height: 100%;
         border-radius: 5px;
         position: absolute;
+        top: 0;
+        left: 0;
         background-color: rgba(255, 255, 255, 1);
         box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.25);
       }
-    }
 
-    // 进度条分段
-    .progress-part {
-      width: 8px;
-      pointer-events: none;
-
-      //    border-radius: 5px;
-      &:first-child {
-        border-radius: 5px 5px 0 0;
-      }
-
-      &:last-child {
-        border-radius: 0 0 5px 5px;
+      .bluebcg {
+        position: absolute;
+        left: 2px;
+        bottom: 8px;
+        height: 0px;
+        width: 8px;
+        z-index: -9;
+        border-radius: 5px;
+        background-color: rgb(71, 145, 255);
+        pointer-events: none;
       }
     }
 
@@ -387,427 +494,328 @@ div.survey {
       z-index: 1;
       height: 18px;
       width: 50px;
-      bottom: -20px;
+      bottom: -30px;
       left: -22px;
       color: rgba(30, 111, 255, 1);
       text-align: center;
       font-size: 16px;
-      line-height: 18px;
+      line-height: 16px;
     }
-
-    .bluebcg {
-      background-color: #4791ff;
-      width: 8px;
-      position: absolute;
-      bottom: 8px;
-      height: 200px;
-      left: 2px;
-      z-index: -9;
-      border-radius: 5px;
-      pointer-events: none;
-    }
-
-    position: absolute;
-    z-index: 1;
-    height: 400px;
-    width: 8px;
-    bottom: 35px;
-    left: calc(615px + 270px);
-    border-radius: 5px;
-    background-color: rgba(204, 204, 204, 1);
-    cursor: pointer;
   }
 
-  >p[title] {
-    display: block;
+  >div.intro {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: flex-start;
+    width: calc(100% - 140px);
     height: auto;
-    width: auto;
-    position: relative;
-    font-size: 3rem;
-    color: rgba(0, 0, 0, 1);
+    padding: 10px 0 10px 20px;
 
-    &::after {
-      content: "";
-      display: block;
-      position: absolute;
-      bottom: -1px;
-      left: 0;
-      height: 3px;
+    @media (max-width:800px) {
       width: 100%;
-      background-color: rgba(30, 111, 255, 1);
-      border-radius: 2px;
+      padding: 10px;
+      align-items: center;
+    }
+
+    >div.titleArea {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      justify-content: center;
+      align-items: center;
+      height: auto;
+      width: auto;
+
+      >h2 {
+        display: block;
+        height: auto;
+        width: auto;
+        font-size: 28px;
+        font-weight: bold;
+        position: relative;
+
+        &::after {
+          content: '';
+          display: block;
+          height: 4px;
+          width: 100%;
+          position: absolute;
+          bottom: -4px;
+          left: 0;
+          background-color: #1e6fff;
+          border-radius: 10px;
+        }
+      }
     }
   }
 
-  >div.survey_area {
+  >main {
     flex: 1;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
     justify-content: flex-start;
     align-items: flex-start;
-    height: auto;
     width: 100%;
+    height: auto;
+    padding-left: 20px;
+    padding-top: 5px;
     overflow: auto;
+    scrollbar-width: none;
     position: relative;
-    background-color: white;
-    scrollbar-width: none; /* Firefox */
-    &::-webkit-scrollbar {
-       display: none; /* Chrome Safari */
-     }
-    >p[intro] {
-      display: block;
+
+    @media (max-width:800px) {
+      padding: 0 10px;
+    }
+
+    >p.second-title {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: flex-end;
       height: auto;
-      width: calc(600px + 250px);
-      margin-top: 15px;
+      width: calc(100% - 140px);
+      font-size: 20px;
+      color: rgba(30, 111, 255, 1);
 
-      >span[intro_title] {
-        display: block;
-        height: auto;
-        width: auto;
-        margin-bottom: 2px;
-        font-size: 1.6rem;
-        color: rgba(30, 111, 255, 1);
-      }
-
-      >span[intro_content] {
-        display: block;
-        height: auto;
-        width: auto;
-        margin-bottom: 5px;
-        font-size: 1.4rem;
-        color: rgba(0, 0, 0, 1);
-        white-space: pre-wrap;
-      }
-
-      >span[warn_title] {
-        display: block;
-        height: auto;
-        width: auto;
-        margin-bottom: 2px;
-        font-size: 1.6rem;
-        color: rgba(0, 0, 0, 1);
-        font-weight: bold;
-      }
-
-      >span[warn_content] {
-        display: block;
-        height: auto;
-        width: auto;
-        font-size: 1.4rem;
-        color: rgba(0, 0, 0, 1);
+      @media (max-width:800px) {
+        width: 100%;
       }
     }
 
-    >div.ques {
+    >p.para {
       display: block;
       height: auto;
-      width: 750px;
-      margin-top: 35px;
+      width: calc(100% - 140px);
+      margin: 5px 0;
+      font-size: 18px;
+      color: rgba(0, 0, 0, 1);
 
-      >div {
+      @media (max-width:800px) {
+        width: 100%;
+      }
+    }
+
+    >div.main {
+      display: flex;
+      flex-direction: column;
+      width: calc(100% - 140px);
+      height: auto;
+      margin-bottom: 10px;
+      padding: 5px;
+
+      @media (max-width:800px) {
+        width: 100%;
+      }
+
+      >div.questiontitle {
         display: block;
         height: auto;
-        width: 100%;
-        margin-bottom: 30px;
+        width: auto;
+        font-size: 16px;
+        position: relative;
+        padding-left: 10px;
+        margin-bottom: 50px;
 
-        >div:nth-child(1) {
-          display: block;
-          height: auto;
-          width: auto;
-          position: relative;
-          padding-left: 5px;
-          margin-bottom: 50px;
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 3px;
+          z-index: 1;
+          width: 4px;
+          height: 100%;
+          background-color: #1e6fff;
+        }
+      }
+
+      >div.ques {
+        @Height: 20px;
+        @Width: 605px;
+        @barWidth: 5px;
+        @barHeight: 30px;
+        @thumbSize: @Height+4px;
+
+
+
+        margin-left: 15px;
+        position: relative;
+        display: flex;
+        height: @Height;
+        width: @Width;
+        justify-content: space-between;
+
+
+        >div.bar {
+          height: @barHeight;
+          width: @barWidth;
+          background-color: rgba(204, 204, 204, 1);
+          cursor: pointer;
+          transform: translateX(-2px) translateY(-9px);
+        }
+
+        .font {
+          text-align: center;
+          width: 70px;
+          font-size: 12;
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          bottom: 36px;
+          font-size: 12px;
+          font-weight: 400;
+          letter-spacing: 0px;
+          color: rgba(0, 0, 0, 1);
+          vertical-align: top;
+        }
+
+        >div.thumb {
+          position: absolute;
+          z-index: 2;
+          bottom: -2px;
+          left: calc(0px - @thumbSize / 2); //thumbSize=24px
+          height: @thumbSize;
+          width: @thumbSize;
+          background-color: rgba(30, 111, 255, 1);
+          border-radius: 5px;
+          transition: all 0.2s linear;
 
           &::before {
             content: "";
             position: absolute;
-            z-index: 0;
-            height: 100%;
-            width: 3px;
-            top: 0;
-            left: 0;
-            background-color: rgba(30, 111, 255, 1);
+            top: calc((@thumbSize - 8px) / 2);
+            left: calc((@thumbSize - 2px) / 2 - 3px);
+            height: 8px;
+            width: 1.5px;
+            background-color: rgb(255, 255, 255);
           }
 
-          >span:nth-child(1) {
-            font-size: 2rem;
-            color: rgb(0, 0, 0);
-            margin-right: 15px;
-          }
-
-          >span:nth-child(2) {
-            font-size: 2rem;
-            color: rgb(0, 0, 0);
-          }
-        }
-
-        >div:nth-child(2) {
-          @Height: 20px;
-          @Width: 605px;
-          @barWidth: 5px;
-          @barHeight: 30px;
-          @thumbSize: @Height+4px;
-
-          display: block;
-          height: @Height;
-          width: @Width;
-          margin-left: 15px;
-          background-color: rgba(245, 245, 245, 1);
-          position: relative;
-          display: flex;
-          justify-content: space-between;
-          transform: translateX(45px);
-
-          >div.bar {
-            height: @barHeight;
-            width: @barWidth;
-            background-color: rgba(204, 204, 204, 1);
-            cursor: pointer;
-            transform: translateX(-2px) translateY(-9px);
-          }
-
-          .font {
-            font-family: "思源黑体";
-            text-align: center;
-            width: 70px;
-            font-size: 12;
+          &::after {
+            content: "";
             position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: 36px;
-            font-size: 12px;
-            font-weight: 400;
-            letter-spacing: 0px;
-            color: rgba(0, 0, 0, 1);
-            vertical-align: top;
-          }
-
-          >div.thumb {
-            position: absolute;
-            z-index: 2;
-            bottom: -2px;
-            left: calc(0px - @thumbSize / 2); //thumbSize=24px
-            height: @thumbSize;
-            width: @thumbSize;
-            background-color: rgba(30, 111, 255, 1);
-            border-radius: 5px;
-            transition: all 0.2s linear;
-
-            &::before {
-              content: "";
-              position: absolute;
-              top: calc((@thumbSize - 8px) / 2);
-              left: calc((@thumbSize - 2px) / 2 - 3px);
-              height: 8px;
-              width: 1.5px;
-              background-color: rgb(255, 255, 255);
-            }
-
-            &::after {
-              content: "";
-              position: absolute;
-              top: calc((@thumbSize - 8px) / 2);
-              left: calc((@thumbSize - 2px) / 2 + 3px);
-              height: 8px;
-              width: 1.5px;
-              background-color: rgb(255, 255, 255);
-            }
+            top: calc((@thumbSize - 8px) / 2);
+            left: calc((@thumbSize - 2px) / 2 + 3px);
+            height: 8px;
+            width: 1.5px;
+            background-color: rgb(255, 255, 255);
           }
         }
       }
     }
+  }
 
-    >div.submitBtn {
-      display: block;
-      height: auto;
-      width: auto;
-      margin: 30px 0;
-      padding: 20px 100px;
+  >div.btn {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    width: 100%;
+    margin: 10px 0;
+
+    >div {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      width: 220px;
+      height: 54px;
+      font-size: 20px;
+      color: rgba(255, 255, 255, 1);
       background-color: rgba(30, 111, 255, 1);
-      color: rgb(255, 255, 255);
-      font-size: 1.8rem;
-      border-radius: 5px;
-      align-self: center;
+      border-radius: 10px;
       cursor: pointer;
     }
   }
 }
 
-div.survey_intro {
+// 问卷完成
+div[finish] {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
-  height: auto;
-  width: 100%;
-
-  >p[title] {
-    display: block;
-    height: auto;
-    width: auto;
-    margin-bottom: 30px;
-    position: relative;
-    font-size: 3.6rem;
-    color: rgba(0, 0, 0, 1);
-
-    &::after {
-      content: "";
-      display: block;
-      position: absolute;
-      bottom: -2px;
-      left: 0;
-      height: 4px;
-      width: 100%;
-      background-color: rgba(30, 111, 255, 1);
-      border-radius: 2px;
-    }
-  }
-
-  >p[intro] {
-    display: block;
-    height: auto;
-    width: 70%;
-    margin-bottom: 80px;
-
-    >span[intro_title] {
-      display: block;
-      height: auto;
-      width: auto;
-      margin-bottom: 10px;
-      font-size: 1.6rem;
-      color: rgba(30, 111, 255, 1);
-    }
-
-    >span[intro_content] {
-      display: block;
-      height: auto;
-      width: auto;
-      margin-bottom: 5px;
-      font-size: 1.4rem;
-      color: rgba(0, 0, 0, 1);
-      white-space: pre-wrap;
-    }
-
-    >span[warn_title] {
-      display: block;
-      height: auto;
-      width: auto;
-      margin-bottom: 10px;
-      font-size: 1.6rem;
-      color: rgba(0, 0, 0, 1);
-    }
-
-    >span[warn_content] {
-      display: block;
-      height: auto;
-      width: auto;
-      font-size: 1.4rem;
-      color: rgba(0, 0, 0, 1);
-    }
-  }
-
-  >p[button] {
-    display: block;
-    height: auto;
-    width: auto;
-    padding: 20px 100px;
-    background-color: rgba(30, 111, 255, 1);
-    color: rgb(255, 255, 255);
-    font-size: 1.8rem;
-    border-radius: 5px;
-
-    &:hover {
-      cursor: pointer;
-    }
-  }
-}
-
-.finish-wrapper {
   width: 100%;
   height: 100%;
+  position: relative;
 
-  // background-color: pink;
-  .innerbox {
-    width: 400px;
-    height: 380px;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translateX(-50%) translateY(-50%);
+  >div.content {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    flex-wrap: nowrap;
+    justify-content: center;
     align-items: center;
+    width: auto;
+    height: 50%;
 
-    .finish-title {
-      width: 365px;
-      height: 190px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      text-align: center;
+    >h2 {
+      display: block;
+      height: auto;
+      width: auto;
+      font-size: 36px;
+      color: rgba(0, 0, 0, 1);
+      position: relative;
+      transform: translateX(-25px);
 
-      h2 {
-        font-family: "思源黑体";
-        font-size: 36px;
-        font-weight: 500;
-        letter-spacing: 0px;
-        line-height: 44px;
-        margin-left: -18px;
-
-        &::after {
-          content: "✔";
-          color: white;
-          font-size: 24px;
-          width: 36px;
-          height: 36px;
-          background: radial-gradient(104.2% 104.2%,
-              rgba(30, 111, 255, 1) 0%,
-              rgba(170, 203, 255, 1) 100%);
-          border-radius: 50%;
-          position: absolute;
-          margin-left: 8px;
-          top: 5px;
-          text-align: center;
-          line-height: 36px;
-        }
-      }
-
-      h3 {
-        font-family: "思源黑体";
-        font-size: 36px;
-        font-weight: 500;
-        letter-spacing: 0px;
-        line-height: 44px;
-        color: rgba(30, 111, 255, 1);
-      }
-
-      p {
-        font-family: "思源黑体";
-        font-size: 20px;
-        font-weight: 400;
-        letter-spacing: 0px;
-        line-height: 28px;
-        color: rgba(0, 0, 0, 1);
+      &::after {
+        content: '✔';
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: -50px;
+        width: 36px;
+        height: 36px;
+        color: white;
+        font-size: 24px;
         text-align: center;
+        line-height: 36px;
+        background-image: radial-gradient(104.2% 104.2%, rgba(30, 111, 255, 1) 0%, rgba(170, 203, 255, 1) 100%);
+        border-radius: 50%;
       }
     }
 
-    .finish-submit {
-      width: 180px;
-      height: 45px;
+    >h3 {
+      display: block;
+      height: auto;
+      width: auto;
+      font-size: 36px;
+      font-weight: bold;
+      color: rgba(30, 111, 255, 1);
+      margin: 10px 0;
+    }
+
+    >p {
+      display: block;
+      height: auto;
+      width: auto;
+      font-size: 20px;
+      color: rgba(0, 0, 0, 1);
+    }
+  }
+
+  >div.btn {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 30%;
+    width: auto;
+
+    >div {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      width: 240px;
+      height: 64px;
+      font-size: 20px;
+      color: rgba(255, 255, 255, 1);
       background-color: rgba(30, 111, 255, 1);
-      margin-top: 40px;
-
-      &:hover {
-        background-color: #4791ff;
-      }
-
-      &:active {
-        background-color: #0f52d9;
-      }
+      border-radius: 10px;
+      cursor: pointer;
     }
   }
 }

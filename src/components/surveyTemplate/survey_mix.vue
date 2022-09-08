@@ -2,7 +2,6 @@
     <div class="wrapper">
 
         <!--问卷介绍 -->
-
         <div intro v-if="Survey.status.begin">
             <div class="titleArea">
                 <h2>{{ survey.intro.info_title }}</h2>
@@ -15,11 +14,11 @@
         </div>
 
 
-        <!-- 问卷内容 -->
-
+        <!-- 问卷填写 -->
         <div content v-if="Survey.status.ongoing">
+
             <!-- 进度条 -->
-            <!-- <div class="shadow"></div> -->
+            <div class="shadow"></div>
             <div class="progress" @click="scrollTo($event)">
                 <span class="progress-part" v-for="item of survey.questionList" :key="item.questionId"
                     :style="{ backgroundColor: `${item.progressPartbcg}` }">
@@ -41,8 +40,9 @@
             <main ref="content" @scroll="onScroll">
                 <p class="second-title">问卷介绍：</p>
                 <p class="para">{{ survey.intro.info_para }}</p>
+
                 <div class="main" v-for="(item, i) of survey.questionList" :key="item.questionId"
-                    :style="{ outline: `${item.outlineColor} 1px  solid` }" ref="questiontitle">
+                    :style="{ outline: `${item.outlineColor} 1px  solid` }" ref="questionBlock">
                     <template v-if="item.type === 0">
                         <div class="questiontitle">{{ `${i + 1}. ${item.questiontitle}（单选）` }}</div>
                         <div class="ques" v-for="(elem, index) of item.option" :key="index">
@@ -64,6 +64,7 @@
                         </div>
                     </template>
                 </div>
+                
             </main>
 
             <!-- 问卷提交按钮 -->
@@ -74,7 +75,6 @@
         </div>
 
         <!-- 问卷完成 -->
-
         <div finish v-if="Survey.status.end">
             <div class="content">
                 <h2>您已完成</h2>
@@ -132,8 +132,8 @@ for (let i in surveyObj.value.questionInfoMap) {
         case 1: obj.value = []; break;
         case 2: obj.value = ""; break;
     }
-    obj.progressPartbcg = '#ccc';
-    obj.outlineColor = 'rgba(255,255,255,0)';
+    obj.progressPartbcg = '#ccc'; //灰
+    obj.outlineColor = 'rgba(255,255,255,0)'; //白透明
     if (obj.type === 2) {
         survey.questionList.push(obj);
         continue;
@@ -164,15 +164,15 @@ const content = ref()
 //点击事件
 function scrollTo(e) {
     const scrollMaxDistance = content.value.scrollHeight - content.value.offsetHeight
-    content.value.scrollTop = scrollMaxDistance * (e.offsetY / 300);
-    text.value.innerHTML = `${Math.floor((e.offsetY / 300) * 100)} %`;
+    content.value.scrollTop = scrollMaxDistance * (e.offsetY / 250);
+    text.value.innerHTML = `${Math.floor((e.offsetY / 250) * 100)} %`;
 }
 //滚动事件
 function onScroll() {
     const scrollMaxDistance = content.value.scrollHeight - content.value.offsetHeight
-    thumb.value.setAttribute('style', `top: ${300 * (content.value.scrollTop / scrollMaxDistance) - 8}px`);
+    thumb.value.setAttribute('style', `top: ${250 * (content.value.scrollTop / scrollMaxDistance) - 8}px`);
     text.value.innerHTML = `${Math.floor((content.value.scrollTop / scrollMaxDistance) * 100)} %`
-    bluebcg.value.style.height = `${300 * (content.value.scrollTop / scrollMaxDistance)}px`
+    bluebcg.value.style.height = `${250 * (content.value.scrollTop / scrollMaxDistance)}px`
 }
 // ---------------------------   进度条 ---------------------------------------
 
@@ -180,7 +180,7 @@ function onScroll() {
 
 // ------------------------- 提交问卷前判断完成度 ------------------------
 //模板引用
-const questiontitle = ref()
+const questionBlock = ref()
 //判断函数
 function Finish() {
     let flag = true
@@ -188,11 +188,12 @@ function Finish() {
     let queId = 0
     bluebcg.value.style.display = 'none'
     survey.questionList.forEach(item => {
-        item.progressPartbcg = '#5a9afa'
+        item.progressPartbcg = '#5a9afa' //蓝色
+        item.outlineColor = 'rgba(255,255,255,0)' //白透明
         if (item.value === 0 || item.value.length === 0 || item.value === '') {
             flag = false
-            item.progressPartbcg = 'rgba(255, 71, 71, 1)'
-            item.outlineColor = 'rgba(240,0,0,1)'
+            item.progressPartbcg = 'rgba(255, 71, 71, 1)' //红色
+            item.outlineColor = 'rgba(240,0,0,1)' //红色
             uncomplete.push(queId)
         }
         queId++
@@ -201,12 +202,12 @@ function Finish() {
     if (uncomplete.length !== 0) {
         ElMessage({
             message: '请完成整张问卷',
-            type: 'warn',
+            type: 'warning',
             duration: 4000,
             showClose: true,
             center: true
         })
-        content.value.scrollTop = questiontitle.value[fisrtreturn].offsetTop - 2
+        content.value.scrollTop = questionBlock.value[fisrtreturn].offsetTop - 2
     }
     if (!flag) {
         return false
@@ -366,13 +367,10 @@ div[intro] {
     }
 
     >p.para {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        align-items: flex-start;
+        display: block;
         height: auto;
         width: 70%;
-        font-size: 20px;
+        font-size: 18px;
         color: rgba(0, 0, 0, 1);
     }
 
@@ -400,7 +398,7 @@ div[intro] {
     }
 }
 
-// 问卷内容
+// 问卷填写
 div[content] {
     display: flex;
     flex-direction: column;
@@ -415,10 +413,10 @@ div[content] {
         position: absolute;
         bottom: 0;
         right: 0;
-        height: calc(100% - 120px);
-        width: 10px;
+        height: calc(100% - 80px);
+        width: 20px;
         background-color: white;
-        z-index: 10;
+        z-index: 1;
 
         @media (max-width:800px) {
             display: none;
@@ -430,7 +428,7 @@ div[content] {
         z-index: 1;
         display: flex;
         flex-direction: column;
-        height: 300px;
+        height: 250px;
         width: 8px;
         bottom: 50%;
         transform: translateY(50%);
@@ -578,12 +576,6 @@ div[content] {
             padding: 0 10px;
         }
 
-        /* Firefox */
-        &::-webkit-scrollbar {
-            display: none;
-            /* Chrome Safari */
-        }
-
         >p.second-title {
             display: flex;
             flex-direction: row;
@@ -600,10 +592,7 @@ div[content] {
         }
 
         >p.para {
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-start;
-            align-items: flex-start;
+            display: block;
             height: auto;
             width: calc(100% - 140px);
             margin: 5px 0;
