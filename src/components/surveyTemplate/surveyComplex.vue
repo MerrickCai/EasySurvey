@@ -200,13 +200,13 @@ function Finish() {
     let fisrtreturn = uncomplete[0]
     if (uncomplete.length !== 0) {
         ElMessage({
-        message: '请完成整张问卷',
-        type: 'warn',
-        duration: 4000,
-        showClose: true,
-        center: true
-      })
-        content.value.scrollTop = questiontitle.value[fisrtreturn].offsetTop-2
+            message: '请完成整张问卷',
+            type: 'warn',
+            duration: 4000,
+            showClose: true,
+            center: true
+        })
+        content.value.scrollTop = questiontitle.value[fisrtreturn].offsetTop - 2
     }
     if (!flag) {
         return false
@@ -322,7 +322,6 @@ div[intro] {
     height: 100%;
     position: relative;
 
-
     >div.titleArea {
         display: flex;
         flex-direction: column;
@@ -330,13 +329,13 @@ div[intro] {
         justify-content: center;
         align-items: center;
         height: 30%;
-        width: auto;
+        width: 80%;
 
         >h2 {
             display: block;
             height: auto;
             width: auto;
-            font-size: 36px;
+            font-size: 30px;
             font-weight: bold;
             position: relative;
 
@@ -420,9 +419,10 @@ div[content] {
         width: 10px;
         background-color: white;
         z-index: 10;
+
         @media (max-width:800px) {
-      display: none;
-    }
+            display: none;
+        }
     }
 
     >div.progress {
@@ -438,9 +438,10 @@ div[content] {
         border-radius: 5px;
         background-color: rgba(204, 204, 204, 1);
         cursor: pointer;
+
         @media (max-width:800px) {
-      display: none;
-    }
+            display: none;
+        }
 
         >span.progress-part {
             flex: 1 1 0;
@@ -519,11 +520,12 @@ div[content] {
         width: calc(100% - 140px);
         height: auto;
         padding: 10px 0 10px 20px;
+
         @media (max-width:800px) {
             width: 100%;
-            padding:5px;
+            padding: 10px;
             align-items: center;
-    }
+        }
 
         >div.titleArea {
             display: flex;
@@ -571,9 +573,10 @@ div[content] {
         overflow: auto;
         scrollbar-width: none;
         position: relative;
+
         @media (max-width:800px) {
-            padding-left: 5px;
-    }
+            padding: 0 10px;
+        }
 
         /* Firefox */
         &::-webkit-scrollbar {
@@ -590,9 +593,10 @@ div[content] {
             width: calc(100% - 140px);
             font-size: 20px;
             color: rgba(30, 111, 255, 1);
+
             @media (max-width:800px) {
-            width:100%;
-    }
+                width: 100%;
+            }
         }
 
         >p.para {
@@ -605,9 +609,10 @@ div[content] {
             margin: 5px 0;
             font-size: 18px;
             color: rgba(0, 0, 0, 1);
+
             @media (max-width:800px) {
-            width:100%;
-    }
+                width: 100%;
+            }
         }
 
         >div.main {
@@ -617,9 +622,10 @@ div[content] {
             height: auto;
             margin-bottom: 10px;
             padding: 5px;
+
             @media (max-width:800px) {
-            width:100%;
-    }
+                width: 100%;
+            }
 
             >div.questiontitle {
                 display: block;

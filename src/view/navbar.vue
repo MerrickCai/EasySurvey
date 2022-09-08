@@ -20,7 +20,7 @@ function logOut() {
         duration: 4000,
         showClose: true,
         center: true
-      })
+    })
     if (localStorage.getItem("account") && localStorage.getItem("password")) { //移除自动登录
         localStorage.removeItem("account")
         localStorage.removeItem("password")
@@ -45,14 +45,14 @@ function logOut() {
 
 
 // ----------------------------------- 开发中通知 ----------------------------------
-function devpop(){
+function devpop() {
     ElMessage({
         message: '开发中',
         type: 'warning',
         duration: 4000,
         showClose: true,
         center: true
-      })
+    })
 }
 // ----------------------------------- 开发中通知 ----------------------------------
 </script>
@@ -67,7 +67,7 @@ function devpop(){
             <Transition name="navbar">
                 <div v-show="datas.navShow">
                     <div button @click="router.push('/surveynew')">创建问卷</div>
-                    <div img @click="devpop" ><img src="/img/navbar_1.png"/></div>
+                    <div img @click="devpop"><img src="/img/navbar_1.png" /></div>
                     <div img avatar @click="devpop"><img src="/img/circle.png" /></div>
                     <div img @click="logOut"><img src="/img/navbar_2.png" /></div>
                 </div>
@@ -78,7 +78,7 @@ function devpop(){
 
 <style lang="less" scoped>
 @navSpan: 70px;
-@navHeight: 60px;
+@navHeight: 50px;
 
 nav {
     display: flex;
@@ -116,7 +116,7 @@ nav {
             height: 100%;
             width: auto;
             color: rgb(0, 0, 0);
-            font-size: 2.8rem;
+            font-size: 28px;
             line-height: @navHeight;
         }
     }
@@ -149,29 +149,37 @@ nav {
             flex-wrap: nowrap;
             justify-content: center;
             align-items: center;
-            height: calc(@navHeight - 10px);
+            height: calc(@navHeight - 15px);
             width: auto;
 
             >div[button] {
                 display: block;
-                height: calc(@navHeight - 20px);
+                height: calc(@navHeight - 15px);
                 width: auto;
-                margin-right: 4rem;
-                padding: 0 15px;
+                margin-right: 40px;
+                padding: 0 10px;
                 background-color: rgba(71, 145, 255, 1);
                 border-radius: 10px;
                 color: rgb(255, 255, 255);
-                font-size: 1.6rem;
-                line-height: calc(@navHeight - 20px);
+                font-size: 16px;
+                line-height: calc(@navHeight - 15px);
                 cursor: pointer;
+
+                @media (max-width:800px) {
+                    margin-right: 10px;
+                }
             }
 
             >div[img] {
                 display: block;
-                height: calc(@navHeight - 20px);
+                height: calc(@navHeight - 15px);
                 width: auto;
-                margin-right: 4rem;
+                margin-right: 40px;
                 cursor: pointer;
+
+                @media (max-width:800px) {
+                    margin-right: 10px;
+                }
 
                 >img {
                     display: block;
@@ -183,8 +191,8 @@ nav {
                 &[avatar] {
                     >img {
                         display: block;
-                        height: calc(@navHeight - 20px);
-                        width: calc(@navHeight - 20px);
+                        height: calc(@navHeight - 15px);
+                        width: calc(@navHeight - 15px);
                         border-radius: 50%;
                         object-fit: cover;
                     }

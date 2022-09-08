@@ -44,7 +44,7 @@ provide('viewId', viewId)
 </template>
 
 <style lang="less" scoped>
-@navSpan: 90px;
+@navSpan: 70px;
 
 div.background {
    position: fixed;
@@ -53,6 +53,10 @@ div.background {
    z-index: -10;
    width: 100%;
    height: 100%;
+
+   @media (max-width:800px) {
+      display: none;
+   }
 
    >img {
       width: 100%;
@@ -77,6 +81,12 @@ div[wrapper] {
       box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
       border-radius: 10px;
       margin-top: -@navSpan;
+
+      @media (max-width:800px) {
+         box-shadow: none;
+         border-radius: 0;
+         width: 100%;
+      }
 
       .fade-enter-active,
       .navbar-leave-active {
