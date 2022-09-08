@@ -176,7 +176,6 @@ function ChangeMoneyShow() {
 input[type="number"] {
   /* 清除原有input样式 */
   -web-kit-appearance: none;
-  -moz-appearance: none;
   outline: 0;
   /* 设置我们要的样式 */
   width: 100px;
@@ -188,6 +187,8 @@ input[type="number"] {
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
+  -webkit-appearance: none !important;  
+        appearance: none !important;
+    	margin: 0; 
 }
 </style>

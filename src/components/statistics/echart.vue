@@ -1,44 +1,101 @@
 <template>
-      <div class="echartall">
-      <div class="userlist">
-        <div class="list_title">用户列表</div>
+  <div class="echartall">
+    <!-- 用户列表 -->
+    <div class="userlist">
+      <div class="list_title">用户列表</div>
+      <template v-if="usershow">
         <el-scrollbar max-height="400px">
-          <p
-            v-for="(item,index) in filenews.context.userWithScores"
-            :key="item.user"
-            class="scrollbar-demo-item"
-          >
+          <p v-for="(item,index) in filenews.context.userWithScores" :key="item.user" class="scrollbar-demo-item">
             <span class="username">{{ item.user.phone_number }}</span>
             <span class="userscore">得分: {{ item.score }}</span>
-            <span class="userdetail"  @click="showDetail(item.user.id,filenews.context.questionnaire.id)">详情</span>
+            <span class="userdetail" @click="showDetail(item.user.id,filenews.context.questionnaire.id)">详情</span>
             <span class="userdel" @click="deluser(item.user.id,filenews.context.questionnaire.id,index)">删除</span>
           </p>
         </el-scrollbar>
-    <!-- 详情页 -->
-        <div class="detail" v-if="showdetail">
-          <span class="cancel" @click="showdetail=false">X</span>
-         <component :is="currentView" :survey-obj="surveydatas.data" ></component>
+      </template>
+      <template v-else>
+        <div class="usershow">
+          <div>
+            <span class="pic"></span>
+            <span class="wscore">得分:</span>
+            <span class="grey"></span>
+          </div>
+          <div>
+            <span class="pic"></span>
+            <span class="wscore">得分:</span>
+            <span class="grey"></span>
+          </div>
+          <div>
+            <span class="pic"></span>
+            <span class="wscore">得分:</span>
+            <span class="grey"></span>
+          </div>
+          <div>
+            <span class="pic"></span>
+            <span class="wscore">得分:</span>
+            <span class="grey"></span>
+          </div>
+
         </div>
+      </template>
+      <!-- 详情页 -->
+      <div class="detail" v-if="showdetail">
+        <span class="cancel" @click="showdetail=false">X</span>
+        <component :is="currentView" :survey-obj="surveydatas.data"></component>
       </div>
+    </div>
+    <!-- 用户地区 -->
+    <template v-if="usershow">
       <div class="userarea">
         <div class="echart_user" id="echart_user"></div>
         <div id="userpie" class="userpie"></div>
       </div>
+    </template>
+
+
+    <template v-else>
+      <div class="areashow">
+        <div class="areahead">
+          <span>用户群体</span>
+          <div>
+            <img src="img/pancake.png" alt="">
+            <img src="img/row.png" alt="">
+            <img src="img/column.png" alt="">
+            <img src="img/line.png" alt="">
+          </div>
+        </div>
+        <img src="/img/pan.png" alt="">
+      </div>
+    </template>
+    <!-- 分数区间 -->
+    <template v-if="usershow">
       <div class="sta_one">
         <div class="echart_mes" id="echart_mes" ref="echart_mes"></div>
         <div id="myChartpie" class="myChartpie"></div>
       </div>
-      <div
-        class="echart_compare"
-        id="echart_compare"
-        @dragover.prevent
-        @drop.prevent="drop($event)"
-      >
-        <img src="/img/compare.png" alt="" />
-        <span>+</span>
-        <i>快将同类型问卷拖入此处对比问卷吧！</i>
+    </template>
+    <template v-else>
+      <div class="scoreshow">
+        <div class="scorehead">
+          <span>分数区间</span>
+          <div>
+            <img src="img/pancake.png" alt="">
+            <img src="img/row.png" alt="">
+            <img src="img/column.png" alt="">
+            <img src="img/line.png" alt="">
+          </div>
+        </div>
+        <img src="/img/score.png" alt="">
       </div>
+    </template>
+
+    <!-- 问卷对比 -->
+    <div class="echart_compare" id="echart_compare" @dragover.prevent @drop.prevent="drop($event)">
+      <img src="/img/compare.png" alt="" />
+      <span>+</span>
+      <i>快将同类型问卷拖入此处对比问卷吧！</i>
     </div>
+  </div>
 
 
 
@@ -56,7 +113,7 @@ import surveyComplex from '../surveyTemplate_min/surveyComplex_min.vue';
 import * as echarts from "echarts";
 import draggable from "vuedraggable";
 import emitter from "../../mitt/mitt.js";
-import { onMounted, ref, reactive, watch,computed, nextTick } from "vue";
+import { onMounted, ref, reactive, watch, computed, nextTick } from "vue";
 //路由
 import { useRouter } from "vue-router";
 //Stores
@@ -65,8 +122,11 @@ import axios from "axios";
 const datas = useStore();
 const router = useRouter();
 
-const count = ref(5);
+//用户列表有数据
+let usershow = ref(false)
+let areashow = ref(false)
 
+console.log(usershow.value);
 //拖拽
 function drop(event) {
   console.log(event.target);
@@ -83,7 +143,6 @@ emitter.on("filenum", (e) => {
 });
 watch(num, (newnum) => {
   getfile();
-  console.log('问卷信息', filenews);  
 });
 
 let filenews = reactive({
@@ -102,8 +161,13 @@ function getfile() {
       console.log(response);
       filenews.context = response.data.data;
       detail.context = response.data.data
-      
-      // console.log(filenews.context);
+      //用户列表显示
+      if (filenews.context.userWithScores != null) {
+        usershow.value = true
+        areashow.value = true
+
+      }
+      console.log(usershow.value);
     })
     .catch((error) => {
       console.log(error);
@@ -114,22 +178,22 @@ function echartupdate() {
   let userChart = echarts.init(document.getElementById("echart_user"));
   let userChartpie = echarts.init(document.getElementById("userpie"));
   let province = reactive([]);
-  let pro=reactive([])
-  let pronum=reactive([])
+  let pro = reactive([])
+  let pronum = reactive([])
   const provincenum = new Map();
   if (filenews.context.userWithScores != null) {
     for (let i = 0; i < filenews.context.userWithScores.length; i++) {
       if (provincenum.has(filenews.context.userWithScores[i].user.province)) {
-        provincenum.set(filenews.context.userWithScores[i].user.province,provincenum.get(filenews.context.userWithScores[i].user.province)+1)
+        provincenum.set(filenews.context.userWithScores[i].user.province, provincenum.get(filenews.context.userWithScores[i].user.province) + 1)
       } else {
-        provincenum.set(filenews.context.userWithScores[i].user.province,1)
+        provincenum.set(filenews.context.userWithScores[i].user.province, 1)
       }
 
     }
     for (let value of provincenum.keys()) {
       let piedata = {};
       piedata["name"] = value;
-      piedata["value"] = provincenum.get( value);
+      piedata["value"] = provincenum.get(value);
       province.push(piedata);
       pro.push(value)
       pronum.push(provincenum.get(value))
@@ -270,8 +334,13 @@ function echartupdate() {
 watch(
   () => filenews.context,
   () => {
-    echartupdate();
-    echartnum();
+    if (filenews.context.userWithScores != null) {
+      console.log(1);
+      nextTick(() => {
+        echartupdate();
+        echartnum();
+      })
+    }
   },
   { deep: true }
 );
@@ -489,42 +558,42 @@ surveydatas.data = {};
 function showDetail(userId, questionnaireId) {
   let count = ref(detail.context.questionnaire.count)
   switch (count.value) {
-          case 0: //单选
-            viewId.value = 3
-            break
-          case 1: //多选
-            viewId.value = 4
-            break
-          case 2: //矩阵
-            viewId.value = 1
-            break
-          case 3: //量表
-            viewId.value = 2
-            break
-          case 4: //文本
-            viewId.value = 5
-            break
-          case 5: //混合
-            viewId.value = 6 
+    case 0: //单选
+      viewId.value = 3
+      break
+    case 1: //多选
+      viewId.value = 4
+      break
+    case 2: //矩阵
+      viewId.value = 1
+      break
+    case 3: //量表
+      viewId.value = 2
+      break
+    case 4: //文本
+      viewId.value = 5
+      break
+    case 5: //混合
+      viewId.value = 6
   }
-    // console.log(userId,questionnaireId);
-    
+  // console.log(userId,questionnaireId);
+
   axios({
-        url: `https://q.denglu1.cn/user/AnswerDetail/${userId}/${questionnaireId}`,
-        method: 'get',
-        withCredentials: true,
-        headers: { 'token': datas.user.token },
+    url: `https://q.denglu1.cn/user/AnswerDetail/${userId}/${questionnaireId}`,
+    method: 'get',
+    withCredentials: true,
+    headers: { 'token': datas.user.token },
 
   }).then((response) => {
     // console.log(response);
     surveydatas.data = response.data.data;
-       console.log('参数',  surveydatas.data );
-       
+    console.log('参数', surveydatas.data);
+
     showdetail.value = true;
 
-      }).catch((error) => {
-        console.log(error)
-      })
+  }).catch((error) => {
+    console.log(error)
+  })
 
 }
 
@@ -532,7 +601,7 @@ function showDetail(userId, questionnaireId) {
 //删除用户作答
 function deluser(userid, fileid, index) {
   if (!confirm('是否要删除该用户的作答记录？')) return;
-   axios({
+  axios({
     url: `https://q.denglu1.cn/deleteUserAnswer/${userid}/${fileid}`,
     method: "get",
     withCredentials: true,
@@ -541,7 +610,7 @@ function deluser(userid, fileid, index) {
   })
     .then((response) => {
       console.log(response);
-      filenews.context.userWithScores.splice(index,1)
+      filenews.context.userWithScores.splice(index, 1)
       emitter.emit("change")
     })
     .catch((error) => {
@@ -558,6 +627,7 @@ function deluser(userid, fileid, index) {
   grid-template-rows: 240px 190px;
   grid-auto-flow: column;
   grid-auto-flow: column dense;
+
   // transform: translateX(370px);
   .userlist {
     padding: 16px;
@@ -566,12 +636,14 @@ function deluser(userid, fileid, index) {
     grid-row-start: 1;
     grid-row-end: 2;
     box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
+
     .list_title {
       text-align: left;
       font-size: 14px;
       font-weight: bold;
       margin-bottom: 16px;
     }
+
     .el-scrollbar {
       width: 430px;
       height: 160px;
@@ -583,17 +655,21 @@ function deluser(userid, fileid, index) {
 
       .scrollbar-demo-item {
         position: relative;
+
         &:hover {
           box-shadow: 0px 8px 30px 0px rgba(73, 107, 158, 0.1);
         }
+
         &:hover .userdetail,
         &:hover .userdel {
           display: block;
         }
+
         .username {
           position: absolute;
           left: 0px;
         }
+
         .userscore {
           position: absolute;
           right: 100px;
@@ -602,6 +678,7 @@ function deluser(userid, fileid, index) {
           color: rgba(30, 111, 255, 1);
           text-align: left;
         }
+
         .userdetail {
           display: none;
           cursor: pointer;
@@ -616,6 +693,7 @@ function deluser(userid, fileid, index) {
           background: rgba(30, 111, 255, 1);
           border-radius: 5px;
         }
+
         .userdel {
           display: none;
           cursor: pointer;
@@ -632,6 +710,7 @@ function deluser(userid, fileid, index) {
           border-radius: 5px;
         }
       }
+
       .el-scrollbar__bar {
         width: 8px;
         position: absolute;
@@ -639,34 +718,80 @@ function deluser(userid, fileid, index) {
       }
     }
 
+    //用户列表最初
+    .usershow {
+      >div {
+        position: relative;
+        width: 317px;
+        height: 40px;
 
-    // 详情页
-      div.detail{
-        width: 1150px;
-        height: 600px;
-        z-index: 10;
-        background-color: white;
-        border-radius: 5px;
-        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;;
-        // opacity:.4;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translateX(-50%) translateY(-50%);
-        display: block;
-        // transition: all .5s linear;
-        overflow: auto;
-        .cancel{
-            position: absolute;
-            right: 10px;
-            top: 5px;
-            font-size: 24px;
-            color:black;
-            cursor: pointer;
-            z-index: 9999;
+        >span.pic {
+          position: absolute;
+          left: 13px;
+          top: 8px;
+          width: 24px;
+          height: 24px;
+          opacity: 1;
+          background: rgba(235, 245, 255, 1);
+          border-radius: 100%;
+        }
+
+        >span.wscore {
+          position: absolute;
+          left: 98px;
+          top: 9px;
+          font-size: 10px;
+          font-weight: 400;
+          letter-spacing: 0px;
+          line-height: 20px;
+          color: rgba(30, 111, 255, 1);
+          text-align: left;
+          vertical-align: top;
+        }
+
+        >span.grey {
+          position: absolute;
+          left: 142px;
+          top: 16px;
+          width: 32px;
+          height: 8px;
+          opacity: 1;
+          border-radius: 4px;
+          background: rgba(240, 240, 240, 1);
         }
       }
-}
+    }
+
+    // 详情页
+    div.detail {
+      width: 1150px;
+      height: 600px;
+      z-index: 10;
+      background-color: white;
+      border-radius: 5px;
+      box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+      ;
+      // opacity:.4;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translateX(-50%) translateY(-50%);
+      display: block;
+      // transition: all .5s linear;
+      overflow: auto;
+
+      .cancel {
+        position: absolute;
+        right: 10px;
+        top: 5px;
+        font-size: 24px;
+        color: black;
+        cursor: pointer;
+        z-index: 9999;
+      }
+    }
+  }
+
   .userarea {
     position: relative;
     grid-column-start: 8;
@@ -674,21 +799,62 @@ function deluser(userid, fileid, index) {
     grid-row-start: 1;
     grid-row-end: 2;
     box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
+
     .userareatit {
       position: absolute;
       left: 20px;
       top: 20px;
     }
+
     .echart_user {
       width: 330px;
       height: 240px;
     }
+
     .userpie {
       width: 330px;
       height: 240px;
       display: none;
     }
   }
+  //地区最初
+  .areashow {
+    position: relative;
+    grid-column-start: 8;
+    grid-column-end: 13;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
+
+    >div.areahead {
+      display: flex;
+      justify-content: space-between;
+      width: 300px;
+      margin: 16px 30px 0 24px;
+
+      >span {
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0px;
+        line-height: 22px;
+        color: rgba(0, 0, 0, 1);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      >div>img {
+        margin-right: 17px;
+      }
+    }
+
+    >img {
+      margin-top: 2px;
+      margin-left: 39px;
+    }
+
+  }
+ 
+
   .sta_one {
     width: 390px;
     height: 220px;
@@ -698,15 +864,55 @@ function deluser(userid, fileid, index) {
     grid-row-end: 3;
     background-color: white;
     box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
+
     .echart_mes {
       width: 390px;
       height: 220px;
     }
+
     .myChartpie {
       display: none;
       width: 390px;
       height: 220px;
     }
+  }
+   //分数区间最初
+   .scoreshow {
+    position: relative;
+    width: 390px;
+    height: 220px;
+    grid-column-start: 1;
+    grid-column-end: 7;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    background-color: white;
+    box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
+    >div.scorehead {
+      display: flex;
+      justify-content: space-between;
+      width: 360px;
+      margin: 16px 30px 0 24px;
+
+      >span {
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0px;
+        line-height: 22px;
+        color: rgba(0, 0, 0, 1);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      >div>img {
+        margin-right: 17px;
+      }
+    }
+
+    >img {
+      margin-top: 2px;
+      margin-left: 39px;
+    }
+
   }
 
   .echart_compare {
@@ -719,12 +925,14 @@ function deluser(userid, fileid, index) {
     grid-row-end: 3;
     background-color: white;
     box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
+
     img {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
     }
+
     span {
       position: absolute;
       bottom: 26px;
@@ -732,6 +940,7 @@ function deluser(userid, fileid, index) {
       font-size: 20px;
       color: rgba(71, 145, 255, 1);
     }
+
     i {
       font-style: normal;
       position: absolute;
@@ -743,6 +952,7 @@ function deluser(userid, fileid, index) {
       text-align: center;
     }
   }
+
   .scrollbar-demo-item {
     display: flex;
     align-items: center;
@@ -754,7 +964,4 @@ function deluser(userid, fileid, index) {
     border-radius: 4px;
   }
 }
-
-
-
 </style>
