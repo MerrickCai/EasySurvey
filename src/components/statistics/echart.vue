@@ -61,10 +61,10 @@
         <div class="areahead">
           <span>用户群体</span>
           <div>
-            <img src="img/pancake.png" alt="">
-            <img src="img/row.png" alt="">
-            <img src="img/column.png" alt="">
-            <img src="img/line.png" alt="">
+            <img src="/img/pancake.png" alt="">
+            <img src="/img/row.png" alt="">
+            <img src="/img/column.png" alt="">
+            <img src="/img/line.png" alt="">
           </div>
         </div>
         <img src="/img/pan.png" alt="">
@@ -82,10 +82,10 @@
         <div class="scorehead">
           <span>分数区间</span>
           <div>
-            <img src="img/pancake.png" alt="">
-            <img src="img/row.png" alt="">
-            <img src="img/column.png" alt="">
-            <img src="img/line.png" alt="">
+            <img src="/img/pancake.png" alt="">
+            <img src="/img/row.png" alt="">
+            <img src="/img/column.png" alt="">
+            <img src="/img/line.png" alt="">
           </div>
         </div>
         <img src="/img/score.png" alt="">
