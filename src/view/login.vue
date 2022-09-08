@@ -13,11 +13,11 @@ const background_url = background.geturl()
 
 
 //动态组件
-import { ref, computed, provide } from 'vue'
-import accountLogin from '../components/login/accountLogin.vue'
-import wechatLogin from '../components/login/wechatLogin.vue'
-import register from '../components/login/register.vue'
-import popUp from '../components/login/popUp.vue'
+import { ref, computed, provide } from 'vue';
+import accountLogin from '../components/login/accountLogin.vue';
+import wechatLogin from '../components/login/wechatLogin.vue';
+import register from '../components/login/register.vue';
+import popUp from '../components/login/popUp.vue';
 const viewList = [wechatLogin, accountLogin, register, popUp]
 const viewId = ref(1)
 const currentView = computed(() => viewList[viewId.value])
@@ -72,7 +72,6 @@ div[wrapper] {
    align-items: center;
    height: 100%;
    width: 100%;
-
    >main {
       display: block;
       width: auto;
