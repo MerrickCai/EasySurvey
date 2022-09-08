@@ -101,13 +101,14 @@ div[wrapper] {
   flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
-  height: calc(100% - 5px);
-  width: 100%;
+  height: calc(100% - 10px);
+  width: calc(100% - 20px);
+  margin:0 auto;
   position: relative;
   top: 0;
   left: 0;
   border-radius: 10px;
-  box-shadow: 0px 5px 10px 0 rgba(73, 107, 158, 0.1);
+  box-shadow: 0px 5px 10px 0 rgba(73, 107, 158, 0.2);
   background-color: rgb(255, 255, 255);
   z-index: 0;
 

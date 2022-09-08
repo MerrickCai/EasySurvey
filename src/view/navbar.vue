@@ -77,7 +77,7 @@ function devpop(){
 </template>
 
 <style lang="less" scoped>
-@navSpan: 80px;
+@navSpan: 70px;
 @navHeight: 60px;
 
 nav {
