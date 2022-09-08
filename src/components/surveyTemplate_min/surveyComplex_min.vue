@@ -20,7 +20,7 @@
                     <template v-if="item.type === 0">
                         <div class="questiontitle" ref="questiontitle">{{  `${i + 1}. ${item.questiontitle}（单选）`  }}</div>
                         <div class="ques" v-for="(elem, index) of item.option" :key="index">
-                            <input type="radio"  ref='option1'   :id="elem.id" :value="elem.detail" disabled />
+                            <input type="radio"   ref='option1'   :id="elem.id" :value="elem.detail" disabled />
                             <p><label :for="elem.id">{{  elem.detail  }}</label></p>
                         </div>
                     </template>
@@ -90,17 +90,21 @@ const option1= ref(null);
 const option2 = ref(null);
 onMounted(() => {
 
-    console.log(option1,option2);
-    
-    option1.value.forEach(item => {
-     if (survey.seleted.includes(item.id/1)) {
-         item.checked = true;
-        }
-    })
-    option2.value.forEach(item => {
-     if (survey.seleted.includes(item.id/1)) {
-         item.checked = true;
-        }})
+    console.log('test',option1,option2);
+    if (option1.value) {
+          option1.value.forEach(item => {
+        if (survey.seleted.includes(item.id/1)) {
+          item.checked = true;
+         }
+      })
+   }  
+    if (option2.value) {
+         option2.value.forEach(item => {
+       if (survey.seleted.includes(item.id/1)) {
+          item.checked = true;
+         }})
+    }
+
 })
 
 
