@@ -98,7 +98,7 @@
 import { ElMessage } from 'element-plus'
 import { ref, inject, reactive, computed, nextTick } from 'vue'
 import axios from "axios"
-import { useStore } from "../../PiniaStores/index.js"
+import { useStore } from "../../Stores/index.js"
 import { useRouter } from "vue-router"
 const router = useRouter()
 const datas = useStore()

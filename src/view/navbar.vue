@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter, useRoute } from "vue-router"
-import { useStore } from "../PiniaStores/index.js"
+import { useStore } from "../Stores/index.js"
 import { ElMessage } from 'element-plus'
 const router = useRouter()
 const route = useRoute()

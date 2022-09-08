@@ -47,14 +47,15 @@ import { Plus } from "@element-plus/icons-vue";
 import file from "./file.vue";
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
-const router = useRouter();
-import { useStore } from "../../PiniaStores/index.js";
-const datas = useStore();
 import axios from "axios";
-import emitter from "../../mitt";
+import emitter from "../../mitt/mitt.js";
+import { useStore } from "../../Stores/index.js";
+const router = useRouter();
+const datas = useStore();
 
 
 
+// 删除用户时,文件上的有效问卷数减一
 emitter.on("change",()=>{
   fileall[0][clickrotate.value].effectiveNumber-=1
 })

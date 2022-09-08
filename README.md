@@ -3,8 +3,6 @@
 
 - 网址：[https://q.denglu1.cn/](https://q.denglu1.cn/)
 
-- 仓库开源地址：[https://merrick-frontend.coding.net/public/survey/survey/git/files](https://merrick-frontend.coding.net/public/survey/survey/git/files)
-
 ## 技术栈
 
 - 架构
@@ -29,7 +27,13 @@
 
     - 代码托管：[Coding](https://coding.net/)
 
-    - 网站部署：腾讯云服务器（Nginx）
+    - 网站部署：腾讯云服务器
+
+        - IP：43.138.219.77
+
+        - 用户名：root
+
+        - 密码：2022cxxl!
 
 ## 开发
 

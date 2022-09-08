@@ -1,6 +1,6 @@
 <script setup>
 import axios from "axios"
-import { useStore } from "../../PiniaStores/index.js"
+import { useStore } from "../../Stores/index.js"
 const datas = useStore()
 import { useRouter } from "vue-router"
 const router = useRouter()
@@ -25,9 +25,10 @@ function validate(account, password) {
     })
     return false
   }
-  if (!/^[0-9a-zA-Z_!.]{8,20}$/.test(password)) { //8-20位字母数字+特殊字符（_!.）
+    // 8-20位字母数字+特殊字符
+    if (!/^[0-9a-zA-Z~!@#$%^&*()_+`\-={}:";'<>?,.\/]{8,20}$/.test(password)) {
     ElMessage({
-      message: '请输入正确的密码: 8-20位字母数字+特殊字符（_!.）',
+      message: '请输入正确的密码: 8-20位字母数字+特殊字符',
       type: 'warning',
       duration: 4000,
       showClose: true,

@@ -55,12 +55,12 @@ import surveyComplex from '../surveyTemplate_min/surveyComplex_min.vue';
 
 import * as echarts from "echarts";
 import draggable from "vuedraggable";
-import emitter from "../../mitt";
+import emitter from "../../mitt/mitt.js";
 import { onMounted, ref, reactive, watch,computed, nextTick } from "vue";
 //路由
 import { useRouter } from "vue-router";
-//PiniaStores
-import { useStore } from "../../PiniaStores/index.js";
+//Stores
+import { useStore } from "../../Stores/index.js";
 import axios from "axios";
 const datas = useStore();
 const router = useRouter();
@@ -99,7 +99,7 @@ function getfile() {
     headers: { token: datas.user.token },
   })
     .then((response) => {
-      // console.log(response);
+      console.log(response);
       filenews.context = response.data.data;
       detail.context = response.data.data
       
@@ -114,20 +114,25 @@ function echartupdate() {
   let userChart = echarts.init(document.getElementById("echart_user"));
   let userChartpie = echarts.init(document.getElementById("userpie"));
   let province = reactive([]);
+  let pro=reactive([])
+  let pronum=reactive([])
   const provincenum = new Map();
   if (filenews.context.userWithScores != null) {
     for (let i = 0; i < filenews.context.userWithScores.length; i++) {
       if (provincenum.has(filenews.context.userWithScores[i].user.province)) {
-        provincenum[filenews.context.userWithScores[i].user.province]++;
+        provincenum.set(filenews.context.userWithScores[i].user.province,provincenum.get(filenews.context.userWithScores[i].user.province)+1)
       } else {
-        provincenum[filenews.context.userWithScores[i].user.province] = 1;
+        provincenum.set(filenews.context.userWithScores[i].user.province,1)
       }
+
     }
-    for (let i = 0; i < Object.keys(provincenum).length; i++) {
+    for (let value of provincenum.keys()) {
       let piedata = {};
-      piedata["name"] = Object.keys(provincenum)[i];
-      piedata["value"] = Object.values(provincenum)[i];
+      piedata["name"] = value;
+      piedata["value"] = provincenum.get( value);
       province.push(piedata);
+      pro.push(value)
+      pronum.push(provincenum.get(value))
     }
   }
   userChart.setOption({
@@ -183,7 +188,7 @@ function echartupdate() {
       },
     },
     xAxis: {
-      data: Object.keys(provincenum),
+      data: pro,
       axisLabel: {
         rotate: 45,
       },
@@ -193,7 +198,7 @@ function echartupdate() {
       {
         name: "个数",
         type: "bar",
-        data: Object.values(provincenum),
+        data: pronum,
         label: {
           show: true,
           position: "top",

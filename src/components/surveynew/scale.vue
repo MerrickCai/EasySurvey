@@ -19,8 +19,9 @@
       <!-- <span class="titlecon" v-show="questitleshow" @click="changeqlshow">
         {{ quesitem.question.detail }}
       </span> -->
-      <input
-        type="text"
+      <el-input
+        type="textarea"
+        autosize
         ref="questitle"
         v-model="quesitem.question.detail"
          placeholder="请输入题目标题"
@@ -36,6 +37,7 @@
     </p>
     <div class="secquesall">
     <p class="secques" v-for="(item, i) in quesitem.options">
+      <div class="secall">
       <i class="additem" @click="addsectitle(i)">+</i>
       <span>{{ quesitem.options.indexOf(item) + 1 }}</span>
       <!-- <span
@@ -45,8 +47,9 @@
       >
         {{ item.detail }}
       </span> -->
-      <input
-        type="text"
+      <el-input
+        type="textarea"
+        autosize
         ref="secquestitle"
         v-model="item.detail"
          placeholder="请输入题目标题"
@@ -56,6 +59,8 @@
          <i class="delrditem" @click="deleterd(i)"
         ref="deletesec"
         @mousemove="cursorfailrd">×</i>
+      </div>
+        <div class="block">       
        <div class="slide" >   <!--400为slide的总宽度，根据分数总数来定每次滑块滑多少-->
          <div class="Gradient" :style="{ width:`${(item.value)* (400/(barArr[0].length-1))}px` }"></div>
                 <!-- 第三层循环 b,j -->
@@ -68,6 +73,7 @@
         @blur="judge()"
         @keyup.enter="judge()">
         </div>  
+      </div>
     </p>
     </div>
   </li>
@@ -338,19 +344,22 @@ li {
       height: fit-content;
       margin-left: 5px;
     }
-    input[type="text"] {
-      /* 清除原有input样式 */
-      -web-kit-appearance: none;
-      -moz-appearance: none;
-      outline: 0;
-      /* 设置我们要的样式 */
-      width: 500px;
+    >div.el-textarea {
+      display: block;
+      :deep(textarea) {
+        width: 600px;
       height: 20px;
       opacity: 1;
       text-align: left;
       border: none;
       margin-left: 5px;
       margin-top: 3px;
+      outline: none;
+      resize: none;
+      box-shadow: none;
+      padding: 0;
+      }
+      
     }
     .scorebox {
       position: absolute;
@@ -376,16 +385,19 @@ li {
       input[type="number"] {
         /* 清除原有input样式 */
         -web-kit-appearance: none;
-        -moz-appearance: none;
+        -moz-appearance: textfield;
+        appearance: textfield;
         outline: 0;
-        -webkit-appearance: none !important;
         margin: 0;
         /* 设置我们要的样式 */
         border: 1px solid rgba(30, 111, 255, 1);
       }
       input::-webkit-outer-spin-button,
       input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
+        -webkit-appearance: none !important;  
+        appearance: none !important;
+    	margin: 0;  
+
       }
     }
   }
@@ -404,10 +416,12 @@ li {
       // &:hover {
       //   border: 1px dashed rgba(30, 111, 255, 1);
       // }
+      >div.secall {
+        display: flex;
       .additem {
         cursor: pointer;
         margin-right: 5px;
-        font-size: 20px;
+        font-size: 17px;
         font-weight: 700;
         color: rgba(30, 111, 255, 1);
         font-style: normal;
@@ -416,18 +430,22 @@ li {
         width: 200px;
         margin-left: 5px;
       }
-      input[type="text"] {
-        /* 清除原有input样式 */
-        -web-kit-appearance: none;
-        -moz-appearance: none;
-        outline: 0;
-        /* 设置我们要的样式 */
-        width: 500px;
+      >div.el-textarea {
+        display: block;
+        :deep(textarea) {
+          display: inline;
+          width: 500px;
         height: 20px;
         opacity: 1;
         text-align: left;
         border: none;
         margin-left: 5px;
+        outline: none;
+        resize: none;
+        box-shadow: none;
+        padding: 0;
+        }
+       
       }
       .delrditem {
         cursor: pointer;
@@ -438,6 +456,10 @@ li {
         font-weight: 400;
         color: rgba(30, 111, 255, 1);
       }
+    }
+     >div.block {
+      position: relative;
+
       .slide {
         // 400+4（其中的4为末尾一个bar的宽度，所以总宽度为404。
         width: 404px;
@@ -446,7 +468,7 @@ li {
         box-sizing: border-box;
         position: absolute;
         left: 45px;
-        top: 55px;
+        top: 25px;
         display: flex;
         justify-content: space-between;
         @Width: 400px;
@@ -546,9 +568,12 @@ li {
         }
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
-          -webkit-appearance: none;
+          -webkit-appearance: none !important;  
+        appearance: none !important;
+    	margin: 0; 
         }
       }
+    }
     }
   }
 }
