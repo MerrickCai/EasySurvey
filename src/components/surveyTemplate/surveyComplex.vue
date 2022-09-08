@@ -420,6 +420,9 @@ div[content] {
         width: 10px;
         background-color: white;
         z-index: 10;
+        @media (max-width:800px) {
+      display: none;
+    }
     }
 
     >div.progress {
@@ -435,6 +438,9 @@ div[content] {
         border-radius: 5px;
         background-color: rgba(204, 204, 204, 1);
         cursor: pointer;
+        @media (max-width:800px) {
+      display: none;
+    }
 
         >span.progress-part {
             flex: 1 1 0;
@@ -513,6 +519,11 @@ div[content] {
         width: calc(100% - 140px);
         height: auto;
         padding: 10px 0 10px 20px;
+        @media (max-width:800px) {
+            width: 100%;
+            padding:5px;
+            align-items: center;
+    }
 
         >div.titleArea {
             display: flex;
@@ -560,6 +571,9 @@ div[content] {
         overflow: auto;
         scrollbar-width: none;
         position: relative;
+        @media (max-width:800px) {
+            padding-left: 5px;
+    }
 
         /* Firefox */
         &::-webkit-scrollbar {
@@ -576,6 +590,9 @@ div[content] {
             width: calc(100% - 140px);
             font-size: 20px;
             color: rgba(30, 111, 255, 1);
+            @media (max-width:800px) {
+            width:100%;
+    }
         }
 
         >p.para {
@@ -588,6 +605,9 @@ div[content] {
             margin: 5px 0;
             font-size: 18px;
             color: rgba(0, 0, 0, 1);
+            @media (max-width:800px) {
+            width:100%;
+    }
         }
 
         >div.main {
@@ -597,6 +617,9 @@ div[content] {
             height: auto;
             margin-bottom: 10px;
             padding: 5px;
+            @media (max-width:800px) {
+            width:100%;
+    }
 
             >div.questiontitle {
                 display: block;
