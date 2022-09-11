@@ -1,11 +1,11 @@
 <template>
 
-      <div class="echartall">
+  <div class="echartall">
     <!-- 用户列表 -->
 
-      <div class="userlist">
-        <div class="list_title">用户列表</div>
-        <template v-if="usershow">
+    <div class="userlist">
+      <div class="list_title">用户列表</div>
+      <template v-if="usershow">
         <el-button class="exportData" type="primary" @click="exportData()">导出问卷信息</el-button>
         <el-scrollbar max-height="400px">
           <p v-for="(item,index) in filenews.context.userWithScores" :key="item.user" class="scrollbar-demo-item">
@@ -623,20 +623,27 @@ function deluser(userid, fileid, index) {
 }
 
 
+
 // 导出excel表格
 function exportData() {
   axios({
-    url: `https://q.denglu1.cn/deleteUserAnswer/${filenews.context.questionnaire.title.id}/${filenews.context.questionnaire.title}`,
+    url: `https://q.denglu1.cn/user/export`,
     method: 'get',
-    withCredentials: true
+    withCredentials: true,
+    headers: { token: datas.user.token },
+    params: {
+      'questionnaire_id': filenews.context.questionnaire.id,
+      'excelName': filenews.context.questionnaire.title
+    },
   }).then((response) => {
     console.log(filenews.context.questionnaire.id);
     console.log(filenews.context.questionnaire.title);
-    
     console.log(response);
   }).catch((error) => {
-      console.log(error);
-    });;
+    console.log(filenews.context.questionnaire.id);
+    console.log(filenews.context.questionnaire.title);
+    console.log(error);
+  });
 }
 </script>
 
@@ -816,185 +823,188 @@ function exportData() {
   }
 
 
-    // 导出excel按钮
-      .exportData{
-        width: 100px;
-        height: 30px;
-        top: 15px;
-        right: 20px;
-        position: absolute;
-      }
+  // 导出excel按钮
+  .exportData {
+    width: 100px;
+    height: 30px;
+    top: 15px;
+    right: 20px;
+    position: absolute;
+  }
 }
-  .userarea {
-    position: relative;
-    grid-column-start: 8;
-    grid-column-end: 13;
-    grid-row-start: 1;
-    grid-row-end: 2;
-    box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
 
-    .userareatit {
-      position: absolute;
-      left: 20px;
-      top: 20px;
-    }
+.userarea {
+  position: relative;
+  grid-column-start: 8;
+  grid-column-end: 13;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
 
-    .echart_user {
-      width: 330px;
-      height: 240px;
-    }
-
-    .userpie {
-      width: 330px;
-      height: 240px;
-      display: none;
-    }
-  }
-  //地区最初
-  .areashow {
-    position: relative;
-    grid-column-start: 8;
-    grid-column-end: 13;
-    grid-row-start: 1;
-    grid-row-end: 2;
-    box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
-
-    >div.areahead {
-      display: flex;
-      justify-content: space-between;
-      width: 300px;
-      margin: 16px 30px 0 24px;
-
-      >span {
-        font-size: 14px;
-        font-weight: 500;
-        letter-spacing: 0px;
-        line-height: 22px;
-        color: rgba(0, 0, 0, 1);
-        text-align: left;
-        vertical-align: top;
-      }
-
-      >div>img {
-        margin-right: 17px;
-      }
-    }
-
-    >img {
-      margin-top: 2px;
-      margin-left: 39px;
-    }
-
-  }
- 
-
-  .sta_one {
-    width: 390px;
-    height: 220px;
-    grid-column-start: 1;
-    grid-column-end: 7;
-    grid-row-start: 2;
-    grid-row-end: 3;
-    background-color: white;
-    box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
-
-    .echart_mes {
-      width: 390px;
-      height: 220px;
-    }
-
-    .myChartpie {
-      display: none;
-      width: 390px;
-      height: 220px;
-    }
-  }
-   //分数区间最初
-   .scoreshow {
-    position: relative;
-    width: 390px;
-    height: 220px;
-    grid-column-start: 1;
-    grid-column-end: 7;
-    grid-row-start: 2;
-    grid-row-end: 3;
-    background-color: white;
-    box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
-    >div.scorehead {
-      display: flex;
-      justify-content: space-between;
-      width: 360px;
-      margin: 16px 30px 0 24px;
-
-      >span {
-        font-size: 14px;
-        font-weight: 500;
-        letter-spacing: 0px;
-        line-height: 22px;
-        color: rgba(0, 0, 0, 1);
-        text-align: left;
-        vertical-align: top;
-      }
-
-      >div>img {
-        margin-right: 17px;
-      }
-    }
-
-    >img {
-      margin-top: 2px;
-      margin-left: 39px;
-    }
-
+  .userareatit {
+    position: absolute;
+    left: 20px;
+    top: 20px;
   }
 
-  .echart_compare {
-    position: relative;
-    width: 390px;
-    height: 220px;
-    grid-column-start: 7;
-    grid-column-end: 13;
-    grid-row-start: 2;
-    grid-row-end: 3;
-    background-color: white;
-    box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
-
-    img {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    span {
-      position: absolute;
-      bottom: 26px;
-      left: 60px;
-      font-size: 20px;
-      color: rgba(71, 145, 255, 1);
-    }
-
-    i {
-      font-style: normal;
-      position: absolute;
-      bottom: 30px;
-      left: 80px;
-      font-size: 14px;
-      font-weight: 400;
-      color: rgba(217, 217, 217, 1);
-      text-align: center;
-    }
+  .echart_user {
+    width: 330px;
+    height: 240px;
   }
 
-  .scrollbar-demo-item {
+  .userpie {
+    width: 330px;
+    height: 240px;
+    display: none;
+  }
+}
+
+//地区最初
+.areashow {
+  position: relative;
+  grid-column-start: 8;
+  grid-column-end: 13;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
+
+  >div.areahead {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 37px;
-    width: 370px;
-    margin: 3px;
-    text-align: center;
-    border-radius: 4px;
+    justify-content: space-between;
+    width: 300px;
+    margin: 16px 30px 0 24px;
+
+    >span {
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0px;
+      line-height: 22px;
+      color: rgba(0, 0, 0, 1);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    >div>img {
+      margin-right: 17px;
+    }
   }
 
+  >img {
+    margin-top: 2px;
+    margin-left: 39px;
+  }
+
+}
+
+
+.sta_one {
+  width: 390px;
+  height: 220px;
+  grid-column-start: 1;
+  grid-column-end: 7;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  background-color: white;
+  box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
+
+  .echart_mes {
+    width: 390px;
+    height: 220px;
+  }
+
+  .myChartpie {
+    display: none;
+    width: 390px;
+    height: 220px;
+  }
+}
+
+//分数区间最初
+.scoreshow {
+  position: relative;
+  width: 390px;
+  height: 220px;
+  grid-column-start: 1;
+  grid-column-end: 7;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  background-color: white;
+  box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
+
+  >div.scorehead {
+    display: flex;
+    justify-content: space-between;
+    width: 360px;
+    margin: 16px 30px 0 24px;
+
+    >span {
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0px;
+      line-height: 22px;
+      color: rgba(0, 0, 0, 1);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    >div>img {
+      margin-right: 17px;
+    }
+  }
+
+  >img {
+    margin-top: 2px;
+    margin-left: 39px;
+  }
+
+}
+
+.echart_compare {
+  position: relative;
+  width: 390px;
+  height: 220px;
+  grid-column-start: 7;
+  grid-column-end: 13;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  background-color: white;
+  box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
+
+  img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  span {
+    position: absolute;
+    bottom: 26px;
+    left: 60px;
+    font-size: 20px;
+    color: rgba(71, 145, 255, 1);
+  }
+
+  i {
+    font-style: normal;
+    position: absolute;
+    bottom: 30px;
+    left: 80px;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(217, 217, 217, 1);
+    text-align: center;
+  }
+}
+
+.scrollbar-demo-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 37px;
+  width: 370px;
+  margin: 3px;
+  text-align: center;
+  border-radius: 4px;
+}
 </style>
