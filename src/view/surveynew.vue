@@ -369,29 +369,29 @@ async function pushfile() {
   //判断题目选项是否填写
   let input = document.getElementsByTagName('input')
   // 将伪数组转换为数组
-  let typeinput = [].slice.call(input)
   let textarea = document.getElementsByTagName('textarea')
+  let typearea = [].slice.call(textarea)
   //textarea未填写标红
-  if (textarea[0].value == "") {
-    textarea[0].style.borderColor = "red"
+  if (input[0].value == "") {
+    input[0].style.borderColor = "red"
     isarea = false
   }
   else {
-    textarea[0].style.borderColor = ""
+    input[0].style.borderColor = ""
     isarea = true
   }
-  for (let i = 0; i < input.length; i++) {
-    if (input[i].value == "") {
-      input[i].style.border = "1px solid"
-      input[i].style.borderColor = "red"
+  for (let i = 0; i < textarea.length; i++) {
+    if (textarea[i].value == "") {
+      textarea[i].style.border = "1px solid"
+      textarea[i].style.borderColor = "red"
     }
     else {
-      input[i].style.border = ""
-      input[i].style.borderColor = ""
+      textarea[i].style.border = ""
+      textarea[i].style.borderColor = ""
     }
   }
   //判断所有的input是否填写
-  isover = typeinput.every((element) => {
+  isover = typearea.every((element) => {
     return element.value != ""
   })
   if (isover == false || isarea == false){
@@ -645,8 +645,7 @@ async function pushfile() {
 let link = ref(1);
 // 链接
 let linkqr = ref(
-  "https://q.denglu1.cn/#/survey/" +
-  parseInt(link.value)
+  "https://q.denglu1.cn/survey/"+link.value
 );
 //二维码
 const { toClipboard } = clipboard3();

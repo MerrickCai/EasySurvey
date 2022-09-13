@@ -177,7 +177,7 @@ function getfile() {
       console.log(error);
     });
 }
-
+//用户地区分布统计图
 function echartupdate() {
   let userChart = echarts.init(document.getElementById("echart_user"));
   let userChartpie = echarts.init(document.getElementById("userpie"));
@@ -258,6 +258,7 @@ function echartupdate() {
     xAxis: {
       data: pro,
       axisLabel: {
+        //坐标文字倾斜程度
         rotate: 45,
       },
     },
@@ -271,6 +272,20 @@ function echartupdate() {
           show: true,
           position: "top",
         },
+        itemStyle: {
+          normal: {
+            //改变柱子颜色
+            color: function (params) {
+              //注意，如果颜色太少的话，后面颜色不会自动循环，最好多定义几个颜色
+              var colorList = ['rgba(47, 184, 252, 1)', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622'];
+              return colorList[params.dataIndex]
+            }
+          },
+          //柱子圆角修改
+          barBorderRadius: [4, 4, 4, 4]
+        },
+        //柱状图柱子的宽度
+        barWidth: 20,
       },
     ],
   });
@@ -457,10 +472,29 @@ function echartnum() {
         name: "用户量",
         type: "bar",
         data: yDataArr,
+        // markLine: {
+        //   data: [
+        //     {  name: '平均值',yAxis:30}
+        //   ]
+        // },
         label: {
           show: true,
           position: "top",
         },
+        itemStyle: {
+          normal: {
+            //改变柱子颜色
+            color: function (params) {
+              //注意，如果颜色太少的话，后面颜色不会自动循环，最好多定义几个颜色
+              var colorList = ['rgba(47, 184, 252, 1)', 'rgba(254, 138, 38, 1)', 'rgba(54, 188, 203, 1)', 'rgba(255, 152, 142, 1)', 'rgba(255, 69, 0, 1)', '#749f83', '#ca8622'];
+              return colorList[params.dataIndex]
+            }
+          },
+          //柱子圆角修改
+          barBorderRadius: 4
+        },
+        //柱子宽度
+        barWidth: 20,
       },
     ],
   });
