@@ -78,7 +78,7 @@ function delfile() {
     })
     .then(() => {
       axios({
-      url: `https://q.denglu1.cn/deleteQuestion/${parseInt(props.item.id)}`,
+      url: `https://q.denglu1.cn/api/deleteQuestion/${parseInt(props.item.id)}`,
       method: "get",
       withCredentials: true,
       headers: { "Content-Type": "application/json" },

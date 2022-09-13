@@ -405,7 +405,7 @@ async function pushfile() {
     if (type.value == 1) {
       radiofile.forEach((element) => delete element.id);
       await axios({
-        url: "https://q.denglu1.cn/questions/rebuild",
+        url: "https://q.denglu1.cn/api/questions/rebuild",
         method: "post",
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
@@ -442,7 +442,7 @@ async function pushfile() {
     if (type.value == 2) {
       checkboxfile.forEach((element) => delete element.id);
       await axios({
-        url: "https://q.denglu1.cn/questions/rebuild",
+        url: "https://q.denglu1.cn/api/questions/rebuild",
         method: "post",
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
@@ -482,7 +482,7 @@ async function pushfile() {
       });
       console.log(fileword);
       await axios({
-        url: "https://q.denglu1.cn/questions/rebuild",
+        url: "https://q.denglu1.cn/api/questions/rebuild",
         method: "post",
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
@@ -525,7 +525,7 @@ async function pushfile() {
         // delete element.secscore;
       });
       await axios({
-        url: "https://q.denglu1.cn/questions/rebuild",
+        url: "https://q.denglu1.cn/api/questions/rebuild",
         method: "post",
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
@@ -564,7 +564,7 @@ async function pushfile() {
     if (type.value == 5) {
       textfile.forEach((element) => delete element.id);
       await axios({
-        url: "https://q.denglu1.cn/questions/rebuild",
+        url: "https://q.denglu1.cn/api/questions/rebuild",
         method: "post",
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
@@ -601,7 +601,7 @@ async function pushfile() {
     if (type.value == 6) {
       textfile.forEach((element) => delete element.id);
       await axios({
-        url: "https://q.denglu1.cn/questions/rebuild",
+        url: "https://q.denglu1.cn/api/questions/rebuild",
         method: "post",
         withCredentials: true,
         headers: { "Content-Type": "application/json" },

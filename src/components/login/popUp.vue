@@ -115,7 +115,7 @@ const title = reactive({
 })
 const user = reactive({ area: ['广东省', '广州市', '番禺区'], age: "" })
 axios({
-  url: `https://q.denglu1.cn/user/getUserMessage/${datas.user.userId}`,
+  url: `https://q.denglu1.cn/api/user/getUserMessage/${datas.user.userId}`,
   method: "get",
   withCredentials: true,
   headers: { "Content-Type": "application/json" },
@@ -156,7 +156,7 @@ async function upLoad(area, age) {
     return false
   }
   await axios({
-    url: "https://q.denglu1.cn/user/updateMessage",
+    url: "https://q.denglu1.cn/api/user/updateMessage",
     method: "post",
     withCredentials: true,
     headers: { "Content-Type": "application/json" },

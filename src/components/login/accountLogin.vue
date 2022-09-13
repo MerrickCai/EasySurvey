@@ -60,7 +60,7 @@ async function login(account, password, remember) {
     return true
   }
   await axios({
-    url: "https://q.denglu1.cn/user/login",
+    url: "https://q.denglu1.cn/api/user/login",
     method: "post",
     withCredentials: true,
     headers: { "Content-Type": "application/json" },

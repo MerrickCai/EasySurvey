@@ -103,9 +103,7 @@ const datas = useStore()
 
 // --------------------------- 获取父组件传入的问卷状态和数据 --------------------
 const Survey = inject('Survey')
-// 从父组件拿到数据
-const surveyObj = ref(Survey.surveyObj)
-console.log('父组件网络请求的数据', surveyObj)
+console.log('父组件网络请求的数据', Survey.surveyObj)
 // --------------------------- 获取父组件传入的问卷状态和数据 --------------------
 
 
@@ -115,18 +113,18 @@ console.log('父组件网络请求的数据', surveyObj)
 const survey = reactive({});
 // survey的介绍和提交问卷用的信息
 survey.intro = {};
-survey.intro.info_title = surveyObj.value.questionnaire.title;
-survey.intro.info_para = surveyObj.value.questionnaire.message;
-survey.effectiveNumber = surveyObj.value.questionnaire.effectiveNumber;
-survey.totalNumber = surveyObj.value.questionnaire.totalNumber;
-survey.count = surveyObj.value.questionnaire.count;
-survey.id = surveyObj.value.questionnaire.id;
+survey.intro.info_title = Survey.surveyObj.questionnaire.title;
+survey.intro.info_para = Survey.surveyObj.questionnaire.message;
+survey.effectiveNumber = Survey.surveyObj.questionnaire.effectiveNumber;
+survey.totalNumber = Survey.surveyObj.questionnaire.totalNumber;
+survey.count = Survey.surveyObj.questionnaire.count;
+survey.id = Survey.surveyObj.questionnaire.id;
 survey.questionList = [];
-for (let i in surveyObj.value.questionInfoMap) {
+for (let i in Survey.surveyObj.questionInfoMap) {
     let obj = {};
     obj.questionId = i;
-    obj.type = surveyObj.value.questionInfoMap[i].type;
-    obj.questiontitle = surveyObj.value.questionInfoMap[i].info;
+    obj.type = Survey.surveyObj.questionInfoMap[i].type;
+    obj.questiontitle = Survey.surveyObj.questionInfoMap[i].info;
     switch (obj.type) {
         case 0: obj.value = 0; break;
         case 1: obj.value = []; break;
@@ -139,10 +137,10 @@ for (let i in surveyObj.value.questionInfoMap) {
         continue;
     }
     obj.option = [];
-    for (let j in surveyObj.value.optionMap[i]) {
+    for (let j in Survey.surveyObj.optionMap[i]) {
         let obj2 = {};
-        obj2.id = surveyObj.value.optionMap[i][j].id;
-        obj2.detail = surveyObj.value.optionMap[i][j].detail;
+        obj2.id = Survey.surveyObj.optionMap[i][j].id;
+        obj2.detail = Survey.surveyObj.optionMap[i][j].detail;
         obj.option.push(obj2);
     }
     survey.questionList.push(obj);
@@ -267,7 +265,7 @@ function Submit() {
 
     console.log('用于提交的questionAnswerList', questionAnswerList)
     axios({
-        url: `https://q.denglu1.cn/questions/commit`,
+        url: `https://q.denglu1.cn/api/questions/commit`,
         method: 'post',
         withCredentials: true,
         headers: { 'Content-Type': 'application/json' },

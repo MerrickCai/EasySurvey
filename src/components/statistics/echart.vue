@@ -155,7 +155,7 @@ let filenews = reactive({
 let detail = reactive({});
 function getfile() {
   axios({
-    url: `https://q.denglu1.cn/user/questionnaireDetail/${parseInt(num.value)}`,
+    url: `https://q.denglu1.cn/api/user/questionnaireDetail/${parseInt(num.value)}`,
     method: "get",
     withCredentials: true,
     headers: { "Content-Type": "application/json" },
@@ -583,7 +583,7 @@ function showDetail(userId, questionnaireId) {
   // console.log(userId,questionnaireId);
 
   axios({
-    url: `https://q.denglu1.cn/user/AnswerDetail/${userId}/${questionnaireId}`,
+    url: `https://q.denglu1.cn/api/user/AnswerDetail/${userId}/${questionnaireId}`,
     method: 'get',
     withCredentials: true,
     headers: { 'token': datas.user.token },
@@ -606,7 +606,7 @@ function showDetail(userId, questionnaireId) {
 function deluser(userid, fileid, index) {
   if (!confirm('是否要删除该用户的作答记录？')) return;
   axios({
-    url: `https://q.denglu1.cn/deleteUserAnswer/${userid}/${fileid}`,
+    url: `https://q.denglu1.cn/api/deleteUserAnswer/${userid}/${fileid}`,
     method: "get",
     withCredentials: true,
     headers: { "Content-Type": "application/json" },
@@ -627,7 +627,7 @@ function deluser(userid, fileid, index) {
 // 导出excel表格
 function exportData() {
   axios({
-    url: `https://q.denglu1.cn/user/export`,
+    url: `https://q.denglu1.cn/api/user/export`,
     method: 'get',
     withCredentials: true,
     headers: { token: datas.user.token },

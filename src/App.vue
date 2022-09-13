@@ -31,7 +31,7 @@ router.beforeEach(async (to, from) => {
   if (localStorage.getItem("account") && localStorage.getItem("password")) {
     try {
       const response = await axios({
-        url: "https://q.denglu1.cn/user/login",
+        url: "https://q.denglu1.cn/api/user/login",
         method: "post",
         withCredentials: true,
         headers: { "Content-Type": "application/json" },

@@ -46,7 +46,7 @@ const Survey = reactive({
 
 //--------------------- 网络请求获取问卷类型和数据 -------------------------
 axios({
-  url: `https://q.denglu1.cn/user/fillQuestionnaire/${route.params.questionnaireId}`,
+  url: `https://q.denglu1.cn/api/user/fillQuestionnaire/${route.params.questionnaireId}`,
   method: "get",
   withCredentials: true,
   headers: { "Content-Type": "application/json" },

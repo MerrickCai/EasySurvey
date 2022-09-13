@@ -80,7 +80,7 @@ async function register(account, password, passwordConfirm, agree) {
         return true
     }
     await axios({
-        url: 'https://q.denglu1.cn/user/regist',
+        url: 'https://q.denglu1.cn/api/user/regist',
         method: 'post',
         withCredentials: true,
         headers: { 'Content-Type': 'application/json' },
@@ -100,7 +100,7 @@ async function register(account, password, passwordConfirm, agree) {
             datas.user.password = password
             //注册完帮助用户登录
             axios({
-                url: "https://q.denglu1.cn/user/login",
+                url: "https://q.denglu1.cn/api/user/login",
                 method: "post",
                 withCredentials: true,
                 headers: { "Content-Type": "application/json" },

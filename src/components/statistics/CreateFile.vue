@@ -64,7 +64,7 @@ let fileall = reactive([]);
 
 function getinfor() {
   axios({
-    url: `https://q.denglu1.cn/user/questionnaire/${datas.user.userId}`,
+    url: `https://q.denglu1.cn/api/user/questionnaire/${datas.user.userId}`,
     method: "get",
     withCredentials: true,
     headers: { "Content-Type": "application/json" },

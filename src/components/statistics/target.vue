@@ -99,7 +99,7 @@ emitter.on("change",()=>{
 
 function getfile() {
   axios({
-    url: `https://q.denglu1.cn/user/questionnaireDetail/${parseInt(num.value)}`,
+    url: `https://q.denglu1.cn/api/user/questionnaireDetail/${parseInt(num.value)}`,
     method: "get",
     withCredentials: true,
     headers: { "Content-Type": "application/json" },

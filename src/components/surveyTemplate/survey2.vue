@@ -217,7 +217,7 @@ function sumbit() {
         questionAnswerList.push(obj);
     }
     axios({
-        url: `https://q.denglu1.cn/questions/commit`,
+        url: `https://q.denglu1.cn/api/questions/commit`,
         method: 'post',
         withCredentials: true,
         headers: { 'Content-Type': 'application/json' },
