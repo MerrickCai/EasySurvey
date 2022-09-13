@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
 //统计数据页
 const statistics = () => import('../view/statistics.vue')
@@ -40,6 +40,6 @@ const routes = [
 ]
 
 export default createRouter({
-    history: createWebHashHistory(),
+    history: createWebHistory(),
     routes
 })
