@@ -425,7 +425,7 @@ async function pushfile() {
           console.log(response);
           link.value = response.data.data.link;
           linkqr.value =
-            "https://q.denglu1.cn/#/survey/" +
+            "https://q.denglu1.cn/survey/" +
             parseInt(link.value);
         })
         .catch((error) => {
@@ -462,7 +462,7 @@ async function pushfile() {
           console.log(response);
           link.value = response.data.data.link;
           linkqr.value =
-            "https://q.denglu1.cn/#/survey/" +
+            "https://q.denglu1.cn/survey/" +
             parseInt(link.value);
         })
         .catch((error) => {
@@ -502,7 +502,7 @@ async function pushfile() {
           console.log(response);
           link.value = response.data.data.link;
           linkqr.value =
-            "https://q.denglu1.cn/#/survey/" +
+            "https://q.denglu1.cn/survey/" +
             parseInt(link.value);
         })
         .catch((error) => {
@@ -545,7 +545,7 @@ async function pushfile() {
           console.log(response);
           link.value = response.data.data.link;
           linkqr.value =
-            "https://q.denglu1.cn/#/survey/" +
+            "https://q.denglu1.cn/survey/" +
             parseInt(link.value);
         })
         .catch((error) => {
@@ -584,7 +584,7 @@ async function pushfile() {
           console.log(response);
           link.value = response.data.data.link;
           linkqr.value =
-            "https://q.denglu1.cn/#/survey/" +
+            "https://q.denglu1.cn/survey/" +
             parseInt(link.value);
         })
         .catch((error) => {
@@ -621,7 +621,7 @@ async function pushfile() {
           console.log(response);
           link.value = response.data.data.link;
           linkqr.value =
-            "https://q.denglu1.cn/#/survey/" +
+            "https://q.denglu1.cn/survey/" +
             parseInt(link.value);
         })
         .catch((error) => {
@@ -645,7 +645,7 @@ async function pushfile() {
 let link = ref(1);
 // 链接
 let linkqr = ref(
-  "https://q.denglu1.cn/#/survey/" +
+  "https://q.denglu1.cn/survey/" +
   parseInt(link.value)
 );
 //二维码
