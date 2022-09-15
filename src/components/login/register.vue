@@ -156,7 +156,7 @@ function Dev(str) {
     <div class="wrapper">
         <div class="title">用户注册</div>
         <div class="imgUpload">
-            <img src="/img/circle.png" alt="默认头像" />
+            <img v-lazy="'/img/circle.png'" alt="默认头像" />
             <div button>
                 <div @click="Dev('上传头像')">+上传头像</div>
             </div>

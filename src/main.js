@@ -19,5 +19,14 @@ app.use(createPinia())
 import router from './router/index.js'
 app.use(router)
 
+// 懒加载插件
+import lazyPlugin from 'vue3-lazy'
+app.use(lazyPlugin, {
+    loading: '/img/compare.png', // 图片加载时默认图片
+    error:'/img/compare.png'// 图片加载失败时默认图片
+});
+
+
+
 // 挂载 Vue 实例
 app.mount('#app')

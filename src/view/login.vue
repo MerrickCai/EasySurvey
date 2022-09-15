@@ -29,7 +29,7 @@ provide('viewId', viewId)
       <!--动态背景-->
       <Teleport to="#app">
          <div class="background">
-            <img :src="background_url" alt="登陆注册页背景" />
+            <img v-lazy="background_url" alt="登陆注册页背景" />
          </div>
       </Teleport>
       <main>

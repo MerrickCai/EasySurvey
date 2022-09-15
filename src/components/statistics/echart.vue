@@ -61,13 +61,13 @@
         <div class="areahead">
           <span>用户群体</span>
           <div>
-            <img src="/img/pancake.png" alt="">
-            <img src="/img/row.png" alt="">
-            <img src="/img/column.png" alt="">
-            <img src="/img/line.png" alt="">
+            <img v-lazy="'/img/pancake.png'" alt="">
+            <img v-lazy="'/img/row.png'" alt="">
+            <img v-lazy="'/img/column.png'" alt="">
+            <img v-lazy="'/img/line.png'" alt="">
           </div>
         </div>
-        <img src="/img/pan.png" alt="">
+        <img v-lazy="'/img/pan.png'" alt="">
       </div>
     </template>
     <!-- 分数区间 -->
@@ -82,19 +82,19 @@
         <div class="scorehead">
           <span>分数区间</span>
           <div>
-            <img src="/img/pancake.png" alt="">
-            <img src="/img/row.png" alt="">
-            <img src="/img/column.png" alt="">
-            <img src="/img/line.png" alt="">
+            <img v-lazy="'/img/pancake.png'" alt="">
+            <img v-lazy="'/img/row.png'" alt="">
+            <img v-lazy="'/img/column.png'" alt="">
+            <img v-lazy="'/img/line.png'" alt="">
           </div>
         </div>
-        <img src="/img/score.png" alt="">
+        <img v-lazy="'/img/score.png'" alt="">
       </div>
     </template>
 
     <!-- 问卷对比 -->
     <div class="echart_compare" id="echart_compare" @dragover.prevent @drop.prevent="drop($event)">
-      <img src="/img/compare.png" alt="" />
+      <img v-lazy="'/img/compare.png'" alt="" />
       <span>+</span>
       <i>快将同类型问卷拖入此处对比问卷吧！</i>
     </div>

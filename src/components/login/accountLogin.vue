@@ -129,7 +129,7 @@ function Dev(str) {
 </script>
 
 <template>
-  <div class="wrapper">
+  <div class="wrapper" >
 
     <div class="selectArea">
       <a @click="Dev('微信登录')">微信登录</a>
@@ -138,7 +138,7 @@ function Dev(str) {
 
     <div class="typeArea">
       <input type="text" v-model="user.account" placeholder="请输入手机号或者学号" />
-      <input type="password" v-model="user.password" placeholder="请输入登录密码" />
+      <input type="password" v-model="user.password" placeholder="请输入登录密码"   @keydown.enter="login(user.account, user.password, user.remember)"/>
     </div>
 
     <div class="functionArea">

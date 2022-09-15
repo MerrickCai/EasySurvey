@@ -89,7 +89,7 @@ provide("Survey", Survey)
     <div class="decoration3" v-show="Survey.status.begin || Survey.status.end"></div>
     <div class="decoration4" v-show="Survey.status.begin || Survey.status.end"></div>
     <div class="decoration5"></div>
-    <img dog-ear src="/img/tangible.png" />
+    <img dog-ear v-lazy="'/img/tangible.png'" />
     <component :is="currentView"></component>
   </div>
 </template>
