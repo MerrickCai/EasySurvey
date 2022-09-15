@@ -161,7 +161,7 @@ function Dev(str) {
                 <div @click="Dev('上传头像')">+上传头像</div>
             </div>
         </div>
-        <div class="typeArea">
+        <div class="typeArea" @keydown.enter="register(user.account, user.password,user.passwordConfirm, user.agree)">
             <input type="text" v-model="user.account" placeholder="请输入手机号或学号" />
             <input type="password" v-model="user.password" placeholder="请输入密码：8-20位字母数字+特殊字符" />
             <input type="password" v-model="user.passwordConfirm" placeholder="确认密码" />

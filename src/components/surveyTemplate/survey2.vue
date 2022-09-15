@@ -69,7 +69,7 @@
                             <img class="thumb" :style="{ left: `${(elem.value) * (400 / (barArr[i].length - 1))}px` }"
                                 v-lazy="elem.value === 0 ? item.silderSrc : '/img/blue.png'">
                             <span class="edit" v-show="!elem.isEdit" @click="editHandle(elem, index)">{{ elem.value
-                            }}<img v-lazy="/img/icon-edit.png"></span>
+                            }}<img v-lazy="'/img/icon-edit.png'"></span>
                             <input class="editinput" type="text" v-show="elem.isEdit"
                                 @blur="editHandle2(elem, item, $event)" @keydown.enter="editHandle2(elem, item, $event)"
                                 :value="elem.value" ref="myRef">

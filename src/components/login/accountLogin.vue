@@ -84,8 +84,8 @@ async function login(account, password, remember) {
         datas.user.token = response.data.data.token
         datas.user.refreshtoken = response.data.data.refreshtoken
         if (remember) { // 确认用户是否自动登录
-            localStorage.setItem('account', btoa(account))
-            localStorage.setItem('password', btoa(password))
+          localStorage.setItem('account', btoa(account))
+          localStorage.setItem('password', btoa(password))
         }
         //跳转填写地区和年龄弹窗
         viewId.value = 3
@@ -117,28 +117,28 @@ async function login(account, password, remember) {
 
 //------------------------------ 开发中 ------------------------------------
 function Dev(str) {
-    ElMessage({
-        message: `${str}开发中`,
-        type: 'warning',
-        duration: 4000,
-        showClose: true,
-        center: true
-    })
+  ElMessage({
+    message: `${str}开发中`,
+    type: 'warning',
+    duration: 4000,
+    showClose: true,
+    center: true
+  })
 }
 //------------------------------ 开发中 ------------------------------------
 </script>
 
 <template>
-  <div class="wrapper" >
+  <div class="wrapper">
 
     <div class="selectArea">
       <a @click="Dev('微信登录')">微信登录</a>
       <a active @click="viewId = 1">账号登录</a>
     </div>
 
-    <div class="typeArea">
+    <div class="typeArea" @keydown.enter="login(user.account, user.password, user.remember)">
       <input type="text" v-model="user.account" placeholder="请输入手机号或者学号" />
-      <input type="password" v-model="user.password" placeholder="请输入登录密码"   @keydown.enter="login(user.account, user.password, user.remember)"/>
+      <input type="password" v-model="user.password" placeholder="请输入登录密码" />
     </div>
 
     <div class="functionArea">
