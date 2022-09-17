@@ -6,7 +6,7 @@
     <div class="userlist">
       <div class="list_title">用户列表</div>
       <template v-if="usershow">
-        <el-button class="exportData" type="primary" @click="exportData()">导出问卷信息</el-button>
+        <el-button class="exportData" type="primary" @click="exportData()">{{btnData}}</el-button>
         <el-scrollbar max-height="400px">
           <p v-for="(item,index) in filenews.context.userWithScores" :key="item.user" class="scrollbar-demo-item">
             <span class="username">{{ item.user.phone_number }}</span>
@@ -656,10 +656,15 @@ function deluser(userid, fileid, index) {
     });
 }
 
-
+// 加载过程中给用户提示，防止多次点
+const btnData = ref("导出问卷信息");
+let isClick = false; //节流阀
 // 导出excel表格
 function exportData() {
-  axios({
+  btnData.value = '导出中...请稍等'
+  if (!isClick) {
+    isClick = true;
+    axios({
     url: `https://q.denglu1.cn/api/user/export`,
     method: 'POST',
     withCredentials: true,
@@ -687,7 +692,9 @@ function exportData() {
           elink.href = URL.createObjectURL(blob);
           document.body.appendChild(elink);
           elink.click();
-          URL.revokeObjectURL(elink.href); // 释放URL 对象
+          btnData.value = "导出问卷信息";
+          isClick = false;
+          URL.revokeObjectURL(elink.href); // 销毁下载链接
           document.body.removeChild(elink);
         } else {
           // IE10+下载
@@ -696,6 +703,8 @@ function exportData() {
   }).catch((error) => {
     console.log(error);
   });
+  }
+
 }
 </script>
 
