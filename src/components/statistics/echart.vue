@@ -657,25 +657,43 @@ function deluser(userid, fileid, index) {
 }
 
 
-
 // 导出excel表格
 function exportData() {
   axios({
     url: `https://q.denglu1.cn/api/user/export`,
-    method: 'get',
+    method: 'POST',
     withCredentials: true,
-    headers: { token: datas.user.token },
-    params: {
+    headers: {
+      "Content-Type": "application/json",
+      'token': datas.user.token
+    },
+    // 请求体-----
+    data: {
       'questionnaire_id': filenews.context.questionnaire.id,
       'excelName': filenews.context.questionnaire.title
     },
+    responseType: 'blob'//将文件流转成blob对象,一定要写
   }).then((response) => {
-    console.log(filenews.context.questionnaire.id);
-    console.log(filenews.context.questionnaire.title);
     console.log(response);
+    let fileName = window.decodeURI(response.headers['content-disposition'].split('=')[1])
+    console.log('文件名字',fileName);
+        const content = response.data;
+        const blob = new Blob([content]);
+        if ("download" in document.createElement("a")) {
+          // 非IE下载
+          const elink = document.createElement("a");
+          elink.download = fileName;
+          elink.style.display = "none";
+          elink.href = URL.createObjectURL(blob);
+          document.body.appendChild(elink);
+          elink.click();
+          URL.revokeObjectURL(elink.href); // 释放URL 对象
+          document.body.removeChild(elink);
+        } else {
+          // IE10+下载
+          navigator.msSaveBlob(blob, fileName);
+        }
   }).catch((error) => {
-    console.log(filenews.context.questionnaire.id);
-    console.log(filenews.context.questionnaire.title);
     console.log(error);
   });
 }
