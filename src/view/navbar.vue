@@ -17,7 +17,7 @@ function logOut() {
     ElMessage({
         message: '已为您退出登录',
         type: 'success',
-        duration: 4000,
+        duration: 3000,
         showClose: true,
         center: true
     })
@@ -49,7 +49,7 @@ function devpop() {
     ElMessage({
         message: '开发中',
         type: 'warning',
-        duration: 4000,
+        duration: 3000,
         showClose: true,
         center: true
     })
@@ -65,7 +65,7 @@ function toHome() {
         ElMessage({
             message: '请您先登录',
             type: 'warning',
-            duration: 4000,
+            duration: 3000,
             showClose: true,
             center: true
         })

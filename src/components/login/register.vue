@@ -19,7 +19,7 @@ function validate(account, password, passwordConfirm) {
         ElMessage({
             message: '请输入正确的手机号或学号',
             type: 'warning',
-            duration: 4000,
+            duration: 3000,
             showClose: true,
             center: true
         })
@@ -30,7 +30,7 @@ function validate(account, password, passwordConfirm) {
         ElMessage({
             message: '请输入正确的密码: 8-20位字母数字+特殊字符',
             type: 'warning',
-            duration: 4000,
+            duration: 3000,
             showClose: true,
             center: true
         })
@@ -40,7 +40,7 @@ function validate(account, password, passwordConfirm) {
         ElMessage({
             message: '两次输入的密码不一致，请重新输入',
             type: 'warning',
-            duration: 4000,
+            duration: 3000,
             showClose: true,
             center: true
         })
@@ -59,7 +59,7 @@ async function register(account, password, passwordConfirm, agree) {
         ElMessage({
             message: '请点击同意《用户隐私协议》按钮',
             type: 'warning',
-            duration: 4000,
+            duration: 3000,
             showClose: true,
             center: true
         })
@@ -72,7 +72,7 @@ async function register(account, password, passwordConfirm, agree) {
         ElMessage({
             message: '您已经登录',
             type: 'success',
-            duration: 4000,
+            duration: 3000,
             showClose: true,
             center: true
         })
@@ -90,7 +90,7 @@ async function register(account, password, passwordConfirm, agree) {
             ElMessage({
                 message: '注册成功',
                 type: 'success',
-                duration: 4000,
+                duration: 3000,
                 showClose: true,
                 center: true
             })
@@ -120,7 +120,7 @@ async function register(account, password, passwordConfirm, agree) {
             ElMessage({
                 message: '请勿重复注册',
                 type: 'error',
-                duration: 4000,
+                duration: 3000,
                 showClose: true,
                 center: true
             })
@@ -129,7 +129,7 @@ async function register(account, password, passwordConfirm, agree) {
         ElMessage({
             message: '由于网络问题注册失败',
             type: 'error',
-            duration: 4000,
+            duration: 3000,
             showClose: true,
             center: true
         })
@@ -144,7 +144,7 @@ function Dev(str) {
     ElMessage({
         message: `${str}开发中`,
         type: 'warning',
-        duration: 4000,
+        duration: 3000,
         showClose: true,
         center: true
     })
