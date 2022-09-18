@@ -68,7 +68,7 @@ function devpop() {
                 <div v-show="datas.navShow">
                     <div button @click="router.push('/surveynew')">创建问卷</div>
                     <div img @click="devpop"><img v-lazy="'/img/navbar_1.png'" /></div>
-                    <div img avatar @click="devpop"><img v-lazy="'/img/circle.png'" /></div>
+                    <div img avatar @click="router.push(`/user/${ datas.user.userId}`)"><img v-lazy="'/img/circle.png'" /></div>
                     <div img @click="logOut"><img v-lazy="'/img/navbar_2.png'" /></div>
                 </div>
             </Transition>
