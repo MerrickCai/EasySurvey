@@ -129,7 +129,7 @@ axios({
     //改默认内容
     // user.area.push(data.province)   ------  等后台将data.province改成数组形式
     user.age = data.age
-    console.log(user.area)
+    // console.log(user.area)
     //默认已经填完
     confirm.area = true
     confirm.age = true
@@ -237,9 +237,11 @@ div.wrapper {
   align-items: center;
   height: 400px;
   width: 420px;
+
   @media (max-width:800px) {
     width: 100%;
   }
+
   >div.titleArea {
     display: flex;
     flex-direction: column;

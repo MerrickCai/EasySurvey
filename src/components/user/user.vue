@@ -42,8 +42,6 @@ function QuestionnaireRecords(){
   })
     .then((response) => {
       console.log(response);
-      if (response.data.code === 200) alert("下线成功！");
-      else alert("该问卷已处于下线状态！请勿重复操作");
     })
     .catch((error) => {
       console.log(error);

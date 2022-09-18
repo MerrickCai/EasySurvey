@@ -4,6 +4,8 @@ export const useStore = defineStore('main', {
   state: () => ({
     //顶部导航栏组件的展示
     navShow: true,
+    //背景展示
+    backgroundShow: false,
     //用户数据
     user: {
       status: false,

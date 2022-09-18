@@ -35,8 +35,8 @@
                                 <span class="num" v-if="!(j % 2)">{{ j }}</span>
                             </div>
                             <img class="thumb" :style="{ left: `${(elem.value) * (400 / (barArr[i].length - 1))}px` }"
-                            v-lazy="elem.value === 0 ? '/img/disable.png' : '/img/blue.png'">
-                            <span class="edit">{{elem.value}}<img v-lazy="'/img/icon-edit.png'"></span>
+                            v-lazy="elem.value === 0 ? '/assets/disable.png' : '/assets/blue.png'">
+                            <span class="edit">{{elem.value}}<img v-lazy="'/assets/icon-edit.png'"></span>
                         </div>
                     </div>
                 </div>
