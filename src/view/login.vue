@@ -24,6 +24,7 @@ provide('viewId', viewId)
 datas.backgroundShow = true
 onBeforeRouteLeave(() => {
    datas.backgroundShow = false
+   viewId.value=1
 })
 onActivated(() => {
    datas.backgroundShow = true

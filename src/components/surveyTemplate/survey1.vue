@@ -224,7 +224,7 @@ function sumbit() {
         ElMessage({
           message: '提交成功',
           type: 'success',
-          duration: 4000,
+          duration: 3000,
           showClose: true,
           center: true
         })
@@ -233,7 +233,7 @@ function sumbit() {
         ElMessage({
           message: '问卷已收集齐了',
           type: 'warning',
-          duration: 4000,
+          duration: 3000,
           showClose: true,
           center: true
         })
@@ -242,7 +242,7 @@ function sumbit() {
       ElMessage({
         message: '请勿重复提交',
         type: 'error',
-        duration: 4000,
+        duration: 3000,
         showClose: true,
         center: true
       })
@@ -251,7 +251,7 @@ function sumbit() {
     ElMessage({
       message: '由于网络问题提交出错',
       type: 'error',
-      duration: 4000,
+      duration: 3000,
       showClose: true,
       center: true
     })
@@ -286,7 +286,7 @@ function Finish() {
     ElMessage({
       message: '请完成整张问卷',
       type: 'warning',
-      duration: 4000,
+      duration: 3000,
       showClose: true,
       center: true
     })

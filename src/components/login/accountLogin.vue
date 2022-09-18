@@ -19,7 +19,7 @@ function validate(account, password) {
     ElMessage({
       message: '请输入正确的手机号或学号',
       type: 'warning',
-      duration: 4000,
+      duration: 3000,
       showClose: true,
       center: true
     })
@@ -30,7 +30,7 @@ function validate(account, password) {
     ElMessage({
       message: '请输入正确的密码: 8-20位字母数字+特殊字符',
       type: 'warning',
-      duration: 4000,
+      duration: 3000,
       showClose: true,
       center: true
     })
@@ -52,7 +52,7 @@ async function login(account, password, remember) {
     ElMessage({
       message: '您已经登录',
       type: 'success',
-      duration: 4000,
+      duration: 3000,
       showClose: true,
       center: true
     })
@@ -72,7 +72,7 @@ async function login(account, password, remember) {
         ElMessage({
           message: '登录成功',
           type: 'success',
-          duration: 4000,
+          duration: 3000,
           showClose: true,
           center: true
         })
@@ -93,7 +93,7 @@ async function login(account, password, remember) {
         ElMessage({
           message: '账号密码错误，请重新输入',
           type: 'error',
-          duration: 4000,
+          duration: 3000,
           showClose: true,
           center: true
         })
@@ -103,7 +103,7 @@ async function login(account, password, remember) {
       ElMessage({
         message: '由于网络问题登录失败',
         type: 'error',
-        duration: 4000,
+        duration: 3000,
         showClose: true,
         center: true
       })
@@ -120,7 +120,7 @@ function Dev(str) {
   ElMessage({
     message: `${str}开发中`,
     type: 'warning',
-    duration: 4000,
+    duration: 3000,
     showClose: true,
     center: true
   })
