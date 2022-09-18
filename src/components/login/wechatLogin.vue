@@ -13,7 +13,7 @@ const viewId = inject('viewId')
       </div>
 
       <div img>
-         <img v-lazy="'/img/login_icon1.png'" alt="微信扫码登录" />
+         <img v-lazy="'/assets/login_icon1.png'" alt="微信扫码登录" />
       </div>
 
       <div class="buttom">使用微信扫一扫登录</div>

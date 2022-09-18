@@ -67,8 +67,8 @@
               <div v-for="(b,j) of barArr[0]" :key="b" :class="j%2===0 ? 'doublebar' :'bar'">
                  <span class="num" v-if="!(j%2)">{{j}}</span>
               </div>
-              <img class="thumb" :style="{ left: `${(item.value) * (400/(barArr[0].length-1))}px`}"  :src="item.value===0 ? quesitem.silderSrc : '/img/blue.png'">	
-              <span class="edit"  v-show="!item.isEdit" >{{item.value}}<img src="/img/icon-edit.png"></span>
+              <img class="thumb" :style="{ left: `${(item.value) * (400/(barArr[0].length-1))}px`}"  :src="item.value===0 ? quesitem.silderSrc : '/assets/blue.png'">	
+              <span class="edit"  v-show="!item.isEdit" >{{item.value}}<img src="/assets/icon-edit.png"></span>
              <input type="number" class="secnum" v-model="quesitem.secscore" 
         @blur="judge()"
         @keyup.enter="judge()">
@@ -188,11 +188,11 @@ function distributeScore(elem, item, num) {
   //   按照分数，如果分配完了背景颜色改变
   if (item.score === 0) {
     item.bcg = "#e5e5e5";
-    item.silderSrc = "/img/disable.png";
+    item.silderSrc = "/assets/disable.png";
   }
   if (item.score > 0) {
     item.bcg = "#f5f5f5";
-    item.silderSrc = "/img/blue.png";
+    item.silderSrc = "/assets/blue.png";
   }
   // console.log(elem.value);
   //  console.log(-6+(elem.value)*40);

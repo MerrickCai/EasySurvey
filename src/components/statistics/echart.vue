@@ -61,13 +61,13 @@
         <div class="areahead">
           <span>用户群体</span>
           <div>
-            <img v-lazy="'/img/pancake.png'" alt="">
-            <img v-lazy="'/img/row.png'" alt="">
-            <img v-lazy="'/img/column.png'" alt="">
-            <img v-lazy="'/img/line.png'" alt="">
+            <img v-lazy="'/assets/pancake.png'" alt="">
+            <img v-lazy="'/assets/row.png'" alt="">
+            <img v-lazy="'/assets/column.png'" alt="">
+            <img v-lazy="'/assets/line.png'" alt="">
           </div>
         </div>
-        <img v-lazy="'/img/pan.png'" alt="">
+        <img v-lazy="'/assets/pan.png'" alt="">
       </div>
     </template>
     <!-- 分数区间 -->
@@ -82,19 +82,19 @@
         <div class="scorehead">
           <span>分数区间</span>
           <div>
-            <img v-lazy="'/img/pancake.png'" alt="">
-            <img v-lazy="'/img/row.png'" alt="">
-            <img v-lazy="'/img/column.png'" alt="">
-            <img v-lazy="'/img/line.png'" alt="">
+            <img v-lazy="'/assets/pancake.png'" alt="">
+            <img v-lazy="'/assets/row.png'" alt="">
+            <img v-lazy="'/assets/column.png'" alt="">
+            <img v-lazy="'/assets/line.png'" alt="">
           </div>
         </div>
-        <img v-lazy="'/img/score.png'" alt="">
+        <img v-lazy="'/assets/score.png'" alt="">
       </div>
     </template>
 
     <!-- 问卷对比 -->
     <div class="echart_compare" id="echart_compare" @dragover.prevent @drop.prevent="drop($event)">
-      <img v-lazy="'/img/compare.png'" alt="" />
+      <img v-lazy="'/assets/compare.png'" alt="" />
       <span>+</span>
       <i>快将同类型问卷拖入此处对比问卷吧！</i>
     </div>
@@ -216,11 +216,11 @@ function echartupdate() {
         magicType: {
           type: ["bar", "line"],
           icon: {
-            line: "image:///img/line.png",
-            bar: "image:///img/column.png",
+            line: "image:///assets/line.png",
+            bar: "image:///assets/column.png",
           },
           onmouseover: function () {
-            icon.line = "image:///img/sum.png";
+            icon.line = "image:///assets/sum.png";
             line.color = "red";
           },
         },
@@ -228,7 +228,7 @@ function echartupdate() {
         myTool1: {
           show: true,
           title: "切换为饼图",
-          icon: "image:///img/pancake.png",
+          icon: "image:///assets/pancake.png",
 
           onclick: function () {
             let echart_mes = document.getElementById("echart_user");
@@ -240,7 +240,7 @@ function echartupdate() {
         // myTool2: {
         //   show: true,
         //   title: "切换为横向柱状图",
-        //   icon: "image:///img/row.png",
+        //   icon: "image:///assets/row.png",
         //   onclick: function () {
         //     series: [
         //       {
@@ -303,7 +303,7 @@ function echartupdate() {
         myTool3: {
           show: true,
           title: "切换为柱状图",
-          icon: "image:///img/column.png",
+          icon: "image:///assets/column.png",
           onclick: function () {
             let echart_mes = document.getElementById("echart_user");
             let myChartpie2 = document.getElementById("userpie");
@@ -314,7 +314,7 @@ function echartupdate() {
         myTool4: {
           show: true,
           title: "切换为折线图",
-          icon: "image:///img/line.png",
+          icon: "image:///assets/line.png",
           onclick: function () {
             let echart_mes = document.getElementById("echart_user");
             let myChartpie2 = document.getElementById("userpie");
@@ -325,7 +325,7 @@ function echartupdate() {
         myTool1: {
           show: true,
           title: "切换为饼图",
-          icon: "image:///img/pancake.png",
+          icon: "image:///assets/pancake.png",
           onclick: function () {
             let echart_mes = document.getElementById("echart_user");
             let myChartpie2 = document.getElementById("userpie");
@@ -336,7 +336,7 @@ function echartupdate() {
         // myTool2: {
         //   show: true,
         //   title: "切换为横向柱状图",
-        //   icon: "image:///img/row.png",
+        //   icon: "image:///assets/row.png",
         //   onclick: function () {},
         // },
       },
@@ -416,11 +416,11 @@ function echartnum() {
         magicType: {
           type: ["bar", "line"],
           icon: {
-            line: "image:///img/line.png",
-            bar: "image:///img/column.png",
+            line: "image:///assets/line.png",
+            bar: "image:///assets/column.png",
           },
           onmouseover: function () {
-            icon.line = "image:///img/sum.png";
+            icon.line = "image:///assets/sum.png";
             line.color = "red";
           },
         },
@@ -428,7 +428,7 @@ function echartnum() {
         myTool1: {
           show: true,
           title: "切换为饼图",
-          icon: "image:///img/pancake.png",
+          icon: "image:///assets/pancake.png",
 
           onclick: function () {
             let echart_mes = document.getElementById("echart_mes");
@@ -440,7 +440,7 @@ function echartnum() {
         // myTool2: {
         //   show: true,
         //   title: "切换为横向柱状图",
-        //   icon: "image:///img/row.png",
+        //   icon: "image:///assets/row.png",
         //   onclick: function () {
         //     series: [
         //       {
@@ -512,7 +512,7 @@ function echartnum() {
         myTool3: {
           show: true,
           title: "切换为柱状图",
-          icon: "image:///img/column.png",
+          icon: "image:///assets/column.png",
           onclick: function () {
             let echart_mes = document.getElementById("echart_mes");
             let myChartpie2 = document.getElementById("myChartpie");
@@ -523,7 +523,7 @@ function echartnum() {
         myTool4: {
           show: true,
           title: "切换为折线图",
-          icon: "image:///img/line.png",
+          icon: "image:///assets/line.png",
           onclick: function () {
             let echart_mes = document.getElementById("echart_mes");
             let myChartpie2 = document.getElementById("myChartpie");
@@ -534,7 +534,7 @@ function echartnum() {
         myTool1: {
           show: true,
           title: "切换为饼图",
-          icon: "image:///img/pancake.png",
+          icon: "image:///assets/pancake.png",
           onclick: function () {
             let echart_mes = document.getElementById("echart_mes");
             let myChartpie2 = document.getElementById("myChartpie");
@@ -545,7 +545,7 @@ function echartnum() {
         // myTool2: {
         //   show: true,
         //   title: "切换为横向柱状图",
-        //   icon: "image:///img/row.png",
+        //   icon: "image:///assets/row.png",
         //   onclick: function () {},
         // },
       },

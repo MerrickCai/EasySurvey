@@ -1,6 +1,3 @@
-// 全局 CSS
-import './assets/global.css'
-
 // Vue 实例
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -22,11 +19,9 @@ app.use(router)
 // 懒加载插件
 import lazyPlugin from 'vue3-lazy'
 app.use(lazyPlugin, {
-    loading: '/img/compare.png', // 图片加载时默认图片
-    error:'/img/compare.png'// 图片加载失败时默认图片
-});
-
-
+    loading: '/assets/compare.png',
+    error: '/assets/compare.png'
+})
 
 // 挂载 Vue 实例
 app.mount('#app')

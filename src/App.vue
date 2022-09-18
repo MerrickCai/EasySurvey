@@ -96,12 +96,14 @@ router.beforeEach(async (to, from) => {
 </template>
 
 <style lang="less" scoped>
-@navSpan: 70px;
+@navSpan: var(--navSpan);
+@safe_area: var(--safe_area);
+
 
 main {
   display: block;
   height: 100vh;
-  width: var(--safe_area);
+  width: @safe_area;
   margin: 0 auto;
 
   >div {
@@ -121,5 +123,61 @@ main {
       filter: opacity(0);
     }
   }
+}
+</style>
+
+<style lang="less">
+@safe_area: 1200px;
+
+:root {
+  --navSpan: 70px;
+  --safe_area: @safe_area; //页面安全区
+}
+
+@media (max-width:@safe_area) {
+  :root {
+    --safe_area: 100%;
+  }
+}
+
+#app {
+  display: block;
+  height: 100vh;
+  width: 100%;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+ol,
+li {
+  list-style: none;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgba(255, 255, 255, 0);
+}
+
+::-webkit-scrollbar-corner {
+  background-color: rgba(255, 255, 255, 0);
+}
+
+::-webkit-scrollbar-thumb {
+  background-clip: padding-box;
+  border: 3px solid rgba(255, 255, 255, 0);
+  border-radius: 5px;
+  background-color: rgba(30, 111, 255, 1);
 }
 </style>

@@ -60,16 +60,16 @@ function devpop() {
 <template>
     <nav>
         <div logo @click="router.push('/')">
-            <img v-lazy="'/img/logo.png'" />
+            <img v-lazy="'/assets/logo.png'" />
             <div>问卷易</div>
         </div>
         <div links>
             <Transition name="navbar">
                 <div v-show="datas.navShow">
                     <div button @click="router.push('/surveynew')">创建问卷</div>
-                    <div img @click="devpop"><img v-lazy="'/img/navbar_1.png'" /></div>
-                    <div img avatar @click="devpop"><img v-lazy="'/img/circle.png'" /></div>
-                    <div img @click="logOut"><img v-lazy="'/img/navbar_2.png'" /></div>
+                    <div img @click="devpop"><img v-lazy="'/assets/navbar_1.png'" /></div>
+                    <div img avatar @click="devpop"><img v-lazy="'/assets/circle.png'" /></div>
+                    <div img @click="logOut"><img v-lazy="'/assets/navbar_2.png'" /></div>
                 </div>
             </Transition>
         </div>
@@ -77,8 +77,8 @@ function devpop() {
 </template>
 
 <style lang="less" scoped>
-@navSpan: 70px;
-@navHeight: 50px;
+@navSpan: var(--navSpan);
+@navHeight: calc(@navSpan - 20px);
 
 nav {
     display: flex;
