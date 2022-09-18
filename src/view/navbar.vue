@@ -55,11 +55,30 @@ function devpop() {
     })
 }
 // ----------------------------------- 开发中通知 ----------------------------------
+
+
+
+
+// ----------------------------------- logo点击事件 ----------------------------------
+function toHome() {
+    if (datas.user.status === false) {
+        ElMessage({
+            message: '请您先登录',
+            type: 'warning',
+            duration: 4000,
+            showClose: true,
+            center: true
+        })
+    } else {
+        router.push('/')
+    }
+}
+// ----------------------------------- logo点击事件 ----------------------------------
 </script>
 
 <template>
     <nav>
-        <div logo @click="router.push('/')">
+        <div logo @click="toHome">
             <img v-lazy="'/assets/logo.png'" />
             <div>问卷易</div>
         </div>

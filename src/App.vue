@@ -8,12 +8,12 @@ const router = useRouter()
 const datas = useStore()
 
 
-//全局前置守卫（帮助用户自动登录）
+
+//------------------------ //全局前置守卫（帮助用户自动登录） --------------------------
 router.beforeEach(async (to, from) => {
-  if (to.path === "/login") {
+  if (to.path === "/login") { //判断是否进入登录注册页面=>防止死循环
     //顶部导航栏组件的展示
     datas.navShow = false
-    //判断是否进入登录注册页面=>防止死循环
     return true
   } else {
     //顶部导航栏组件的展示
@@ -78,6 +78,24 @@ router.beforeEach(async (to, from) => {
     query: { redirect: to.fullPath },
   }
 })
+//------------------------ //全局前置守卫（帮助用户自动登录） --------------------------
+
+
+
+
+
+//------------------------ 随机背景图 ----------------------------------
+const background = {
+  url: ['/assets/login_cloud.png', '/assets/login_mountain.png', '/assets/login_mount.jpg'],
+  random(x, y) {//随机返回[x,y]的数字
+    return Math.floor(Math.random() * (y - x + 1)) + x
+  },
+  geturl() {
+    return this.url[this.random(0, this.url.length - 1)]
+  }
+}
+const background_url = background.geturl()
+//------------------------ 随机背景图 ----------------------------------
 </script>
 
 <template>
@@ -87,18 +105,41 @@ router.beforeEach(async (to, from) => {
       <!--主路由容器-->
       <router-view v-slot="{ Component, route }">
         <transition name="mainView" mode="out-in">
-          <component :is="Component" :key="route.path" />
+          <keep-alive>
+            <component :is="Component" :key="route.path" />
+          </keep-alive>
         </transition>
       </router-view>
       <!--主路由容器-->
     </div>
   </main>
+  <div class="background" v-if="datas.backgroundShow">
+    <img v-lazy="background_url" alt="页面背景" />
+  </div>
 </template>
 
 <style lang="less" scoped>
 @navSpan: var(--navSpan);
 @safe_area: var(--safe_area);
 
+div.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -10;
+  width: 100%;
+  height: 100%;
+
+  @media (max-width:800px) {
+    display: none;
+  }
+
+  >img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
 
 main {
   display: block;

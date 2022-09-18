@@ -19,8 +19,8 @@ app.use(router)
 // 懒加载插件
 import lazyPlugin from 'vue3-lazy'
 app.use(lazyPlugin, {
-    loading: '/assets/compare.png',
-    error: '/assets/compare.png'
+    loading: '',
+    error: ''
 })
 
 // 挂载 Vue 实例
