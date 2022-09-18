@@ -39,13 +39,15 @@
 
 - 克隆项目
 
-    `git clone git@e.coding.net:merrick-frontend/survey/survey.git -b main`
+    `git clone git@e.coding.net:merrick-frontend/survey/EasySurvey.git -b main`
 
     `npm install`
 
+
+
 - 关联远程
 
-    `git remote add origin git@e.coding.net:merrick-frontend/survey/survey.git`
+    `git remote add origin git@e.coding.net:merrick-frontend/survey/EasySurvey.git`
 
 - 推送
 
