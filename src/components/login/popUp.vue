@@ -3,10 +3,11 @@ import { onMounted, reactive, ref, computed, watch } from "vue"
 import axios from "axios"
 import { useStore } from "../../Stores/index.js"
 import { useRouter, useRoute } from "vue-router"
+import { ElMessage } from 'element-plus'
 const datas = useStore()
 const router = useRouter()
 const route = useRoute()
-import { ElMessage } from 'element-plus'
+
 
 
 
@@ -58,6 +59,8 @@ function jump() {
 //--------------------------- 跳过按钮逻辑 -----------------------------
 
 
+
+
 //--------------------------- 确定按钮变色逻辑 -----------------------------
 const confirmStyle = reactive({
   bgColor: 'rgba(235, 245, 255, 1)',
@@ -79,6 +82,7 @@ watch(confirm, (n, o) => {
 
 
 
+
 //--------------------------- 地区数据 -----------------------------
 import area from "../../Stores/area.js"
 const props = {
@@ -88,6 +92,7 @@ const props = {
   label: "name",
 }
 //--------------------------- 地区数据 -----------------------------
+
 
 
 
@@ -108,12 +113,14 @@ function validate(age) {
 //--------------------------- 账号密码规则验证 -----------------------------
 
 
+
+
 //--------------------------- 检查用户之前填写的地区年龄 -----------------------------
 const title = reactive({
   p1: '为了保证问卷质量',
   p2: '我们希望获知您的如下信息'
 })
-const user = reactive({ area: ['广东省', '广州市', '番禺区'], age: "" })
+const user = reactive({ area: [], age: "" })
 axios({
   url: `https://q.denglu1.cn/api/user/getUserMessage/${datas.user.userId}`,
   method: "get",
@@ -122,15 +129,12 @@ axios({
   headers: { token: datas.user.token },
 }).then((response) => {
   const data = response.data.data
+  console.log(data)
   if (data.province && data.age) {
-    //改标题
     title.p1 = '系统已自动保存您上次填写信息'
     title.p2 = '请检查是否有误'
-    //改默认内容
-    // user.area.push(data.province)   ------  等后台将data.province改成数组形式
+    user.area = data.province
     user.age = data.age
-    // console.log(user.area)
-    //默认已经填完
     confirm.area = true
     confirm.age = true
   }
@@ -138,6 +142,8 @@ axios({
   console.log(error)
 })
 //--------------------------- 检查用户之前填写的地区年龄 -----------------------------
+
+
 
 
 //--------------------------- 提交信息 -----------------------------
@@ -164,13 +170,13 @@ async function upLoad(area, age) {
     data: {
       id: datas.user.userId,
       age: age,
-      province: area[0], //area是数组，目前只上传省
+      province: area,
     },
   })
     .then((response) => {
       //写入用户数据
       datas.user.age = age
-      datas.user.area = area[0]
+      datas.user.area = area
       ElMessage({
         message: '信息获取成功',
         type: 'success',
