@@ -6,6 +6,9 @@
     <div class="userlist">
       <div class="list_title">用户列表</div>
       <template v-if="usershow">
+        <el-button class="downline" type="primary" @click="downline()">下线网站</el-button>
+        <el-button class="reOnline" type="primary" @click="reOnline()">重新上线网站</el-button>
+        
         <el-button class="exportData" type="primary" @click="exportData()">{{btnData}}</el-button>
         <el-scrollbar max-height="400px">
           <p v-for="(item,index) in filenews.context.userWithScores" :key="item.user" class="scrollbar-demo-item">
@@ -706,6 +709,46 @@ function exportData() {
   }
 
 }
+
+
+
+function downline() {
+    if (!window.confirm("是否要下线该问卷？")) return;    
+    axios({
+    url: `https://q.denglu1.cn/api/user/questionnaireStop/${filenews.context.questionnaire.id}`,
+    method: "get",
+    withCredentials: true,
+    headers: { token: datas.user.token },
+  })
+    .then((response) => {
+      console.log(response);
+      if (response.data.code === 200) alert("下线成功！");
+      else alert("该问卷已处于下线状态！请勿重复操作");
+    })
+    .catch((error) => {
+      console.log(error);
+    });    
+}
+
+
+function reOnline() {
+    if (!window.confirm("是否要重新上线该问卷？")) return;    
+    axios({
+    url: `https://q.denglu1.cn/api/user/questionnaireStopRebuild/${filenews.context.questionnaire.id}`,
+    method: "get",
+    withCredentials: true,
+    headers: { token: datas.user.token },
+  })
+    .then((response) => {
+      console.log(response);
+      if (response.data.code === 200) alert("重新上线成功！");
+      else alert("该问卷已处于上线状态！请勿重复操作");
+    })
+    .catch((error) => {
+      console.log(error);
+    });    
+}
+
 </script>
 
 <style lang="less" scoped>
@@ -890,6 +933,22 @@ function exportData() {
     height: 30px;
     top: 15px;
     right: 20px;
+    position: absolute;
+  }
+
+  // 问卷下线与重新上线按钮
+  .downline{
+    width: 100px;
+    height: 30px;
+    top: 15px;
+    right: 135px;
+    position: absolute;
+  }
+  .reOnline{
+    width: 100px;
+    height: 30px;
+    top: 15px;
+    right: 250px;
     position: absolute;
   }
 }
