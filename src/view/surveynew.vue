@@ -599,7 +599,7 @@ async function pushfile() {
       });
     }
     if (type.value == 6) {
-      textfile.forEach((element) => delete element.id);
+      mixfile.forEach((element) => delete element.id);
       await axios({
         url: "https://q.denglu1.cn/api/questions/rebuild",
         method: "post",
@@ -647,6 +647,7 @@ let link = ref(1);
 let linkqr = ref(
   "https://q.denglu1.cn/survey/" +
   parseInt(link.value)
+
 );
 //二维码
 const { toClipboard } = clipboard3();
