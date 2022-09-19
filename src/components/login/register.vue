@@ -106,14 +106,21 @@ async function register(account, password, passwordConfirm, agree) {
                 headers: { "Content-Type": "application/json" },
                 data: { phone_number: account, password: password },
             }).then((response) => {
+
+
                 //写入用户数据
-                datas.user.userId = response.data.data.userId
+                datas.user.status = true
+                datas.user.account = account
+                datas.user.password = password
                 datas.user.token = response.data.data.token
                 datas.user.refreshtoken = response.data.data.refreshtoken
             })
+
+
             //默认记住账号密码到本地
-            localStorage.setItem('account', btoa(account))
-            localStorage.setItem('password', btoa(password))
+            localStorage.setItem('account', account)
+            localStorage.setItem('password', password)
+            
             //跳转填写地区和年龄弹窗
             viewId.value = 3
         } else { //response.data.code === 400=>重复注册

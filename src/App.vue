@@ -36,8 +36,8 @@ router.beforeEach(async (to, from) => {
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
         data: {
-          phone_number: atob(localStorage.getItem("account")),
-          password: atob(localStorage.getItem("password")),
+          phone_number: localStorage.getItem("account"),
+          password: localStorage.getItem("password"),
         },
       })
       ElMessage({
@@ -49,8 +49,8 @@ router.beforeEach(async (to, from) => {
       })
       //写入用户数据
       datas.user.status = true
-      datas.user.account = atob(localStorage.getItem("account"))
-      datas.user.password = atob(localStorage.getItem("password"))
+      datas.user.account = localStorage.getItem("account")
+      datas.user.password = localStorage.getItem("password")
       datas.user.userId = response.data.data.userId
       datas.user.token = response.data.data.token
       datas.user.refreshtoken = response.data.data.refreshtoken
@@ -64,7 +64,6 @@ router.beforeEach(async (to, from) => {
         center: true
       })
       // 跳转登录注册页面
-      datas.navShow = false
       return {
         path: "/login",
         query: { redirect: to.fullPath },
@@ -72,7 +71,6 @@ router.beforeEach(async (to, from) => {
     }
   }
   // 跳转登录注册页面
-  datas.navShow = false
   return {
     path: "/login",
     query: { redirect: to.fullPath },

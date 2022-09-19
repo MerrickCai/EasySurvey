@@ -120,27 +120,19 @@ const title = reactive({
   p1: '为了保证问卷质量',
   p2: '我们希望获知您的如下信息'
 })
+
 const user = reactive({ area: [], age: "" })
-axios({
-  url: `https://q.denglu1.cn/api/user/getUserMessage/${datas.user.userId}`,
-  method: "get",
-  withCredentials: true,
-  headers: { "Content-Type": "application/json" },
-  headers: { token: datas.user.token },
-}).then((response) => {
-  const data = response.data.data
-  console.log(data)
-  if (data.province && data.age) {
-    title.p1 = '系统已自动保存您上次填写信息'
-    title.p2 = '请检查是否有误'
-    user.area = data.province
-    user.age = data.age
-    confirm.area = true
-    confirm.age = true
-  }
-}).catch((error) => {
-  console.log(error)
-})
+
+if (datas.user.area && datas.user.age) {
+
+  title.p1 = '系统已自动保存您上次填写信息'
+  title.p2 = '请检查是否有误'
+  user.area = datas.user.area
+  user.age = datas.user.age
+  confirm.area = true
+  confirm.age = true
+
+}
 //--------------------------- 检查用户之前填写的地区年龄 -----------------------------
 
 
