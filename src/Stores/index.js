@@ -2,7 +2,9 @@ import { defineStore } from 'pinia'
 import axios from "axios"
 
 export const useStore = defineStore('main', {
+
   state: () => ({
+
     //顶部导航栏组件的展示
     navShow: true,
 
@@ -22,8 +24,11 @@ export const useStore = defineStore('main', {
       picture: 0,
       account: 0,
       password: 0,
+
     }
+
   }),
+  
   actions: {
 
     async login(account, password, remember) {
@@ -105,13 +110,20 @@ export const useStore = defineStore('main', {
         this.user.account = response.data.data.phone_number
         this.user.password = response.data.data.password
 
-        console.log('Pinia中的用户数据(datas.user)，登录后自动获取',this.user)
+        console.log('Pinia中的用户数据(datas.user)，登录后自动获取', this.user)
 
       } catch (error) {
 
         console.log('获取用户数据错误', error)
       }
 
+    },
+
+    getToken() {
+      return this.user.token
     }
+
   }
+
+
 })
