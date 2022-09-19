@@ -67,9 +67,9 @@
                                 <span class="num" v-if="!(j % 2)">{{ j }}</span>
                             </div>
                             <img class="thumb" :style="{ left: `${(elem.value) * (400 / (barArr[i].length - 1))}px` }"
-                                :src="elem.value === 0 ? item.silderSrc : '/img/blue.png'">
+                                v-lazy="elem.value === 0 ? item.silderSrc : '/assets/blue.png'">
                             <span class="edit" v-show="!elem.isEdit" @click="editHandle(elem, index)">{{ elem.value
-                            }}<img src="/img/icon-edit.png"></span>
+                            }}<img v-lazy="'/assets/icon-edit.png'"></span>
                             <input class="editinput" type="text" v-show="elem.isEdit"
                                 @blur="editHandle2(elem, item, $event)" @keydown.enter="editHandle2(elem, item, $event)"
                                 :value="elem.value" ref="myRef">
@@ -164,7 +164,7 @@ for (let i in surveyObj.value.questionInfoMap) {
     obj.progressPartbcg = '#ccc';
     obj.question = optionDetail[start];
     obj.questionId = surveyObj.value.optionMap[i][0].questionId;
-    obj.silderSrc = '/img/blue.png';
+    obj.silderSrc = '/assets/blue.png';
     obj.score = item.dominate;
     obj.staticScore = obj.score;
     obj.secscore = surveyObj.value.optionMap[i][0].dominate;
@@ -237,7 +237,7 @@ function sumbit() {
                 ElMessage({
                     message: '提交成功',
                     type: 'success',
-                    duration: 4000,
+                    duration: 3000,
                     showClose: true,
                     center: true
                 })
@@ -246,7 +246,7 @@ function sumbit() {
                 ElMessage({
                     message: '问卷已收集齐了',
                     type: 'warning',
-                    duration: 4000,
+                    duration: 3000,
                     showClose: true,
                     center: true
                 })
@@ -255,7 +255,7 @@ function sumbit() {
             ElMessage({
                 message: '请勿重复提交',
                 type: 'error',
-                duration: 4000,
+                duration: 3000,
                 showClose: true,
                 center: true
             })
@@ -264,7 +264,7 @@ function sumbit() {
         ElMessage({
             message: '由于网络问题提交出错',
             type: 'error',
-            duration: 4000,
+            duration: 3000,
             showClose: true,
             center: true
         })
@@ -302,7 +302,7 @@ function Finish() {
         ElMessage({
             message: '请完成整张问卷',
             type: 'warning',
-            duration: 4000,
+            duration: 3000,
             showClose: true,
             center: true
         })
@@ -340,11 +340,11 @@ function distributeScore(elem, item, num) {
     //   按照分数，如果分配完了背景颜色改变
     if (item.score === 0) {
         item.bcg = '#e5e5e5';
-        item.silderSrc = '/img/disable.png';
+        item.silderSrc = '/assets/disable.png';
     }
     if (item.score > 0) {
         item.bcg = '#f5f5f5';
-        item.silderSrc = '/img/blue.png';
+        item.silderSrc = '/assets/blue.png';
     }
 }
 // -----------------------------分配分数相关的变量和方法-----------------------------

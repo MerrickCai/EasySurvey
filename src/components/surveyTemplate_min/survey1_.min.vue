@@ -244,7 +244,7 @@ div.survey {
     height: auto;
     width: auto;
     position: relative;
-    font-size: 3rem;
+    font-size: 30px;
     color: rgba(0, 0, 0, 1);
 
     &::after {
@@ -288,7 +288,7 @@ div.survey {
         height: auto;
         width: auto;
         margin-bottom: 2px;
-        font-size: 1.6rem;
+        font-size: 16px;
         color: rgba(30, 111, 255, 1);
       }
 
@@ -297,7 +297,7 @@ div.survey {
         height: auto;
         width: auto;
         margin-bottom: 5px;
-        font-size: 1.4rem;
+        font-size: 14px;
         color: rgba(0, 0, 0, 1);
         white-space: pre-wrap;
       }
@@ -307,7 +307,7 @@ div.survey {
         height: auto;
         width: auto;
         margin-bottom: 2px;
-        font-size: 1.6rem;
+        font-size: 16px;
         color: rgba(0, 0, 0, 1);
         font-weight: bold;
       }
@@ -316,7 +316,7 @@ div.survey {
         display: block;
         height: auto;
         width: auto;
-        font-size: 1.4rem;
+        font-size: 14px;
         color: rgba(0, 0, 0, 1);
       }
     }
@@ -353,13 +353,13 @@ div.survey {
           }
 
           >span:nth-child(1) {
-            font-size: 2rem;
+            font-size: 20px;
             color: rgb(0, 0, 0);
             margin-right: 15px;
           }
 
           >span:nth-child(2) {
-            font-size: 2rem;
+            font-size: 20px;
             color: rgb(0, 0, 0);
           }
         }
@@ -448,7 +448,7 @@ div.survey {
       padding: 20px 100px;
       background-color: rgba(30, 111, 255, 1);
       color: rgb(255, 255, 255);
-      font-size: 1.8rem;
+      font-size: 18px;
       border-radius: 5px;
       align-self: center;
       cursor: pointer;
@@ -471,7 +471,7 @@ div.survey_intro {
     width: auto;
     margin-bottom: 30px;
     position: relative;
-    font-size: 3.6rem;
+    font-size: 36px;
     color: rgba(0, 0, 0, 1);
 
     &::after {
@@ -498,7 +498,7 @@ div.survey_intro {
       height: auto;
       width: auto;
       margin-bottom: 10px;
-      font-size: 1.6rem;
+      font-size: 16px;
       color: rgba(30, 111, 255, 1);
     }
 
@@ -507,7 +507,7 @@ div.survey_intro {
       height: auto;
       width: auto;
       margin-bottom: 5px;
-      font-size: 1.4rem;
+      font-size: 14px;
       color: rgba(0, 0, 0, 1);
       white-space: pre-wrap;
     }
@@ -517,7 +517,7 @@ div.survey_intro {
       height: auto;
       width: auto;
       margin-bottom: 10px;
-      font-size: 1.6rem;
+      font-size: 16px;
       color: rgba(0, 0, 0, 1);
     }
 
@@ -525,7 +525,7 @@ div.survey_intro {
       display: block;
       height: auto;
       width: auto;
-      font-size: 1.4rem;
+      font-size: 14px;
       color: rgba(0, 0, 0, 1);
     }
   }
@@ -537,7 +537,7 @@ div.survey_intro {
     padding: 20px 100px;
     background-color: rgba(30, 111, 255, 1);
     color: rgb(255, 255, 255);
-    font-size: 1.8rem;
+    font-size: 18px;
     border-radius: 5px;
 
     &:hover {

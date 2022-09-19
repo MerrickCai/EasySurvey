@@ -1,13 +1,14 @@
 <script setup>
-import axios from "axios"
 import { useStore } from "../../Stores/index.js"
-const datas = useStore()
 import { useRouter } from "vue-router"
-const router = useRouter()
+import { reactive, inject } from "vue"
 import { ElMessage } from 'element-plus'
+const datas = useStore()
+const router = useRouter()
+
+
 
 //--------------------------- 视图切换 -----------------------------
-import { reactive, inject } from "vue"
 const viewId = inject("viewId")
 //--------------------------- 视图切换 -----------------------------
 
@@ -19,7 +20,7 @@ function validate(account, password) {
     ElMessage({
       message: '请输入正确的手机号或学号',
       type: 'warning',
-      duration: 4000,
+      duration: 3000,
       showClose: true,
       center: true
     })
@@ -30,7 +31,7 @@ function validate(account, password) {
     ElMessage({
       message: '请输入正确的密码: 8-20位字母数字+特殊字符',
       type: 'warning',
-      duration: 4000,
+      duration: 3000,
       showClose: true,
       center: true
     })
@@ -44,71 +45,52 @@ function validate(account, password) {
 
 //--------------------------- 登录逻辑-----------------------------
 const user = reactive({ account: "", password: "", remember: false })
+
 async function login(account, password, remember) {
+
   if (!validate(account, password)) { // 表单验证
     return false
   }
+
   if (datas.user.status === true) { //确认用户是否登录
     ElMessage({
       message: '您已经登录',
       type: 'success',
-      duration: 4000,
+      duration: 3000,
       showClose: true,
       center: true
     })
     router.push('/')
     return true
   }
-  await axios({
-    url: "https://q.denglu1.cn/api/user/login",
-    method: "post",
-    withCredentials: true,
-    headers: { "Content-Type": "application/json" },
-    data: { phone_number: account, password: password },
-  })
-    .then((response) => {
-      console.log(response)
-      if (response.data.code === 200) { //账号密码正确
-        ElMessage({
-          message: '登录成功',
-          type: 'success',
-          duration: 4000,
-          showClose: true,
-          center: true
-        })
-        //写入用户数据
-        datas.user.status = true
-        datas.user.account = account
-        datas.user.password = password
-        datas.user.userId = response.data.data.userId
-        datas.user.token = response.data.data.token
-        datas.user.refreshtoken = response.data.data.refreshtoken
-        if (remember) { // 确认用户是否自动登录
-            localStorage.setItem('account', btoa(account))
-            localStorage.setItem('password', btoa(password))
-        }
-        //跳转填写地区和年龄弹窗
-        viewId.value = 3
-      } else { //response.data.code === 401
-        ElMessage({
-          message: '账号密码错误，请重新输入',
-          type: 'error',
-          duration: 4000,
-          showClose: true,
-          center: true
-        })
-      }
+
+  const result = await datas.login(account, password, remember)
+
+  if (result) {
+
+    ElMessage({
+      message: '登录成功',
+      type: 'success',
+      duration: 3000,
+      showClose: true,
+      center: true
     })
-    .catch((error) => {
-      ElMessage({
-        message: '由于网络问题登录失败',
-        type: 'error',
-        duration: 4000,
-        showClose: true,
-        center: true
-      })
-      console.log(error)
+
+    await datas.updateUserMessage(datas.user.token)
+
+    viewId.value = 3
+
+  } else {
+
+    ElMessage({
+      message: '账号或者密码错误，请重新登录',
+      type: 'error',
+      duration: 3000,
+      showClose: true,
+      center: true
     })
+    
+  }
 }
 //--------------------------- 登录逻辑-----------------------------
 
@@ -117,13 +99,13 @@ async function login(account, password, remember) {
 
 //------------------------------ 开发中 ------------------------------------
 function Dev(str) {
-    ElMessage({
-        message: `${str}开发中`,
-        type: 'warning',
-        duration: 4000,
-        showClose: true,
-        center: true
-    })
+  ElMessage({
+    message: `${str}开发中`,
+    type: 'warning',
+    duration: 3000,
+    showClose: true,
+    center: true
+  })
 }
 //------------------------------ 开发中 ------------------------------------
 </script>
@@ -136,7 +118,7 @@ function Dev(str) {
       <a active @click="viewId = 1">账号登录</a>
     </div>
 
-    <div class="typeArea">
+    <div class="typeArea" @keydown.enter="login(user.account, user.password, user.remember)">
       <input type="text" v-model="user.account" placeholder="请输入手机号或者学号" />
       <input type="password" v-model="user.password" placeholder="请输入登录密码" />
     </div>

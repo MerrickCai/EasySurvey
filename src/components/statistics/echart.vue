@@ -6,7 +6,10 @@
     <div class="userlist">
       <div class="list_title">用户列表</div>
       <template v-if="usershow">
-        <el-button class="exportData" type="primary" @click="exportData()">导出问卷信息</el-button>
+        <el-button class="downline" type="primary" @click="downline()">下线网站</el-button>
+        <el-button class="reOnline" type="primary" @click="reOnline()">重新上线网站</el-button>
+        
+        <el-button class="exportData" type="primary" @click="exportData()">{{btnData}}</el-button>
         <el-scrollbar max-height="400px">
           <p v-for="(item,index) in filenews.context.userWithScores" :key="item.user" class="scrollbar-demo-item">
             <span class="username">{{ item.user.phone_number }}</span>
@@ -61,13 +64,13 @@
         <div class="areahead">
           <span>用户群体</span>
           <div>
-            <img src="/img/pancake.png" alt="">
-            <img src="/img/row.png" alt="">
-            <img src="/img/column.png" alt="">
-            <img src="/img/line.png" alt="">
+            <img v-lazy="'/assets/pancake.png'" alt="">
+            <img v-lazy="'/assets/row.png'" alt="">
+            <img v-lazy="'/assets/column.png'" alt="">
+            <img v-lazy="'/assets/line.png'" alt="">
           </div>
         </div>
-        <img src="/img/pan.png" alt="">
+        <img v-lazy="'/assets/pan.png'" alt="">
       </div>
     </template>
     <!-- 分数区间 -->
@@ -82,19 +85,19 @@
         <div class="scorehead">
           <span>分数区间</span>
           <div>
-            <img src="/img/pancake.png" alt="">
-            <img src="/img/row.png" alt="">
-            <img src="/img/column.png" alt="">
-            <img src="/img/line.png" alt="">
+            <img v-lazy="'/assets/pancake.png'" alt="">
+            <img v-lazy="'/assets/row.png'" alt="">
+            <img v-lazy="'/assets/column.png'" alt="">
+            <img v-lazy="'/assets/line.png'" alt="">
           </div>
         </div>
-        <img src="/img/score.png" alt="">
+        <img v-lazy="'/assets/score.png'" alt="">
       </div>
     </template>
 
     <!-- 问卷对比 -->
     <div class="echart_compare" id="echart_compare" @dragover.prevent @drop.prevent="drop($event)">
-      <img src="/img/compare.png" alt="" />
+      <img v-lazy="'/assets/compare.png'" alt="" />
       <span>+</span>
       <i>快将同类型问卷拖入此处对比问卷吧！</i>
     </div>
@@ -216,11 +219,11 @@ function echartupdate() {
         magicType: {
           type: ["bar", "line"],
           icon: {
-            line: "image:///img/line.png",
-            bar: "image:///img/column.png",
+            line: "image:///assets/line.png",
+            bar: "image:///assets/column.png",
           },
           onmouseover: function () {
-            icon.line = "image:///img/sum.png";
+            icon.line = "image:///assets/sum.png";
             line.color = "red";
           },
         },
@@ -228,7 +231,7 @@ function echartupdate() {
         myTool1: {
           show: true,
           title: "切换为饼图",
-          icon: "image:///img/pancake.png",
+          icon: "image:///assets/pancake.png",
 
           onclick: function () {
             let echart_mes = document.getElementById("echart_user");
@@ -240,7 +243,7 @@ function echartupdate() {
         // myTool2: {
         //   show: true,
         //   title: "切换为横向柱状图",
-        //   icon: "image:///img/row.png",
+        //   icon: "image:///assets/row.png",
         //   onclick: function () {
         //     series: [
         //       {
@@ -303,7 +306,7 @@ function echartupdate() {
         myTool3: {
           show: true,
           title: "切换为柱状图",
-          icon: "image:///img/column.png",
+          icon: "image:///assets/column.png",
           onclick: function () {
             let echart_mes = document.getElementById("echart_user");
             let myChartpie2 = document.getElementById("userpie");
@@ -314,7 +317,7 @@ function echartupdate() {
         myTool4: {
           show: true,
           title: "切换为折线图",
-          icon: "image:///img/line.png",
+          icon: "image:///assets/line.png",
           onclick: function () {
             let echart_mes = document.getElementById("echart_user");
             let myChartpie2 = document.getElementById("userpie");
@@ -325,7 +328,7 @@ function echartupdate() {
         myTool1: {
           show: true,
           title: "切换为饼图",
-          icon: "image:///img/pancake.png",
+          icon: "image:///assets/pancake.png",
           onclick: function () {
             let echart_mes = document.getElementById("echart_user");
             let myChartpie2 = document.getElementById("userpie");
@@ -336,7 +339,7 @@ function echartupdate() {
         // myTool2: {
         //   show: true,
         //   title: "切换为横向柱状图",
-        //   icon: "image:///img/row.png",
+        //   icon: "image:///assets/row.png",
         //   onclick: function () {},
         // },
       },
@@ -416,11 +419,11 @@ function echartnum() {
         magicType: {
           type: ["bar", "line"],
           icon: {
-            line: "image:///img/line.png",
-            bar: "image:///img/column.png",
+            line: "image:///assets/line.png",
+            bar: "image:///assets/column.png",
           },
           onmouseover: function () {
-            icon.line = "image:///img/sum.png";
+            icon.line = "image:///assets/sum.png";
             line.color = "red";
           },
         },
@@ -428,7 +431,7 @@ function echartnum() {
         myTool1: {
           show: true,
           title: "切换为饼图",
-          icon: "image:///img/pancake.png",
+          icon: "image:///assets/pancake.png",
 
           onclick: function () {
             let echart_mes = document.getElementById("echart_mes");
@@ -440,7 +443,7 @@ function echartnum() {
         // myTool2: {
         //   show: true,
         //   title: "切换为横向柱状图",
-        //   icon: "image:///img/row.png",
+        //   icon: "image:///assets/row.png",
         //   onclick: function () {
         //     series: [
         //       {
@@ -512,7 +515,7 @@ function echartnum() {
         myTool3: {
           show: true,
           title: "切换为柱状图",
-          icon: "image:///img/column.png",
+          icon: "image:///assets/column.png",
           onclick: function () {
             let echart_mes = document.getElementById("echart_mes");
             let myChartpie2 = document.getElementById("myChartpie");
@@ -523,7 +526,7 @@ function echartnum() {
         myTool4: {
           show: true,
           title: "切换为折线图",
-          icon: "image:///img/line.png",
+          icon: "image:///assets/line.png",
           onclick: function () {
             let echart_mes = document.getElementById("echart_mes");
             let myChartpie2 = document.getElementById("myChartpie");
@@ -534,7 +537,7 @@ function echartnum() {
         myTool1: {
           show: true,
           title: "切换为饼图",
-          icon: "image:///img/pancake.png",
+          icon: "image:///assets/pancake.png",
           onclick: function () {
             let echart_mes = document.getElementById("echart_mes");
             let myChartpie2 = document.getElementById("myChartpie");
@@ -545,7 +548,7 @@ function echartnum() {
         // myTool2: {
         //   show: true,
         //   title: "切换为横向柱状图",
-        //   icon: "image:///img/row.png",
+        //   icon: "image:///assets/row.png",
         //   onclick: function () {},
         // },
       },
@@ -656,29 +659,96 @@ function deluser(userid, fileid, index) {
     });
 }
 
-
-
+// 加载过程中给用户提示，防止多次点
+const btnData = ref("导出问卷信息");
+let isClick = false; //节流阀
 // 导出excel表格
 function exportData() {
-  axios({
+  btnData.value = '导出中...请稍等'
+  if (!isClick) {
+    isClick = true;
+    axios({
     url: `https://q.denglu1.cn/api/user/export`,
-    method: 'get',
+    method: 'POST',
     withCredentials: true,
-    headers: { token: datas.user.token },
-    params: {
+    headers: {
+      "Content-Type": "application/json",
+      'token': datas.user.token
+    },
+    // 请求体-----
+    data: {
       'questionnaire_id': filenews.context.questionnaire.id,
       'excelName': filenews.context.questionnaire.title
     },
+    responseType: 'blob'//将文件流转成blob对象,一定要写
   }).then((response) => {
-    console.log(filenews.context.questionnaire.id);
-    console.log(filenews.context.questionnaire.title);
     console.log(response);
+    let fileName = window.decodeURI(response.headers['content-disposition'].split('=')[1])
+    console.log('文件名字',fileName);
+        const content = response.data;
+        const blob = new Blob([content]);
+        if ("download" in document.createElement("a")) {
+          // 非IE下载
+          const elink = document.createElement("a");
+          elink.download = fileName;
+          elink.style.display = "none";
+          elink.href = URL.createObjectURL(blob);
+          document.body.appendChild(elink);
+          elink.click();
+          btnData.value = "导出问卷信息";
+          isClick = false;
+          URL.revokeObjectURL(elink.href); // 销毁下载链接
+          document.body.removeChild(elink);
+        } else {
+          // IE10+下载
+          navigator.msSaveBlob(blob, fileName);
+        }
   }).catch((error) => {
-    console.log(filenews.context.questionnaire.id);
-    console.log(filenews.context.questionnaire.title);
     console.log(error);
   });
+  }
+
 }
+
+
+
+function downline() {
+    if (!window.confirm("是否要下线该问卷？")) return;    
+    axios({
+    url: `https://q.denglu1.cn/api/user/questionnaireStop/${filenews.context.questionnaire.id}`,
+    method: "get",
+    withCredentials: true,
+    headers: { token: datas.user.token },
+  })
+    .then((response) => {
+      console.log(response);
+      if (response.data.code === 200) alert("下线成功！");
+      else alert("该问卷已处于下线状态！请勿重复操作");
+    })
+    .catch((error) => {
+      console.log(error);
+    });    
+}
+
+
+function reOnline() {
+    if (!window.confirm("是否要重新上线该问卷？")) return;    
+    axios({
+    url: `https://q.denglu1.cn/api/user/questionnaireStopRebuild/${filenews.context.questionnaire.id}`,
+    method: "get",
+    withCredentials: true,
+    headers: { token: datas.user.token },
+  })
+    .then((response) => {
+      console.log(response);
+      if (response.data.code === 200) alert("重新上线成功！");
+      else alert("该问卷已处于上线状态！请勿重复操作");
+    })
+    .catch((error) => {
+      console.log(error);
+    });    
+}
+
 </script>
 
 <style lang="less" scoped>
@@ -863,6 +933,22 @@ function exportData() {
     height: 30px;
     top: 15px;
     right: 20px;
+    position: absolute;
+  }
+
+  // 问卷下线与重新上线按钮
+  .downline{
+    width: 100px;
+    height: 30px;
+    top: 15px;
+    right: 135px;
+    position: absolute;
+  }
+  .reOnline{
+    width: 100px;
+    height: 30px;
+    top: 15px;
+    right: 250px;
     position: absolute;
   }
 }

@@ -3,7 +3,7 @@
 
     <div class="decoration1"></div>
     <div class="decoration5"></div>
-    <img dog-ear src="/img/tangible.png" />
+    <img dog-ear v-lazy="'/assets/tangible.png'" />
 
 
     <div class="container">

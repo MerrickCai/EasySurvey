@@ -17,7 +17,7 @@ function logOut() {
     ElMessage({
         message: '已为您退出登录',
         type: 'success',
-        duration: 4000,
+        duration: 3000,
         showClose: true,
         center: true
     })
@@ -49,27 +49,46 @@ function devpop() {
     ElMessage({
         message: '开发中',
         type: 'warning',
-        duration: 4000,
+        duration: 3000,
         showClose: true,
         center: true
     })
 }
 // ----------------------------------- 开发中通知 ----------------------------------
+
+
+
+
+// ----------------------------------- logo点击事件 ----------------------------------
+function toHome() {
+    if (datas.user.status === false) {
+        ElMessage({
+            message: '请您先登录',
+            type: 'warning',
+            duration: 3000,
+            showClose: true,
+            center: true
+        })
+    } else {
+        router.push('/')
+    }
+}
+// ----------------------------------- logo点击事件 ----------------------------------
 </script>
 
 <template>
     <nav>
-        <div logo @click="router.push('/')">
-            <img src="/img/logo.png" />
+        <div logo @click="toHome">
+            <img v-lazy="'/assets/logo.png'" />
             <div>问卷易</div>
         </div>
         <div links>
             <Transition name="navbar">
                 <div v-show="datas.navShow">
                     <div button @click="router.push('/surveynew')">创建问卷</div>
-                    <div img @click="devpop"><img src="/img/navbar_1.png" /></div>
-                    <div img avatar @click="devpop"><img src="/img/circle.png" /></div>
-                    <div img @click="logOut"><img src="/img/navbar_2.png" /></div>
+                    <div img @click="devpop"><img v-lazy="'/assets/navbar_1.png'" /></div>
+                    <div img avatar @click="router.push(`/user/${ datas.user.userId}`)"><img v-lazy="'/assets/circle.png'" /></div>
+                    <div img @click="logOut"><img v-lazy="'/assets/navbar_2.png'" /></div>
                 </div>
             </Transition>
         </div>
@@ -77,8 +96,8 @@ function devpop() {
 </template>
 
 <style lang="less" scoped>
-@navSpan: 70px;
-@navHeight: 50px;
+@navSpan: var(--navSpan);
+@navHeight: calc(@navSpan - 20px);
 
 nav {
     display: flex;

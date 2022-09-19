@@ -19,7 +19,7 @@ function validate(account, password, passwordConfirm) {
         ElMessage({
             message: '请输入正确的手机号或学号',
             type: 'warning',
-            duration: 4000,
+            duration: 3000,
             showClose: true,
             center: true
         })
@@ -30,7 +30,7 @@ function validate(account, password, passwordConfirm) {
         ElMessage({
             message: '请输入正确的密码: 8-20位字母数字+特殊字符',
             type: 'warning',
-            duration: 4000,
+            duration: 3000,
             showClose: true,
             center: true
         })
@@ -40,7 +40,7 @@ function validate(account, password, passwordConfirm) {
         ElMessage({
             message: '两次输入的密码不一致，请重新输入',
             type: 'warning',
-            duration: 4000,
+            duration: 3000,
             showClose: true,
             center: true
         })
@@ -59,7 +59,7 @@ async function register(account, password, passwordConfirm, agree) {
         ElMessage({
             message: '请点击同意《用户隐私协议》按钮',
             type: 'warning',
-            duration: 4000,
+            duration: 3000,
             showClose: true,
             center: true
         })
@@ -72,7 +72,7 @@ async function register(account, password, passwordConfirm, agree) {
         ElMessage({
             message: '您已经登录',
             type: 'success',
-            duration: 4000,
+            duration: 3000,
             showClose: true,
             center: true
         })
@@ -90,7 +90,7 @@ async function register(account, password, passwordConfirm, agree) {
             ElMessage({
                 message: '注册成功',
                 type: 'success',
-                duration: 4000,
+                duration: 3000,
                 showClose: true,
                 center: true
             })
@@ -106,21 +106,28 @@ async function register(account, password, passwordConfirm, agree) {
                 headers: { "Content-Type": "application/json" },
                 data: { phone_number: account, password: password },
             }).then((response) => {
+
+
                 //写入用户数据
-                datas.user.userId = response.data.data.userId
+                datas.user.status = true
+                datas.user.account = account
+                datas.user.password = password
                 datas.user.token = response.data.data.token
                 datas.user.refreshtoken = response.data.data.refreshtoken
             })
+
+
             //默认记住账号密码到本地
-            localStorage.setItem('account', btoa(account))
-            localStorage.setItem('password', btoa(password))
+            localStorage.setItem('account', account)
+            localStorage.setItem('password', password)
+            
             //跳转填写地区和年龄弹窗
             viewId.value = 3
         } else { //response.data.code === 400=>重复注册
             ElMessage({
                 message: '请勿重复注册',
                 type: 'error',
-                duration: 4000,
+                duration: 3000,
                 showClose: true,
                 center: true
             })
@@ -129,7 +136,7 @@ async function register(account, password, passwordConfirm, agree) {
         ElMessage({
             message: '由于网络问题注册失败',
             type: 'error',
-            duration: 4000,
+            duration: 3000,
             showClose: true,
             center: true
         })
@@ -144,7 +151,7 @@ function Dev(str) {
     ElMessage({
         message: `${str}开发中`,
         type: 'warning',
-        duration: 4000,
+        duration: 3000,
         showClose: true,
         center: true
     })
@@ -156,12 +163,12 @@ function Dev(str) {
     <div class="wrapper">
         <div class="title">用户注册</div>
         <div class="imgUpload">
-            <img src="/img/circle.png" alt="默认头像" />
+            <img v-lazy="'/assets/circle.png'" alt="默认头像" />
             <div button>
                 <div @click="Dev('上传头像')">+上传头像</div>
             </div>
         </div>
-        <div class="typeArea">
+        <div class="typeArea" @keydown.enter="register(user.account, user.password,user.passwordConfirm, user.agree)">
             <input type="text" v-model="user.account" placeholder="请输入手机号或学号" />
             <input type="password" v-model="user.password" placeholder="请输入密码：8-20位字母数字+特殊字符" />
             <input type="password" v-model="user.passwordConfirm" placeholder="确认密码" />

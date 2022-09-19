@@ -1,6 +1,3 @@
-// 全局 CSS
-import './assets/global.css'
-
 // Vue 实例
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -18,6 +15,13 @@ app.use(createPinia())
 // 路由
 import router from './router/index.js'
 app.use(router)
+
+// 懒加载插件
+import lazyPlugin from 'vue3-lazy'
+app.use(lazyPlugin, {
+    loading: '',
+    error: ''
+})
 
 // 挂载 Vue 实例
 app.mount('#app')

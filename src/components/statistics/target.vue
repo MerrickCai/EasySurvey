@@ -22,7 +22,7 @@
             <img
               class="change"
               style="display: inline"
-              src="/img/revise.png"
+              v-lazy="'/assets/revise.png'"
               alt=""
               @click="ChangePlanShow"
             />
@@ -47,7 +47,7 @@
             <img
               class="change"
               style="display: inline"
-              src="/img/revise.png"
+              v-lazy="'/assets/revise.png'"
               alt=""
               @click="ChangeMoneyShow"
             />
