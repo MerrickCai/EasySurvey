@@ -4,6 +4,7 @@ import axios from "axios"
 import { useStore } from "../../Stores/index.js"
 import { useRouter, useRoute } from "vue-router"
 import { ElMessage } from 'element-plus'
+import area from "../../Stores/area.js"
 const datas = useStore()
 const router = useRouter()
 const route = useRoute()
@@ -84,7 +85,6 @@ watch(confirm, (n, o) => {
 
 
 //--------------------------- 地区数据 -----------------------------
-import area from "../../Stores/area.js"
 const props = {
   expandTrigger: "hover",
   children: "childs",

@@ -68,10 +68,28 @@ async function login(account, password, remember) {
 
   if (result) {
 
+    ElMessage({
+      message: '登录成功',
+      type: 'success',
+      duration: 3000,
+      showClose: true,
+      center: true
+    })
+
     await datas.updateUserMessage(datas.user.token)
 
     viewId.value = 3
 
+  } else {
+
+    ElMessage({
+      message: '账号或者密码错误，请重新登录',
+      type: 'error',
+      duration: 3000,
+      showClose: true,
+      center: true
+    })
+    
   }
 }
 //--------------------------- 登录逻辑-----------------------------

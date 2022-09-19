@@ -10,7 +10,8 @@ const datas = useStore()
 
 
 //------------------------ //全局前置守卫（帮助用户自动登录） --------------------------
-router.beforeEach(async (to, from) => {
+router.beforeEach(async (to) => {
+
   if (to.path === "/login") { //判断是否进入登录注册页面=>防止死循环
     //顶部导航栏组件的展示
     datas.navShow = false
@@ -19,43 +20,41 @@ router.beforeEach(async (to, from) => {
     //顶部导航栏组件的展示
     datas.navShow = true
   }
+
   if (to.meta.requireLogin === false) {
     //确认页面是否需要登录
     return true
   }
+
   if (datas.user.status === true) {
     //确认用户是否登录
     return true
   }
+
   // 如果 localStorage 储存了用户登录数据，帮用户自动登录
   if (localStorage.getItem("account") && localStorage.getItem("password")) {
+
     try {
-      const response = await axios({
-        url: "https://q.denglu1.cn/api/user/login",
-        method: "post",
-        withCredentials: true,
-        headers: { "Content-Type": "application/json" },
-        data: {
-          phone_number: localStorage.getItem("account"),
-          password: localStorage.getItem("password"),
-        },
-      })
-      ElMessage({
-        message: '自动登录成功',
-        type: 'success',
-        duration: 3000,
-        showClose: true,
-        center: true
-      })
-      //写入用户数据
-      datas.user.status = true
-      datas.user.account = localStorage.getItem("account")
-      datas.user.password = localStorage.getItem("password")
-      datas.user.userId = response.data.data.userId
-      datas.user.token = response.data.data.token
-      datas.user.refreshtoken = response.data.data.refreshtoken
-      return true
+      const result = await datas.login(localStorage.getItem("account"), localStorage.getItem("password"), true)
+
+      if (result) {
+
+        ElMessage({
+          message: '自动登录成功',
+          type: 'success',
+          duration: 3000,
+          showClose: true,
+          center: true
+        })
+
+        await datas.updateUserMessage(datas.user.token)
+
+        return true
+
+      }
+
     } catch (error) {
+
       ElMessage({
         message: '自动登录失败',
         type: 'error',
@@ -63,18 +62,23 @@ router.beforeEach(async (to, from) => {
         showClose: true,
         center: true
       })
+
       // 跳转登录注册页面
       return {
         path: "/login",
         query: { redirect: to.fullPath },
       }
+
     }
+
   }
+
   // 跳转登录注册页面
   return {
     path: "/login",
     query: { redirect: to.fullPath },
   }
+
 })
 //------------------------ //全局前置守卫（帮助用户自动登录） --------------------------
 

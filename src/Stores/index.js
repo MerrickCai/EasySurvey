@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import axios from "axios"
-import { ElMessage } from 'element-plus'
 
 export const useStore = defineStore('main', {
   state: () => ({
@@ -42,14 +41,6 @@ export const useStore = defineStore('main', {
 
         if (response.data.code === 200) { //账号密码正确
 
-          ElMessage({
-            message: '登录成功',
-            type: 'success',
-            duration: 3000,
-            showClose: true,
-            center: true
-          })
-
           //写入用户数据到pinia状态管理库
           this.user.status = true
           this.user.account = account
@@ -81,24 +72,10 @@ export const useStore = defineStore('main', {
 
         } else if (response.data.code === 401) { //账号或者密码错误
 
-          ElMessage({
-            message: '账号或者密码错误，请重新登录',
-            type: 'error',
-            duration: 3000,
-            showClose: true,
-            center: true
-          })
+          return false
 
         }
       } catch (error) {
-
-        ElMessage({
-          message: '由于网络问题，登录失败',
-          type: 'error',
-          duration: 3000,
-          showClose: true,
-          center: true
-        })
 
         console.log('由于网络问题，登录失败', error)
 
@@ -116,7 +93,7 @@ export const useStore = defineStore('main', {
           headers: { token: token }
         })
 
-       console.log('用户信息',response)
+        console.log('获取的用户信息', response)
 
         //写入pinia
         this.user.userId = response.data.data.id
@@ -128,19 +105,11 @@ export const useStore = defineStore('main', {
         this.user.account = response.data.data.phone_number
         this.user.password = response.data.data.password
 
+        console.log('Pinia中的用户数据(datas.user)，登录后自动获取',this.user)
 
       } catch (error) {
 
-        ElMessage({
-          message: '获取用户数据错误',
-          type: 'error',
-          duration: 3000,
-          showClose: true,
-          center: true
-        })
-
         console.log('获取用户数据错误', error)
-
       }
 
     }
