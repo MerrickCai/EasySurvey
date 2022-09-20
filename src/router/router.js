@@ -11,7 +11,7 @@ const Survey = () => import('../view/Survey.vue')
 //404页
 const NotFound = () => import('../view/NotFound.vue')
 //个人信息页
-const User = ()=>import('../components/user/User.vue')
+const User = () => import('../components/user/User.vue')
 
 const routes = [
     {

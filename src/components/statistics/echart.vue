@@ -132,7 +132,6 @@ const router = useRouter();
 let usershow = ref(false)
 let areashow = ref(false)
 
-console.log(usershow.value);
 //拖拽
 function drop(event) {
   console.log(event.target);

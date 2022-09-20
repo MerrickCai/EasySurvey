@@ -479,7 +479,7 @@ async function pushfile() {
         method: "post",
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
-        headers: { token: datas.user.token },
+        headers: { 'token': datas.getToken() },
         data: {
           questionnaire: {
             userId: datas.user.userId,
@@ -522,7 +522,7 @@ async function pushfile() {
         method: "post",
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
-        headers: { token: datas.user.token },
+        headers: { 'token': datas.getToken() },
         data: {
           questionnaire: {
             userId: datas.user.userId,
@@ -598,7 +598,7 @@ async function pushfile() {
         method: "post",
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
-        headers: { token: datas.user.token },
+        headers: { 'token': datas.getToken() },
         data: {
           questionnaire: {
             userId: datas.user.userId,
@@ -635,6 +635,7 @@ async function pushfile() {
     localStorage.removeItem("title");
   }
 }
+console.log(datas.getToken());
 let link = ref(1);
 // 链接
 let linkqr = ref(
