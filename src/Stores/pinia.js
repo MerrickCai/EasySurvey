@@ -132,7 +132,6 @@ export const useStore = defineStore('main', {
 
           //写入pinia状态管理库（！注意：页面关闭会销毁）
           this.user.status = true
-          this.user.token = token
           this.user.userId = response.data.data.id
           this.user.username = response.data.data.username
           this.user.email = response.data.data.email
@@ -184,7 +183,6 @@ export const useStore = defineStore('main', {
               token: result,
               refreshToken: User.refreshToken
             }))
-            this.user.token = result
 
             return result //refreshToken有效，返回了正确的token
 

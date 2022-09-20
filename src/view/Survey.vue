@@ -49,8 +49,10 @@ axios({
   url: `https://q.denglu1.cn/api/user/fillQuestionnaire/${route.params.questionnaireId}`,
   method: "get",
   withCredentials: true,
-  headers: { "Content-Type": "application/json" },
-  headers: { token: datas.getToken() },
+  headers: {
+    "Content-Type": "application/json",
+    token: await datas.getToken()
+  },
 })
   .then((response) => {
     console.log(response)

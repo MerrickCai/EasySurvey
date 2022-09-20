@@ -219,7 +219,7 @@ function Finish() {
 
 
 //-------------------------------- 提交函数---------------------------------------
-function Submit() {
+async function Submit() {
     const questionAnswerList = [];
     survey.questionList.forEach(item => {
         let questionAnswer = {
@@ -268,8 +268,10 @@ function Submit() {
         url: `https://q.denglu1.cn/api/questions/commit`,
         method: 'post',
         withCredentials: true,
-        headers: { 'Content-Type': 'application/json' },
-        headers: { 'token': datas.getToken() },
+        headers: {
+            "Content-Type": "application/json",
+            token: await datas.getToken()
+        },
         data: {
             questionnaire_id: survey.id,
             totalNumber: survey.totalNumber,
