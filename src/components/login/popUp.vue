@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, reactive, ref, computed, watch } from "vue"
 import axios from "axios"
-import { useStore } from "../../Stores/index.js"
+import { useStore } from "../../Stores/pinia.js"
 import { useRouter, useRoute } from "vue-router"
 import { ElMessage } from 'element-plus'
 import area from "../../Stores/area.js"

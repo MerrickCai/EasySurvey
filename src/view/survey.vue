@@ -5,7 +5,7 @@ import survey_mix from '../components/surveyTemplate/survey_mix.vue'
 import { ref, reactive, provide } from "vue"
 import axios from "axios"
 import { useRoute } from "vue-router"
-import { useStore } from "../Stores/index.js"
+import { useStore } from "../Stores/pinia.js"
 const route = useRoute()
 const datas = useStore()
 
@@ -50,9 +50,10 @@ axios({
   method: "get",
   withCredentials: true,
   headers: { "Content-Type": "application/json" },
-  headers: { token: datas.user.token },
+  headers: { token: datas.getToken() },
 })
   .then((response) => {
+    console.log(response)
     switch (response.data.data.questionnaire.count) {
       case 2: // 矩阵
         currentView.value = surveyTemplateList[0]

@@ -71,7 +71,7 @@ import matrixlist from "../components/surveynew/matrixlist.vue";
 import scalelist from "../components/surveynew/scalelist.vue";
 import textlist from "../components/surveynew/textlist.vue";
 import mixlist from "../components/surveynew/mixlist.vue"
-import { useStore } from "../Stores/index.js";
+import { useStore } from "../Stores/pinia.js";
 import axios from "axios";
 import clipboard3 from "vue-clipboard3";
 import QrcodeVue from "qrcode.vue";

@@ -1,5 +1,5 @@
 <script setup>
-import { useStore } from "../../Stores/index.js"
+import { useStore } from "../../Stores/pinia.js"
 import { useRouter } from "vue-router"
 import { reactive, inject } from "vue"
 import { ElMessage } from 'element-plus'

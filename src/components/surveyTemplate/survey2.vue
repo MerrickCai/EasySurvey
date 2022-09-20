@@ -109,7 +109,7 @@
 import { ref, reactive, inject, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 import axios from "axios"
-import { useStore } from "../../Stores/index.js"
+import { useStore } from "../../Stores/pinia.js"
 import { useRouter } from "vue-router"
 const router = useRouter()
 const datas = useStore()

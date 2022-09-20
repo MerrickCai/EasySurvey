@@ -76,7 +76,7 @@
 import axios from "axios";
 import { ref, nextTick, watch, reactive } from "vue";
 import emitter from "../../mitt/mitt.js";
-import { useStore } from "../../Stores/index.js";
+import { useStore } from "../../Stores/pinia.js";
 const datas = useStore();
 
 //接收确定是哪一份问卷

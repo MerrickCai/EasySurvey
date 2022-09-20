@@ -94,7 +94,7 @@
 import { ref, reactive, inject } from 'vue'
 import { ElMessage } from 'element-plus'
 import axios from "axios"
-import { useStore } from "../../Stores/index.js"
+import { useStore } from "../../Stores/pinia.js"
 import { useRouter } from "vue-router"
 const router = useRouter()
 const datas = useStore()
@@ -269,7 +269,7 @@ function Submit() {
         method: 'post',
         withCredentials: true,
         headers: { 'Content-Type': 'application/json' },
-        headers: { 'token': datas.user.token },
+        headers: { 'token': datas.getToken() },
         data: {
             questionnaire_id: survey.id,
             totalNumber: survey.totalNumber,

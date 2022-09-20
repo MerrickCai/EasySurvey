@@ -28,7 +28,7 @@ export const useStore = defineStore('main', {
     }
 
   }),
-  
+
   actions: {
 
     async login(account, password, remember) {
@@ -77,12 +77,14 @@ export const useStore = defineStore('main', {
 
         } else if (response.data.code === 401) { //账号或者密码错误
 
-          return false
-
+          return false // 返回false，账号或者密码错误
         }
+
       } catch (error) {
 
         console.log('由于网络问题，登录失败', error)
+
+        return error
 
       }
     },
@@ -110,17 +112,27 @@ export const useStore = defineStore('main', {
         this.user.account = response.data.data.phone_number
         this.user.password = response.data.data.password
 
-        console.log('Pinia中的用户数据(datas.user)，登录后自动获取', this.user)
+        console.log('Pinia中登录后自动获取的用户数据(datas.user)', this.user)
+
+        return true
 
       } catch (error) {
 
         console.log('获取用户数据错误', error)
+
+        return false
       }
 
     },
 
     getToken() {
-      return this.user.token
+
+      if (this.updateUserMessage(this.user.token)) {
+        return this.user.token
+      } else {
+        return false
+      }
+
     }
 
   }

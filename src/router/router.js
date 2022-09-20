@@ -1,47 +1,48 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 //统计数据页
-const statistics = () => import('../view/statistics.vue')
+const Statistics = () => import('../view/Statistics.vue')
 //登录注册页
-const login = () => import('../view/login.vue')
+const Login = () => import('../view/Login.vue')
 //创建问卷页
-const surveynew = () => import('../view/surveynew.vue')
+const SurveyNew = () => import('../view/SurveyNew.vue')
 //填写问卷页
-const survey = () => import('../view/survey.vue')
+const Survey = () => import('../view/Survey.vue')
 //404页
-const notFound = () => import('../view/notFound.vue')
+const NotFound = () => import('../view/NotFound.vue')
+//个人信息页
+const User = ()=>import('../components/user/User.vue')
 
-const user = ()=>import('../components/user/user.vue')
 const routes = [
     {
         path: '/',
         meta: { requireLogin: true },
-        component: statistics,
+        component: Statistics,
     },
     {
         path: '/login',
         meta: { requireLogin: false },
-        component: login
+        component: Login
     },
     {
         path: '/surveynew',
         meta: { requireLogin: true },
-        component: surveynew
+        component: SurveyNew
     },
     {
         path: '/survey/:questionnaireId',
         meta: { requireLogin: true },
-        component: survey
+        component: Survey
     },
     {
         path: '/:path(.*)', //匹配不到以上路径=>404页面
         meta: { requireLogin: false },
-        component: notFound
+        component: NotFound
     },
     {
         path: '/user/:userId',
         meta: { requireLogin: true },
-        component: user
+        component: User
     },
 ]
 

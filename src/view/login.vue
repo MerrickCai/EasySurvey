@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, provide, onActivated } from 'vue'
-import { useStore } from "../Stores/index.js"
+import { useStore } from "../Stores/pinia.js"
 import { onBeforeRouteLeave } from 'vue-router'
 import accountLogin from '../components/login/accountLogin.vue'
 import wechatLogin from '../components/login/wechatLogin.vue'

@@ -49,7 +49,7 @@ import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import emitter from "../../mitt/mitt.js";
-import { useStore } from "../../Stores/index.js";
+import { useStore } from "../../Stores/pinia.js";
 const router = useRouter();
 const datas = useStore();
 

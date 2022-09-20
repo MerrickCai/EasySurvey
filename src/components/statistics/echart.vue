@@ -123,7 +123,7 @@ import { onMounted, ref, reactive, watch, computed, nextTick } from "vue";
 //路由
 import { useRouter } from "vue-router";
 //Stores
-import { useStore } from "../../Stores/index.js";
+import { useStore } from "../../Stores/pinia.js";
 import axios from "axios";
 const datas = useStore();
 const router = useRouter();

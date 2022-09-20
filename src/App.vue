@@ -1,8 +1,7 @@
 <script setup>
-import navbar from "./view/navbar.vue"
-import axios from "axios"
+import Navbar from "./view/Navbar.vue"
 import { useRouter } from "vue-router"
-import { useStore } from "./Stores/index.js"
+import { useStore } from "./Stores/pinia.js"
 import { ElMessage } from 'element-plus'
 const router = useRouter()
 const datas = useStore()
@@ -102,7 +101,7 @@ const background_url = background.geturl()
 
 <template>
   <main>
-    <navbar />
+    <Navbar />
     <div>
       <!--主路由容器-->
       <router-view v-slot="{ Component, route }">
