@@ -67,7 +67,7 @@ function startDrag(e) {
   e.dataTransfer.dropEffect = "move";
   e.dataTransfer.effectAllowed = "move";
 }
-function delfile() {
+async function delfile() {
    ElMessageBox.confirm(
     '确定删除吗?',
     '删除题目',
@@ -81,8 +81,10 @@ function delfile() {
       url: `https://q.denglu1.cn/api/deleteQuestion/${parseInt(props.item.id)}`,
       method: "get",
       withCredentials: true,
-      headers: { "Content-Type": "application/json" },
-      headers: { token: datas.getToken() },
+      headers: {
+      "Content-Type": "application/json",
+      token: await datas.getToken()
+    },
     })
       .then((response) => {
         console.log(response);

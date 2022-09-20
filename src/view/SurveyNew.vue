@@ -401,8 +401,10 @@ async function pushfile() {
         url: "https://q.denglu1.cn/api/questions/rebuild",
         method: "post",
         withCredentials: true,
-        headers: { "Content-Type": "application/json" },
-        headers: { token: datas.user.token },
+        headers: {
+      "Content-Type": "application/json",
+      token: await datas.getToken()
+    },
         data: {
           questionnaire: {
             userId: datas.user.userId,
@@ -438,8 +440,10 @@ async function pushfile() {
         url: "https://q.denglu1.cn/api/questions/rebuild",
         method: "post",
         withCredentials: true,
-        headers: { "Content-Type": "application/json" },
-        headers: { token: datas.user.token },
+        headers: {
+      "Content-Type": "application/json",
+      token: await datas.getToken()
+    },
         data: {
           questionnaire: {
             userId: datas.user.userId,
@@ -478,8 +482,10 @@ async function pushfile() {
         url: "https://q.denglu1.cn/api/questions/rebuild",
         method: "post",
         withCredentials: true,
-        headers: { "Content-Type": "application/json" },
-        headers: { token: datas.user.token },
+        headers: {
+      "Content-Type": "application/json",
+      token: await datas.getToken()
+    },
         data: {
           questionnaire: {
             userId: datas.user.userId,
@@ -521,8 +527,10 @@ async function pushfile() {
         url: "https://q.denglu1.cn/api/questions/rebuild",
         method: "post",
         withCredentials: true,
-        headers: { "Content-Type": "application/json" },
-        headers: { token: datas.user.token },
+        headers: {
+      "Content-Type": "application/json",
+      token: await datas.getToken()
+    },
         data: {
           questionnaire: {
             userId: datas.user.userId,
@@ -560,8 +568,10 @@ async function pushfile() {
         url: "https://q.denglu1.cn/api/questions/rebuild",
         method: "post",
         withCredentials: true,
-        headers: { "Content-Type": "application/json" },
-        headers: { token: datas.user.token },
+        headers: {
+      "Content-Type": "application/json",
+      token: await datas.getToken()
+    },
         data: {
           questionnaire: {
             userId: datas.user.userId,
@@ -597,8 +607,10 @@ async function pushfile() {
         url: "https://q.denglu1.cn/api/questions/rebuild",
         method: "post",
         withCredentials: true,
-        headers: { "Content-Type": "application/json" },
-        headers: { token: datas.user.token },
+        headers: {
+      "Content-Type": "application/json",
+      token: await datas.getToken()
+    },
         data: {
           questionnaire: {
             userId: datas.user.userId,
