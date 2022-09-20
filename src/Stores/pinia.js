@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 import axios from "axios"
+import { useRouter } from "vue-router"
+const router = useRouter()
 
 export const useStore = defineStore('main', {
 
@@ -33,6 +35,7 @@ export const useStore = defineStore('main', {
   actions: {
 
     async login(account, password, remember) {
+
       try {
 
         const response = await axios({
@@ -43,99 +46,206 @@ export const useStore = defineStore('main', {
           data: { phone_number: account, password: password },
         })
 
-        //console.log('登录成功返回response', response)
-
         if (response.data.code === 200) { //账号密码正确
 
-          //写入用户数据到pinia状态管理库
-          this.user.status = true
-          this.user.account = account
-          this.user.password = password
-          this.user.token = response.data.data.token
-          this.user.refreshtoken = response.data.data.refreshtoken
+          //console.log('登录成功response', response)
 
-
-
-          if (remember) { // 确认用户是否自动登录
+          if (remember) { // 确认用户是否保持长期登录
 
             localStorage.setItem('User', JSON.stringify({
               token: response.data.data.token,
               refreshtoken: response.data.data.refreshtoken
             }))
+
           } else {
+
             localStorage.setItem('User', JSON.stringify({
               token: response.data.data.token
             }))
+
           }
 
-          return true // 返回true，可以跳转到填写地区和年龄的弹窗页面
-
+          return true // 登录成功
 
         } else if (response.data.code === 401) { //账号或者密码错误
 
-          return false // 返回false，账号或者密码错误
+          //console.log('登录失败response（账号或者密码错误）', response)
+
+          return false // 登录失败，账号或者密码错误
         }
 
       } catch (error) {
 
-        console.log('由于网络问题，登录失败', error)
+        console.log('登录接口错误', error)
 
         return error
 
       }
+
+    },
+
+
+    async register(account, password) {
+
+      const response = await axios({
+        url: 'https://q.denglu1.cn/api/user/regist',
+        method: 'post',
+        withCredentials: true,
+        headers: { 'Content-Type': 'application/json' },
+        data: {
+          phone_number: account,
+          password: password
+        }
+      })
+
+      if (response.data.code === 200) { // 注册成功
+
+        await this.login(account, password, true)
+
+        return true //注册成功
+
+      } else { //response.data.code === 400 => 重复注册
+
+        return false //重复注册
+
+      }
+
     },
 
     async getUserMessage(token) {
+
       try {
 
         const response = await axios({
           url: `https://q.denglu1.cn/api/user/getUserMessage`,
           method: "get",
           withCredentials: true,
-          headers: { "Content-Type": "application/json" },
-          headers: { token: token }
+          headers: {
+            "Content-Type": "application/json",
+            "token": token
+          }
         })
 
-        //console.log('获取的用户信息', response)
+        //console.log('getUserMessage接口获取的用户信息', response)
 
-        //写入pinia
-        this.user.status=true
-        this.user.userId = response.data.data.id
-        this.user.username = response.data.data.username
-        this.user.email = response.data.data.email
-        this.user.age = response.data.data.age
-        this.user.area = response.data.data.province
-        this.user.picture = response.data.data.picture
-        this.user.account = response.data.data.phone_number
-        this.user.password = response.data.data.password
+        if (response.data.code === 200) { //获取成功。token有效
 
-        //console.log('调用getUserMessage()后Pinia中的用户数据(datas.user)', this.user)
+          //写入pinia状态管理库（！注意：页面关闭会销毁）
+          this.user.status = true
+          this.user.token = token
+          this.user.userId = response.data.data.id
+          this.user.username = response.data.data.username
+          this.user.email = response.data.data.email
+          this.user.age = response.data.data.age
+          this.user.area = response.data.data.province
+          this.user.picture = response.data.data.picture
+          this.user.account = response.data.data.phone_number
+          this.user.password = response.data.data.password
 
-        return true
+          //console.log('调用getUserMessage()后Pinia中的用户数据(datas.user)', this.user)
+
+          return true //用户验证成功
+
+        } else {  //response.data.code === 403 || response.data.code === 500 => token过期或者非法
+
+          return false //token无效
+
+        }
 
       } catch (error) {
 
-        console.log('获取用户数据错误', error)
+        console.log('获取用户数据接口错误', error)
 
         return false
       }
 
     },
 
-    getToken() {
+    async getToken() {
 
       const User = JSON.parse(localStorage.getItem('User'))
-      const result = this.getUserMessage(User.token)
 
-      if (result) {
-        return User.token
-      } else {
-        return false
+      const result = await this.getUserMessage(User.token)
+
+      if (result) { //token有效
+
+        return User.token //token有效
+
+      } else { //token无效
+
+        if (User.refreshToken) { //用户选择保持登录,本地有refreshToken
+
+          const result = await this.refreshToken()
+
+          if (result) { //refreshToken有效，返回了正确的token
+
+            localStorage.removeItem('User')
+            localStorage.setItem('User', JSON.stringify({
+              token: result,
+              refreshToken: User.refreshToken
+            }))
+            this.user.token = result
+
+            return result //refreshToken有效，返回了正确的token
+
+          } else { //refreshToken无效，只能重新进行登录注册
+
+            localStorage.removeItem('User')
+
+            // 跳转到登录注册页面
+            router.push({
+              path: "/login",
+              query: { redirect: to.fullPath },
+            })
+
+            return false //token无效，refreshToken无效
+
+          }
+
+        } else { //token无效，且无refreshToken，只能重新进行登录注册
+
+          localStorage.removeItem('User')
+
+          // 跳转到登录注册页面
+          router.push({
+            path: "/login",
+            query: { redirect: to.fullPath },
+          })
+
+          return false
+
+        }
+
+      }
+
+    },
+
+    async refreshToken() {
+
+      const User = JSON.parse(localStorage.getItem('User'))
+
+      const response = axios({
+        url: `q.denglu1.cn/user/refresh`,
+        method: "post",
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+          refreshtoken: User.refreshToken
+        }
+      })
+
+      if (response.data.code === 200) { //refreshToken有效
+
+        return response.data.token
+
+      } else {  //response.data.code === 403 || response.data.code === 500 => refreshToken过期或者非法
+
+        return false //refreshToken过期或者非法
+
       }
 
     }
 
   }
-
 
 })
