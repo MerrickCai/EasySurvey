@@ -99,6 +99,7 @@ export const useStore = defineStore('main', {
         //console.log('获取的用户信息', response)
 
         //写入pinia
+        this.user.status=true
         this.user.userId = response.data.data.id
         this.user.username = response.data.data.username
         this.user.email = response.data.data.email
