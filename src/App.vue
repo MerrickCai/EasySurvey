@@ -121,9 +121,6 @@ const background_url = background.geturl()
 </template>
 
 <style lang="less" scoped>
-@navSpan: var(--navSpan);
-@safe_area: var(--safe_area);
-
 div.background {
   position: fixed;
   top: 0;
@@ -132,7 +129,7 @@ div.background {
   width: 100%;
   height: 100%;
 
-  @media (max-width:800px) {
+  @media (max-width:@breakpoint) {
     display: none;
   }
 
@@ -146,7 +143,7 @@ div.background {
 main {
   display: block;
   height: 100vh;
-  width: @safe_area;
+  width: var(--safe_area);
   margin: 0 auto;
 
   >div {
@@ -169,15 +166,16 @@ main {
 }
 </style>
 
-<style lang="less">
-@safe_area: 1200px;
 
+
+
+
+<style lang="less">
 :root {
-  --navSpan: 70px;
-  --safe_area: @safe_area; //页面安全区
+  --safe_area: @safeArea;
 }
 
-@media (max-width:@safe_area) {
+@media (max-width:@safeArea) {
   :root {
     --safe_area: 100%;
   }

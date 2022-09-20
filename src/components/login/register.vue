@@ -193,7 +193,7 @@ function Dev(str) {
     height: 450px;
     width: 420px;
 
-    @media (max-width:800px) {
+    @media (max-width:@breakpoint) {
         width: 100%;
     }
 

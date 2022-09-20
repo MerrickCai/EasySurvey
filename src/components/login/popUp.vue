@@ -236,7 +236,7 @@ div.wrapper {
   height: 400px;
   width: 420px;
 
-  @media (max-width:800px) {
+  @media (max-width:@breakpoint) {
     width: 100%;
   }
 

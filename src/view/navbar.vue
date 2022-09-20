@@ -96,9 +96,6 @@ function toHome() {
 </template>
 
 <style lang="less" scoped>
-@navSpan: var(--navSpan);
-@navHeight: calc(@navSpan - 20px);
-
 nav {
     display: flex;
     flex-direction: row;
@@ -184,7 +181,7 @@ nav {
                 line-height: calc(@navHeight - 15px);
                 cursor: pointer;
 
-                @media (max-width:800px) {
+                @media (max-width:@breakpoint) {
                     margin-right: 10px;
                 }
             }
@@ -196,7 +193,7 @@ nav {
                 margin-right: 40px;
                 cursor: pointer;
 
-                @media (max-width:800px) {
+                @media (max-width:@breakpoint) {
                     margin-right: 10px;
                 }
 

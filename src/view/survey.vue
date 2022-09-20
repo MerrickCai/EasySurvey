@@ -112,7 +112,7 @@ div[wrapper] {
   background-color: rgb(255, 255, 255);
   z-index: 0;
 
-  @media (max-width:800px) {
+  @media (max-width:@breakpoint) {
     height: 100%;
     width: 100%;
     box-shadow: none;
@@ -131,7 +131,7 @@ div[wrapper] {
     background-color: rgba(235, 245, 255, 1);
     clip-path: polygon(50% 50%, 100% 50%, 100% 100%, 50% 100%);
 
-    @media (max-width:800px) {
+    @media (max-width:@breakpoint) {
       display: none;
     }
   }
@@ -147,7 +147,7 @@ div[wrapper] {
     border-radius: 50%;
     background-color: rgba(71, 145, 255, 1);
 
-    @media (max-width:800px) {
+    @media (max-width:@breakpoint) {
       display: none;
     }
   }
@@ -163,7 +163,7 @@ div[wrapper] {
     border-radius: 50%;
     background-color: rgba(30, 111, 255, 1);
 
-    @media (max-width:800px) {
+    @media (max-width:@breakpoint) {
       display: none;
     }
   }
@@ -179,7 +179,7 @@ div[wrapper] {
     border-radius: 50%;
     background-color: rgba(235, 245, 255, 1);
 
-    @media (max-width:800px) {
+    @media (max-width:@breakpoint) {
       display: none;
     }
   }
@@ -194,7 +194,7 @@ div[wrapper] {
     right: -7px;
     background-color: rgb(255, 255, 255, 1);
 
-    @media (max-width:800px) {
+    @media (max-width:@breakpoint) {
       display: none;
     }
   }
@@ -210,7 +210,7 @@ div[wrapper] {
     object-fit: contain;
     transform: scale(1.07);
 
-    @media (max-width:800px) {
+    @media (max-width:@breakpoint) {
       display: none;
     }
   }

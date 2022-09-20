@@ -29,7 +29,7 @@ div.wrapper {
    align-items: center;
    height: 400px;
    width: 420px;
-   @media (max-width:800px) {
+   @media (max-width:@breakpoint) {
     width: 100%;
   }
    >div.selectArea {

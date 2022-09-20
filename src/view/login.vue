@@ -66,7 +66,7 @@ div[wrapper] {
       border-radius: 10px;
       margin-top: -@navSpan;
 
-      @media (max-width:800px) {
+      @media (max-width:@breakpoint) {
          box-shadow: none;
          border-radius: 0;
          width: 100%;
