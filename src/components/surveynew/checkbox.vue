@@ -4,27 +4,15 @@
     <p class="itemnav">
       <span class="type">多选</span>
       <i class="additem" @click="addamount(), updatescroll()">+</i>
-      <i
-        class="delitem"
-        @click="deleteamount(quesitem.id)"
-        ref="deletematrix"
-        @mousemove="cursorfail"
-        >×</i
-      >
+      <i class="delitem" @click="deleteamount(quesitem.id)" ref="deletematrix" @mousemove="cursorfail">×</i>
     </p>
     <p class="questitle">
       <span>{{ checkboxfile.indexOf(quesitem) + 1 }}</span>
       <!-- <span class="titlecon" v-show="questitleshow" @click="changeqlshow">
         {{ quesitem.question.detail }}
       </span> -->
-      <input
-        type="text"
-        ref="questitle"
-        v-model="quesitem.question.detail"
-        placeholder="请输入题目标题"
-        @blur="questitleshow = true"
-        @keyup.enter="questitleshow = true"
-      />
+      <input type="text" ref="questitle" v-model="quesitem.question.detail" placeholder="请输入题目标题"
+        @blur="questitleshow = true" @keyup.enter="questitleshow = true" />
     </p>
     <el-scrollbar max-height="400px">
       <p class="optionall" v-for="(con, i) in quesitem.options">
@@ -32,21 +20,9 @@
         <!-- <span class="option" v-show="!optionshow[i]" @click="optionsshow(i)">
           {{ con.detail }}
         </span> -->
-        <input
-          type="text"
-          ref="optiontitle"
-          v-model="con.detail"
-          placeholder="请输入题目标题"
-          @blur="optionshow[i] = false"
-          @keyup.enter="optionshow[i] = false"
-        />
-        <i
-          class="deloption"
-          @click="deleoption(i)"
-          ref="deleteo"
-          @mousemove="opcursorfail"
-          >×</i
-        >
+        <input type="text" ref="optiontitle" v-model="con.detail" placeholder="请输入题目标题" @blur="optionshow[i] = false"
+          @keyup.enter="optionshow[i] = false" />
+        <i class="deloption" @click="deleoption(i)" ref="deleteo" @mousemove="opcursorfail">×</i>
       </p>
       <p class="addoption">
         <i class="additem" @click="addaoption()">+</i>
@@ -145,6 +121,7 @@ li {
     width: 100%;
     height: 30px;
     position: relative;
+
     .type {
       width: 60px;
       height: 24px;
@@ -155,9 +132,11 @@ li {
       background: rgba(255, 255, 255, 1);
       border: 1px solid rgba(217, 217, 217, 1);
     }
+
     i {
       font-style: normal;
     }
+
     .additem {
       cursor: pointer;
       position: absolute;
@@ -166,6 +145,7 @@ li {
       font-weight: 400;
       color: rgba(30, 111, 255, 1);
     }
+
     .delitem {
       cursor: pointer;
       position: absolute;
@@ -175,6 +155,7 @@ li {
       color: rgba(30, 111, 255, 1);
     }
   }
+
   .questitle {
     display: flex;
     margin: 5px 40px 5px 39px;
@@ -183,18 +164,21 @@ li {
     border: 1px solid transparent;
     color: rgba(0, 0, 0, 1);
     word-wrap: break-word; //超出页面自动换行
+
     &:hover {
       border: 1px dashed rgba(30, 111, 255, 1);
     }
+
     .titlecon {
       width: 700px;
       height: fit-content;
       margin-left: 5px;
     }
+
     input[type="text"] {
       /* 清除原有input样式 */
       -web-kit-appearance: none;
-      -moz-appearance: none;
+      // -moz-appearance: none;
       outline: 0;
       /* 设置我们要的样式 */
       width: 700px;
@@ -206,6 +190,7 @@ li {
       margin-top: 3px;
     }
   }
+
   .el-scrollbar {
     width: 720px;
     height: 130px;
@@ -220,16 +205,19 @@ li {
       position: absolute;
       right: 0;
     }
+
     .optionall {
       display: flex;
       height: 20px;
       height: fit-content;
       margin: 5px 0 5px 37px;
+
       .circle {
         width: 18px;
         height: 18px;
         border: 2px solid rgba(217, 217, 217, 1);
       }
+
       .option {
         display: block;
         width: 600px;
@@ -240,10 +228,11 @@ li {
         font-weight: 400;
         color: rgba(0, 0, 0, 1);
       }
+
       input[type="text"] {
         /* 清除原有input样式 */
         -web-kit-appearance: none;
-        -moz-appearance: none;
+        // -moz-appearance: none;
         outline: 0;
         /* 设置我们要的样式 */
         width: 700px;
@@ -253,6 +242,7 @@ li {
         border: none;
         margin-left: 5px;
       }
+
       .deloption {
         cursor: pointer;
         font-size: 20px;
@@ -262,8 +252,10 @@ li {
       }
     }
   }
+
   .addoption {
     display: flex;
+
     .additem {
       cursor: pointer;
       margin-left: 37px;
@@ -272,6 +264,7 @@ li {
       color: rgba(30, 111, 255, 1);
       font-style: normal;
     }
+
     span {
       cursor: default;
       margin-top: 10px;

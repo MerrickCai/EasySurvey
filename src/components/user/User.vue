@@ -10,9 +10,9 @@
       <span @click="userchoose=2" :class="{ userclick:userchoose==2}">问卷记录</span>
       <span @click="userchoose=3" :class="{ userclick:userchoose==3}">用户反馈</span>
     </div>
-    <!-- <div class="uesrcon">
-      <component :is="componentview"></component>
-    </div> -->
+    <div class="uesrcon">
+      <component :is="componentview" :user="user"></component>
+    </div>
   </div>
 </template>
 
@@ -21,6 +21,7 @@ import { Finished } from "@element-plus/icons-vue";
 import axios from "axios";
 import { ref, reactive } from "vue";
 import { useStore } from "../../Stores/pinia.js";
+import usermas from "./usermas.vue"
 const datas = useStore();
 const user = reactive({
   account: datas.user.account,
@@ -34,8 +35,11 @@ const user = reactive({
   username: datas.user.username,
 });
 
-// let componentview = reactive([usermas])
 let userchoose = ref(0)
+let viewlist = [usermas]
+let componentview = viewlist[userchoose.value]
+
+console.log("视图", componentview);
 console.log("user数据", datas.user);
 console.log("user", user);
 axios({
@@ -118,7 +122,7 @@ div.wrapper {
 
   .uesrcon {
     width: 875px;
-    height: 675px;
+    height: 600px;
     opacity: 1;
     background: rgba(255, 255, 255, 1);
     box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
