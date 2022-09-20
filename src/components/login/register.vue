@@ -1,13 +1,14 @@
 <script setup>
 import axios from "axios"
 import { useStore } from "../../Stores/pinia.js"
-const datas = useStore()
+import { reactive, inject } from "vue"
 import { ElMessage } from 'element-plus'
+const datas = useStore()
+
 
 
 
 //--------------------------- 视图切换 -----------------------------
-import { reactive, inject } from "vue"
 const viewId = inject("viewId")
 //--------------------------- 视图切换 -----------------------------
 

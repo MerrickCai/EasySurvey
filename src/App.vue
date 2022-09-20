@@ -31,10 +31,12 @@ router.beforeEach(async (to) => {
   }
 
   // 如果 localStorage 储存了用户登录数据，帮用户自动登录
-  if (localStorage.getItem("account") && localStorage.getItem("password")) {
+  if (localStorage.getItem("User")) {
 
     try {
-      const result = await datas.login(localStorage.getItem("account"), localStorage.getItem("password"), true)
+
+      const User = JSON.parse(localStorage.getItem('User'))
+      const result = await datas.getUserMessage(User.token)
 
       if (result) {
 
@@ -45,8 +47,6 @@ router.beforeEach(async (to) => {
           showClose: true,
           center: true
         })
-
-        await datas.updateUserMessage(datas.user.token)
 
         return true
 

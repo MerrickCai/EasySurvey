@@ -39,7 +39,7 @@
 
 - 克隆项目
 
-    `git clone git@e.coding.net:merrick-frontend/survey/EasySurvey.git -b main`
+    `git clone git@e.coding.net:merrick-frontend/survey/EasySurvey.git --depth=1 -b main`
 
     `npm install`
 

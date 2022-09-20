@@ -13,6 +13,7 @@ export const useStore = defineStore('main', {
 
     //用户数据
     user: {
+
       status: false,
       token: 0,
       refreshtoken: 0,
@@ -42,7 +43,7 @@ export const useStore = defineStore('main', {
           data: { phone_number: account, password: password },
         })
 
-        console.log('登录成功返回response', response)
+        //console.log('登录成功返回response', response)
 
         if (response.data.code === 200) { //账号密码正确
 
@@ -67,11 +68,6 @@ export const useStore = defineStore('main', {
             }))
           }
 
-          //兼容 后期删
-          this.user.userId = response.data.data.userId
-          localStorage.setItem('account', account)
-          localStorage.setItem('password', password)
-
           return true // 返回true，可以跳转到填写地区和年龄的弹窗页面
 
 
@@ -89,18 +85,18 @@ export const useStore = defineStore('main', {
       }
     },
 
-    async updateUserMessage(token) {
+    async getUserMessage(token) {
       try {
 
         const response = await axios({
-          url: `https://q.denglu1.cn/api/user/getUserMessage/${this.user.userId}`,
+          url: `https://q.denglu1.cn/api/user/getUserMessage`,
           method: "get",
           withCredentials: true,
           headers: { "Content-Type": "application/json" },
           headers: { token: token }
         })
 
-        console.log('获取的用户信息', response)
+        //console.log('获取的用户信息', response)
 
         //写入pinia
         this.user.userId = response.data.data.id
@@ -112,7 +108,7 @@ export const useStore = defineStore('main', {
         this.user.account = response.data.data.phone_number
         this.user.password = response.data.data.password
 
-        console.log('Pinia中登录后自动获取的用户数据(datas.user)', this.user)
+        //console.log('调用getUserMessage()后Pinia中的用户数据(datas.user)', this.user)
 
         return true
 
@@ -127,8 +123,11 @@ export const useStore = defineStore('main', {
 
     getToken() {
 
-      if (this.updateUserMessage(this.user.token)) {
-        return this.user.token
+      const User = JSON.parse(localStorage.getItem('User'))
+      const result = this.getUserMessage(User.token)
+
+      if (result) {
+        return User.token
       } else {
         return false
       }

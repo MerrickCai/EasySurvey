@@ -76,7 +76,7 @@ async function login(account, password, remember) {
       center: true
     })
 
-    await datas.updateUserMessage(datas.user.token)
+    await datas.getUserMessage(datas.user.token)
 
     viewId.value = 3
 

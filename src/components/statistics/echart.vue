@@ -8,7 +8,7 @@
       <template v-if="usershow">
         <el-button class="downline" type="primary" @click="downline()">下线网站</el-button>
         <el-button class="reOnline" type="primary" @click="reOnline()">重新上线网站</el-button>
-        
+
         <el-button class="exportData" type="primary" @click="exportData()">{{btnData}}</el-button>
         <el-scrollbar max-height="400px">
           <p v-for="(item,index) in filenews.context.userWithScores" :key="item.user" class="scrollbar-demo-item">
@@ -162,7 +162,7 @@ function getfile() {
     method: "get",
     withCredentials: true,
     headers: { "Content-Type": "application/json" },
-    headers: { token: datas.user.token },
+    headers: { token: datas.getToken() },
   })
     .then((response) => {
       console.log(response);
@@ -623,7 +623,7 @@ function showDetail(userId, questionnaireId) {
     url: `https://q.denglu1.cn/api/user/AnswerDetail/${userId}/${questionnaireId}`,
     method: 'get',
     withCredentials: true,
-    headers: { 'token': datas.user.token },
+    headers: { token: datas.getToken() },
 
   }).then((response) => {
     // console.log(response);
@@ -647,7 +647,7 @@ function deluser(userid, fileid, index) {
     method: "get",
     withCredentials: true,
     headers: { "Content-Type": "application/json" },
-    headers: { token: datas.user.token },
+    headers: { token: datas.getToken() },
   })
     .then((response) => {
       console.log(response);
@@ -668,44 +668,44 @@ function exportData() {
   if (!isClick) {
     isClick = true;
     axios({
-    url: `https://q.denglu1.cn/api/user/export`,
-    method: 'POST',
-    withCredentials: true,
-    headers: {
-      "Content-Type": "application/json",
-      'token': datas.user.token
-    },
-    // 请求体-----
-    data: {
-      'questionnaire_id': filenews.context.questionnaire.id,
-      'excelName': filenews.context.questionnaire.title
-    },
-    responseType: 'blob'//将文件流转成blob对象,一定要写
-  }).then((response) => {
-    console.log(response);
-    let fileName = window.decodeURI(response.headers['content-disposition'].split('=')[1])
-    console.log('文件名字',fileName);
-        const content = response.data;
-        const blob = new Blob([content]);
-        if ("download" in document.createElement("a")) {
-          // 非IE下载
-          const elink = document.createElement("a");
-          elink.download = fileName;
-          elink.style.display = "none";
-          elink.href = URL.createObjectURL(blob);
-          document.body.appendChild(elink);
-          elink.click();
-          btnData.value = "导出问卷信息";
-          isClick = false;
-          URL.revokeObjectURL(elink.href); // 销毁下载链接
-          document.body.removeChild(elink);
-        } else {
-          // IE10+下载
-          navigator.msSaveBlob(blob, fileName);
-        }
-  }).catch((error) => {
-    console.log(error);
-  });
+      url: `https://q.denglu1.cn/api/user/export`,
+      method: 'POST',
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json",
+        token: datas.getToken()
+      },
+      // 请求体-----
+      data: {
+        'questionnaire_id': filenews.context.questionnaire.id,
+        'excelName': filenews.context.questionnaire.title
+      },
+      responseType: 'blob'//将文件流转成blob对象,一定要写
+    }).then((response) => {
+      console.log(response);
+      let fileName = window.decodeURI(response.headers['content-disposition'].split('=')[1])
+      console.log('文件名字', fileName);
+      const content = response.data;
+      const blob = new Blob([content]);
+      if ("download" in document.createElement("a")) {
+        // 非IE下载
+        const elink = document.createElement("a");
+        elink.download = fileName;
+        elink.style.display = "none";
+        elink.href = URL.createObjectURL(blob);
+        document.body.appendChild(elink);
+        elink.click();
+        btnData.value = "导出问卷信息";
+        isClick = false;
+        URL.revokeObjectURL(elink.href); // 销毁下载链接
+        document.body.removeChild(elink);
+      } else {
+        // IE10+下载
+        navigator.msSaveBlob(blob, fileName);
+      }
+    }).catch((error) => {
+      console.log(error);
+    });
   }
 
 }
@@ -713,12 +713,12 @@ function exportData() {
 
 
 function downline() {
-    if (!window.confirm("是否要下线该问卷？")) return;    
-    axios({
+  if (!window.confirm("是否要下线该问卷？")) return;
+  axios({
     url: `https://q.denglu1.cn/api/user/questionnaireStop/${filenews.context.questionnaire.id}`,
     method: "get",
     withCredentials: true,
-    headers: { token: datas.user.token },
+    headers: { token: datas.getToken() },
   })
     .then((response) => {
       console.log(response);
@@ -727,17 +727,17 @@ function downline() {
     })
     .catch((error) => {
       console.log(error);
-    });    
+    });
 }
 
 
 function reOnline() {
-    if (!window.confirm("是否要重新上线该问卷？")) return;    
-    axios({
+  if (!window.confirm("是否要重新上线该问卷？")) return;
+  axios({
     url: `https://q.denglu1.cn/api/user/questionnaireStopRebuild/${filenews.context.questionnaire.id}`,
     method: "get",
     withCredentials: true,
-    headers: { token: datas.user.token },
+    headers: { token: datas.getToken() },
   })
     .then((response) => {
       console.log(response);
@@ -746,7 +746,7 @@ function reOnline() {
     })
     .catch((error) => {
       console.log(error);
-    });    
+    });
 }
 
 </script>
@@ -937,14 +937,15 @@ function reOnline() {
   }
 
   // 问卷下线与重新上线按钮
-  .downline{
+  .downline {
     width: 100px;
     height: 30px;
     top: 15px;
     right: 135px;
     position: absolute;
   }
-  .reOnline{
+
+  .reOnline {
     width: 100px;
     height: 30px;
     top: 15px;

@@ -68,7 +68,7 @@ function getinfor() {
     method: "get",
     withCredentials: true,
     headers: { "Content-Type": "application/json" },
-    headers: { token: datas.user.token },
+    headers: { token: datas.getToken() },
   })
     .then((response) => {
       console.log(response);
