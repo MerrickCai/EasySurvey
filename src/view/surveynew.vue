@@ -99,9 +99,10 @@ watch(scroll, () => {
 });
 //问卷标题介绍
 
-let filetitle = reactive(null);
+let filetitle;
 if (localStorage.getItem("title")) {
-  filetitle = reactive(JSON.parse(localStorage.getItem("title")));
+  let title=JSON.parse(localStorage.getItem("title"))
+  filetitle = reactive(title.title);
 } else {
   filetitle = reactive({
     info_title: "",
@@ -110,9 +111,11 @@ if (localStorage.getItem("title")) {
   });
 }
 //存储矩阵问卷信息内容
-let fileword = reactive(null);
-if (localStorage.getItem("matrix")) {
-  fileword = reactive(JSON.parse(localStorage.getItem("matrix")));
+let fileword;
+if (localStorage.getItem("surveyData")) {
+  let surveyData=JSON.parse(localStorage.getItem("surveyData"))
+  fileword = reactive(Array.from(surveyData.matrix));
+  console.log("fileword为",fileword);
 } else {
   fileword = reactive([
     {
@@ -153,9 +156,10 @@ function deleteques(id) {
 }
 
 //存储量表问卷信息内容
-let scalefile = reactive(null);
-if (localStorage.getItem("scale")) {
-  scalefile = reactive(JSON.parse(localStorage.getItem("scale")));
+let scalefile;
+if (localStorage.getItem("surveyData")) {
+  let surveyData=JSON.parse(localStorage.getItem("surveyData"))
+  scalefile = reactive(surveyData.scale);
 } else {
   scalefile = reactive([
     {
@@ -190,7 +194,7 @@ function sdeleteques(id) {
 }
 
 //存储单选问卷信息内容
-let radiofile = reactive(null);
+let radiofile;
 if (localStorage.getItem("radio")) {
   radiofile = reactive(JSON.parse(localStorage.getItem("radio")));
 } else {
@@ -226,7 +230,7 @@ function rdeleteques(id) {
 }
 
 //存储多选问卷信息内容
-let checkboxfile = reactive(null);
+let checkboxfile;
 if (localStorage.getItem("checkbox")) {
   checkboxfile = reactive(JSON.parse(localStorage.getItem("checkbox")));
 } else {
@@ -263,7 +267,7 @@ function cdeleteques(id) {
 }
 
 //存储文本问卷信息内容
-let textfile = reactive(null);
+let textfile;
 if (localStorage.getItem("text")) {
   textfile = reactive(JSON.parse(localStorage.getItem("text")));
 } else {
@@ -299,9 +303,10 @@ function tdeleteques(id) {
 
 
 //存储混合问卷信息内容
-let mixfile = reactive(null);
-if (localStorage.getItem("mix")) {
-  mixfile = reactive(JSON.parse(localStorage.getItem("mix")));
+let mixfile
+if (localStorage.getItem("surveyData")) {
+  let surveyData=JSON.parse(localStorage.getItem("surveyData"))
+  mixfile = reactive(surveyData.mix);
 } else {
   mixfile = reactive([
     {
@@ -335,25 +340,13 @@ function mixdeleteques(id) {
 }
 //保存问卷
 function keepinfor() {
-  localStorage.setItem("title", JSON.stringify(filetitle));
-  if (type.value == 1) {
-    localStorage.setItem("radio", JSON.stringify(radiofile));
-  }
-  if (type.value == 2) {
-    localStorage.setItem("checkbox", JSON.stringify(checkboxfile));
-  }
-  if (type.value == 3) {
-    localStorage.setItem("matrix", JSON.stringify(fileword));
-  }
-  if (type.value == 4) {
-    localStorage.setItem("scale", JSON.stringify(scalefile));
-  }
-  if (type.value == 5) {
-    localStorage.setItem("text", JSON.stringify(textfile));
-  }
-  if (type.value == 6) {
-    localStorage.setItem("mix", JSON.stringify(mixfile));
-  }
+  localStorage.setItem("title", JSON.stringify({
+    title:filetitle}));
+  localStorage.setItem('surveyData',JSON.stringify({
+    mix:mixfile,
+    scale:scalefile,
+    matrix:fileword,
+  }))
   ElMessage({
     message: '保存成功!',
     type: 'success',
@@ -508,7 +501,7 @@ async function pushfile() {
         .catch((error) => {
           console.log(error);
         });
-      localStorage.removeItem("matrix");
+      localStorage.removeItem("surveyData");
       fileword.splice(0, fileword.length);
       fileword.push({
         options: [{ detail: "" }],
@@ -551,7 +544,7 @@ async function pushfile() {
         .catch((error) => {
           console.log(error);
         });
-      localStorage.removeItem("scale");
+      localStorage.removeItem("surveyData");
       scalefile.splice(0, scalefile.length);
       scalefile.push({
         question: { detail: "", type: 1 },
@@ -599,7 +592,7 @@ async function pushfile() {
       });
     }
     if (type.value == 6) {
-      textfile.forEach((element) => delete element.id);
+      mixfile.forEach((element) => delete element.id);
       await axios({
         url: "https://q.denglu1.cn/api/questions/rebuild",
         method: "post",
@@ -627,7 +620,7 @@ async function pushfile() {
         .catch((error) => {
           console.log(error);
         });
-      localStorage.removeItem("mix");
+      localStorage.removeItem("surveyData");
       mixfile.splice(0, mixfile.length);
       mixfile.push({
         options: [{ detail: "" }],
@@ -647,6 +640,7 @@ let link = ref(1);
 let linkqr = ref(
   "https://q.denglu1.cn/survey/" +
   parseInt(link.value)
+
 );
 //二维码
 const { toClipboard } = clipboard3();
