@@ -76,7 +76,7 @@ async function delfile() {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
     })
-    .then(() => {
+    .then(() => {async()=>{
       axios({
       url: `https://q.denglu1.cn/api/deleteQuestion/${parseInt(props.item.id)}`,
       method: "get",
@@ -94,6 +94,7 @@ async function delfile() {
       });
       //传递删除信号给父组件，更新dom
     emit("deletefile", props.index);
+    }
     })
     .catch(() => {
     })
