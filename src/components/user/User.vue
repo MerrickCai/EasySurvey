@@ -5,7 +5,7 @@
     </span>
     <el-button type="primary" @click="QuestionnaireRecords">查看填写过的问卷</el-button> -->
     <div class="usertype">
-      <span @click="userchoose=0" :class="{ userclick:userchoose==0}">个人信息</span>
+      <span @click="userchoose = 0" :class="{ userclick:userchoose==0}">个人信息</span>
       <span @click="userchoose=1" :class="{ userclick:userchoose==1}">修改密码</span>
       <span @click="userchoose=2" :class="{ userclick:userchoose==2}">问卷记录</span>
       <span @click="userchoose=3" :class="{ userclick:userchoose==3}">用户反馈</span>
@@ -19,9 +19,10 @@
 <script setup>
 import { Finished } from "@element-plus/icons-vue";
 import axios from "axios";
-import { ref, reactive } from "vue";
+import { ref, reactive, computed } from "vue";
 import { useStore } from "../../Stores/pinia.js";
 import usermas from "./usermas.vue"
+import password from "./password.vue"
 const datas = useStore();
 const user = reactive({
   account: datas.user.account,
@@ -35,9 +36,14 @@ const user = reactive({
   username: datas.user.username,
 });
 
-let userchoose = ref(0)
-let viewlist = [usermas]
-let componentview = viewlist[userchoose.value]
+let userchoose = ref(1)
+let viewlist = [usermas, password]
+let componentview = computed(() => viewlist[userchoose.value])
+function userch() {
+
+  console.log(componentview);
+  console.log(1);
+}
 
 console.log("视图", componentview);
 console.log("user数据", datas.user);

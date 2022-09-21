@@ -1,44 +1,28 @@
 <template>
   <ul class="filesum">
-    <el-scrollbar max-height="600px">
-      <li class="creatfile" @click="router.push('/surveynew')">
-        <!-- 使得文件阴影定位 -->
-        <div class="file">
-          <div class="creatcontent">
-            <div class="filetop">
-              <span class="creat">创建问卷</span>
-            </div>
-            <span class="plus">
-              <el-icon color="white" :size="5 * 5">
-                <Plus />
-              </el-icon>
-            </span>
-            <!-- 进度条 -->
-            <span class="progress">
-              <el-progress
-                type="circle"
-                :percentage="0"
-                :width="90"
-                :height="90"
-                :stroke-width="8"
-                :show-text="false"
-              />
-            </span>
+    <li class="creatfile" @click="router.push('/surveynew')">
+      <!-- 使得文件阴影定位 -->
+      <div class="file">
+        <div class="creatcontent">
+          <div class="filetop">
+            <span class="creat">创建问卷</span>
           </div>
-          <!-- 文件阴影 -->
-          <div class="shadow"></div>
+          <span class="plus">
+            <el-icon color="white" :size="5 * 5">
+              <Plus />
+            </el-icon>
+          </span>
+          <!-- 进度条 -->
+          <span class="progress">
+            <el-progress type="circle" :percentage="0" :width="90" :height="90" :stroke-width="8" :show-text="false" />
+          </span>
         </div>
-      </li>
-      <file
-        v-for="(item, index) of fileall[0]"
-        :key="item"
-        :item="item"
-        :index="index"
-        :clickrotate="clickrotate"
-        @update:clickrotate="(n) => (clickrotate = n)"
-        @deletefile="(index) => fileall[0].splice(index, 1)"
-      ></file>
-    </el-scrollbar>
+        <!-- 文件阴影 -->
+        <div class="shadow"></div>
+      </div>
+    </li>
+    <file v-for="(item, index) of fileall[0]" :key="item" :item="item" :index="index" :clickrotate="clickrotate"
+      @update:clickrotate="(n) => (clickrotate = n)" @deletefile="(index) => fileall[0].splice(index, 1)"></file>
   </ul>
 </template>
 
@@ -56,8 +40,8 @@ const datas = useStore();
 
 
 // 删除用户时,文件上的有效问卷数减一
-emitter.on("change",()=>{
-  fileall[0][clickrotate.value].effectiveNumber-=1
+emitter.on("change", () => {
+  fileall[0][clickrotate.value].effectiveNumber -= 1
 })
 
 let fileall = reactive([]);
@@ -86,22 +70,23 @@ let clickrotate = ref(null);
 
 <style lang="less" scoped>
 .filesum {
-  height: 600px;
+  height: 680px;
   width: 300px;
   padding: 0px 20px;
+  overflow: auto;
 
-  .el-scrollbar {
-    width: 300px;
-    --el-scrollbar-opacity: 0.3;
-    --el-scrollbar-bg-color: rgba(71, 145, 255, 1);
-    --el-scrollbar-hover-opacity: 0.5;
-    --el-scrollbar-hover-bg-color: rgba(71, 145, 255, 1);
+  &:hover&::-webkit-scrollbar {
+    display: block;
+  }
 
-    .el-scrollbar__bar {
-      width: 8px;
-      position: absolute;
-      right: 0;
-    }
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &::-webkit-scrollbar-track {
+    height: 450px;
+    width: 10px;
+    background: rgba(245, 245, 245, 1);
   }
 }
 
@@ -119,7 +104,7 @@ let clickrotate = ref(null);
   width: 210px;
   height: 148px;
   border-radius: 0px 4px 4px 4px;
-  clip-path: polygon(40% 0, 45% 13%, 100% 13%, 100% 100%, 0 100%, 0 0);
+  clip-path: polygon(40% 0, 41% 1%, 41.5% 2%, 45% 13%, 99% 11.5%, 99.5% 12%, 100% 13%, 100% 100%, 0 100%, 0 3%, 0.5% 1%, 1% 0.5%);
   text-align: left;
   text-indent: 10px;
   color: white;
@@ -161,12 +146,10 @@ let clickrotate = ref(null);
   width: 210px;
   height: 148px;
   border-radius: 0px 4px 4px 4px;
-  clip-path: polygon(40% 0, 45% 13%, 100% 13%, 100% 100%, 0 100%, 0 0);
-  background: linear-gradient(
-    90deg,
-    rgba(30, 111, 255, 1) 0%,
-    rgba(138, 204, 237, 1) 100%
-  );
+  clip-path: polygon(40% 0, 41% 1%, 41.5% 2%, 45% 13%, 99% 11.5%, 99.5% 12%, 100% 13%, 100% 100%, 0 100%, 0 3%, 0.5% 1%, 1% 0.5%);
+  background: linear-gradient(90deg,
+      rgba(30, 111, 255, 1) 0%,
+      rgba(138, 204, 237, 1) 100%);
   z-index: -1;
 }
 

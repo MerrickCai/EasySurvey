@@ -30,6 +30,8 @@
             <span class="asterisk" v-if="getRequired(rules.email)">&nbsp;*</span>
             <label for="useremail">绑定邮箱:</label>
             <input type="text" id="useremail" placeholder="请输入邮箱" v-model="user.email" @blur="judgeEmail" prop="email">
+            <span class="check" v-show="checkshow">发送验证码</span>
+            <input type="text" class="checkmas" v-show="checkshow">
             <div class="put" v-show="!modelControl['email']"></div>
             <div class="error" v-show="modelControl['email']">{{modelControl['email']}}</div>
         </div>
@@ -57,12 +59,14 @@ import area from "../../Stores/area.js"
 import Schema from 'async-validator';
 import { ref } from "vue"
 const props = defineProps(["user"])
+//验证码发送按钮显示
+let checkshow = ref(false)
 //错误信息存储
 const modelControl = ref({})
 //信息判断
 const rules = {
     username: { required: false, message: '请输入昵称' },
-    age: { required: true, message: '请输入正确年龄', pattern: /^[0-9]{1,3}$/, },
+    age: { required: false, message: '请输入正确年龄', pattern: /^[0-9]{1,3}$/, },
     area: { required: true, message: '请输入地区' },
     email: { required: true, message: '请输入正确邮箱', pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(.[a-zA-Z0-9_-]+)+$/ },
     account: { required: true, message: '请输入正确学号', pattern: /^[1-9]\d{9}$/ },
@@ -91,8 +95,7 @@ const judgeAge = (e) => {
     }
     validator.validate({ age: props.user.age }, (errors, fields) => {
         if (errors && fields.age) {
-            console.log("cuowu", errors, "lingyu", fields);
-            console.log(fields.age[0].message);
+            // console.log("cuowu", errors, "lingyu", fields);
             modelControl.value[prop] = fields[prop][0].message
             return errors
         }
@@ -108,9 +111,12 @@ const judgeEmail = (e) => {
     validator.validate({ email: props.user.email }, (errors, fields) => {
         if (errors && fields.email) {
             modelControl.value[prop] = fields[prop][0].message
+            checkshow.value = false
             return errors
         }
         modelControl.value[prop] = null
+        checkshow.value = true
+        console.log(checkshow.value);
     })
 }
 //手机号判断
@@ -146,13 +152,10 @@ const submit = (e) => {
     e.preventDefault();
     validator.validate(props.user).then((value) => {
         // 校验通过
-        console.log(value);
     }).catch(({ errors, fields }) => {
-        console.log(errors, fields);
         for (let key in fields) {
             modelControl.value[key] = fields[key][0].message
         }
-        console.log(modelControl);
         return errors
     })
 }
@@ -218,6 +221,34 @@ form {
     margin-top: 26px;
     margin-left: 128px;
 
+    .email {
+        .check {
+            cursor: pointer;
+            display: inline-block;
+            width: 84px;
+            height: 24px;
+            opacity: 1;
+            border-radius: 4px;
+            background: rgba(30, 111, 255, 1);
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 24px;
+            color: rgba(255, 255, 255, 1);
+            text-align: center;
+            vertical-align: top;
+        }
+
+        .checkmas {
+            margin-left: 19px;
+            width: 90px;
+            height: 24px;
+            opacity: 1;
+            border-radius: 4px;
+            border: 1px solid rgba(30, 111, 255, 1);
+        }
+
+    }
+
     >div {
         >label {
             display: inline-block;
@@ -238,7 +269,10 @@ form {
             border: none;
             width: 240px;
             height: 24px;
+            color: rgba(30, 111, 255, 1);
         }
+
+
 
         >.error {
             width: 300px;
@@ -264,6 +298,10 @@ form {
                 box-shadow: none;
             }
         }
+
+        :deep(.el-input__inner) {
+            color: rgba(30, 111, 255, 1);
+        }
     }
 
     >input {
@@ -282,5 +320,13 @@ form {
         text-align: center;
         vertical-align: top;
     }
+}
+
+input:-webkit-autofill {
+    box-shadow: 0 0 0 1000px white inset !important;
+}
+
+input:-internal-autofill-selected {
+    -webkit-text-fill-color: rgba(30, 111, 255, 1) !important;
 }
 </style>

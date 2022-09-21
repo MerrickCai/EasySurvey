@@ -1,10 +1,5 @@
 <template >
-  <li
-    class="filenew"
-    @click="filerotate($event, index)"
-    draggable="true"
-    @dragstart="startDrag($event)"
-  >
+  <li class="filenew" @click="filerotate($event, index)" draggable="true" @dragstart="startDrag($event)">
     <!-- 使得文件阴影定位 -->
     <div class="file">
       <div class="creatcontent">
@@ -17,16 +12,9 @@
         <span class="filenum">有效问卷数</span>
         <!-- 进度条 -->
         <span class="progress">
-          <el-progress
-            type="circle"
-            :percentage="
-              (props.item.effectiveNumber / props.item.totalNumber) * 100
-            "
-            :width="90"
-            :height="90"
-            :stroke-width="8"
-            :show-text="false"
-          />
+          <el-progress type="circle" :percentage="
+            (props.item.effectiveNumber / props.item.totalNumber) * 100
+          " :width="90" :height="90" :stroke-width="8" :show-text="false" />
           <span class="number">{{ item.effectiveNumber }}</span>
           <span class="fen">份</span>
         </span>
@@ -38,10 +26,10 @@
 </template>
 
 <script setup>
-  import axios from "axios";
+import axios from "axios";
 import clipboard3 from "vue-clipboard3";
-import { ElMessage, ElMessageBox  } from 'element-plus'
-import { ref ,watch,inject} from "vue";
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { ref, watch, inject } from "vue";
 import emitter from "../../mitt/mitt.js";
 import { useStore } from "../../Stores/pinia.js";
 const datas = useStore();
@@ -56,7 +44,7 @@ const props = defineProps(["index", "clickrotate", "item"]);
 let shadow = ref("shadow");
 let shadowclick = ref("shadowclick");
 
-function filerotate(e,index) {
+function filerotate(e, index) {
   //修改父组件传来的clickrotate
   emit("update:clickrotate", index);
   //传被点击问卷id
@@ -68,7 +56,7 @@ function startDrag(e) {
   e.dataTransfer.effectAllowed = "move";
 }
 function delfile() {
-   ElMessageBox.confirm(
+  ElMessageBox.confirm(
     '确定删除吗?',
     '删除题目',
     {
@@ -78,20 +66,20 @@ function delfile() {
     })
     .then(() => {
       axios({
-      url: `https://q.denglu1.cn/api/deleteQuestion/${parseInt(props.item.id)}`,
-      method: "get",
-      withCredentials: true,
-      headers: { "Content-Type": "application/json" },
-      headers: { token: datas.getToken() },
-    })
-      .then((response) => {
-        console.log(response);
+        url: `https://q.denglu1.cn/api/deleteQuestion/${parseInt(props.item.id)}`,
+        method: "get",
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+        headers: { token: datas.getToken() },
       })
-      .catch((error) => {
-        console.log(error);
-      });
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
       //传递删除信号给父组件，更新dom
-    emit("deletefile", props.index);
+      emit("deletefile", props.index);
     })
     .catch(() => {
     })
@@ -101,13 +89,13 @@ function delfile() {
 const { toClipboard } = clipboard3();
 async function sharefile() {
   try {
-    await toClipboard( "https://q.denglu1.cn/survey/" +props.item.id);
+    await toClipboard("https://q.denglu1.cn/survey/" + props.item.id);
     ElMessage({
-    message: '链接复制成功!',
-    type: 'success',
-  })
+      message: '链接复制成功!',
+      type: 'success',
+    })
   } catch (error) {
-     ElMessage.error('链接复制失败!')
+    ElMessage.error('链接复制失败!')
   }
 }
 </script>
@@ -118,12 +106,13 @@ async function sharefile() {
   margin-top: 84px;
   padding-left: 20px;
 }
+
 .creatcontent {
   position: relative;
   width: 210px;
   height: 148px;
   border-radius: 0px 4px 4px 4px;
-  clip-path: polygon(40% 0, 45% 13%, 100% 13%, 100% 100%, 0 100%, 0 0);
+  clip-path: polygon(40% 0, 41% 1%, 41.5% 2%, 45% 13%, 99% 11.5%, 99.5% 12%, 100% 13%, 100% 100%, 0 100%, 0 3%, 0.5% 1%, 1% 0.5%);
   text-align: left;
   text-indent: 10px;
   color: white;
@@ -134,7 +123,7 @@ async function sharefile() {
   .filetop {
     display: flex;
 
-    .share{
+    .share {
       cursor: pointer;
       position: absolute;
       left: 10px;
@@ -216,12 +205,10 @@ async function sharefile() {
   width: 210px;
   height: 148px;
   border-radius: 0px 4px 4px 4px;
-  clip-path: polygon(40% 0, 45% 13%, 100% 13%, 100% 100%, 0 100%, 0 0);
-  background: linear-gradient(
-    90deg,
-    rgba(30, 111, 255, 1) 0%,
-    rgba(138, 204, 237, 1) 100%
-  );
+  clip-path: polygon(40% 0, 41% 1%, 41.5% 2%, 45% 13%, 99% 11.5%, 99.5% 12%, 100% 13%, 100% 100%, 0 100%, 0 3%, 0.5% 1%, 1% 0.5%);
+  background: linear-gradient(90deg,
+      rgba(30, 111, 255, 1) 0%,
+      rgba(138, 204, 237, 1) 100%);
   z-index: -1;
   transform-origin: left top;
 }
