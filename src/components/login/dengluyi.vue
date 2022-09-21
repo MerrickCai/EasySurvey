@@ -6,24 +6,22 @@ import textlistVue from '../surveynew/textlist.vue';
 const viewId = inject('viewId')
 
 // 轮询向接口获取token （未实现）
-let timer = setInterval(() => {
-   axios({
-      url: `https://q.denglu1.cn/denglu/qrLogin`,
-      method: "POST",
-      withCredentials: true,
-      headers: { 'Content-Type': 'application/json' },   
-   }).then((res) => {
-      console.log(res);
-   }).catch((error) => {
-      console.log(error);
-   })
-}, 1000);
+// let timer = setInterval(() => {
+//    axios({
+//       url: `https://q.denglu1.cn/denglu/qrLogin`,
+//       method: "POST",
+//       withCredentials: true,
+//       headers: { 'Content-Type': 'application/json' },   
+//    }).then((res) => {
+//       console.log(res);
+//    }).catch((error) => {
+//       console.log(error);
+//    })
+// }, 1000);
 
 
-let showQrcode = ref(false);
-let test = ref(null);
+let showQrcode = ref(true);
 
-let base64Url = ref("");
 // axios({
 //    url: `https://qrconnect.denglu.net.cn/connect.php`,
 //    method: "GET",
@@ -45,9 +43,11 @@ let base64Url = ref("");
 //       console.log(error);
 //    })
 
-function jumpTodengluyi() {
-   viewId.value = 0;
-   showQrcode.value = true;
+
+
+function close() {
+   showQrcode.value = false;
+   viewId.value = 1
 }
 
 </script>
@@ -56,7 +56,7 @@ function jumpTodengluyi() {
    <div class="wrapper">
 
       <div class="selectArea">
-         <a active @click="jumpTodengluyi()">微信登录</a>
+         <a active >微信登录</a>
          <a @click="viewId = 1">账号登录</a>
       </div>
 
@@ -65,8 +65,8 @@ function jumpTodengluyi() {
          <!-- <img :src="base64Url" alt="登录易扫码登录" id="dengluyiqrCode"> -->
        </div>
 
-       <div v-if="showQrcode" class="qrCode">
-         <span class="close" @click="showQrcode=false,viewId = 1">关闭</span>
+       <div class="qrCode">
+         <span class="close" @click="close()">关闭</span>
          <iframe :src="`https://qrconnect.denglu.net.cn/connect.php?sAppId=18845bb439a2f17eb217014948af7d90&sUrl=https://q.denglu1.cn/&sType=login&sResType=web`" class="qr-content"></iframe>
       </div>
       <!-- <div class="buttom">请用<a href="https://denglu1.cn/" target="_blank" class="download-link">登录易手机App</a>扫描二维码登录</div> -->
