@@ -99,13 +99,16 @@ async function login(account, password, remember) {
 
 //------------------------------ 开发中 ------------------------------------
 function Dev(str) {
-  ElMessage({
-    message: `${str}开发中`,
-    type: 'warning',
-    duration: 3000,
-    showClose: true,
-    center: true
-  })
+  // ElMessage({
+  //   message: `${str}开发中`,
+  //   type: 'warning',
+  //   duration: 3000,
+  //   showClose: true,
+  //   center: true
+  // })
+  viewId.value = 0
+  
+  
 }
 //------------------------------ 开发中 ------------------------------------
 </script>
