@@ -15,29 +15,16 @@
             </span>
             <!-- 进度条 -->
             <span class="progress">
-              <el-progress
-                type="circle"
-                :percentage="0"
-                :width="90"
-                :height="90"
-                :stroke-width="8"
-                :show-text="false"
-              />
+              <el-progress type="circle" :percentage="0" :width="90" :height="90" :stroke-width="8"
+                :show-text="false" />
             </span>
           </div>
           <!-- 文件阴影 -->
           <div class="shadow"></div>
         </div>
       </li>
-      <file
-        v-for="(item, index) of fileall[0]"
-        :key="item"
-        :item="item"
-        :index="index"
-        :clickrotate="clickrotate"
-        @update:clickrotate="(n) => (clickrotate = n)"
-        @deletefile="(index) => fileall[0].splice(index, 1)"
-      ></file>
+      <file v-for="(item, index) of fileall[0]" :key="item" :item="item" :index="index" :clickrotate="clickrotate"
+        @update:clickrotate="(n) => (clickrotate = n)" @deletefile="(index) => fileall[0].splice(index, 1)"></file>
     </el-scrollbar>
   </ul>
 </template>
@@ -49,26 +36,28 @@ import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import emitter from "../../mitt/mitt.js";
-import { useStore } from "../../Stores/index.js";
+import { useStore } from "../../Stores/pinia.js";
 const router = useRouter();
 const datas = useStore();
 
 
 
 // 删除用户时,文件上的有效问卷数减一
-emitter.on("change",()=>{
-  fileall[0][clickrotate.value].effectiveNumber-=1
+emitter.on("change", () => {
+  fileall[0][clickrotate.value].effectiveNumber -= 1
 })
 
 let fileall = reactive([]);
 
-function getinfor() {
+async function getinfor() {
   axios({
     url: `https://q.denglu1.cn/api/user/questionnaire/${datas.user.userId}`,
     method: "get",
     withCredentials: true,
-    headers: { "Content-Type": "application/json" },
-    headers: { token: datas.user.token },
+    headers: {
+      "Content-Type": "application/json",
+      token: await datas.getToken()
+    },
   })
     .then((response) => {
       console.log(response);
@@ -162,11 +151,9 @@ let clickrotate = ref(null);
   height: 148px;
   border-radius: 0px 4px 4px 4px;
   clip-path: polygon(40% 0, 45% 13%, 100% 13%, 100% 100%, 0 100%, 0 0);
-  background: linear-gradient(
-    90deg,
-    rgba(30, 111, 255, 1) 0%,
-    rgba(138, 204, 237, 1) 100%
-  );
+  background: linear-gradient(90deg,
+      rgba(30, 111, 255, 1) 0%,
+      rgba(138, 204, 237, 1) 100%);
   z-index: -1;
 }
 

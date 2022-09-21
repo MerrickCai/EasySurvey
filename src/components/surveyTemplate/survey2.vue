@@ -109,7 +109,7 @@
 import { ref, reactive, inject, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 import axios from "axios"
-import { useStore } from "../../Stores/index.js"
+import { useStore } from "../../Stores/pinia.js"
 import { useRouter } from "vue-router"
 const router = useRouter()
 const datas = useStore()
@@ -200,7 +200,7 @@ function onScroll() {
 
 
 //-------------------------------- 提交函数---------------------------------------
-function sumbit() {
+async function sumbit() {
     // 请求参数里面的问卷信息列表
     const questionAnswerList = [];
     const scoreList = [];
@@ -220,8 +220,10 @@ function sumbit() {
         url: `https://q.denglu1.cn/api/questions/commit`,
         method: 'post',
         withCredentials: true,
-        headers: { 'Content-Type': 'application/json' },
-        headers: { 'token': datas.user.token },
+        headers: {
+            "Content-Type": "application/json",
+            token: await datas.getToken()
+        },
         data: {
             "questionnaire_id": survey.id,
             "totalNumber": survey.totalNumber,
@@ -499,7 +501,7 @@ div[content] {
         background-color: white;
         z-index: 1;
 
-        @media (max-width:800px) {
+        @media (max-width:@breakpoint) {
             display: none;
         }
     }
@@ -518,7 +520,7 @@ div[content] {
         background-color: rgba(204, 204, 204, 1);
         cursor: pointer;
 
-        @media (max-width:800px) {
+        @media (max-width:@breakpoint) {
             display: none;
         }
 
@@ -600,7 +602,7 @@ div[content] {
         height: auto;
         padding: 10px 0 10px 20px;
 
-        @media (max-width:800px) {
+        @media (max-width:@breakpoint) {
             width: 100%;
             padding: 10px;
             align-items: center;
@@ -653,7 +655,7 @@ div[content] {
         scrollbar-width: none;
         position: relative;
 
-        @media (max-width:800px) {
+        @media (max-width:@breakpoint) {
             padding: 0 10px;
         }
 
@@ -667,7 +669,7 @@ div[content] {
             font-size: 20px;
             color: rgba(30, 111, 255, 1);
 
-            @media (max-width:800px) {
+            @media (max-width:@breakpoint) {
                 width: 100%;
             }
         }
@@ -680,7 +682,7 @@ div[content] {
             font-size: 18px;
             color: rgba(0, 0, 0, 1);
 
-            @media (max-width:800px) {
+            @media (max-width:@breakpoint) {
                 width: 100%;
             }
         }
@@ -693,7 +695,7 @@ div[content] {
             margin-bottom: 10px;
             padding: 5px;
 
-            @media (max-width:800px) {
+            @media (max-width:@breakpoint) {
                 width: 100%;
             }
 

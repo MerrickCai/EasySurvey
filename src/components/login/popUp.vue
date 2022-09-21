@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, reactive, ref, computed, watch } from "vue"
 import axios from "axios"
-import { useStore } from "../../Stores/index.js"
+import { useStore } from "../../Stores/pinia.js"
 import { useRouter, useRoute } from "vue-router"
 import { ElMessage } from 'element-plus'
 import area from "../../Stores/area.js"
@@ -157,8 +157,10 @@ async function upLoad(area, age) {
     url: "https://q.denglu1.cn/api/user/updateMessage",
     method: "post",
     withCredentials: true,
-    headers: { "Content-Type": "application/json" },
-    headers: { token: datas.user.token },
+    headers: {
+      "Content-Type": "application/json",
+      token: await datas.getToken()
+    },
     data: {
       id: datas.user.userId,
       age: age,
@@ -236,7 +238,7 @@ div.wrapper {
   height: 400px;
   width: 420px;
 
-  @media (max-width:800px) {
+  @media (max-width:@breakpoint) {
     width: 100%;
   }
 

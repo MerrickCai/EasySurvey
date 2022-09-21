@@ -5,7 +5,7 @@ import survey_mix from '../components/surveyTemplate/survey_mix.vue'
 import { ref, reactive, provide } from "vue"
 import axios from "axios"
 import { useRoute } from "vue-router"
-import { useStore } from "../Stores/index.js"
+import { useStore } from "../Stores/pinia.js"
 const route = useRoute()
 const datas = useStore()
 
@@ -45,32 +45,36 @@ const Survey = reactive({
 
 
 //--------------------- 网络请求获取问卷类型和数据 -------------------------
-axios({
-  url: `https://q.denglu1.cn/api/user/fillQuestionnaire/${route.params.questionnaireId}`,
-  method: "get",
-  withCredentials: true,
-  headers: { "Content-Type": "application/json" },
-  headers: { token: datas.user.token },
-})
-  .then((response) => {
-    switch (response.data.data.questionnaire.count) {
-      case 2: // 矩阵
-        currentView.value = surveyTemplateList[0]
-        Survey.surveyObj = response.data.data
-        break
-      case 3: // 量表
-        currentView.value = surveyTemplateList[1]
-        Survey.surveyObj = response.data.data
-        break
-      case 5: // 普通
-        currentView.value = surveyTemplateList[2]
-        Survey.surveyObj = response.data.data
-        break;
-    }
+async function getData() {
+
+  const response = await axios({
+    url: `https://q.denglu1.cn/api/user/fillQuestionnaire/${route.params.questionnaireId}`,
+    method: "get",
+    withCredentials: true,
+    headers: {
+      "Content-Type": "application/json",
+      token: await datas.getToken()
+    },
   })
-  .catch((error) => {
-    console.log(error)
-  })
+
+  console.log(response)
+  switch (response.data.data.questionnaire.count) {
+    case 2: // 矩阵
+      currentView.value = surveyTemplateList[0]
+      Survey.surveyObj = response.data.data
+      break
+    case 3: // 量表
+      currentView.value = surveyTemplateList[1]
+      Survey.surveyObj = response.data.data
+      break
+    case 5: // 普通
+      currentView.value = surveyTemplateList[2]
+      Survey.surveyObj = response.data.data
+      break;
+  }
+
+}
+getData()
 //--------------------- 网络请求获取问卷类型和数据 -------------------------
 
 
@@ -112,7 +116,7 @@ div[wrapper] {
   background-color: rgb(255, 255, 255);
   z-index: 0;
 
-  @media (max-width:800px) {
+  @media (max-width:@breakpoint) {
     height: 100%;
     width: 100%;
     box-shadow: none;
@@ -131,7 +135,7 @@ div[wrapper] {
     background-color: rgba(235, 245, 255, 1);
     clip-path: polygon(50% 50%, 100% 50%, 100% 100%, 50% 100%);
 
-    @media (max-width:800px) {
+    @media (max-width:@breakpoint) {
       display: none;
     }
   }
@@ -147,7 +151,7 @@ div[wrapper] {
     border-radius: 50%;
     background-color: rgba(71, 145, 255, 1);
 
-    @media (max-width:800px) {
+    @media (max-width:@breakpoint) {
       display: none;
     }
   }
@@ -163,7 +167,7 @@ div[wrapper] {
     border-radius: 50%;
     background-color: rgba(30, 111, 255, 1);
 
-    @media (max-width:800px) {
+    @media (max-width:@breakpoint) {
       display: none;
     }
   }
@@ -179,7 +183,7 @@ div[wrapper] {
     border-radius: 50%;
     background-color: rgba(235, 245, 255, 1);
 
-    @media (max-width:800px) {
+    @media (max-width:@breakpoint) {
       display: none;
     }
   }
@@ -194,7 +198,7 @@ div[wrapper] {
     right: -7px;
     background-color: rgb(255, 255, 255, 1);
 
-    @media (max-width:800px) {
+    @media (max-width:@breakpoint) {
       display: none;
     }
   }
@@ -210,7 +214,7 @@ div[wrapper] {
     object-fit: contain;
     transform: scale(1.07);
 
-    @media (max-width:800px) {
+    @media (max-width:@breakpoint) {
       display: none;
     }
   }

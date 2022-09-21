@@ -76,7 +76,7 @@
 import axios from "axios";
 import { ref, nextTick, watch, reactive } from "vue";
 import emitter from "../../mitt/mitt.js";
-import { useStore } from "../../Stores/index.js";
+import { useStore } from "../../Stores/pinia.js";
 const datas = useStore();
 
 //接收确定是哪一份问卷
@@ -97,13 +97,15 @@ emitter.on("change",()=>{
   filenews.context.questionnaire.effectiveNumber-=1
 })
 
-function getfile() {
+async function getfile() {
   axios({
     url: `https://q.denglu1.cn/api/user/questionnaireDetail/${parseInt(num.value)}`,
     method: "get",
     withCredentials: true,
-    headers: { "Content-Type": "application/json" },
-    headers: { token: datas.user.token },
+    headers: {
+      "Content-Type": "application/json",
+      token: await datas.getToken()
+    },
   })
     .then((response) => {
       console.log(response);

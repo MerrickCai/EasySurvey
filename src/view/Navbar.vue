@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter, useRoute } from "vue-router"
-import { useStore } from "../Stores/index.js"
+import { useStore } from "../Stores/pinia.js"
 import { ElMessage } from 'element-plus'
 const router = useRouter()
 const route = useRoute()
@@ -10,10 +10,12 @@ const datas = useStore()
 
 // ----------------------------------- 退出登录 ----------------------------------
 function logOut() {
+
     if (datas.user.status === false) { //用户在不需要登录的页面
         router.push("/login")
         return false
     }
+
     ElMessage({
         message: '已为您退出登录',
         type: 'success',
@@ -21,23 +23,19 @@ function logOut() {
         showClose: true,
         center: true
     })
-    if (localStorage.getItem("account") && localStorage.getItem("password")) { //移除自动登录
-        localStorage.removeItem("account")
-        localStorage.removeItem("password")
+
+    if (localStorage.getItem("User")) { //移除自动登录
+        localStorage.removeItem("User")
     }
-    //清空暂存用户数据
+
     datas.user.status = false
-    datas.user.account = 0
-    datas.user.password = 0
-    datas.user.userId = 0
-    datas.user.token = 0
-    datas.user.refreshtoken = 0
+
     // 跳转登录注册页面
-    datas.navShow = false
     router.push({
         path: "/login",
         query: { redirect: route.fullPath },
     })
+
 }
 // ----------------------------------- 退出登录 ----------------------------------
 
@@ -87,7 +85,8 @@ function toHome() {
                 <div v-show="datas.navShow">
                     <div button @click="router.push('/surveynew')">创建问卷</div>
                     <div img @click="devpop"><img v-lazy="'/assets/navbar_1.png'" /></div>
-                    <div img avatar @click="router.push(`/user/${ datas.user.userId}`)"><img v-lazy="'/assets/circle.png'" /></div>
+                    <div img avatar @click="router.push(`/user/${ datas.user.userId}`)"><img
+                            v-lazy="'/assets/circle.png'" /></div>
                     <div img @click="logOut"><img v-lazy="'/assets/navbar_2.png'" /></div>
                 </div>
             </Transition>
@@ -96,9 +95,6 @@ function toHome() {
 </template>
 
 <style lang="less" scoped>
-@navSpan: var(--navSpan);
-@navHeight: calc(@navSpan - 20px);
-
 nav {
     display: flex;
     flex-direction: row;
@@ -184,7 +180,7 @@ nav {
                 line-height: calc(@navHeight - 15px);
                 cursor: pointer;
 
-                @media (max-width:800px) {
+                @media (max-width:@breakpoint) {
                     margin-right: 10px;
                 }
             }
@@ -196,7 +192,7 @@ nav {
                 margin-right: 40px;
                 cursor: pointer;
 
-                @media (max-width:800px) {
+                @media (max-width:@breakpoint) {
                     margin-right: 10px;
                 }
 

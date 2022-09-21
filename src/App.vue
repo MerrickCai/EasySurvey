@@ -1,8 +1,7 @@
 <script setup>
-import navbar from "./view/navbar.vue"
-import axios from "axios"
+import Navbar from "./view/Navbar.vue"
 import { useRouter } from "vue-router"
-import { useStore } from "./Stores/index.js"
+import { useStore } from "./Stores/pinia.js"
 import { ElMessage } from 'element-plus'
 const router = useRouter()
 const datas = useStore()
@@ -32,28 +31,24 @@ router.beforeEach(async (to) => {
   }
 
   // 如果 localStorage 储存了用户登录数据，帮用户自动登录
-  if (localStorage.getItem("account") && localStorage.getItem("password")) {
+  if (localStorage.getItem("User")) {
 
-    try {
-      const result = await datas.login(localStorage.getItem("account"), localStorage.getItem("password"), true)
 
-      if (result) {
+    const result = await datas.getToken()
 
-        ElMessage({
-          message: '自动登录成功',
-          type: 'success',
-          duration: 3000,
-          showClose: true,
-          center: true
-        })
+    if (result) { //token有效，可能没用到refreshToken，或者没有refreshToken
 
-        await datas.updateUserMessage(datas.user.token)
+      ElMessage({
+        message: '自动登录成功',
+        type: 'success',
+        duration: 3000,
+        showClose: true,
+        center: true
+      })
 
-        return true
+      return true
 
-      }
-
-    } catch (error) {
+    } else { //token无效，refreshToken也无效
 
       ElMessage({
         message: '自动登录失败',
@@ -63,11 +58,7 @@ router.beforeEach(async (to) => {
         center: true
       })
 
-      // 跳转登录注册页面
-      return {
-        path: "/login",
-        query: { redirect: to.fullPath },
-      }
+      false
 
     }
 
@@ -102,7 +93,7 @@ const background_url = background.geturl()
 
 <template>
   <main>
-    <navbar />
+    <Navbar />
     <div>
       <!--主路由容器-->
       <router-view v-slot="{ Component, route }">
@@ -121,9 +112,6 @@ const background_url = background.geturl()
 </template>
 
 <style lang="less" scoped>
-@navSpan: var(--navSpan);
-@safe_area: var(--safe_area);
-
 div.background {
   position: fixed;
   top: 0;
@@ -132,7 +120,7 @@ div.background {
   width: 100%;
   height: 100%;
 
-  @media (max-width:800px) {
+  @media (max-width:@breakpoint) {
     display: none;
   }
 
@@ -146,7 +134,7 @@ div.background {
 main {
   display: block;
   height: 100vh;
-  width: @safe_area;
+  width: var(--safe_area);
   margin: 0 auto;
 
   >div {
@@ -169,15 +157,16 @@ main {
 }
 </style>
 
-<style lang="less">
-@safe_area: 1200px;
 
+
+
+
+<style lang="less">
 :root {
-  --navSpan: 70px;
-  --safe_area: @safe_area; //页面安全区
+  --safe_area: @safeArea;
 }
 
-@media (max-width:@safe_area) {
+@media (max-width:@safeArea) {
   :root {
     --safe_area: 100%;
   }

@@ -11,7 +11,7 @@
 import { Finished } from '@element-plus/icons-vue';
 import axios from 'axios';
 import { ref, reactive } from 'vue';
-import {useStore} from '../../Stores/index'
+import {useStore} from '../../Stores/pinia.js'
 const datas = useStore();
 const user = reactive({});
 

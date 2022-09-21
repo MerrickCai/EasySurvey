@@ -8,7 +8,7 @@
       <template v-if="usershow">
         <el-button class="downline" type="primary" @click="downline()">下线网站</el-button>
         <el-button class="reOnline" type="primary" @click="reOnline()">重新上线网站</el-button>
-        
+
         <el-button class="exportData" type="primary" @click="exportData()">{{btnData}}</el-button>
         <el-scrollbar max-height="400px">
           <p v-for="(item,index) in filenews.context.userWithScores" :key="item.user" class="scrollbar-demo-item">
@@ -123,7 +123,7 @@ import { onMounted, ref, reactive, watch, computed, nextTick } from "vue";
 //路由
 import { useRouter } from "vue-router";
 //Stores
-import { useStore } from "../../Stores/index.js";
+import { useStore } from "../../Stores/pinia.js";
 import axios from "axios";
 const datas = useStore();
 const router = useRouter();
@@ -156,13 +156,15 @@ let filenews = reactive({
 });
 
 let detail = reactive({});
-function getfile() {
+async function getfile() {
   axios({
     url: `https://q.denglu1.cn/api/user/questionnaireDetail/${parseInt(num.value)}`,
     method: "get",
     withCredentials: true,
-    headers: { "Content-Type": "application/json" },
-    headers: { token: datas.user.token },
+    headers: {
+      "Content-Type": "application/json",
+      token: await datas.getToken()
+    },
   })
     .then((response) => {
       console.log(response);
@@ -596,7 +598,7 @@ const currentView = computed(() => surveyTemplateList[viewId.value - 1]);
 let surveydatas = reactive({});
 surveydatas.data = {};
 // 展示详情页
-function showDetail(userId, questionnaireId) {
+async function showDetail(userId, questionnaireId) {
   let count = ref(detail.context.questionnaire.count)
   switch (count.value) {
     case 0: //单选
@@ -623,7 +625,10 @@ function showDetail(userId, questionnaireId) {
     url: `https://q.denglu1.cn/api/user/AnswerDetail/${userId}/${questionnaireId}`,
     method: 'get',
     withCredentials: true,
-    headers: { 'token': datas.user.token },
+    headers: {
+      "Content-Type": "application/json",
+      token: await datas.getToken()
+    },
 
   }).then((response) => {
     // console.log(response);
@@ -640,14 +645,16 @@ function showDetail(userId, questionnaireId) {
 
 
 //删除用户作答
-function deluser(userid, fileid, index) {
+async function deluser(userid, fileid, index) {
   if (!confirm('是否要删除该用户的作答记录？')) return;
   axios({
     url: `https://q.denglu1.cn/api/deleteUserAnswer/${userid}/${fileid}`,
     method: "get",
     withCredentials: true,
-    headers: { "Content-Type": "application/json" },
-    headers: { token: datas.user.token },
+    headers: {
+      "Content-Type": "application/json",
+      token: await datas.getToken()
+    },
   })
     .then((response) => {
       console.log(response);
@@ -663,62 +670,65 @@ function deluser(userid, fileid, index) {
 const btnData = ref("导出问卷信息");
 let isClick = false; //节流阀
 // 导出excel表格
-function exportData() {
+async function exportData() {
   btnData.value = '导出中...请稍等'
   if (!isClick) {
     isClick = true;
     axios({
-    url: `https://q.denglu1.cn/api/user/export`,
-    method: 'POST',
-    withCredentials: true,
-    headers: {
+      url: `https://q.denglu1.cn/api/user/export`,
+      method: 'POST',
+      withCredentials: true,
+      headers: {
       "Content-Type": "application/json",
-      'token': datas.user.token
+      token: await datas.getToken()
     },
-    // 请求体-----
-    data: {
-      'questionnaire_id': filenews.context.questionnaire.id,
-      'excelName': filenews.context.questionnaire.title
-    },
-    responseType: 'blob'//将文件流转成blob对象,一定要写
-  }).then((response) => {
-    console.log(response);
-    let fileName = window.decodeURI(response.headers['content-disposition'].split('=')[1])
-    console.log('文件名字',fileName);
-        const content = response.data;
-        const blob = new Blob([content]);
-        if ("download" in document.createElement("a")) {
-          // 非IE下载
-          const elink = document.createElement("a");
-          elink.download = fileName;
-          elink.style.display = "none";
-          elink.href = URL.createObjectURL(blob);
-          document.body.appendChild(elink);
-          elink.click();
-          btnData.value = "导出问卷信息";
-          isClick = false;
-          URL.revokeObjectURL(elink.href); // 销毁下载链接
-          document.body.removeChild(elink);
-        } else {
-          // IE10+下载
-          navigator.msSaveBlob(blob, fileName);
-        }
-  }).catch((error) => {
-    console.log(error);
-  });
+      // 请求体-----
+      data: {
+        'questionnaire_id': filenews.context.questionnaire.id,
+        'excelName': filenews.context.questionnaire.title
+      },
+      responseType: 'blob'//将文件流转成blob对象,一定要写
+    }).then((response) => {
+      console.log(response);
+      let fileName = window.decodeURI(response.headers['content-disposition'].split('=')[1])
+      console.log('文件名字', fileName);
+      const content = response.data;
+      const blob = new Blob([content]);
+      if ("download" in document.createElement("a")) {
+        // 非IE下载
+        const elink = document.createElement("a");
+        elink.download = fileName;
+        elink.style.display = "none";
+        elink.href = URL.createObjectURL(blob);
+        document.body.appendChild(elink);
+        elink.click();
+        btnData.value = "导出问卷信息";
+        isClick = false;
+        URL.revokeObjectURL(elink.href); // 销毁下载链接
+        document.body.removeChild(elink);
+      } else {
+        // IE10+下载
+        navigator.msSaveBlob(blob, fileName);
+      }
+    }).catch((error) => {
+      console.log(error);
+    });
   }
 
 }
 
 
 
-function downline() {
-    if (!window.confirm("是否要下线该问卷？")) return;    
-    axios({
+async function downline() {
+  if (!window.confirm("是否要下线该问卷？")) return;
+  axios({
     url: `https://q.denglu1.cn/api/user/questionnaireStop/${filenews.context.questionnaire.id}`,
     method: "get",
     withCredentials: true,
-    headers: { token: datas.user.token },
+    headers: {
+      "Content-Type": "application/json",
+      token: await datas.getToken()
+    },
   })
     .then((response) => {
       console.log(response);
@@ -727,17 +737,20 @@ function downline() {
     })
     .catch((error) => {
       console.log(error);
-    });    
+    });
 }
 
 
-function reOnline() {
-    if (!window.confirm("是否要重新上线该问卷？")) return;    
-    axios({
+async function reOnline() {
+  if (!window.confirm("是否要重新上线该问卷？")) return;
+  axios({
     url: `https://q.denglu1.cn/api/user/questionnaireStopRebuild/${filenews.context.questionnaire.id}`,
     method: "get",
     withCredentials: true,
-    headers: { token: datas.user.token },
+    headers: {
+      "Content-Type": "application/json",
+      token: await datas.getToken()
+    },
   })
     .then((response) => {
       console.log(response);
@@ -746,7 +759,7 @@ function reOnline() {
     })
     .catch((error) => {
       console.log(error);
-    });    
+    });
 }
 
 </script>
@@ -937,14 +950,15 @@ function reOnline() {
   }
 
   // 问卷下线与重新上线按钮
-  .downline{
+  .downline {
     width: 100px;
     height: 30px;
     top: 15px;
     right: 135px;
     position: absolute;
   }
-  .reOnline{
+
+  .reOnline {
     width: 100px;
     height: 30px;
     top: 15px;

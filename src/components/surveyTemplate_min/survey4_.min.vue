@@ -216,7 +216,7 @@ div[wrapper] {
     }
 
     .para {
-        width: 800px;
+        width: @breakpoint;
         font-family: '思源黑体';
         font-size: 16*@a;
         font-weight: 400;

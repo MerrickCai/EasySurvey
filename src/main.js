@@ -13,7 +13,7 @@ import { createPinia } from 'pinia'
 app.use(createPinia())
 
 // 路由
-import router from './router/index.js'
+import router from './router/router.js'
 app.use(router)
 
 // 懒加载插件

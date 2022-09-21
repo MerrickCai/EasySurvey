@@ -43,7 +43,7 @@ import clipboard3 from "vue-clipboard3";
 import { ElMessage, ElMessageBox  } from 'element-plus'
 import { ref ,watch,inject} from "vue";
 import emitter from "../../mitt/mitt.js";
-import { useStore } from "../../Stores/index.js";
+import { useStore } from "../../Stores/pinia.js";
 const datas = useStore();
 
 
@@ -67,7 +67,7 @@ function startDrag(e) {
   e.dataTransfer.dropEffect = "move";
   e.dataTransfer.effectAllowed = "move";
 }
-function delfile() {
+async function delfile() {
    ElMessageBox.confirm(
     '确定删除吗?',
     '删除题目',
@@ -76,13 +76,15 @@ function delfile() {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
     })
-    .then(() => {
+    .then(() => {async()=>{
       axios({
       url: `https://q.denglu1.cn/api/deleteQuestion/${parseInt(props.item.id)}`,
       method: "get",
       withCredentials: true,
-      headers: { "Content-Type": "application/json" },
-      headers: { token: datas.user.token },
+      headers: {
+      "Content-Type": "application/json",
+      token: await datas.getToken()
+    },
     })
       .then((response) => {
         console.log(response);
@@ -92,6 +94,7 @@ function delfile() {
       });
       //传递删除信号给父组件，更新dom
     emit("deletefile", props.index);
+    }
     })
     .catch(() => {
     })

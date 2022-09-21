@@ -1,5 +1,5 @@
 <script setup>
-import { useStore } from "../../Stores/index.js"
+import { useStore } from "../../Stores/pinia.js"
 import { useRouter } from "vue-router"
 import { reactive, inject } from "vue"
 import { ElMessage } from 'element-plus'
@@ -76,8 +76,13 @@ async function login(account, password, remember) {
       center: true
     })
 
-    await datas.updateUserMessage(datas.user.token)
+    const User = JSON.parse(localStorage.getItem('User'))
 
+    await datas.getUserMessage(User.token)
+    
+    console.log(datas.user)
+
+    //跳转填写地区和年龄弹窗
     viewId.value = 3
 
   } else {
@@ -89,8 +94,9 @@ async function login(account, password, remember) {
       showClose: true,
       center: true
     })
-    
+
   }
+
 }
 //--------------------------- 登录逻辑-----------------------------
 
@@ -150,7 +156,7 @@ div.wrapper {
   height: 400px;
   width: 420px;
 
-  @media (max-width:800px) {
+  @media (max-width:@breakpoint) {
     width: 100%;
   }
 
