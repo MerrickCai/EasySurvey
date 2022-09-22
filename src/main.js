@@ -3,11 +3,6 @@ import { createApp } from 'vue'
 import App from './App.vue'
 const app = createApp(App)
 
-// Element Plus
-import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
-app.use(ElementPlus)
-
 // Pinia状态管理
 import { createPinia } from 'pinia'
 app.use(createPinia())
