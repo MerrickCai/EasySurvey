@@ -23,6 +23,8 @@ import { ref, reactive, computed } from "vue";
 import { useStore } from "../../Stores/pinia.js";
 import usermas from "./usermas.vue"
 import password from "./password.vue"
+import record from "./record.vue"
+import feedback from "./feedback.vue"
 const datas = useStore();
 const user = reactive({
   account: datas.user.account,
@@ -36,8 +38,8 @@ const user = reactive({
   username: datas.user.username,
 });
 
-let userchoose = ref(1)
-let viewlist = [usermas, password]
+let userchoose = ref(0)
+let viewlist = [usermas, password, record, feedback]
 let componentview = computed(() => viewlist[userchoose.value])
 function userch() {
 
@@ -45,7 +47,6 @@ function userch() {
   console.log(1);
 }
 
-console.log("视图", componentview);
 console.log("user数据", datas.user);
 console.log("user", user);
 axios({
@@ -86,7 +87,7 @@ function QuestionnaireRecords() {
 div.wrapper {
   height: 100%;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: space-between;
 
   .infoList {
@@ -103,7 +104,7 @@ div.wrapper {
   .usertype {
     display: flex;
     flex-wrap: wrap;
-    width: 295px;
+    width: 25%;
     height: 400px;
     opacity: 1;
     background: rgba(255, 255, 255, 1);
@@ -112,7 +113,7 @@ div.wrapper {
 
     >span {
       cursor: pointer;
-      width: 295px;
+      width: 100%;
       height: 72px;
       opacity: 1;
       background: rgba(255, 255, 255, 1);
@@ -127,7 +128,7 @@ div.wrapper {
   }
 
   .uesrcon {
-    width: 875px;
+    width: 72%;
     height: 600px;
     opacity: 1;
     background: rgba(255, 255, 255, 1);

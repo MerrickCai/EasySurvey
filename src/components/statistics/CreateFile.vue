@@ -55,7 +55,7 @@ function getinfor() {
     headers: { token: datas.getToken() },
   })
     .then((response) => {
-      console.log(response);
+      console.log("用户发布的所有问卷信息", response);
       fileall.push(response.data.data);
     })
     .catch((error) => {
