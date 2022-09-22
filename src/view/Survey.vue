@@ -45,33 +45,36 @@ const Survey = reactive({
 
 
 //--------------------- 网络请求获取问卷类型和数据 -------------------------
-axios({
-  url: `https://q.denglu1.cn/api/user/fillQuestionnaire/${route.params.questionnaireId}`,
-  method: "get",
-  withCredentials: true,
-  headers: { "Content-Type": "application/json" },
-  headers: { token: datas.getToken() },
-})
-  .then((response) => {
-    console.log(response)
-    switch (response.data.data.questionnaire.count) {
-      case 2: // 矩阵
-        currentView.value = surveyTemplateList[0]
-        Survey.surveyObj = response.data.data
-        break
-      case 3: // 量表
-        currentView.value = surveyTemplateList[1]
-        Survey.surveyObj = response.data.data
-        break
-      case 5: // 普通
-        currentView.value = surveyTemplateList[2]
-        Survey.surveyObj = response.data.data
-        break;
-    }
+async function getData() {
+
+  const response = await axios({
+    url: `https://q.denglu1.cn/api/user/fillQuestionnaire/${route.params.questionnaireId}`,
+    method: "get",
+    withCredentials: true,
+    headers: {
+      "Content-Type": "application/json",
+      token: await datas.getToken()
+    },
   })
-  .catch((error) => {
-    console.log(error)
-  })
+
+  console.log(response)
+  switch (response.data.data.questionnaire.count) {
+    case 2: // 矩阵
+      currentView.value = surveyTemplateList[0]
+      Survey.surveyObj = response.data.data
+      break
+    case 3: // 量表
+      currentView.value = surveyTemplateList[1]
+      Survey.surveyObj = response.data.data
+      break
+    case 5: // 普通
+      currentView.value = surveyTemplateList[2]
+      Survey.surveyObj = response.data.data
+      break;
+  }
+
+}
+getData()
 //--------------------- 网络请求获取问卷类型和数据 -------------------------
 
 

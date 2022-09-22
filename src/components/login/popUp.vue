@@ -157,8 +157,10 @@ async function upLoad(area, age) {
     url: "https://q.denglu1.cn/api/user/updateMessage",
     method: "post",
     withCredentials: true,
-    headers: { "Content-Type": "application/json" },
-    headers: { token: datas.user.token },
+    headers: {
+      "Content-Type": "application/json",
+      token: await datas.getToken()
+    },
     data: {
       id: datas.user.userId,
       age: age,

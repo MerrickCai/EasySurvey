@@ -33,26 +33,22 @@ router.beforeEach(async (to) => {
   // 如果 localStorage 储存了用户登录数据，帮用户自动登录
   if (localStorage.getItem("User")) {
 
-    try {
 
-      const User = JSON.parse(localStorage.getItem('User'))
-      const result = await datas.getUserMessage(User.token)
+    const result = await datas.getToken()
 
-      if (result) {
+    if (result) { //token有效，可能没用到refreshToken，或者没有refreshToken
 
-        ElMessage({
-          message: '自动登录成功',
-          type: 'success',
-          duration: 3000,
-          showClose: true,
-          center: true
-        })
+      ElMessage({
+        message: '自动登录成功',
+        type: 'success',
+        duration: 3000,
+        showClose: true,
+        center: true
+      })
 
-        return true
+      return true
 
-      }
-
-    } catch (error) {
+    } else { //token无效，refreshToken也无效
 
       ElMessage({
         message: '自动登录失败',
@@ -62,11 +58,7 @@ router.beforeEach(async (to) => {
         center: true
       })
 
-      // 跳转登录注册页面
-      return {
-        path: "/login",
-        query: { redirect: to.fullPath },
-      }
+      false
 
     }
 

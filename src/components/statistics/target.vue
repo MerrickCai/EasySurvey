@@ -97,13 +97,15 @@ emitter.on("change",()=>{
   filenews.context.questionnaire.effectiveNumber-=1
 })
 
-function getfile() {
+async function getfile() {
   axios({
     url: `https://q.denglu1.cn/api/user/questionnaireDetail/${parseInt(num.value)}`,
     method: "get",
     withCredentials: true,
-    headers: { "Content-Type": "application/json" },
-    headers: { token: datas.getToken() },
+    headers: {
+      "Content-Type": "application/json",
+      token: await datas.getToken()
+    },
   })
     .then((response) => {
       console.log(response);

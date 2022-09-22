@@ -1,10 +1,10 @@
 <script setup>
-import axios from "axios"
 import { useStore } from "../../Stores/pinia.js"
 import { reactive, inject } from "vue"
 import { ElMessage } from 'element-plus'
+import { useRouter } from "vue-router"
 const datas = useStore()
-
+const router = useRouter()
 
 
 
@@ -55,7 +55,9 @@ function validate(account, password, passwordConfirm) {
 
 //--------------------------- 注册逻辑-----------------------------
 const user = reactive({ account: '', password: '', passwordConfirm: '', agree: false })
+
 async function register(account, password, passwordConfirm, agree) {
+
     if (agree === false) { // 确认用户是否同意《用户隐私协议》
         ElMessage({
             message: '请点击同意《用户隐私协议》按钮',
@@ -66,9 +68,11 @@ async function register(account, password, passwordConfirm, agree) {
         })
         return false
     }
+
     if (!validate(account, password, passwordConfirm)) { // 表单验证
         return false
     }
+
     if (datas.user.status === true) { //确认用户是否登录
         ElMessage({
             message: '您已经登录',
@@ -80,69 +84,40 @@ async function register(account, password, passwordConfirm, agree) {
         router.push('/')
         return true
     }
-    await axios({
-        url: 'https://q.denglu1.cn/api/user/regist',
-        method: 'post',
-        withCredentials: true,
-        headers: { 'Content-Type': 'application/json' },
-        data: { phone_number: account, password: password }
-    }).then((response) => {
-        if (response.data.code === 200) { //注册成功=>意味着登录成功
-            ElMessage({
-                message: '注册成功',
-                type: 'success',
-                duration: 3000,
-                showClose: true,
-                center: true
-            })
-            //写入用户数据
-            datas.user.status = true
-            datas.user.account = account
-            datas.user.password = password
-            //注册完帮助用户登录
-            axios({
-                url: "https://q.denglu1.cn/api/user/login",
-                method: "post",
-                withCredentials: true,
-                headers: { "Content-Type": "application/json" },
-                data: { phone_number: account, password: password },
-            }).then((response) => {
 
+    const result = await datas.register(account, password)
 
-                //写入用户数据
-                datas.user.status = true
-                datas.user.account = account
-                datas.user.password = password
-                datas.user.token = response.data.data.token
-                datas.user.refreshtoken = response.data.data.refreshtoken
-            })
+    if (result) {
 
-
-            //默认记住账号密码到本地
-            localStorage.setItem('account', account)
-            localStorage.setItem('password', password)
-            
-            //跳转填写地区和年龄弹窗
-            viewId.value = 3
-        } else { //response.data.code === 400=>重复注册
-            ElMessage({
-                message: '请勿重复注册',
-                type: 'error',
-                duration: 3000,
-                showClose: true,
-                center: true
-            })
-        }
-    }).catch((error) => {//注册失败
         ElMessage({
-            message: '由于网络问题注册失败',
+            message: '注册成功',
+            type: 'success',
+            duration: 3000,
+            showClose: true,
+            center: true
+        })
+
+        const User = JSON.parse(localStorage.getItem('User'))
+
+        await datas.getUserMessage(User.token)
+
+        console.log(datas.user)
+
+        //跳转填写地区和年龄弹窗
+        viewId.value = 3
+
+    } else {
+
+        ElMessage({
+            message: '请勿重复注册',
             type: 'error',
             duration: 3000,
             showClose: true,
             center: true
         })
-        console.log(error)
-    })
+
+    }
+
 }
 //--------------------------- 注册逻辑-----------------------------
 

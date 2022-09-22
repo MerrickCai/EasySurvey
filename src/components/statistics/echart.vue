@@ -155,13 +155,15 @@ let filenews = reactive({
 });
 
 let detail = reactive({});
-function getfile() {
+async function getfile() {
   axios({
     url: `https://q.denglu1.cn/api/user/questionnaireDetail/${parseInt(num.value)}`,
     method: "get",
     withCredentials: true,
-    headers: { "Content-Type": "application/json" },
-    headers: { token: datas.getToken() },
+    headers: {
+      "Content-Type": "application/json",
+      token: await datas.getToken()
+    },
   })
     .then((response) => {
       console.log(response);
@@ -595,7 +597,7 @@ const currentView = computed(() => surveyTemplateList[viewId.value - 1]);
 let surveydatas = reactive({});
 surveydatas.data = {};
 // 展示详情页
-function showDetail(userId, questionnaireId) {
+async function showDetail(userId, questionnaireId) {
   let count = ref(detail.context.questionnaire.count)
   switch (count.value) {
     case 0: //单选
@@ -622,7 +624,10 @@ function showDetail(userId, questionnaireId) {
     url: `https://q.denglu1.cn/api/user/AnswerDetail/${userId}/${questionnaireId}`,
     method: 'get',
     withCredentials: true,
-    headers: { token: datas.getToken() },
+    headers: {
+      "Content-Type": "application/json",
+      token: await datas.getToken()
+    },
 
   }).then((response) => {
     // console.log(response);
@@ -639,14 +644,16 @@ function showDetail(userId, questionnaireId) {
 
 
 //删除用户作答
-function deluser(userid, fileid, index) {
+async function deluser(userid, fileid, index) {
   if (!confirm('是否要删除该用户的作答记录？')) return;
   axios({
     url: `https://q.denglu1.cn/api/deleteUserAnswer/${userid}/${fileid}`,
     method: "get",
     withCredentials: true,
-    headers: { "Content-Type": "application/json" },
-    headers: { token: datas.getToken() },
+    headers: {
+      "Content-Type": "application/json",
+      token: await datas.getToken()
+    },
   })
     .then((response) => {
       console.log(response);
@@ -662,7 +669,7 @@ function deluser(userid, fileid, index) {
 const btnData = ref("导出问卷信息");
 let isClick = false; //节流阀
 // 导出excel表格
-function exportData() {
+async function exportData() {
   btnData.value = '导出中...请稍等'
   if (!isClick) {
     isClick = true;
@@ -671,9 +678,9 @@ function exportData() {
       method: 'POST',
       withCredentials: true,
       headers: {
-        "Content-Type": "application/json",
-        token: datas.getToken()
-      },
+      "Content-Type": "application/json",
+      token: await datas.getToken()
+    },
       // 请求体-----
       data: {
         'questionnaire_id': filenews.context.questionnaire.id,
@@ -711,13 +718,16 @@ function exportData() {
 
 
 
-function downline() {
+async function downline() {
   if (!window.confirm("是否要下线该问卷？")) return;
   axios({
     url: `https://q.denglu1.cn/api/user/questionnaireStop/${filenews.context.questionnaire.id}`,
     method: "get",
     withCredentials: true,
-    headers: { token: datas.getToken() },
+    headers: {
+      "Content-Type": "application/json",
+      token: await datas.getToken()
+    },
   })
     .then((response) => {
       console.log(response);
@@ -730,13 +740,16 @@ function downline() {
 }
 
 
-function reOnline() {
+async function reOnline() {
   if (!window.confirm("是否要重新上线该问卷？")) return;
   axios({
     url: `https://q.denglu1.cn/api/user/questionnaireStopRebuild/${filenews.context.questionnaire.id}`,
     method: "get",
     withCredentials: true,
-    headers: { token: datas.getToken() },
+    headers: {
+      "Content-Type": "application/json",
+      token: await datas.getToken()
+    },
   })
     .then((response) => {
       console.log(response);

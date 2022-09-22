@@ -10,17 +10,16 @@
       <div class="title">
 
         <!-- 新建问卷标题 -->
-        <input type="text" class="titlein" v-model="filetitle.info_title" 
-          placeholder="请输入问卷标题" />
+        <input type="text" class="titlein" v-model="filetitle.info_title" placeholder="请输入问卷标题" />
         <!-- 新建问卷介绍 -->
         <div class="newintro">
           <span class="newintro_title">问卷介绍：</span>
-          <textarea cols="30" rows="5"  class="introin" v-model="filetitle.info_para"
+          <textarea cols="30" rows="5" class="introin" v-model="filetitle.info_para"
             placeholder="为了使问卷调查结果更加清晰，准确，请输入关于问卷的简短介绍以及注意事项，方便填写问卷的人更清晰的认识问卷，字数少于500字"></textarea>
         </div>
       </div>
       <div class="quearea">
-      <!-- 问卷类型选择标签 -->
+        <!-- 问卷类型选择标签 -->
         <div class="questype">
           <span class="typetitle">请选择问卷类型:</span>
           <span class="typeall">
@@ -57,7 +56,7 @@
       </div>
 
 
-      
+
     </div>
   </div>
 </template>
@@ -101,7 +100,7 @@ watch(scroll, () => {
 
 let filetitle;
 if (localStorage.getItem("title")) {
-  let title=JSON.parse(localStorage.getItem("title"))
+  let title = JSON.parse(localStorage.getItem("title"))
   filetitle = reactive(title.title);
 } else {
   filetitle = reactive({
@@ -113,9 +112,9 @@ if (localStorage.getItem("title")) {
 //存储矩阵问卷信息内容
 let fileword;
 if (localStorage.getItem("surveyData")) {
-  let surveyData=JSON.parse(localStorage.getItem("surveyData"))
+  let surveyData = JSON.parse(localStorage.getItem("surveyData"))
   fileword = reactive(Array.from(surveyData.matrix));
-  console.log("fileword为",fileword);
+  console.log("fileword为", fileword);
 } else {
   fileword = reactive([
     {
@@ -158,7 +157,7 @@ function deleteques(id) {
 //存储量表问卷信息内容
 let scalefile;
 if (localStorage.getItem("surveyData")) {
-  let surveyData=JSON.parse(localStorage.getItem("surveyData"))
+  let surveyData = JSON.parse(localStorage.getItem("surveyData"))
   scalefile = reactive(surveyData.scale);
 } else {
   scalefile = reactive([
@@ -305,7 +304,7 @@ function tdeleteques(id) {
 //存储混合问卷信息内容
 let mixfile
 if (localStorage.getItem("surveyData")) {
-  let surveyData=JSON.parse(localStorage.getItem("surveyData"))
+  let surveyData = JSON.parse(localStorage.getItem("surveyData"))
   mixfile = reactive(surveyData.mix);
 } else {
   mixfile = reactive([
@@ -341,11 +340,12 @@ function mixdeleteques(id) {
 //保存问卷
 function keepinfor() {
   localStorage.setItem("title", JSON.stringify({
-    title:filetitle}));
-  localStorage.setItem('surveyData',JSON.stringify({
-    mix:mixfile,
-    scale:scalefile,
-    matrix:fileword,
+    title: filetitle
+  }));
+  localStorage.setItem('surveyData', JSON.stringify({
+    mix: mixfile,
+    scale: scalefile,
+    matrix: fileword,
   }))
   ElMessage({
     message: '保存成功!',
@@ -387,13 +387,13 @@ async function pushfile() {
   isover = typearea.every((element) => {
     return element.value != ""
   })
-  if (isover == false || isarea == false){
-     ElMessage({
-    showClose: true,
-    message: '请将标红处进行填写!',
-    type: 'warning',
-  })
-    }
+  if (isover == false || isarea == false) {
+    ElMessage({
+      showClose: true,
+      message: '请将标红处进行填写!',
+      type: 'warning',
+    })
+  }
   if (isover == true && isarea == true) {
     if (type.value == 1) {
       radiofile.forEach((element) => delete element.id);
@@ -401,8 +401,10 @@ async function pushfile() {
         url: "https://q.denglu1.cn/api/questions/rebuild",
         method: "post",
         withCredentials: true,
-        headers: { "Content-Type": "application/json" },
-        headers: { token: datas.user.token },
+        headers: {
+          "Content-Type": "application/json",
+          token: await datas.getToken()
+        },
         data: {
           questionnaire: {
             userId: datas.user.userId,
@@ -438,8 +440,10 @@ async function pushfile() {
         url: "https://q.denglu1.cn/api/questions/rebuild",
         method: "post",
         withCredentials: true,
-        headers: { "Content-Type": "application/json" },
-        headers: { token: datas.user.token },
+        headers: {
+          "Content-Type": "application/json",
+          token: await datas.getToken()
+        },
         data: {
           questionnaire: {
             userId: datas.user.userId,
@@ -478,8 +482,10 @@ async function pushfile() {
         url: "https://q.denglu1.cn/api/questions/rebuild",
         method: "post",
         withCredentials: true,
-        headers: { "Content-Type": "application/json" },
-        headers: { 'token': datas.getToken() },
+        headers: {
+          "Content-Type": "application/json",
+          token: await datas.getToken()
+        },
         data: {
           questionnaire: {
             userId: datas.user.userId,
@@ -521,8 +527,10 @@ async function pushfile() {
         url: "https://q.denglu1.cn/api/questions/rebuild",
         method: "post",
         withCredentials: true,
-        headers: { "Content-Type": "application/json" },
-        headers: { 'token': datas.getToken() },
+        headers: {
+          "Content-Type": "application/json",
+          token: await datas.getToken()
+        },
         data: {
           questionnaire: {
             userId: datas.user.userId,
@@ -560,8 +568,10 @@ async function pushfile() {
         url: "https://q.denglu1.cn/api/questions/rebuild",
         method: "post",
         withCredentials: true,
-        headers: { "Content-Type": "application/json" },
-        headers: { token: datas.user.token },
+        headers: {
+          "Content-Type": "application/json",
+          token: await datas.getToken()
+        },
         data: {
           questionnaire: {
             userId: datas.user.userId,
@@ -597,8 +607,10 @@ async function pushfile() {
         url: "https://q.denglu1.cn/api/questions/rebuild",
         method: "post",
         withCredentials: true,
-        headers: { "Content-Type": "application/json" },
-        headers: { 'token': datas.getToken() },
+        headers: {
+          "Content-Type": "application/json",
+          token: await datas.getToken()
+        },
         data: {
           questionnaire: {
             userId: datas.user.userId,
@@ -629,8 +641,8 @@ async function pushfile() {
       });
     }
     //填完一份问卷后将题目介绍清空
-  filetitle.info_title=""
-  filetitle.info_para=""
+    filetitle.info_title = ""
+    filetitle.info_para = ""
     show.value = "block";
     localStorage.removeItem("title");
   }

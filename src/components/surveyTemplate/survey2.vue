@@ -200,7 +200,7 @@ function onScroll() {
 
 
 //-------------------------------- 提交函数---------------------------------------
-function sumbit() {
+async function sumbit() {
     // 请求参数里面的问卷信息列表
     const questionAnswerList = [];
     const scoreList = [];
@@ -220,8 +220,10 @@ function sumbit() {
         url: `https://q.denglu1.cn/api/questions/commit`,
         method: 'post',
         withCredentials: true,
-        headers: { 'Content-Type': 'application/json' },
-        headers: { 'token': datas.user.token },
+        headers: {
+            "Content-Type": "application/json",
+            token: await datas.getToken()
+        },
         data: {
             "questionnaire_id": survey.id,
             "totalNumber": survey.totalNumber,

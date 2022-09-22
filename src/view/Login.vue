@@ -3,7 +3,7 @@ import { ref, computed, provide, onActivated } from 'vue'
 import { useStore } from "../Stores/pinia.js"
 import { onBeforeRouteLeave } from 'vue-router'
 import accountLogin from '../components/login/accountLogin.vue'
-import wechatLogin from '../components/login/wechatLogin.vue'
+import dengluyi from '../components/login/dengluyi.vue'
 import register from '../components/login/register.vue'
 import popUp from '../components/login/popUp.vue'
 const datas = useStore()
@@ -11,7 +11,7 @@ const datas = useStore()
 
 
 //------------------------ 动态组件 ----------------------------------
-const viewList = [wechatLogin, accountLogin, register, popUp]
+const viewList = [dengluyi, accountLogin, register, popUp]
 const viewId = ref(1)
 const currentView = computed(() => viewList[viewId.value])
 provide('viewId', viewId)

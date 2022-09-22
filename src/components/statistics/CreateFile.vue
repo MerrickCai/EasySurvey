@@ -6,6 +6,7 @@
         <div class="creatcontent">
           <div class="filetop">
             <span class="creat">创建问卷</span>
+
           </div>
           <span class="plus">
             <el-icon color="white" :size="5 * 5">
@@ -46,13 +47,15 @@ emitter.on("change", () => {
 
 let fileall = reactive([]);
 
-function getinfor() {
+async function getinfor() {
   axios({
     url: `https://q.denglu1.cn/api/user/questionnaire/${datas.user.userId}`,
     method: "get",
     withCredentials: true,
-    headers: { "Content-Type": "application/json" },
-    headers: { token: datas.getToken() },
+    headers: {
+      "Content-Type": "application/json",
+      token: await datas.getToken()
+    },
   })
     .then((response) => {
       console.log("用户发布的所有问卷信息", response);
