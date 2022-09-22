@@ -7,18 +7,19 @@
 
 
     <div class="container">
-      <div class="title">
 
-        <!-- 新建问卷标题 -->
-        <input type="text" class="titlein" v-model="filetitle.info_title" placeholder="请输入问卷标题" />
-        <!-- 新建问卷介绍 -->
-        <div class="newintro">
-          <span class="newintro_title">问卷介绍：</span>
-          <textarea cols="30" rows="5" class="introin" v-model="filetitle.info_para"
-            placeholder="为了使问卷调查结果更加清晰，准确，请输入关于问卷的简短介绍以及注意事项，方便填写问卷的人更清晰的认识问卷，字数少于500字"></textarea>
-        </div>
-      </div>
       <div class="quearea">
+        <div class="title">
+
+          <!-- 新建问卷标题 -->
+          <input type="text" class="titlein" v-model="filetitle.info_title" placeholder="请输入问卷标题" />
+          <!-- 新建问卷介绍 -->
+          <div class="newintro">
+            <span class="newintro_title">问卷介绍：</span>
+            <textarea cols="30" rows="5" class="introin" v-model="filetitle.info_para"
+              placeholder="为了使问卷调查结果更加清晰，准确，请输入关于问卷的简短介绍以及注意事项，方便填写问卷的人更清晰的认识问卷，字数少于500字"></textarea>
+          </div>
+        </div>
         <!-- 问卷类型选择标签 -->
         <div class="questype">
           <span class="typetitle">请选择问卷类型:</span>
@@ -681,7 +682,7 @@ div.wrapper {
   flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: calc(100% - 10px);
   width: 100%;
   position: relative;
   top: 0;
@@ -697,106 +698,11 @@ div.wrapper {
     flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
-    height: 100%;
     width: 100%;
-
-    >div.title {
-      display: flex;
-      flex-direction: column;
-      flex-wrap: nowrap;
-      justify-content: center;
-      align-items: center;
-      height: auto;
-      width: 100%;
-
-      >p.newtitle {
-        display: block;
-        width: auto;
-        height: auto;
-        font-size: 33px;
-        font-weight: bold;
-        color: rgb(0, 0, 0);
-        position: relative;
-
-        &::after {
-          content: "";
-          display: block;
-          position: absolute;
-          bottom: -2px;
-          left: 0;
-          height: 4px;
-          width: 100%;
-          background-color: #1e6fff;
-          border-radius: 2px;
-        }
-      }
-
-      >input.titlein {
-        position: relative;
-        display: block;
-        width: 500px;
-        height: auto;
-        font-size: 33px;
-        font-weight: bold;
-        color: rgb(0, 0, 0);
-        outline: 0;
-        border: 1px dashed rgba(30, 111, 255, 1);
-        text-align: center;
-
-        &::after {
-          content: "";
-          display: block;
-          position: absolute;
-          bottom: -2px;
-          left: 0;
-          height: 4px;
-          width: 100%;
-          background-color: #1e6fff;
-          border-radius: 2px;
-        }
-      }
-
-      >div.newintro {
-        display: flex;
-        flex-direction: column;
-        flex-wrap: nowrap;
-        justify-content: center;
-        align-items: flex-start;
-        height: auto;
-        width: 70%;
-        margin-top: 5px;
-
-        >span.newintro_title {
-          display: block;
-          font-size: 16px;
-          color: rgba(30, 111, 255, 1);
-          margin-bottom: 5px;
-        }
-
-        >p.newintro_con {
-          display: block;
-          height: auto;
-          width: auto;
-          font-size: 15px;
-          color: rgb(0, 0, 0);
-        }
-
-        >textarea {
-          display: block;
-          height: auto;
-          width: 100%;
-          height: 100px;
-          font-size: 15px;
-          color: rgb(0, 0, 0);
-          outline: none;
-          resize: none;
-          border: 1px dashed rgba(30, 111, 255, 1);
-        }
-      }
-    }
+    height: 100%;
 
     >div.quearea {
-      flex: 1;
+      flex:1;
       display: flex;
       flex-direction: column;
       flex-wrap: nowrap;
@@ -804,8 +710,104 @@ div.wrapper {
       align-items: flex-start;
       height: auto;
       width: 70%;
-      margin-top: 5px;
-      overflow: hidden;
+      margin-top: 20px;
+      overflow-y: auto;
+      overflow-x: hidden;
+
+      >div.title {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+        height: auto;
+        width: 100%;
+
+        >p.newtitle {
+          display: block;
+          width: auto;
+          height: auto;
+          font-size: 33px;
+          font-weight: bold;
+          color: rgb(0, 0, 0);
+          position: relative;
+
+          &::after {
+            content: "";
+            display: block;
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            height: 4px;
+            width: 100%;
+            background-color: #1e6fff;
+            border-radius: 2px;
+          }
+        }
+
+        >input.titlein {
+          position: relative;
+          display: block;
+          width: 500px;
+          height: auto;
+          font-size: 33px;
+          font-weight: bold;
+          color: rgb(0, 0, 0);
+          outline: 0;
+          border: 1px dashed rgba(30, 111, 255, 1);
+          text-align: center;
+
+          &::after {
+            content: "";
+            display: block;
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            height: 4px;
+            width: 100%;
+            background-color: #1e6fff;
+            border-radius: 2px;
+          }
+        }
+
+        >div.newintro {
+          display: flex;
+          flex-direction: column;
+          flex-wrap: nowrap;
+          justify-content: center;
+          align-items: flex-start;
+          height: auto;
+          width: 70%;
+          margin-top: 5px;
+
+          >span.newintro_title {
+            display: block;
+            font-size: 16px;
+            color: rgba(30, 111, 255, 1);
+            margin-bottom: 5px;
+          }
+
+          >p.newintro_con {
+            display: block;
+            height: auto;
+            width: auto;
+            font-size: 15px;
+            color: rgb(0, 0, 0);
+          }
+
+          >textarea {
+            display: block;
+            height: auto;
+            width: 100%;
+            height: 100px;
+            font-size: 15px;
+            color: rgb(0, 0, 0);
+            outline: none;
+            resize: none;
+            border: 1px dashed rgba(30, 111, 255, 1);
+          }
+        }
+      }
 
       >div.questype {
         display: flex;
@@ -872,7 +874,7 @@ div.wrapper {
         display: block;
         height: auto;
         width: 100%;
-        overflow: auto;
+        overflow: visible;
       }
     }
 

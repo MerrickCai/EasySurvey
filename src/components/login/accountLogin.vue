@@ -79,7 +79,7 @@ async function login(account, password, remember) {
     const User = JSON.parse(localStorage.getItem('User'))
 
     await datas.getUserMessage(User.token)
-    
+
     console.log(datas.user)
 
     //跳转填写地区和年龄弹窗
@@ -99,31 +99,13 @@ async function login(account, password, remember) {
 
 }
 //--------------------------- 登录逻辑-----------------------------
-
-
-
-
-//------------------------------ 开发中 ------------------------------------
-function Dev(str) {
-  // ElMessage({
-  //   message: `${str}开发中`,
-  //   type: 'warning',
-  //   duration: 3000,
-  //   showClose: true,
-  //   center: true
-  // })
-  viewId.value = 0
-  
-  
-}
-//------------------------------ 开发中 ------------------------------------
 </script>
 
 <template>
   <div class="wrapper">
 
     <div class="selectArea">
-      <a @click="Dev('微信登录')">微信登录</a>
+      <a @click="viewId = 0">登录易</a>
       <a active @click="viewId = 1">账号登录</a>
     </div>
 
