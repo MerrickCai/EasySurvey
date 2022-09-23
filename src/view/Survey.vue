@@ -28,7 +28,9 @@ const Survey = reactive({
     begin: true,
     ongoing: false,
     end: false,
+    onMobile: 'block',
     toOngoing() {
+      this.onMobile='none'
       this.begin = false
       this.ongoing = true
     },
@@ -41,7 +43,9 @@ const Survey = reactive({
 })
 //------------------------- 问卷状态和数据对象 ------------------------
 
-
+setTimeout(()=>{
+  Survey.status.onMobile='none'
+},1000)
 
 
 //--------------------- 网络请求获取问卷类型和数据 -------------------------
@@ -105,7 +109,7 @@ div[wrapper] {
   flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
-  height: calc(100% - 10px);
+  height: calc(100% - 20px);
   width: calc(100% - 20px);
   margin: 0 auto;
   position: relative;
@@ -117,9 +121,8 @@ div[wrapper] {
   z-index: 0;
 
   @media (max-width:@breakpoint) {
-    height: 100%;
-    width: 100%;
-    box-shadow: none;
+    height: calc(100% - 10px);
+    width: calc(100% - 20px);
   }
 
   >div.decoration1 {
@@ -136,7 +139,8 @@ div[wrapper] {
     clip-path: polygon(50% 50%, 100% 50%, 100% 100%, 50% 100%);
 
     @media (max-width:@breakpoint) {
-      display: none;
+      height: 200px;
+      width: 200px;
     }
   }
 
@@ -152,7 +156,10 @@ div[wrapper] {
     background-color: rgba(71, 145, 255, 1);
 
     @media (max-width:@breakpoint) {
-      display: none;
+      height: 100px;
+      width: 100px;
+      bottom: 15px;
+      right: 15px;
     }
   }
 
@@ -163,12 +170,15 @@ div[wrapper] {
     position: absolute;
     z-index: -2;
     bottom: 80px;
-    right: -20px;
+    right: -10px;
     border-radius: 50%;
     background-color: rgba(30, 111, 255, 1);
 
     @media (max-width:@breakpoint) {
-      display: none;
+      height: 70px;
+      width: 70px;
+      bottom: 50px;
+      right: -10px;
     }
   }
 
@@ -184,7 +194,10 @@ div[wrapper] {
     background-color: rgba(235, 245, 255, 1);
 
     @media (max-width:@breakpoint) {
-      display: none;
+      height: 110px;
+      width: 110px;
+      bottom: -10px;
+      right: 40px;
     }
   }
 
@@ -199,7 +212,9 @@ div[wrapper] {
     background-color: rgb(255, 255, 255, 1);
 
     @media (max-width:@breakpoint) {
-      display: none;
+      display: v-bind('Survey.status.onMobile');
+      height: calc(70px + 5px);
+      width: calc(77.7px + 7px);
     }
   }
 
@@ -215,7 +230,9 @@ div[wrapper] {
     transform: scale(1.07);
 
     @media (max-width:@breakpoint) {
-      display: none;
+      display: v-bind('Survey.status.onMobile');
+      height: 70px;
+      width: 77.7px;
     }
   }
 }

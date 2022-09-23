@@ -23,7 +23,7 @@ provide('viewId', viewId)
 datas.backgroundShow = true
 onBeforeRouteLeave(() => {
    datas.backgroundShow = false
-   viewId.value=1
+   viewId.value = 1
 })
 onActivated(() => {
    datas.backgroundShow = true
@@ -66,9 +66,7 @@ div[wrapper] {
       margin-top: -@navSpan;
 
       @media (max-width:@breakpoint) {
-         box-shadow: none;
-         border-radius: 0;
-         width: 100%;
+         width: calc(100% - 30px);
       }
 
       .fade-enter-active,

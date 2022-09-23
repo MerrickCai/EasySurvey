@@ -38,8 +38,6 @@
 
             <!-- 答题区域 -->
             <main ref="content" @scroll="onScroll">
-                <p class="second-title">问卷介绍：</p>
-                <p class="para">{{ survey.intro.info_para }}</p>
 
                 <div class="main" v-for="(item, i) of survey.questionList" :key="item.questionId"
                     :style="{ outline: `${item.outlineColor} 1px  solid` }" ref="questionBlock">
@@ -358,6 +356,10 @@ div[intro] {
             font-weight: bold;
             position: relative;
 
+            @media (max-width:@breakpoint) {
+                font-size: 20px;
+            }
+
             &::after {
                 content: '';
                 display: block;
@@ -382,6 +384,11 @@ div[intro] {
         margin: 20px 0;
         font-size: 20px;
         color: rgba(30, 111, 255, 1);
+
+        @media (max-width:@breakpoint) {
+            width: 80%;
+            font-size: 18px;
+        }
     }
 
     >p.para {
@@ -390,6 +397,11 @@ div[intro] {
         width: 70%;
         font-size: 18px;
         color: rgba(0, 0, 0, 1);
+
+        @media (max-width:@breakpoint) {
+            width: 80%;
+            font-size: 16px;
+        }
     }
 
     >div.btn {
@@ -412,6 +424,13 @@ div[intro] {
             background-color: rgba(30, 111, 255, 1);
             border-radius: 10px;
             cursor: pointer;
+
+
+            @media (max-width:@breakpoint) {
+                width: 200px;
+                height: 50px;
+                font-size: 18px;
+            }
         }
     }
 }
@@ -538,8 +557,9 @@ div[content] {
         padding: 10px 0 10px 20px;
 
         @media (max-width:@breakpoint) {
-            width: 100%;
-            padding: 10px;
+            width: 90%;
+            padding: 0;
+            margin: 20px auto;
             align-items: center;
         }
 
@@ -559,6 +579,10 @@ div[content] {
                 font-size: 28px;
                 font-weight: bold;
                 position: relative;
+
+                @media (max-width:@breakpoint) {
+                    font-size: 20px;
+                }
 
                 &::after {
                     content: '';
@@ -591,35 +615,7 @@ div[content] {
         position: relative;
 
         @media (max-width:@breakpoint) {
-            padding: 0 10px;
-        }
-
-        >p.second-title {
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-start;
-            align-items: flex-end;
-            height: auto;
-            width: calc(100% - 140px);
-            font-size: 20px;
-            color: rgba(30, 111, 255, 1);
-
-            @media (max-width:@breakpoint) {
-                width: 100%;
-            }
-        }
-
-        >p.para {
-            display: block;
-            height: auto;
-            width: calc(100% - 140px);
-            margin: 5px 0;
-            font-size: 18px;
-            color: rgba(0, 0, 0, 1);
-
-            @media (max-width:@breakpoint) {
-                width: 100%;
-            }
+            padding: 0;
         }
 
         >div.main {
@@ -713,6 +709,11 @@ div[content] {
             background-color: rgba(30, 111, 255, 1);
             border-radius: 10px;
             cursor: pointer;
+
+            @media (max-width:@breakpoint) {
+                width: 160px;
+            height: 40px;
+            }
         }
     }
 }

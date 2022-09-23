@@ -23,7 +23,7 @@ export default defineConfig({
         additionalData: `
         @safeArea: 1200px;
         @navSpan:70px;
-        @breakpoint:800px;
+        @breakpoint:600px;
         @navHeight: calc(@navSpan - 20px);
         `
       }

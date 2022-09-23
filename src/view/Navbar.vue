@@ -84,9 +84,10 @@ function toHome() {
                 <div v-show="datas.navShow">
                     <div button @click="router.push('/surveynew')">创建问卷</div>
                     <div img @click="devpop"><img v-lazy="'/assets/navbar_1.png'" /></div>
-                    <div img avatar @click="router.push(`/user/${ datas.user.userId}`)"><img
-                            v-lazy="'/assets/circle.png'" /></div>
-                    <div img @click="logOut"><img v-lazy="'/assets/navbar_2.png'" /></div>
+                    <div img avatar @click="router.push(`/user/${ datas.user.userId}`)">
+                        <img v-lazy="'/assets/circle.png'" />
+                    </div>
+                    <div img logout @click="logOut"><img v-lazy="'/assets/navbar_2.png'" /></div>
                 </div>
             </Transition>
         </div>
@@ -102,6 +103,10 @@ nav {
     align-items: center;
     height: @navSpan;
     width: var(--safe_area);
+
+    @media (max-width:@breakpoint) {
+        height: calc(@navSpan - 10px);
+    }
 
     >div[logo] {
         display: flex;
@@ -132,6 +137,10 @@ nav {
             color: rgb(0, 0, 0);
             font-size: 28px;
             line-height: @navHeight;
+
+            @media (max-width:@breakpoint) {
+                font-size: 24px;
+            }
         }
     }
 
@@ -180,7 +189,8 @@ nav {
                 cursor: pointer;
 
                 @media (max-width:@breakpoint) {
-                    margin-right: 10px;
+                    margin-right: 20px;
+                    font-size: 15px;
                 }
             }
 
@@ -192,7 +202,7 @@ nav {
                 cursor: pointer;
 
                 @media (max-width:@breakpoint) {
-                    margin-right: 10px;
+                    display: none;
                 }
 
                 >img {
@@ -203,12 +213,24 @@ nav {
                 }
 
                 &[avatar] {
+                    @media (max-width:@breakpoint) {
+                        display: block;
+                        margin-right: 20px;
+                    }
+
                     >img {
                         display: block;
                         height: calc(@navHeight - 15px);
                         width: calc(@navHeight - 15px);
                         border-radius: 50%;
                         object-fit: cover;
+                    }
+                }
+
+                &[logout] {
+                    @media (max-width:@breakpoint) {
+                        display: block;
+                        margin-right: 20px;
                     }
                 }
             }
