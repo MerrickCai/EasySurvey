@@ -2,7 +2,6 @@
 import Navbar from "./view/Navbar.vue"
 import { useRouter } from "vue-router"
 import { useStore } from "./Stores/pinia.js"
-import { ElMessage } from 'element-plus'
 const router = useRouter()
 const datas = useStore()
 

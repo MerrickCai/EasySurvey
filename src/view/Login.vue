@@ -5,13 +5,12 @@ import { onBeforeRouteLeave } from 'vue-router'
 import accountLogin from '../components/login/accountLogin.vue'
 import dengluyi from '../components/login/dengluyi.vue'
 import register from '../components/login/register.vue'
-import popUp from '../components/login/popUp.vue'
 const datas = useStore()
 
 
 
 //------------------------ 动态组件 ----------------------------------
-const viewList = [dengluyi, accountLogin, register, popUp]
+const viewList = [dengluyi, accountLogin, register]
 const viewId = ref(1)
 const currentView = computed(() => viewList[viewId.value])
 provide('viewId', viewId)

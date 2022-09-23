@@ -75,7 +75,6 @@ import { useStore } from "../Stores/pinia.js";
 import axios from "axios";
 import clipboard3 from "vue-clipboard3";
 import QrcodeVue from "qrcode.vue";
-import { ElMessage, ElMessageBox } from 'element-plus'
 //数据
 const datas = useStore();
 //动态组件视图
