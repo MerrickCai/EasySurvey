@@ -116,7 +116,6 @@ let fileword;
 if (localStorage.getItem("surveyData")) {
   let surveyData = JSON.parse(localStorage.getItem("surveyData"))
   fileword = reactive(Array.from(surveyData.matrix));
-  console.log("fileword为", fileword);
 } else {
   fileword = reactive([
     {
@@ -246,7 +245,6 @@ if (localStorage.getItem("checkbox")) {
 //多选问卷新增问题
 function creceive(quesobj) {
   checkboxfile.push(quesobj);
-  console.log(checkboxfile);
 }
 //多选问卷删除问题
 function cdeleteques(id) {
@@ -419,7 +417,6 @@ async function pushfile() {
         },
       })
         .then((response) => {
-          console.log(response);
           link.value = response.data.data.link;
           linkqr.value =
             "https://q.denglu1.cn/survey/" +
@@ -458,7 +455,6 @@ async function pushfile() {
         },
       })
         .then((response) => {
-          console.log(response);
           link.value = response.data.data.link;
           linkqr.value =
             "https://q.denglu1.cn/survey/" +
@@ -649,7 +645,6 @@ async function pushfile() {
     localStorage.removeItem("title");
   }
 }
-console.log(datas.getToken());
 let link = ref(1);
 // 链接
 let linkqr = ref(

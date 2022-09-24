@@ -41,11 +41,6 @@ const user = reactive({
 let userchoose = ref(0)
 let viewlist = [usermas, password, record, feedback]
 let componentview = computed(() => viewlist[userchoose.value])
-function userch() {
-
-  console.log(componentview);
-  console.log(1);
-}
 
 console.log("user数据", datas.user);
 console.log("user", user);
@@ -102,8 +97,11 @@ div.wrapper {
       background: rgba(255, 255, 255, 1);
       text-align: center;
       line-height: 72px;
+      font-size: 20px;
+      font-weight: 500;
 
       &.userclick {
+        color: rgba(255, 255, 255, 1);
         background: rgba(30, 111, 255, 1);
         ;
       }

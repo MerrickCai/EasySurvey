@@ -76,7 +76,7 @@ async function delfile() {
           },
         })
           .then((response) => {
-            console.log(response);
+            console.log("要删除的问卷", response);
           })
           .catch((error) => {
             console.log(error);
