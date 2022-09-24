@@ -12,8 +12,8 @@ function getted() {
         url: `https://q.denglu1.cn/api/user/questionnaireList/${datas.user.userId}`,
         method: "get",
         withCredentials: true,
-        headers: { "Content-Type": "application/json" },
-        headers: { token: datas.getToken() },
+        headers: { "Content-Type": "application/json", token: datas.getToken() },
+
     })
         .then((response) => {
             console.log("用户填写过的所有问卷信息", response);
@@ -28,8 +28,7 @@ function getinfor() {
         url: `https://q.denglu1.cn/api/user/questionnaire/${datas.user.userId}`,
         method: "get",
         withCredentials: true,
-        headers: { "Content-Type": "application/json" },
-        headers: { token: datas.getToken() },
+        headers: { "Content-Type": "application/json", token: datas.getToken() },
     })
         .then((response) => {
             console.log("用户发布的所有问卷信息", response);

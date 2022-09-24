@@ -134,7 +134,7 @@ let areashow = ref(false)
 
 //拖拽
 function drop(event) {
-  console.log(event.target);
+  // console.log(event.target);
   event.preventDefault();
   if (event.target.className === "echart_compare") {
     console.log("完成");
@@ -166,7 +166,7 @@ async function getfile() {
     },
   })
     .then((response) => {
-      console.log(response);
+      console.log("单个文件数据", response);
       filenews.context = response.data.data;
       detail.context = response.data.data
       //用户列表显示
@@ -175,7 +175,6 @@ async function getfile() {
         areashow.value = true
 
       }
-      console.log(usershow.value);
     })
     .catch((error) => {
       console.log(error);
@@ -358,7 +357,6 @@ watch(
   () => filenews.context,
   () => {
     if (filenews.context.userWithScores != null) {
-      console.log(1);
       nextTick(() => {
         echartupdate();
         echartnum();
@@ -656,7 +654,7 @@ async function deluser(userid, fileid, index) {
     },
   })
     .then((response) => {
-      console.log(response);
+      console.log("删除作答记录", response);
       filenews.context.userWithScores.splice(index, 1)
       emitter.emit("change")
     })
@@ -678,9 +676,9 @@ async function exportData() {
       method: 'POST',
       withCredentials: true,
       headers: {
-      "Content-Type": "application/json",
-      token: await datas.getToken()
-    },
+        "Content-Type": "application/json",
+        token: await datas.getToken()
+      },
       // 请求体-----
       data: {
         'questionnaire_id': filenews.context.questionnaire.id,
