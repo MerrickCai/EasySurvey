@@ -621,6 +621,8 @@ div[content] {
         >div.main {
             display: flex;
             flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
             width: calc(100% - 140px);
             height: auto;
             margin-bottom: 10px;
@@ -633,7 +635,7 @@ div[content] {
             >div.questiontitle {
                 display: block;
                 height: auto;
-                width: auto;
+                width: 100%;
                 font-size: 16px;
                 position: relative;
                 padding-left: 10px;
@@ -654,28 +656,31 @@ div[content] {
             >div.ques {
                 display: flex;
                 flex-direction: row;
-                justify-content: flex-start;
+                justify-content: center;
                 align-items: center;
                 height: auto;
                 width: 100%;
-                padding-left: 10px;
-
-                >p {
-                    font-size: 16px;
-                    color: rgb(0, 0, 0);
-                }
 
                 >input {
                     display: block;
                     width: 16px;
                     height: 16px;
-                    margin-right: 10px;
+                    margin: 0 10px;
+                }
+
+                >p {
+                    flex:1;
+                    display: block;
+                    height: auto;
+                    width: auto;
+                    font-size: 16px;
+                    color: rgb(0, 0, 0);
                 }
 
                 >textarea {
                     display: block;
                     height: 100px;
-                    width: 80%;
+                    width: 70%;
                     font-size: 16px;
                     color: rgb(0, 0, 0);
                     padding: 5px;
@@ -683,6 +688,9 @@ div[content] {
                     resize: none;
                     border: 2px solid rgba(30, 111, 255, 1);
                     border-radius: 10px;
+                    @media (max-width:@breakpoint){
+                        width: 100%;
+                    }
                 }
             }
         }

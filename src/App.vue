@@ -188,6 +188,11 @@ main {
   }
 }
 
+@font-face {
+  font-family: 'Han Sans';
+  src: url('/SourceHanSansSC-VF.otf.woff2');
+}
+
 #app {
   display: block;
   height: 100vh;
