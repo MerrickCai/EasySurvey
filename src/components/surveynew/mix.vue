@@ -7,15 +7,15 @@
         <option>多选</option>
         <option>文本</option>
       </select>
-      <i class="additem" @click="addamount(), updatescroll()">+</i>
+      <span class="additem" @click="addamount(), updatescroll()">+</span>
+      <span class="delitem" @click="deleteamount(quesitem.id)" ref="deletematrix" @mousemove="cursorfail">×</span>
 
-      <i class="delitem" @click="deleteamount(quesitem.id)" ref="deletematrix" @mousemove="cursorfail">×</i>
     </div>
 
 
     <div class="questitle">
       <span>{{ content.mixfile.indexOf(quesitem) + 1 }}</span>
-      <el-input v-model="quesitem.question.detail" autosize type="textarea" placeholder="请输入题目标题" />
+      <el-input v-model="quesitem.question.detail" autosize type="textarea" placeholder="请输入题目" />
     </div>
 
 
@@ -24,11 +24,11 @@
         <p class="optionall" v-for="(con, index) in quesitem.options">
           <span class="circle"></span>
           <el-input type="textarea" autosize placeholder="请输入选项内容" v-model="con.detail" />
-          <i class="deloption" @click="deleoption(index, con)" ref="deleteo">×</i>
+          <span class="deloption" @click="deleoption(index, con)" ref="deleteo">×</span>
         </p>
-        <p class="addoption">
-          <i class="additem" @click="addaoption()">+</i>
-          <span>添加选项</span>
+        <p class="addoption" @click="addaoption()">
+        <div class="additem">+</div>
+        <span>添加选项</span>
         </p>
       </div>
     </template>
@@ -39,11 +39,11 @@
         <p class="optionall" v-for="(con, i) in quesitem.options">
           <span class="fang"></span>
           <el-input type="textarea" autosize v-model="con.detail" placeholder="请输入选项内容" />
-          <i class="deloption" @click="deleoption(i)" ref="deleteo">×</i>
+          <span class="deloption" @click="deleoption(i)" ref="deleteo">×</span>
         </p>
-        <p class="addoption">
-          <i class="additem" @click="addaoption()">+</i>
-          <span>添加选项</span>
+        <p class="addoption" @click="addaoption()">
+        <div class="additem">+</div>
+        <span>添加选项</span>
         </p>
       </div>
     </template>
@@ -59,7 +59,7 @@
 </template>
 
 <script setup>
-import { ref, nextTick, inject, reactive, onMounted, watch } from "vue";
+import { ref, inject, onMounted } from "vue";
 import { nanoid } from "nanoid";
 
 const props = defineProps(["quesitem", "content", "index"]);
@@ -93,7 +93,7 @@ function typechange(index) {
   }
 }
 //鼠标滚轮在添加新题目时滑动到底部
-let { scroll, updatescroll } = inject("changescroll");
+let { updatescroll } = inject("changescroll");
 //添加问题
 function addamount() {
   const quesobj = {
@@ -139,6 +139,14 @@ function addaoption() {
 function deleoption(id, con) {
   if (props.quesitem.options.length != 1) {
     props.quesitem.options.splice(id, 1);
+  } else {
+    ElMessage({
+      message: '无法删除',
+      type: 'warning',
+      duration: 3000,
+      showClose: true,
+      center: true
+    })
   }
 
 }
@@ -148,8 +156,9 @@ function deleoption(id, con) {
 li {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 30px;
 
   .itemnav {
     display: flex;
@@ -158,42 +167,45 @@ li {
     height: 30px;
     position: relative;
 
-    #type {
+    .type {
       width: 60px;
       height: 24px;
-      margin: 0 34px;
+      margin-left: 0px;
       text-align: center;
       line-height: 24px;
-      opacity: 1;
+      font-size: 14px;
       background: rgba(255, 255, 255, 1);
       border: 1px solid rgba(217, 217, 217, 1);
     }
 
-    i {
-      font-style: normal;
-    }
-
-    .additem {
+    span {
       cursor: pointer;
       position: absolute;
-      right: 70px;
-      font-size: 25px;
-      font-weight: 400;
+      display: block;
+      height: 20px;
+      width: 20px;
+      text-align: center;
+      line-height: 20px;
+      font-size: 20px;
+      font-weight: bold;
       color: rgba(30, 111, 255, 1);
-    }
 
-    .delitem {
-      cursor: pointer;
-      position: absolute;
-      right: 30px;
-      font-size: 25px;
-      font-weight: 400;
-      color: rgba(30, 111, 255, 1);
+      &.additem {
+        font-size: 24px;
+        right: 70px;
+      }
+
+      &.delitem {
+        right: 30px;
+      }
     }
   }
 
   div.questitle {
     display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
     height: auto;
     width: 100%;
     padding: 5px;
@@ -204,125 +216,142 @@ li {
     }
 
     span {
+      display: block;
+      height: auto;
+      width: auto;
       font-size: 16px;
-      font-weight: 500;
       margin-right: 5px;
       color: rgba(0, 0, 0, 1);
     }
 
     >div.el-textarea {
+      flex: 1;
       display: block;
+      height: auto;
+      width: auto;
+
 
       :deep(textarea) {
         display: block;
         height: auto;
         width: 100%;
-        height: auto;
-        font-size: 15px;
-        color: #000000;
+        font-size: 16px;
+        color: rgb(0, 0, 0);
         outline: none;
         resize: none;
         border: none;
-        padding: 0;
         box-shadow: none;
+        padding: 0;
+        overflow: hidden;
       }
     }
   }
 
   >.quesbox {
-    display: block;
-    height: auto;
-    width: 100%;
-  }
-
-  .optionall {
     display: flex;
-    height: 20px;
-    height: fit-content;
-    margin: 5px 50px 5px 37px;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: auto;
+    width: calc(100% - 10px);
+    margin: 10px 0;
 
-    .circle {
-      width: 18px;
-      height: 18px;
-      border: 2px solid rgba(217, 217, 217, 1);
-      border-radius: 100%;
-    }
+    .optionall {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      height: auto;
+      width: 100%;
 
-    .fang {
-      width: 18px;
-      height: 18px;
-      border: 2px solid rgba(217, 217, 217, 1);
-    }
-
-    .option {
-      display: block;
-      width: 500px;
-      height: fit-content;
-      word-wrap: break-word; //超出页面自动换行
-
-      margin-left: 5px;
-      font-size: 16px;
-      font-weight: 400;
-      color: rgba(0, 0, 0, 1);
-    }
-
-    >div.el-textarea {
-      :deep(textarea) {
-        height: auto;
-        opacity: 1;
-        text-align: left;
-        border: none;
-        outline: none;
-        resize: none;
-        border: none;
-        box-shadow: none;
-        padding: 0;
-        margin: 0;
+      .circle {
+        display: block;
+        width: 14px;
+        height: 14px;
+        border: 1px solid rgb(202, 202, 202);
+        border-radius: 50%;
+        margin-right: 5px;
       }
 
+      .fang {
+        width: 14px;
+        height: 14px;
+        border: 1px solid rgba(217, 217, 217, 1);
+        margin-right: 5px;
+      }
+
+      >div.el-textarea {
+
+        flex: 1;
+        display: block;
+        height: auto;
+        width: auto;
+
+
+        :deep(textarea) {
+          display: block;
+          height: auto;
+          width: 100%;
+          font-size: 16px;
+          color: rgb(0, 0, 0);
+          outline: none;
+          resize: none;
+          border: none;
+          box-shadow: none;
+          padding: 0;
+          overflow: hidden;
+        }
+      }
+
+      .deloption {
+        cursor: pointer;
+        display: block;
+        height: 20px;
+        width: 20px;
+        text-align: center;
+        line-height: 20px;
+        font-size: 20px;
+        font-weight: bold;
+        color: rgba(30, 111, 255, 1);
+      }
     }
 
-    .deloption {
-      cursor: pointer;
-      font-size: 20px;
-      font-weight: 400;
-      color: rgba(30, 111, 255, 1);
-      font-style: normal;
-    }
-  }
-
-
-
-
-  .addoption {
-    display: flex;
-
-    .additem {
-      cursor: pointer;
-      margin-left: 37px;
-      font-size: 25px;
-      font-weight: 400;
-      color: rgba(30, 111, 255, 1);
-      font-style: normal;
-    }
-
-    span {
-      cursor: default;
+    .addoption {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      height: auto;
+      width: 100%;
       margin-top: 10px;
-      margin-left: 10px;
-      opacity: 1;
-      text-align: left;
-      border-width: 0;
+      cursor: pointer;
+
+      .additem {
+        cursor: pointer;
+        display: block;
+        height: 20px;
+        width: 20px;
+        text-align: center;
+        line-height: 20px;
+        font-size: 20px;
+        font-weight: bold;
+        color: #1e6fff;
+      }
+
+      span {
+        flex: 1;
+        display: block;
+        height: auto;
+        width: auto;
+      }
+    }
+
+    .quesarea {
+      height: 30px;
+      margin-left: 34px;
+      border: 1px solid rgba(217, 217, 217, 1);
+      margin-bottom: 20px;
     }
   }
-
-
-  .quesarea {
-    height: 30px;
-    margin-left: 34px;
-    border: 1px solid rgba(217, 217, 217, 1);
-    margin-bottom: 20px;
-  }
-
 }
 </style>
