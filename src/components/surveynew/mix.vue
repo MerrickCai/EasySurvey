@@ -21,32 +21,30 @@
 
     <template v-if="titletype=='单选'">
       <div class="quesbox radiotype">
-          <p class="optionall" v-for="(con, index) in quesitem.options">
-            <span class="circle"></span>
-            <el-input type="textarea" autosize placeholder="请输入选项内容" v-model="con.detail"
-             />
-            <i class="deloption" @click="deleoption(index, con)" ref="deleteo" >×</i>
-          </p>
-          <p class="addoption">
-            <i class="additem" @click="addaoption()">+</i>
-            <span>添加选项</span>
-          </p>
+        <p class="optionall" v-for="(con, index) in quesitem.options">
+          <span class="circle"></span>
+          <el-input type="textarea" autosize placeholder="请输入选项内容" v-model="con.detail" />
+          <i class="deloption" @click="deleoption(index, con)" ref="deleteo">×</i>
+        </p>
+        <p class="addoption">
+          <i class="additem" @click="addaoption()">+</i>
+          <span>添加选项</span>
+        </p>
       </div>
     </template>
 
 
     <template v-else-if="titletype=='多选'">
       <div class="quesbox checkboxtype">
-          <p class="optionall" v-for="(con, i) in quesitem.options">
-            <span class="fang"></span>
-            <el-input type="textarea" autosize v-model="con.detail" placeholder="请输入选项内容"
-               />
-            <i class="deloption" @click="deleoption(i)" ref="deleteo">×</i>
-          </p>
-          <p class="addoption">
-            <i class="additem" @click="addaoption()">+</i>
-            <span>添加选项</span>
-          </p>
+        <p class="optionall" v-for="(con, i) in quesitem.options">
+          <span class="fang"></span>
+          <el-input type="textarea" autosize v-model="con.detail" placeholder="请输入选项内容" />
+          <i class="deloption" @click="deleoption(i)" ref="deleteo">×</i>
+        </p>
+        <p class="addoption">
+          <i class="additem" @click="addaoption()">+</i>
+          <span>添加选项</span>
+        </p>
       </div>
     </template>
 
@@ -61,7 +59,7 @@
 </template>
 
 <script setup>
-import { ref, nextTick, inject, reactive, onMounted,watch } from "vue";
+import { ref, nextTick, inject, reactive, onMounted, watch } from "vue";
 import { nanoid } from "nanoid";
 
 const props = defineProps(["quesitem", "mixfile", "mixreceive", "mixdeleteques", "index"]);
@@ -76,23 +74,23 @@ onMounted(() => {
 //存储选项
 var option = []
 function typechange(index) {
-    
-    var obj=document.getElementsByTagName('select')
-    //obj.selectedIndex为选中的option的索引,obj.options[obj.selectedIndex].text为选中的文本
-    titletype.value=obj[index].options[obj[index].selectedIndex].text
-    props.quesitem.question.type=obj[index].selectedIndex
-    // 问卷类型为文本类型,删去次级选项的键值
-    if(obj[index].selectedIndex==2) {
-      option.splice(0,option.length)
-      //储存主题目中单选和多选原写下的题目，使得切换到文本再切换回去后不会丢失
-      props.quesitem.options.forEach((item)=>{
-        option.push(JSON.parse(JSON.stringify(item)))
-      })
-     delete props.quesitem.options
-    }
-    if((obj[index].selectedIndex==0||obj[index].selectedIndex==1)&&!props.quesitem.options){
-      props.quesitem.options=option
-    }
+
+  var obj = document.getElementsByTagName('select')
+  //obj.selectedIndex为选中的option的索引,obj.options[obj.selectedIndex].text为选中的文本
+  titletype.value = obj[index].options[obj[index].selectedIndex].text
+  props.quesitem.question.type = obj[index].selectedIndex
+  // 问卷类型为文本类型,删去次级选项的键值
+  if (obj[index].selectedIndex == 2) {
+    option.splice(0, option.length)
+    //储存主题目中单选和多选原写下的题目，使得切换到文本再切换回去后不会丢失
+    props.quesitem.options.forEach((item) => {
+      option.push(JSON.parse(JSON.stringify(item)))
+    })
+    delete props.quesitem.options
+  }
+  if ((obj[index].selectedIndex == 0 || obj[index].selectedIndex == 1) && !props.quesitem.options) {
+    props.quesitem.options = option
+  }
 }
 //鼠标滚轮在添加新题目时滑动到底部
 let { scroll, updatescroll } = inject("changescroll");
@@ -187,9 +185,10 @@ li {
     height: auto;
     width: 100%;
     padding: 5px;
-    border: 1px solid transparent; 
+    border: 1px solid transparent;
+
     &:hover {
-      border: 1px dashed rgba(30, 111, 255, 1); 
+      border: 1px dashed rgba(30, 111, 255, 1);
     }
 
     span {
@@ -223,41 +222,40 @@ li {
     height: auto;
     width: 100%;
   }
-    .optionall {
-      display: flex;
-      height: 20px;
+
+  .optionall {
+    display: flex;
+    height: 20px;
+    height: fit-content;
+    margin: 5px 50px 5px 37px;
+
+    .circle {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(217, 217, 217, 1);
+      border-radius: 100%;
+    }
+
+    .fang {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(217, 217, 217, 1);
+    }
+
+    .option {
+      display: block;
+      width: 500px;
       height: fit-content;
-      margin: 5px 0 5px 37px;
+      word-wrap: break-word; //超出页面自动换行
 
-      .circle {
-        width: 18px;
-        height: 18px;
-        border: 2px solid rgba(217, 217, 217, 1);
-        border-radius: 100%;
-      }
+      margin-left: 5px;
+      font-size: 16px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 1);
+    }
 
-      .fang {
-        width: 18px;
-        height: 18px;
-        border: 2px solid rgba(217, 217, 217, 1);
-      }
-
-      .option {
-        display: block;
-        width: 500px;
-        height: fit-content;
-        word-wrap: break-word; //超出页面自动换行
-
-        margin-left: 5px;
-        font-size: 16px;
-        font-weight: 400;
-        color: rgba(0, 0, 0, 1);
-      }
-
-      >div.el-textarea {
-        width: 700px;
-        :deep(textarea) {
-          width: 700px;
+    >div.el-textarea {
+      :deep(textarea) {
         height: auto;
         opacity: 1;
         text-align: left;
@@ -268,18 +266,18 @@ li {
         box-shadow: none;
         padding: 0;
         margin: 0;
-        }
-      
       }
 
-      .deloption {
-        cursor: pointer;
-        font-size: 20px;
-        font-weight: 400;
-        color: rgba(30, 111, 255, 1);
-        font-style: normal;
-      }
     }
+
+    .deloption {
+      cursor: pointer;
+      font-size: 20px;
+      font-weight: 400;
+      color: rgba(30, 111, 255, 1);
+      font-style: normal;
+    }
+  }
 
 
 
@@ -308,7 +306,6 @@ li {
 
 
   .quesarea {
-    width: 600px;
     height: 30px;
     margin-left: 34px;
     border: 1px solid rgba(217, 217, 217, 1);
