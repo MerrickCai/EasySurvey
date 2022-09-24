@@ -122,6 +122,10 @@ nav {
         cursor: pointer;
         transition: all 0.2s ease-in-out 0s;
 
+        @media (max-width:@breakpoint) {
+            height: calc(@navHeight - 10px);
+        }
+
         &:hover {
             transform: scale(1.1);
         }
@@ -143,6 +147,7 @@ nav {
 
             @media (max-width:@breakpoint) {
                 font-size: 24px;
+                line-height: calc(@navHeight - 10px);
             }
         }
     }
@@ -157,6 +162,10 @@ nav {
         height: @navHeight;
         width: auto;
         overflow: hidden;
+
+        @media (max-width:@breakpoint) {
+            height: calc(@navHeight - 10px);
+        }
 
         >.navbar-enter-active,
         >.navbar-leave-active {
@@ -178,6 +187,10 @@ nav {
             height: calc(@navHeight - 15px);
             width: auto;
 
+            @media (max-width:@breakpoint) {
+                height: calc(@navHeight - 10px - 15px);
+            }
+
             >div[button] {
                 display: block;
                 height: calc(@navHeight - 15px);
@@ -185,15 +198,18 @@ nav {
                 margin-right: 40px;
                 padding: 0 10px;
                 background-color: rgba(71, 145, 255, 1);
-                border-radius: 10px;
+                border-radius: 5px;
                 color: rgb(255, 255, 255);
                 font-size: 16px;
                 line-height: calc(@navHeight - 15px);
                 cursor: pointer;
 
                 @media (max-width:@breakpoint) {
+                    height: calc(@navHeight - 10px - 15px);
+                    line-height: calc(@navHeight - 10px - 15px);
                     margin-right: 20px;
-                    font-size: 15px;
+                    font-size: 14px;
+                    padding: 0 5px;
                 }
             }
 
@@ -205,6 +221,7 @@ nav {
                 cursor: pointer;
 
                 @media (max-width:@breakpoint) {
+                    height: calc(@navHeight - 10px - 15px);
                     display: none;
                 }
 
@@ -227,6 +244,11 @@ nav {
                         width: calc(@navHeight - 15px);
                         border-radius: 50%;
                         object-fit: cover;
+
+                        @media (max-width:@breakpoint) {
+                            height: calc(@navHeight - 10px - 15px);
+                            width: calc(@navHeight - 10px - 15px);
+                        }
                     }
                 }
 

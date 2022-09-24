@@ -16,18 +16,18 @@
           <!-- 新建问卷介绍 -->
           <div class="newintro">
             <span class="newintro_title">问卷介绍：</span>
-            <textarea cols="30" rows="5" class="introin" v-model="filetitle.info_para"
+            <textarea class="introin" v-model="filetitle.info_para"
               placeholder="为了使问卷调查结果更加清晰，准确，请输入关于问卷的简短介绍以及注意事项，方便填写问卷的人更清晰的认识问卷，字数少于500字"></textarea>
           </div>
         </div>
         <!-- 问卷类型选择标签 -->
         <div class="questype">
-          <span class="typetitle">请选择问卷类型:</span>
-          <span class="typeall">
-            <span :class="{ typeclick: type == 6 }" @click="type = 6">普通问卷</span>
-            <span :class="{ typeclick: type == 3 }" @click="type = 3">矩阵</span>
-            <span :class="{ typeclick: type == 4 }" @click="type = 4">量表</span>
-          </span>
+          <div class="typetitle">请选择问卷类型:</div>
+          <div class="typeall">
+            <span :class="{ typeclick: type === 6 }" @click="type = 6">普通问卷</span>
+            <span :class="{ typeclick: type === 3 }" @click="type = 3">矩阵</span>
+            <span :class="{ typeclick: type === 4 }" @click="type = 4">量表</span>
+          </div>
         </div>
 
         <div class="quesList">
@@ -683,7 +683,7 @@ div.wrapper {
   flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
-  height: calc(100% - 20px);
+  height: calc(100% - 10px);
   width: calc(100% - 20px);
   margin: 0 auto;
   position: relative;
@@ -694,13 +694,7 @@ div.wrapper {
   background-color: rgb(255, 255, 255);
   z-index: 0;
 
-  @media (max-width:@breakpoint) {
-    height: calc(100% - 10px);
-    width: calc(100% - 20px);
-  }
-
   >div.container {
-
 
     display: flex;
     flex-direction: column;
@@ -716,12 +710,16 @@ div.wrapper {
       flex-direction: column;
       flex-wrap: nowrap;
       justify-content: flex-start;
-      align-items: flex-start;
+      align-items: center;
       height: auto;
       width: 70%;
-      margin-top: 20px;
-      overflow-y: auto;
-      overflow-x: hidden;
+      margin-top: 40px;
+      overflow: auto;
+
+      @media (max-width:@breakpoint) {
+        margin-top: 80px;
+        width: 100%;
+      }
 
       >div.title {
         display: flex;
@@ -732,50 +730,22 @@ div.wrapper {
         height: auto;
         width: 100%;
 
-        >p.newtitle {
-          display: block;
-          width: auto;
-          height: auto;
-          font-size: 33px;
-          font-weight: bold;
-          color: rgb(0, 0, 0);
-          position: relative;
-
-          &::after {
-            content: "";
-            display: block;
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            height: 4px;
-            width: 100%;
-            background-color: #1e6fff;
-            border-radius: 2px;
-          }
-        }
-
         >input.titlein {
           position: relative;
           display: block;
           width: 500px;
           height: auto;
-          font-size: 33px;
+          font-size: 28px;
           font-weight: bold;
           color: rgb(0, 0, 0);
           outline: 0;
           border: 1px dashed rgba(30, 111, 255, 1);
           text-align: center;
+          padding: 5px;
 
-          &::after {
-            content: "";
-            display: block;
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            height: 4px;
-            width: 100%;
-            background-color: #1e6fff;
-            border-radius: 2px;
+          @media (max-width:@breakpoint) {
+            width: 300px;
+            font-size: 22px;
           }
         }
 
@@ -786,22 +756,22 @@ div.wrapper {
           justify-content: center;
           align-items: flex-start;
           height: auto;
-          width: 70%;
-          margin-top: 5px;
+          width: 550px;
+          margin-top: 10px;
+
+          @media (max-width:@breakpoint) {
+            width: 330px
+          }
 
           >span.newintro_title {
             display: block;
-            font-size: 16px;
+            font-size: 18px;
             color: rgba(30, 111, 255, 1);
             margin-bottom: 5px;
-          }
 
-          >p.newintro_con {
-            display: block;
-            height: auto;
-            width: auto;
-            font-size: 15px;
-            color: rgb(0, 0, 0);
+            @media (max-width:@breakpoint) {
+              font-size: 16px;
+            }
           }
 
           >textarea {
@@ -809,11 +779,16 @@ div.wrapper {
             height: auto;
             width: 100%;
             height: 100px;
-            font-size: 15px;
+            font-size: 16px;
             color: rgb(0, 0, 0);
             outline: none;
             resize: none;
             border: 1px dashed rgba(30, 111, 255, 1);
+            padding: 5px;
+
+            @media (max-width:@breakpoint) {
+              font-size: 15px;
+            }
           }
         }
       }
@@ -826,7 +801,7 @@ div.wrapper {
         align-items: center;
         height: auto;
         width: 100%;
-        margin-bottom: 5px;
+        margin: 5px 0;
 
         .typetitle {
           display: block;
@@ -835,7 +810,12 @@ div.wrapper {
           font-size: 16px;
           color: rgba(0, 0, 0, 1);
           position: relative;
-          margin-right: 10px;
+          margin-right: 20px;
+
+          @media (max-width:@breakpoint) {
+            font-size: 14px;
+            margin-right: 10px;
+          }
 
           &::after {
             content: "";
@@ -843,7 +823,7 @@ div.wrapper {
             position: absolute;
             bottom: -3px;
             left: 0;
-            height: 2px;
+            height: 3px;
             width: 100%;
             background-color: #1e6fff;
             border-radius: 5px;
@@ -856,20 +836,27 @@ div.wrapper {
           flex-wrap: nowrap;
           justify-content: flex-start;
           align-items: center;
+          height: auto;
+          width: auto;
 
           >span {
             display: block;
-            width: 60px;
-            height: 24px;
+            width: auto;
+            height: auto;
             margin-right: 10px;
-            text-align: center;
-            line-height: 24px;
+            line-height: 16px;
             color: rgba(30, 111, 255, 1);
-            font-size: 13px;
+            font-size: 16px;
             box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
             background-color: rgb(255, 255, 255);
             border-radius: 5px;
             cursor: pointer;
+            padding: 5px 10px;
+
+            @media (max-width:@breakpoint) {
+              font-size: 14px;
+              line-height: 14px;
+            }
 
             &.typeclick {
               background: rgba(235, 245, 255, 1);
@@ -883,7 +870,6 @@ div.wrapper {
         display: block;
         height: auto;
         width: 100%;
-        overflow: visible;
       }
     }
 
@@ -909,10 +895,20 @@ div.wrapper {
         font-size: 18px;
         border-radius: 10px;
 
+        @media (max-width:@breakpoint) {
+          width: 120px;
+          height: 40px;
+          font-size: 16px;
+        }
+
         &[keep] {
           background-color: #ebf5ff;
           color: #8c8c8c;
           margin-right: 50px;
+
+          @media (max-width:@breakpoint) {
+            margin-right: 20px;
+          }
         }
 
         &[push] {

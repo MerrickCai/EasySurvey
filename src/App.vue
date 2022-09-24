@@ -141,6 +141,10 @@ main {
     width: 100%;
     overflow: visible;
 
+    @media (max-width:@breakpoint) {
+      height: calc(100vh - @navSpan + 10px);
+    }
+
     >.mainView-enter-active,
     >.mainView-leave-active {
       transition: all 0.2s ease-in-out 0s;
