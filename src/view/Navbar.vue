@@ -1,6 +1,9 @@
 <script setup>
 import { useRouter, useRoute } from "vue-router"
 import { useStore } from "../Stores/pinia.js"
+import navbar_1 from '../assets/navbar_1.png'
+import navbar_2 from '../assets/navbar_2.png'
+import circle from '../assets/circle.png'
 const router = useRouter()
 const route = useRoute()
 const datas = useStore()
@@ -83,11 +86,11 @@ function toHome() {
             <Transition name="navbar">
                 <div v-show="datas.navShow">
                     <div button @click="router.push('/surveynew')">创建问卷</div>
-                    <div img @click="devpop"><img v-lazy="'/assets/navbar_1.png'" /></div>
+                    <div img @click="devpop"><img v-lazy="navbar_1" /></div>
                     <div img avatar @click="router.push(`/user/${ datas.user.userId}`)">
-                        <img v-lazy="'/assets/circle.png'" />
+                        <img v-lazy="circle" />
                     </div>
-                    <div img logout @click="logOut"><img v-lazy="'/assets/navbar_2.png'" /></div>
+                    <div img logout @click="logOut"><img v-lazy="navbar_2" /></div>
                 </div>
             </Transition>
         </div>

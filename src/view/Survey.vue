@@ -6,6 +6,7 @@ import { ref, reactive, provide } from "vue"
 import axios from "axios"
 import { useRoute } from "vue-router"
 import { useStore } from "../Stores/pinia.js"
+import tangible from '../assets/tangible.png'
 const route = useRoute()
 const datas = useStore()
 
@@ -30,7 +31,7 @@ const Survey = reactive({
     end: false,
     onMobile: 'block',
     toOngoing() {
-      this.onMobile='none'
+      this.onMobile = 'none'
       this.begin = false
       this.ongoing = true
     },
@@ -43,9 +44,7 @@ const Survey = reactive({
 })
 //------------------------- 问卷状态和数据对象 ------------------------
 
-setTimeout(()=>{
-  Survey.status.onMobile='none'
-},1000)
+
 
 
 //--------------------- 网络请求获取问卷类型和数据 -------------------------
@@ -97,7 +96,7 @@ provide("Survey", Survey)
     <div class="decoration3" v-show="Survey.status.begin || Survey.status.end"></div>
     <div class="decoration4" v-show="Survey.status.begin || Survey.status.end"></div>
     <div class="decoration5"></div>
-    <img dog-ear v-lazy="'/assets/tangible.png'" />
+    <img dog-ear v-lazy="tangible" />
     <component :is="currentView"></component>
   </div>
 </template>

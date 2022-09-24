@@ -3,7 +3,7 @@
 
     <div class="decoration1"></div>
     <div class="decoration5"></div>
-    <img dog-ear v-lazy="'/assets/tangible.png'" />
+    <img dog-ear v-lazy="tangible" />
 
 
     <div class="container">
@@ -63,23 +63,25 @@
 </template>
 
 <script setup>
-import { nextTick, reactive, ref, provide, watch, computed, toRaw } from "vue";
-import { nanoid } from "nanoid";
-import radiolist from "../components/surveynew/radiolist.vue";
-import checkboxlist from "../components/surveynew/checkboxlist.vue";
-import matrixlist from "../components/surveynew/matrixlist.vue";
-import scalelist from "../components/surveynew/scalelist.vue";
-import textlist from "../components/surveynew/textlist.vue";
-import mixlist from "../components/surveynew/mixlist.vue"
+import { nextTick, reactive, ref, provide, watch, computed } from "vue";
 import { useStore } from "../Stores/pinia.js";
 import axios from "axios";
+import tangible from '../assets/tangible.png'
+import { nanoid } from "nanoid";
 import clipboard3 from "vue-clipboard3";
 import QrcodeVue from "qrcode.vue";
-//数据
+
+
+import matrixlist from "../components/surveynew/matrixlist.vue";
+import scalelist from "../components/surveynew/scalelist.vue";
+import mixlist from "../components/surveynew/mixlist.vue"
+
+
+
 const datas = useStore();
 //动态组件视图
 let type = ref(6);
-let typelist = [radiolist, checkboxlist, matrixlist, scalelist, textlist, mixlist];
+let typelist = [0, 0, matrixlist, scalelist, 0, mixlist];
 let typeview = computed(() => typelist[type.value - 1]);
 //添加题目滚轮滑到最下方
 let scroll = ref(0);
@@ -676,8 +678,9 @@ div.wrapper {
   flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
-  height: calc(100% - 10px);
-  width: 100%;
+  height: calc(100% - 20px);
+  width: calc(100% - 20px);
+  margin: 0 auto;
   position: relative;
   top: 0;
   left: 0;
@@ -686,7 +689,14 @@ div.wrapper {
   background-color: rgb(255, 255, 255);
   z-index: 0;
 
+  @media (max-width:@breakpoint) {
+    height: calc(100% - 10px);
+    width: calc(100% - 20px);
+  }
+
   >div.container {
+
+
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -988,12 +998,14 @@ div.wrapper {
         }
       }
     }
+
+
   }
 
   >div.decoration1 {
     display: block;
-    height: 400px;
-    width: 400px;
+    height: 300px;
+    width: 300px;
     position: absolute;
     z-index: -1;
     top: 0;
@@ -1002,8 +1014,12 @@ div.wrapper {
     border-radius: 50%;
     background-color: rgba(235, 245, 255, 1);
     clip-path: polygon(50% 50%, 100% 50%, 100% 100%, 50% 100%);
-  }
 
+    @media (max-width:@breakpoint) {
+      height: 150px;
+      width: 150px;
+    }
+  }
 
   >div.decoration5 {
     display: block;
@@ -1014,6 +1030,11 @@ div.wrapper {
     top: -5px;
     right: -7px;
     background-color: rgb(255, 255, 255, 1);
+
+    @media (max-width:@breakpoint) {
+      height: calc(70px + 5px);
+      width: calc(77.7px + 7px);
+    }
   }
 
   >img[dog-ear] {
@@ -1026,6 +1047,11 @@ div.wrapper {
     right: 0;
     object-fit: contain;
     transform: scale(1.07);
+
+    @media (max-width:@breakpoint) {
+      height: 70px;
+      width: 77.7px;
+    }
   }
 }
 </style>

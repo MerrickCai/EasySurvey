@@ -712,7 +712,7 @@ div[content] {
 
             @media (max-width:@breakpoint) {
                 width: 160px;
-            height: 40px;
+                height: 40px;
             }
         }
     }
@@ -747,6 +747,10 @@ div[finish] {
             position: relative;
             transform: translateX(-25px);
 
+            @media (max-width:@breakpoint) {
+                font-size: 26px;
+            }
+
             &::after {
                 content: '✔';
                 position: absolute;
@@ -772,6 +776,10 @@ div[finish] {
             font-weight: bold;
             color: rgba(30, 111, 255, 1);
             margin: 10px 0;
+
+            @media (max-width:@breakpoint) {
+                font-size: 26px;
+            }
         }
 
         >p {
@@ -780,6 +788,10 @@ div[finish] {
             width: auto;
             font-size: 20px;
             color: rgba(0, 0, 0, 1);
+
+            @media (max-width:@breakpoint) {
+                font-size: 18px;
+            }
         }
     }
 
@@ -803,6 +815,11 @@ div[finish] {
             background-color: rgba(30, 111, 255, 1);
             border-radius: 10px;
             cursor: pointer;
+
+            @media (max-width:@breakpoint) {
+                width: 200px;
+                height: 50px;
+            }
         }
     }
 }
