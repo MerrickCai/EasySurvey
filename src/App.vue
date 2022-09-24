@@ -5,8 +5,22 @@ import { useStore } from "./Stores/pinia.js"
 import bg1 from './assets/login_cloud.jpg'
 import bg2 from './assets/login_mount.jpg'
 import bg3 from './assets/login_mountain.jpg'
+import HanSans from './assets/SourceHanSansSC-VF.otf.woff2';
+import { onMounted } from "vue"
 const router = useRouter()
 const datas = useStore()
+
+
+//----------------------------------------- 异步加载字体文件(延迟5-10秒=>防止高并发) ----------------------------------
+onMounted(() => {
+  const delay = (function (x, y) {//随机返回[x,y]的数字
+    return Math.floor(Math.random() * (y - x + 1)) + x
+  })(5, 10)
+  setTimeout(() => {
+    document.fonts.add(new FontFace('Han Sans', `url(${HanSans})`))
+  }, delay * 1000)
+})
+//----------------------------------------- 异步加载字体文件(延迟5-10秒=>防止高并发) ----------------------------------
 
 
 
@@ -188,11 +202,6 @@ main {
   }
 }
 
-@font-face {
-  font-family: 'Han Sans';
-  src: url('/SourceHanSansSC-VF.otf.woff2');
-}
-
 #app {
   display: block;
   height: 100vh;
@@ -200,6 +209,8 @@ main {
 }
 
 * {
+  font-family: 'Han Sans', 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
   box-sizing: border-box;
   margin: 0;
   padding: 0;
