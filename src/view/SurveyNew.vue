@@ -25,18 +25,14 @@
           <div class="typetitle">请选择问卷类型:</div>
           <div class="typeall">
             <span :class="{ typeclick: type === 6 }" @click="type = 6">普通问卷</span>
-            <span :class="{ typeclick: type === 3 }" @click="type = 3">矩阵</span>
-            <span :class="{ typeclick: type === 4 }" @click="type = 4">量表</span>
+            <span :class="{ typeclick: type === 3 }" @click="type=3">矩阵</span>
+            <span :class="{ typeclick: type === 4 }" @click="type=4">量表</span>
           </div>
         </div>
 
         <div class="quesList">
           <keep-alive>
-            <component :is="typeview" :fileword="fileword" :receive="receive" :deleteques="deleteques"
-              :scalefile="scalefile" :sreceive="sreceive" :sdeleteques="sdeleteques" :radiofile="radiofile"
-              :rreceive="rreceive" :rdeleteques="rdeleteques" :checkboxfile="checkboxfile" :creceive="creceive"
-              :cdeleteques="cdeleteques" :textfile="textfile" :treceive="treceive" :tdeleteques="tdeleteques"
-              :mixfile="mixfile" :mixreceive="mixreceive" :mixdeleteques="mixdeleteques">
+            <component :is="typeview" :content="content">
             </component>
           </keep-alive>
         </div>
@@ -98,6 +94,7 @@ watch(scroll, () => {
     div[0].scrollTop = div[0].scrollHeight;
   });
 });
+
 //问卷标题介绍
 
 let filetitle;
@@ -132,28 +129,6 @@ if (localStorage.getItem("surveyData")) {
     },
   ]);
 }
-//矩阵问卷新增问题
-function receive(quesobj) {
-  fileword.push(quesobj);
-}
-//矩阵问卷删除问题
-function deleteques(id) {
-  ElMessageBox.confirm(
-    '确定删除吗?',
-    '删除题目',
-    {
-      distinguishCancelAndClose: true,
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-    })
-    .then(() => {
-      fileword.map((i, x) => {
-        if (i.id == id) fileword.splice(x, 1);
-      });
-    })
-    .catch(() => {
-    })
-}
 
 //存储量表问卷信息内容
 let scalefile;
@@ -169,135 +144,6 @@ if (localStorage.getItem("surveyData")) {
       secscore: 20,
     },
   ]);
-}
-//量表问卷新增问题
-function sreceive(quesobj) {
-  scalefile.push(quesobj);
-}
-//量表问卷删除问题
-function sdeleteques(id) {
-  ElMessageBox.confirm(
-    '确定删除吗?',
-    '删除题目',
-    {
-      distinguishCancelAndClose: true,
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-    })
-    .then(() => {
-      scalefile.map((i, x) => {
-        if (i.id == id) scalefile.splice(x, 1);
-      });
-    })
-    .catch(() => {
-    })
-}
-
-//存储单选问卷信息内容
-let radiofile;
-if (localStorage.getItem("radio")) {
-  radiofile = reactive(JSON.parse(localStorage.getItem("radio")));
-} else {
-  radiofile = reactive([
-    {
-      options: [{ detail: "" }],
-      question: { detail: "", type: 0 },
-      id: nanoid(),
-    },
-  ]);
-}
-//单选问卷新增问题
-function rreceive(quesobj) {
-  radiofile.push(quesobj);
-}
-//单选问卷删除问题
-function rdeleteques(id) {
-  ElMessageBox.confirm(
-    '确定删除吗?',
-    '删除题目',
-    {
-      distinguishCancelAndClose: true,
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-    })
-    .then(() => {
-      radiofile.map((i, x) => {
-        if (i.id == id) radiofile.splice(x, 1);
-      });
-    })
-    .catch(() => {
-    })
-}
-
-//存储多选问卷信息内容
-let checkboxfile;
-if (localStorage.getItem("checkbox")) {
-  checkboxfile = reactive(JSON.parse(localStorage.getItem("checkbox")));
-} else {
-  checkboxfile = reactive([
-    {
-      options: [{ detail: "" }],
-      question: { detail: "", type: 1 },
-      id: nanoid(),
-    },
-  ]);
-}
-//多选问卷新增问题
-function creceive(quesobj) {
-  checkboxfile.push(quesobj);
-}
-//多选问卷删除问题
-function cdeleteques(id) {
-  ElMessageBox.confirm(
-    '确定删除吗?',
-    '删除题目',
-    {
-      distinguishCancelAndClose: true,
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-    })
-    .then(() => {
-      checkboxfile.map((i, x) => {
-        if (i.id == id) checkboxfile.splice(x, 1);
-      });
-    })
-    .catch(() => {
-    })
-}
-
-//存储文本问卷信息内容
-let textfile;
-if (localStorage.getItem("text")) {
-  textfile = reactive(JSON.parse(localStorage.getItem("text")));
-} else {
-  textfile = reactive([
-    {
-      question: { detail: "", type: 2 },
-      id: nanoid(),
-    },
-  ]);
-}
-//文本问卷新增问题
-function treceive(quesobj) {
-  textfile.push(quesobj);
-}
-//文本问卷删除问题
-function tdeleteques(id) {
-  ElMessageBox.confirm(
-    '确定删除吗?',
-    '删除题目',
-    {
-      distinguishCancelAndClose: true,
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-    })
-    .then(() => {
-      textfile.map((i, x) => {
-        if (i.id == id) textfile.splice(x, 1);
-      });
-    })
-    .catch(() => {
-    })
 }
 
 
@@ -315,28 +161,12 @@ if (localStorage.getItem("surveyData")) {
     },
   ]);
 }
-//混合问卷新增问题
-function mixreceive(quesobj) {
-  mixfile.push(quesobj);
-}
-//混合问卷删除问题
-function mixdeleteques(id) {
-  ElMessageBox.confirm(
-    '确定删除吗?',
-    '删除题目',
-    {
-      distinguishCancelAndClose: true,
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-    })
-    .then(() => {
-      mixfile.map((i, x) => {
-        if (i.id == id) mixfile.splice(x, 1);
-      });
-    })
-    .catch(() => {
-    })
-}
+//props数据
+let content = reactive({
+  scalefile: scalefile,
+  matrixfile: fileword,
+  mixfile: mixfile
+})
 //保存问卷
 function keepinfor() {
   localStorage.setItem("title", JSON.stringify({
@@ -395,87 +225,10 @@ async function pushfile() {
     })
   }
   if (isover == true && isarea == true) {
-    if (type.value == 1) {
-      radiofile.forEach((element) => delete element.id);
-      await axios({
-        url: "https://q.denglu1.cn/api/questions/rebuild",
-        method: "post",
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-          token: await datas.getToken()
-        },
-        data: {
-          questionnaire: {
-            userId: datas.user.userId,
-            totalNumber: 100,
-            message: filetitle.info_para,
-            title: filetitle.info_title,
-            count: 0,
-          },
-          questionOptionList: JSON.parse(JSON.stringify(radiofile)),
-        },
-      })
-        .then((response) => {
-          link.value = response.data.data.link;
-          linkqr.value =
-            "https://q.denglu1.cn/survey/" +
-            parseInt(link.value);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      localStorage.removeItem("radio");
-      radiofile.splice(0, radiofile.length);
-      radiofile.push({
-        options: [{ detail: "" }],
-        question: { detail: "", type: 1 },
-        id: nanoid(),
-      });
-    }
-    if (type.value == 2) {
-      checkboxfile.forEach((element) => delete element.id);
-      await axios({
-        url: "https://q.denglu1.cn/api/questions/rebuild",
-        method: "post",
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-          token: await datas.getToken()
-        },
-        data: {
-          questionnaire: {
-            userId: datas.user.userId,
-            totalNumber: 100,
-            message: filetitle.info_para,
-            title: filetitle.info_title,
-            count: 1,
-          },
-          questionOptionList: JSON.parse(JSON.stringify(checkboxfile)),
-        },
-      })
-        .then((response) => {
-          link.value = response.data.data.link;
-          linkqr.value =
-            "https://q.denglu1.cn/survey/" +
-            parseInt(link.value);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      localStorage.removeItem("checkbox");
-      checkboxfile.splice(0, checkboxfile.length);
-      checkboxfile.push({
-        options: [{ detail: "" }],
-        question: { detail: "", type: 1 },
-        id: nanoid(),
-      });
-    }
     if (type.value == 3) {
       fileword.forEach((element) => {
         delete element.id;
       });
-      console.log(fileword);
       await axios({
         url: "https://q.denglu1.cn/api/questions/rebuild",
         method: "post",
@@ -553,50 +306,10 @@ async function pushfile() {
       localStorage.removeItem("surveyData");
       scalefile.splice(0, scalefile.length);
       scalefile.push({
-        question: { detail: "", type: 1 },
+        question: { detail: "", dominate: 60, },
         options: [{ detail: "", dominate: 20 }],
         id: nanoid(),
-        dominate: 60,
         secscore: 20,
-      });
-    }
-    if (type.value == 5) {
-      textfile.forEach((element) => delete element.id);
-      await axios({
-        url: "https://q.denglu1.cn/api/questions/rebuild",
-        method: "post",
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-          token: await datas.getToken()
-        },
-        data: {
-          questionnaire: {
-            userId: datas.user.userId,
-            totalNumber: 100,
-            message: filetitle.info_para,
-            title: filetitle.info_title,
-            count: 4,
-          },
-          questionOptionList: JSON.parse(JSON.stringify(textfile)),
-        },
-      })
-        .then((response) => {
-          console.log(response);
-          link.value = response.data.data.link;
-          linkqr.value =
-            "https://q.denglu1.cn/survey/" +
-            parseInt(link.value);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      localStorage.removeItem("text");
-      textfile.splice(0, textfile.length);
-      textfile.push({
-        options: [{ detail: "" }],
-        question: { detail: "", type: 2 },
-        id: nanoid(),
       });
     }
     if (type.value == 6) {
