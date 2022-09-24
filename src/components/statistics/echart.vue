@@ -116,7 +116,24 @@ import survey4 from "../surveyTemplate_min/survey4_.min.vue";
 import survey5 from "../surveyTemplate_min/survey5_.min.vue";
 import surveyComplex from '../surveyTemplate_min/surveyComplex_min.vue';
 
-import * as echarts from "echarts";
+// 引入 echarts 核心模块，核心模块提供了 echarts 使用必须要的接口。
+import * as echarts from 'echarts/core';
+// 引入柱状图图表，图表后缀都为 Chart
+import { BarChart, PieChart } from 'echarts/charts';
+// 引入提示框，标题，直角坐标系，数据集，内置数据转换器组件，组件后缀都为 Component
+import {
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  DatasetComponent,
+  TransformComponent,
+  ToolboxComponent
+} from 'echarts/components';
+// 标签自动布局，全局过渡动画等特性
+import { LabelLayout, UniversalTransition } from 'echarts/features';
+// 引入 Canvas 渲染器，注意引入 CanvasRenderer 或者 SVGRenderer 是必须的一步
+import { CanvasRenderer } from 'echarts/renderers';
+
 import draggable from "vuedraggable";
 import emitter from "../../mitt/mitt.js";
 import { onMounted, ref, reactive, watch, computed, nextTick } from "vue";
@@ -127,6 +144,20 @@ import { useStore } from "../../Stores/pinia.js";
 import axios from "axios";
 const datas = useStore();
 const router = useRouter();
+// 注册必须的组件
+echarts.use([
+  TitleComponent,
+  TooltipComponent,
+  ToolboxComponent,
+  GridComponent,
+  DatasetComponent,
+  TransformComponent,
+  BarChart,
+  PieChart,
+  LabelLayout,
+  UniversalTransition,
+  CanvasRenderer,
+]);
 
 //用户列表有数据
 let usershow = ref(false)

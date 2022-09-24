@@ -696,7 +696,7 @@ div.wrapper {
     height: 100%;
 
     >div.quearea {
-      flex:1;
+      flex: 1;
       display: flex;
       flex-direction: column;
       flex-wrap: nowrap;
