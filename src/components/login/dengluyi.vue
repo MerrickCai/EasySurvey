@@ -2,7 +2,6 @@
 //视图切换
 import axios from 'axios';
 import { inject,onMounted,ref,onActivated} from 'vue'
-import textlistVue from '../surveynew/textlist.vue';
 const viewId = inject('viewId')
 
 // 轮询向接口获取token （未实现）

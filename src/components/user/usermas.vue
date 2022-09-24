@@ -2,7 +2,7 @@
     <div class="wapper">
         <div class="title">个人信息</div>
         <div class="pic">
-            <img src="/assets/circle.png" alt="">
+            <img :src="circle" alt="">
             <button>上传头像</button>
         </div>
         <form action="">
@@ -63,6 +63,7 @@
 <script setup>
 import area from "../../Stores/area.js"
 import Schema from 'async-validator';
+import circle from '../../assets/circle.png'
 import { ref } from "vue"
 const props = defineProps(["user"])
 //验证码发送按钮显示
