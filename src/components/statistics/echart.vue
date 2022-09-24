@@ -119,7 +119,7 @@ import surveyComplex from '../surveyTemplate_min/surveyComplex_min.vue';
 // 引入 echarts 核心模块，核心模块提供了 echarts 使用必须要的接口。
 import * as echarts from 'echarts/core';
 // 引入柱状图图表，图表后缀都为 Chart
-import { BarChart, PieChart } from 'echarts/charts';
+import { BarChart, PieChart, LineChart } from 'echarts/charts';
 // 引入提示框，标题，直角坐标系，数据集，内置数据转换器组件，组件后缀都为 Component
 import {
   TitleComponent,
@@ -153,6 +153,7 @@ echarts.use([
   DatasetComponent,
   TransformComponent,
   BarChart,
+  LineChart,
   PieChart,
   LabelLayout,
   UniversalTransition,
@@ -211,10 +212,31 @@ async function getfile() {
       console.log(error);
     });
 }
+// onMounted(()=>{})
+//显示统计图
+watch(
+  () => filenews.context,
+  () => {
+    if (filenews.context.userWithScores != null) {
+      nextTick(() => {
+        echartupdate();
+        echartnum();
+      })
+    }
+  },
+  { deep: true }
+);
+let userChart
+let userChartpie
+let myChart
+let myChartpie
 //用户地区分布统计图
 function echartupdate() {
-  let userChart = echarts.init(document.getElementById("echart_user"));
-  let userChartpie = echarts.init(document.getElementById("userpie"));
+  if (userChart != null && userChart != "" && userChart != undefined) {
+    userChart.dispose();//销毁
+  }
+  userChart = echarts.init(document.getElementById("echart_user"));
+  //获取地区数据
   let province = reactive([]);
   let pro = reactive([])
   let pronum = reactive([])
@@ -269,6 +291,70 @@ function echartupdate() {
             let myChartpie2 = document.getElementById("userpie");
             echart_mes.style.display = "none";
             myChartpie2.style.display = "block";
+            if (userChartpie != null && userChartpie != "" && userChartpie != undefined) {
+              userChartpie.dispose();//销毁
+            }
+            userChartpie = echarts.init(document.getElementById("userpie"));
+            //绘制饼状图
+            userChartpie.setOption({
+              title: { text: "总用户量" },
+              tooltip: {},
+              toolbox: {
+                feature: {
+                  saveAsImage: {
+                    iconStyle: {
+                      borderColor: "rbg(217, 217, 217)",
+                    },
+                  },
+                  myTool3: {
+                    show: true,
+                    title: "切换为柱状图",
+                    icon: "image:///assets/column.png",
+                    onclick: function () {
+                      let echart_mes = document.getElementById("echart_user");
+                      let myChartpie2 = document.getElementById("userpie");
+                      echart_mes.style.display = "block";
+                      myChartpie2.style.display = "none";
+                    },
+                  },
+                  myTool4: {
+                    show: true,
+                    title: "切换为折线图",
+                    icon: "image:///assets/line.png",
+                    onclick: function () {
+                      let echart_mes = document.getElementById("echart_user");
+                      let myChartpie2 = document.getElementById("userpie");
+                      echart_mes.style.display = "block";
+                      myChartpie2.style.display = "none";
+                    },
+                  },
+                  myTool1: {
+                    show: true,
+                    title: "切换为饼图",
+                    icon: "image:///assets/pancake.png",
+                    onclick: function () {
+                      let echart_mes = document.getElementById("echart_user");
+                      let myChartpie2 = document.getElementById("userpie");
+                      echart_mes.style.display = "none";
+                      myChartpie2.style.display = "block";
+                    },
+                  },
+                  // myTool2: {
+                  //   show: true,
+                  //   title: "切换为横向柱状图",
+                  //   icon: "image:///assets/row.png",
+                  //   onclick: function () {},
+                  // },
+                },
+              },
+              series: [
+                {
+                  name: "用户量",
+                  type: "pie",
+                  data: province,
+                },
+              ],
+            });
           },
         },
         // myTool2: {
@@ -307,98 +393,28 @@ function echartupdate() {
           position: "top",
         },
         itemStyle: {
-          normal: {
-            //改变柱子颜色
-            color: function (params) {
-              //注意，如果颜色太少的话，后面颜色不会自动循环，最好多定义几个颜色
-              var colorList = ['rgba(47, 184, 252, 1)', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622'];
-              return colorList[params.dataIndex]
-            }
+          //改变柱子颜色
+          color: function (params) {
+            //注意，如果颜色太少的话，后面颜色不会自动循环，最好多定义几个颜色
+            var colorList = ['rgba(47, 184, 252, 1)', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622'];
+            return colorList[params.dataIndex]
           },
           //柱子圆角修改
-          barBorderRadius: [4, 4, 4, 4]
+          borderRadius: [4, 4, 4, 4]
         },
         //柱状图柱子的宽度
         barWidth: 20,
       },
     ],
   });
-  //绘制饼状图表
-  userChartpie.setOption({
-    title: { text: "总用户量" },
-    tooltip: {},
-    toolbox: {
-      feature: {
-        saveAsImage: {
-          iconStyle: {
-            borderColor: "rbg(217, 217, 217)",
-          },
-        },
-        myTool3: {
-          show: true,
-          title: "切换为柱状图",
-          icon: "image:///assets/column.png",
-          onclick: function () {
-            let echart_mes = document.getElementById("echart_user");
-            let myChartpie2 = document.getElementById("userpie");
-            echart_mes.style.display = "block";
-            myChartpie2.style.display = "none";
-          },
-        },
-        myTool4: {
-          show: true,
-          title: "切换为折线图",
-          icon: "image:///assets/line.png",
-          onclick: function () {
-            let echart_mes = document.getElementById("echart_user");
-            let myChartpie2 = document.getElementById("userpie");
-            echart_mes.style.display = "block";
-            myChartpie2.style.display = "none";
-          },
-        },
-        myTool1: {
-          show: true,
-          title: "切换为饼图",
-          icon: "image:///assets/pancake.png",
-          onclick: function () {
-            let echart_mes = document.getElementById("echart_user");
-            let myChartpie2 = document.getElementById("userpie");
-            echart_mes.style.display = "none";
-            myChartpie2.style.display = "block";
-          },
-        },
-        // myTool2: {
-        //   show: true,
-        //   title: "切换为横向柱状图",
-        //   icon: "image:///assets/row.png",
-        //   onclick: function () {},
-        // },
-      },
-    },
-    series: [
-      {
-        name: "用户量",
-        type: "pie",
-        data: province,
-      },
-    ],
-  });
 }
-watch(
-  () => filenews.context,
-  () => {
-    if (filenews.context.userWithScores != null) {
-      nextTick(() => {
-        echartupdate();
-        echartnum();
-      })
-    }
-  },
-  { deep: true }
-);
+
+//分数区间统计图
 function echartnum() {
-  let myChart = echarts.init(document.getElementById("echart_mes"));
-  let myChartpie = echarts.init(document.getElementById("myChartpie"));
+  if (myChart != null && myChart != "" && myChart != undefined) {
+    myChart.dispose();//销毁
+  }
+  myChart = echarts.init(document.getElementById("echart_mes"));
   let yDataArr = reactive([0, 0, 0, 0, 0]);
   if (filenews.context.userWithScores != null) {
     for (let i = 0; i < filenews.context.userWithScores.length; i++) {
@@ -468,6 +484,92 @@ function echartnum() {
             let myChartpie2 = document.getElementById("myChartpie");
             echart_mes.style.display = "none";
             myChartpie2.style.display = "block";
+            if (myChartpie != null && myChartpie != "" && myChartpie != undefined) {
+              myChartpie.dispose();//销毁
+            }
+            myChartpie = echarts.init(document.getElementById("myChartpie"));
+            //绘制饼状图表
+            myChartpie.setOption({
+              title: { text: "总用户量" },
+              tooltip: {},
+              toolbox: {
+                feature: {
+                  saveAsImage: {
+                    iconStyle: {
+                      borderColor: "rbg(217, 217, 217)",
+                    },
+                  },
+                  myTool3: {
+                    show: true,
+                    title: "切换为柱状图",
+                    icon: "image:///assets/column.png",
+                    onclick: function () {
+                      let echart_mes = document.getElementById("echart_mes");
+                      let myChartpie2 = document.getElementById("myChartpie");
+                      echart_mes.style.display = "block";
+                      myChartpie2.style.display = "none";
+                    },
+                  },
+                  myTool4: {
+                    show: true,
+                    title: "切换为折线图",
+                    icon: "image:///assets/line.png",
+                    onclick: function () {
+                      let echart_mes = document.getElementById("echart_mes");
+                      let myChartpie2 = document.getElementById("myChartpie");
+                      echart_mes.style.display = "block";
+                      myChartpie2.style.display = "none";
+                    },
+                  },
+                  myTool1: {
+                    show: true,
+                    title: "切换为饼图",
+                    icon: "image:///assets/pancake.png",
+                    onclick: function () {
+                      let echart_mes = document.getElementById("echart_mes");
+                      let myChartpie2 = document.getElementById("myChartpie");
+                      echart_mes.style.display = "none";
+                      myChartpie2.style.display = "block";
+                    },
+                  },
+                  // myTool2: {
+                  //   show: true,
+                  //   title: "切换为横向柱状图",
+                  //   icon: "image:///assets/row.png",
+                  //   onclick: function () {},
+                  // },
+                },
+              },
+              series: [
+                {
+                  name: "用户量",
+                  type: "pie",
+                  data: [
+                    {
+                      value: yDataArr[0],
+                      name: xDataArr[0],
+                    },
+                    {
+                      value: yDataArr[1],
+                      name: xDataArr[1],
+                    },
+                    {
+                      value: yDataArr[2],
+                      name: xDataArr[2],
+                    },
+                    {
+                      value: yDataArr[3],
+                      name: xDataArr[3],
+                    },
+                    {
+                      value: yDataArr[4],
+                      name: xDataArr[4],
+                    },
+                  ],
+                },
+              ],
+            });
+
           },
         },
         // myTool2: {
@@ -515,105 +617,23 @@ function echartnum() {
           position: "top",
         },
         itemStyle: {
-          normal: {
-            //改变柱子颜色
-            color: function (params) {
-              //注意，如果颜色太少的话，后面颜色不会自动循环，最好多定义几个颜色
-              var colorList = ['rgba(47, 184, 252, 1)', 'rgba(254, 138, 38, 1)', 'rgba(54, 188, 203, 1)', 'rgba(255, 152, 142, 1)', 'rgba(255, 69, 0, 1)', '#749f83', '#ca8622'];
-              return colorList[params.dataIndex]
-            }
+          //改变柱子颜色
+          color: function (params) {
+            //注意，如果颜色太少的话，后面颜色不会自动循环，最好多定义几个颜色
+            var colorList = ['rgba(47, 184, 252, 1)', 'rgba(254, 138, 38, 1)', 'rgba(54, 188, 203, 1)', 'rgba(255, 152, 142, 1)', 'rgba(255, 69, 0, 1)', '#749f83', '#ca8622'];
+            return colorList[params.dataIndex]
           },
           //柱子圆角修改
-          barBorderRadius: 4
+          borderRadius: 4
         },
         //柱子宽度
         barWidth: 20,
       },
     ],
   });
-  //绘制饼状图表
-  myChartpie.setOption({
-    title: { text: "总用户量" },
-    tooltip: {},
-    toolbox: {
-      feature: {
-        saveAsImage: {
-          iconStyle: {
-            borderColor: "rbg(217, 217, 217)",
-          },
-        },
-        myTool3: {
-          show: true,
-          title: "切换为柱状图",
-          icon: "image:///assets/column.png",
-          onclick: function () {
-            let echart_mes = document.getElementById("echart_mes");
-            let myChartpie2 = document.getElementById("myChartpie");
-            echart_mes.style.display = "block";
-            myChartpie2.style.display = "none";
-          },
-        },
-        myTool4: {
-          show: true,
-          title: "切换为折线图",
-          icon: "image:///assets/line.png",
-          onclick: function () {
-            let echart_mes = document.getElementById("echart_mes");
-            let myChartpie2 = document.getElementById("myChartpie");
-            echart_mes.style.display = "block";
-            myChartpie2.style.display = "none";
-          },
-        },
-        myTool1: {
-          show: true,
-          title: "切换为饼图",
-          icon: "image:///assets/pancake.png",
-          onclick: function () {
-            let echart_mes = document.getElementById("echart_mes");
-            let myChartpie2 = document.getElementById("myChartpie");
-            echart_mes.style.display = "none";
-            myChartpie2.style.display = "block";
-          },
-        },
-        // myTool2: {
-        //   show: true,
-        //   title: "切换为横向柱状图",
-        //   icon: "image:///assets/row.png",
-        //   onclick: function () {},
-        // },
-      },
-    },
-    series: [
-      {
-        name: "用户量",
-        type: "pie",
-        data: [
-          {
-            value: yDataArr[0],
-            name: xDataArr[0],
-          },
-          {
-            value: yDataArr[1],
-            name: xDataArr[1],
-          },
-          {
-            value: yDataArr[2],
-            name: xDataArr[2],
-          },
-          {
-            value: yDataArr[3],
-            name: xDataArr[3],
-          },
-          {
-            value: yDataArr[4],
-            name: xDataArr[4],
-          },
-        ],
-      },
-    ],
-  });
+
 }
-//第一个echart
+
 
 
 
@@ -1003,11 +1023,6 @@ async function reOnline() {
   grid-row-end: 2;
   box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.1);
 
-  .userareatit {
-    position: absolute;
-    left: 20px;
-    top: 20px;
-  }
 
   .echart_user {
     width: 330px;
