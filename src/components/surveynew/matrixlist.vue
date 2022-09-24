@@ -1,15 +1,8 @@
 <template>
   <div class="matrixall">
     <transition-group name="matrixques">
-      <matrix
-        class="matrixq"
-        v-for="(item, index) in fileword"
-        :key="item.id"
-        :quesitem="item"
-        :fileword="fileword"
-        :receive="receive"
-        :deleteques="deleteques"
-      ></matrix>
+      <matrix class="matrixq" v-for="(item, index) in content.matrixfile" :key="item.id" :quesitem="item" :index="index"
+        :content="content"></matrix>
     </transition-group>
   </div>
 </template>
@@ -20,7 +13,7 @@ import { onMounted, ref, reactive, nextTick, watch } from "vue";
 import scrollReveal from "scrollreveal";
 
 const emit = defineEmits(["updateamount"]);
-const props = defineProps(["fileword", "receive", "deleteques"]);
+const props = defineProps(["content"]);
 
 // const data = reactive({
 //   // 3.在reactive()中声明scrollReveal组件
@@ -72,11 +65,13 @@ const props = defineProps(["fileword", "receive", "deleteques"]);
 .matrixques-leave-active {
   transition: all 0.5s ease;
 }
+
 .matrixques-enter-from,
 .matrixques-leave-to {
   opacity: 0;
   transform: scale(0) translateY(30px);
 }
+
 .matrixques-enter-to,
 .matrixques-leave-from {
   opacity: 1;

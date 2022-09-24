@@ -14,7 +14,7 @@
 
 
     <div class="questitle">
-      <span>{{ mixfile.indexOf(quesitem) + 1 }}</span>
+      <span>{{ content.mixfile.indexOf(quesitem) + 1 }}</span>
       <el-input v-model="quesitem.question.detail" autosize type="textarea" placeholder="请输入题目标题" />
     </div>
 
@@ -62,7 +62,7 @@
 import { ref, nextTick, inject, reactive, onMounted, watch } from "vue";
 import { nanoid } from "nanoid";
 
-const props = defineProps(["quesitem", "mixfile", "mixreceive", "mixdeleteques", "index"]);
+const props = defineProps(["quesitem", "content", "index"]);
 let titletype = ref('单选')
 //
 onMounted(() => {
@@ -101,21 +101,33 @@ function addamount() {
     question: { detail: "", type: 0 },
     options: [{ detail: "" }],
   };
-  props.mixreceive(quesobj);
+  props.content.mixfile.push(quesobj);
 }
 //删除问题
 let deletematrix = ref(null);
 function cursorfail() {
-  if (props.mixfile.length == 1) {
+  if (props.content.mixfile.length == 1) {
     deletematrix.value.style.cursor = "not-allowed";
   }
-  if (props.mixfile.length != 1) {
+  if (props.content.mixfile.length != 1) {
     deletematrix.value.style.cursor = "pointer";
   }
 }
 function deleteamount(id) {
-  if (props.mixfile.length != 1) {
-    props.mixdeleteques(id);
+  if (props.content.mixfile.length != 1) {
+    ElMessageBox.confirm(
+      '确定删除吗?',
+      '删除题目',
+      {
+        distinguishCancelAndClose: true,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+      })
+      .then(() => {
+        props.content.mixfile.splice(props.index, 1)
+      })
+      .catch(() => {
+      })
   }
 }
 
