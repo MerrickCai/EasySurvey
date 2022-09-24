@@ -1,12 +1,10 @@
 <script setup>
 import { useStore } from "../../Stores/pinia.js"
-import { useRouter } from "vue-router"
+import { useRouter, useRoute } from "vue-router"
 import { reactive, inject } from "vue"
-import { ElMessage } from 'element-plus'
 const datas = useStore()
 const router = useRouter()
-
-
+const route = useRoute()
 
 //--------------------------- 视图切换 -----------------------------
 const viewId = inject("viewId")
@@ -68,6 +66,7 @@ async function login(account, password, remember) {
 
   if (result) {
 
+
     ElMessage({
       message: '登录成功',
       type: 'success',
@@ -79,11 +78,18 @@ async function login(account, password, remember) {
     const User = JSON.parse(localStorage.getItem('User'))
 
     await datas.getUserMessage(User.token)
-    
-    console.log(datas.user)
 
-    //跳转填写地区和年龄弹窗
-    viewId.value = 3
+    //console.log(datas.user)
+
+
+    //登录成功跳转
+    if (route.query.redirect) { //判断用户是否从其他页面过来
+      router.push({ path: route.query.redirect })
+    } else {
+      router.push({ path: "/" })
+    }
+
+
 
   } else {
 
@@ -99,31 +105,13 @@ async function login(account, password, remember) {
 
 }
 //--------------------------- 登录逻辑-----------------------------
-
-
-
-
-//------------------------------ 开发中 ------------------------------------
-function Dev(str) {
-  // ElMessage({
-  //   message: `${str}开发中`,
-  //   type: 'warning',
-  //   duration: 3000,
-  //   showClose: true,
-  //   center: true
-  // })
-  viewId.value = 0
-  
-  
-}
-//------------------------------ 开发中 ------------------------------------
 </script>
 
 <template>
   <div class="wrapper">
 
     <div class="selectArea">
-      <a @click="Dev('微信登录')">微信登录</a>
+      <a @click="viewId = 0">登录易</a>
       <a active @click="viewId = 1">账号登录</a>
     </div>
 

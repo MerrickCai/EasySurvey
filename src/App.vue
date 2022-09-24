@@ -2,7 +2,9 @@
 import Navbar from "./view/Navbar.vue"
 import { useRouter } from "vue-router"
 import { useStore } from "./Stores/pinia.js"
-import { ElMessage } from 'element-plus'
+import bg1 from './assets/login_cloud.jpg'
+import bg2 from './assets/login_mount.jpg'
+import bg3 from './assets/login_mountain.jpg'
 const router = useRouter()
 const datas = useStore()
 
@@ -79,7 +81,7 @@ router.beforeEach(async (to) => {
 
 //------------------------ 随机背景图 ----------------------------------
 const background = {
-  url: ['/assets/login_cloud.png', '/assets/login_mountain.png', '/assets/login_mount.jpg'],
+  url: [bg1, bg2, bg3],
   random(x, y) {//随机返回[x,y]的数字
     return Math.floor(Math.random() * (y - x + 1)) + x
   },
@@ -119,10 +121,6 @@ div.background {
   z-index: -10;
   width: 100%;
   height: 100%;
-
-  @media (max-width:@breakpoint) {
-    display: none;
-  }
 
   >img {
     width: 100%;
@@ -169,6 +167,20 @@ main {
 @media (max-width:@safeArea) {
   :root {
     --safe_area: 100%;
+  }
+}
+
+@media (max-width:@breakpoint) {
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-clip: padding-box;
+    border: 1.5px solid rgba(255, 255, 255, 0);
+    border-radius: 5px;
+    background-color: rgba(30, 111, 255, 1);
   }
 }
 

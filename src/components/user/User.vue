@@ -44,24 +44,7 @@ let componentview = computed(() => viewlist[userchoose.value])
 
 console.log("user数据", datas.user);
 console.log("user", user);
-axios({
-  url: `https://q.denglu1.cn/api/user/getUserMessage/`,
-  method: "get",
-  withCredentials: true,
-  headers: { token: datas.getToken() },
-})
-  .then((response) => {
-    // console.log(response);
-    user["用户名"] = response.data.data.username;
-    user["年龄"] = response.data.data.age;
-    user["邮箱"] = response.data.data.email;
-    user["手机号码"] = response.data.data.phone_number;
-    user["头像"] = response.data.data.picture;
-    user["省份"] = response.data.data.province;
-  })
-  .catch((error) => {
-    console.log(error);
-  });
+
 
 function QuestionnaireRecords() {
   axios({

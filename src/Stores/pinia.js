@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from "axios"
 import { useRouter } from "vue-router"
-const router = useRouter()
 
 export const useStore = defineStore('main', {
 
@@ -189,7 +188,7 @@ export const useStore = defineStore('main', {
           } else { //refreshToken无效，只能重新进行登录注册
 
             localStorage.removeItem('User')
-
+            const router = useRouter()
             // 跳转到登录注册页面
             router.push({
               path: "/login",
@@ -203,7 +202,7 @@ export const useStore = defineStore('main', {
         } else { //token无效，且无refreshToken，只能重新进行登录注册
 
           localStorage.removeItem('User')
-
+          const router = useRouter()
           // 跳转到登录注册页面
           router.push({
             path: "/login",

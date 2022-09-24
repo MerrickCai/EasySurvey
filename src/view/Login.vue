@@ -5,13 +5,12 @@ import { onBeforeRouteLeave } from 'vue-router'
 import accountLogin from '../components/login/accountLogin.vue'
 import dengluyi from '../components/login/dengluyi.vue'
 import register from '../components/login/register.vue'
-import popUp from '../components/login/popUp.vue'
 const datas = useStore()
 
 
 
 //------------------------ 动态组件 ----------------------------------
-const viewList = [dengluyi, accountLogin, register, popUp]
+const viewList = [dengluyi, accountLogin, register]
 const viewId = ref(1)
 const currentView = computed(() => viewList[viewId.value])
 provide('viewId', viewId)
@@ -24,7 +23,7 @@ provide('viewId', viewId)
 datas.backgroundShow = true
 onBeforeRouteLeave(() => {
    datas.backgroundShow = false
-   viewId.value=1
+   viewId.value = 1
 })
 onActivated(() => {
    datas.backgroundShow = true
@@ -67,9 +66,7 @@ div[wrapper] {
       margin-top: -@navSpan;
 
       @media (max-width:@breakpoint) {
-         box-shadow: none;
-         border-radius: 0;
-         width: 100%;
+         width: calc(100% - 30px);
       }
 
       .fade-enter-active,

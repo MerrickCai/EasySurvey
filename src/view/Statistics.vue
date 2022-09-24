@@ -9,7 +9,10 @@
 <script setup>
 import CreateFile from "../components/statistics/CreateFile.vue";
 import target from "../components/statistics/target.vue";
-import echart from "../components/statistics/echart.vue";
+import { defineAsyncComponent } from 'vue'
+const echart = defineAsyncComponent(() =>
+  import('../components/statistics/echart.vue')
+)
 </script>
 
 <style lang="less" scoped>

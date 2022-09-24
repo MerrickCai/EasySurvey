@@ -1,7 +1,6 @@
 <script setup>
 import { useStore } from "../../Stores/pinia.js"
 import { reactive, inject } from "vue"
-import { ElMessage } from 'element-plus'
 import { useRouter } from "vue-router"
 const datas = useStore()
 const router = useRouter()
@@ -103,8 +102,12 @@ async function register(account, password, passwordConfirm, agree) {
 
         console.log(datas.user)
 
-        //跳转填写地区和年龄弹窗
-        viewId.value = 3
+        //注册成功跳转
+        if (route.query.redirect) { //判断用户是否从其他页面过来
+            router.push({ path: route.query.redirect })
+        } else {
+            router.push({ path: "/" })
+        }
 
     } else {
 
