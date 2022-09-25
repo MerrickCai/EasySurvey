@@ -11,16 +11,11 @@ const router = useRouter()
 const datas = useStore()
 
 
-//----------------------------------------- 异步加载字体文件(延迟5-10秒=>防止高并发) ----------------------------------
+//----------------------------------------- 异步加载字体文件 ----------------------------------
 onMounted(() => {
-  const delay = (function (x, y) {//随机返回[x,y]的数字
-    return Math.floor(Math.random() * (y - x + 1)) + x
-  })(5, 10)
-  setTimeout(() => {
-    document.fonts.add(new FontFace('Han Sans', `url(${HanSans})`))
-  }, delay * 1000)
+  document.fonts.add(new FontFace('Han Sans', `url(${HanSans})`))
 })
-//----------------------------------------- 异步加载字体文件(延迟5-10秒=>防止高并发) ----------------------------------
+//----------------------------------------- 异步加载字体文件 ----------------------------------
 
 
 
@@ -74,7 +69,7 @@ router.beforeEach(async (to) => {
         center: true
       })
 
-      false
+      return false
 
     }
 

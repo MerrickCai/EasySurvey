@@ -509,7 +509,7 @@ div.wrapper {
         align-items: center;
         height: auto;
         width: 100%;
-        margin: 5px 0;
+        margin: 10px 0;
 
         .typetitle {
           display: block;
@@ -518,11 +518,11 @@ div.wrapper {
           font-size: 16px;
           color: rgba(0, 0, 0, 1);
           position: relative;
-          margin-right: 20px;
+          margin: 0 15px;
 
           @media (max-width:@breakpoint) {
             font-size: 14px;
-            margin-right: 10px;
+            margin: 0 10px;
           }
 
           &::after {
@@ -577,7 +577,7 @@ div.wrapper {
         flex: 1;
         display: block;
         height: auto;
-        width: 100%;
+        width: calc(100% - 20px);
       }
     }
 
