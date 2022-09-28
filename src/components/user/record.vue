@@ -13,8 +13,6 @@
                     end-placeholder="End date" size="default" value-format="YYYY-MM-DD"
                     :disabled-date="disabledDateFun" />
             </div>
-            <div @click="show">1111111</div>
-
         </div>
 
     </div>
@@ -28,9 +26,6 @@ const datas = useStore();
 
 const value1 = ref('')
 const value2 = ref('')
-let show = () => {
-    console.log(value2.value);
-}
 const disabledDateFun = (time) => {
     // console.log(time);
     return time.getTime() > Date.now() - 8.64e6
