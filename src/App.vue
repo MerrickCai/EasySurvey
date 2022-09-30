@@ -5,17 +5,8 @@ import { useStore } from "./Stores/pinia.js"
 import bg1 from './assets/login_cloud.jpg'
 import bg2 from './assets/login_mount.jpg'
 import bg3 from './assets/login_mountain.jpg'
-import HanSans from './assets/SourceHanSansSC-VF.otf.woff2';
-import { onMounted } from "vue"
 const router = useRouter()
 const datas = useStore()
-
-
-//----------------------------------------- 异步加载字体文件 ----------------------------------
-onMounted(() => {
-  document.fonts.add(new FontFace('Han Sans', `url(${HanSans})`))
-})
-//----------------------------------------- 异步加载字体文件 ----------------------------------
 
 
 
@@ -204,7 +195,7 @@ main {
 }
 
 * {
-  font-family: 'Han Sans', 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
     'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
   box-sizing: border-box;
   margin: 0;
