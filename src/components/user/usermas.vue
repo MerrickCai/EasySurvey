@@ -102,7 +102,7 @@ const judgeAge = (e) => {
     }
     validator.validate({ age: props.user.age }, (errors, fields) => {
         if (errors && fields.age) {
-            // console.log("cuowu", errors, "lingyu", fields);
+            console.log("cuowu", errors, "lingyu", fields);
             modelControl.value[prop] = fields[prop][0].message
             return errors
         }
@@ -123,7 +123,6 @@ const judgeEmail = (e) => {
         }
         modelControl.value[prop] = null
         checkshow.value = true
-        console.log(checkshow.value);
     })
 }
 //手机号判断

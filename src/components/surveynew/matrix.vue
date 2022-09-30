@@ -9,9 +9,6 @@
     </p>
     <p class="questitle">
       <span>{{ content.matrixfile.indexOf(quesitem) + 1 }}</span>
-      <!-- <span class="titlecon" v-show="questitleshow" @click="changeqlshow">
-        {{ quesitem.question.detail }}
-      </span> -->
       <el-input type="textarea" autosize ref="questitle" v-model="quesitem.question.detail" placeholder="请输入题目标题"
         @blur="questitleshow = true" @keyup.enter="questitleshow = true" />
     </p>
@@ -49,17 +46,30 @@
 </template>
 
 <script setup>
-import { ref, nextTick, inject, watch } from "vue";
+import { ref, nextTick, inject, watch, onMounted } from "vue";
 import { nanoid } from "nanoid";
 
 const emit = defineEmits(["updateamount"]);
 const props = defineProps(["quesitem", "index", "content"]);
+// let width = ref(500)
+// let block
+// onMounted(() => {
+//   let block = document.getElementsByClassName("block")
+//   width.value = block[0].clientWidth
+//   console.log(block[0]);
+// })
+// window.onresize = () => {
+//   console.log(block);
+//   console.log(block[0]);
+//   width.value = block[0].clientWidth
+//   console.log(width);
+// }
 //鼠标滚轮在添加新题目时滑动到底部
 let { scroll, updatescroll } = inject("changescroll");
 //添加问题
 function addamount() {
   const quesobj = {
-    question: { detail: "请输入题目标题", type: 0 },
+    question: { detail: "", type: 0 },
     options: [
       { detail: "" },
       { detail: "" },
@@ -147,22 +157,8 @@ function tip() {
 </script>
 
 <style lang="less" scoped>
-// .disappearques {
-//   animation: disappear 0.5s forwards;
-// }
-// @keyframes disappear {
-//   0% {
-//     opacity: 1;
-//     transform: scale(1);
-//   }
-//   100% {
-//     opacity: 0.7;
-//     transform: scale(0.8);
-//   }
-// }
 li {
   height: 200px;
-  // box-shadow: 0px 6px 30px 0px rgba(73, 107, 158, 0.25);
 
   .itemnav {
     display: flex;
