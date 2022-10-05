@@ -9,8 +9,8 @@
 
 <script setup>
 import matrix from "./matrix.vue";
-import { onMounted, ref, reactive, nextTick, watch } from "vue";
-import scrollReveal from "scrollreveal";
+//import { onMounted, ref, reactive, nextTick, watch } from "vue";
+//import scrollReveal from "scrollreveal";
 
 const emit = defineEmits(["updateamount"]);
 const props = defineProps(["content"]);
