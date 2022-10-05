@@ -163,7 +163,7 @@ const confirmPassword = (e) => {
 // }
 async function submit(e) {
     e.preventDefault();
-    validator.validate(fixuser, (errors, fields) => {
+    validator.validate(fixuser, async (errors, fields) => {
         if (errors) {
             console.log(errors);
             for (let key in fields) {
