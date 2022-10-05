@@ -7,7 +7,7 @@ import bg2 from './assets/login_mount.jpg'
 import bg3 from './assets/login_mountain.jpg'
 const router = useRouter()
 const datas = useStore()
-
+datas.router=router
 
 
 //------------------------ //全局前置守卫（帮助用户自动登录） --------------------------
