@@ -324,6 +324,7 @@ const proparea = {
 
         .area {
             :deep(.el-input__wrapper, .el-cascader .el-input.is-focus .el-input__wrapper) {
+                width: 200px;
                 box-shadow: none;
                 padding: 0;
 

@@ -3,31 +3,31 @@
         <div class="title">问题反馈</div>
         <form class="content">
             <span>
-                <input type="checkbox" id="caton">
+                <input type="checkbox" id="caton" value="使用卡顿">
                 <label for="caton">使用卡顿</label>
             </span>
             <span>
-                <input type="checkbox" id="bug">
+                <input type="checkbox" id="bug" value="bug">
                 <label for="bug">bug</label>
             </span>
             <span>
-                <input type="checkbox" id="boundary">
+                <input type="checkbox" id="boundary" value="界面美观">
                 <label for="boundary">界面美观</label>
             </span>
             <span>
-                <input type="checkbox" id="statistics">
+                <input type="checkbox" id="statistics" value="数据处理">
                 <label for="statistics">数据处理</label>
             </span>
             <span>
-                <input type="checkbox" id="create">
+                <input type="checkbox" id="create" value="创建问卷">
                 <label for="create">创建问卷</label>
             </span>
             <span>
-                <input type="checkbox" id="push">
+                <input type="checkbox" id="push" value="发布问卷">
                 <label for="push">发布问卷</label>
             </span>
             <span>
-                <input type="checkbox" id="else">
+                <input type="checkbox" id="else" value="其他">
                 <label for="else">其他</label>
             </span>
             <p class="opinion" @click="focus" :class="{border:blue==true}">

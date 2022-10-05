@@ -4,7 +4,8 @@
         <form action="">
             <div class="account">
                 <label for="account">请输入注册时所用的学号：</label>
-                <input type="text" id="account" v-model="fixuser.account" @blur="judgeAccount" prop="account">
+                <input type="text" id="account" v-model="fixuser.account" @blur="judgeAccount" prop="account"
+                    placeholder="请输入注册时所用的学号">
                 <div class="put" v-show="!errormes['account']"></div>
                 <div class="error" v-show="errormes['account']">{{errormes['account']}}</div>
             </div>
@@ -22,26 +23,30 @@
             </div>
             <div class="password">
                 <label for="password">请输入新密码：</label>
-                <input type="text" id="password" v-model="fixuser.password" @blur="judgePassword" prop="password">
+                <input type="password" id="password" v-model="fixuser.password" @blur="judgePassword" prop="password"
+                    placeholder="请输入8-20位字母数字+特殊字符">
                 <div class="put" v-show="!errormes['password']"></div>
                 <div class="error" v-show="errormes['password']">{{errormes['password']}}</div>
             </div>
             <div class="newpassword">
                 <label for="newpassword">请再次确认新密码：</label>
-                <input type="text" id="newpassword" v-model="fixuser.confirmPassword" @blur="confirmPassword"
-                    prop="confirmPassword">
+                <input type="password" id="newpassword" v-model="fixuser.confirmPassword" @blur="confirmPassword"
+                    prop="confirmPassword" placeholder="请再次确认新密码">
                 <div class="put" v-show="!errormes['confirmPassword']"></div>
                 <div class="error" v-show="errormes['confirmPassword']">{{errormes['confirmPassword']}}</div>
             </div>
             <div class="confirm">
-                <input type="submit" value="确认操作">
+                <input type="submit" value="确认操作" @click="submit">
             </div>
         </form>
     </div>
 </template>
 <script setup>
+import axios from "axios"
 import Schema from 'async-validator'
 import { reactive, ref } from "vue"
+import { useStore } from "../../Stores/pinia.js";
+const datas = useStore();
 const props = defineProps(["user"])
 const fixuser = reactive({
     account: '',
@@ -59,7 +64,7 @@ const rules = {
             return value === props.user.account
         }
     },
-    password: { required: true, message: '请输入8-20位字母数字+特殊字符', pattern: /^[0-9a-zA-Z~!@#$%^&*()_+`\-={}:";'<>?,.\/]{8,20}$/ },
+    password: { required: false, message: '请输入8-20位字母数字+特殊字符', pattern: /^[0-9a-zA-Z~!@#$%^&*()_+`\-={}:";'<>?,.\/]{8,20}$/ },
     confirmPassword: {
         required: true, message: '请确保两次密码一致', validator(rule, value, callback) {
             return value === fixuser.password
@@ -116,6 +121,72 @@ const confirmPassword = (e) => {
             return errors
         }
         errormes[prop] = null
+    })
+}
+//提交验证
+// function submit(e) {
+//     e.preventDefault();
+//     validator.validate(fixuser).then(async () => {
+//         let ans = datas.getToken()
+//         ans.then(res => { console.log(res); })
+//         let token = ans.then(res => { return res })
+//         console.log(token);
+//         await axios({
+//             url: `https://q.denglu1.cn/api/user/updatepass`,
+//             method: "post",
+//             withCredentials: true,
+//             headers: {
+//                 "Content-Type": "application/json",
+//                 token: token
+//             },
+//             data: {
+//                 userId: props.user.userId,
+//                 password: fixuser.password
+//             }
+//         })
+//             .then((response) => {
+//                 console.log(response);
+//             })
+//             .catch((error) => {
+//                 console.log(error);
+//             });
+
+//         // 校验通过
+//     }).catch(({ errors, fields }) => {
+//         console.log(errors);
+//         for (let key in fields) {
+//             errormes[key] = fields[key][0].message
+//         }
+//         return errors
+//     })
+
+// }
+async function submit(e) {
+    e.preventDefault();
+    validator.validate(fixuser, (errors, fields) => {
+        if (errors) {
+            console.log(errors);
+            for (let key in fields) {
+                errormes[key] = fields[key][0].message
+            }
+            return errors
+        }
+        else {
+            const response = await axios({
+                url: `https://q.denglu1.cn/api/user/updatepass`,
+                method: "post",
+                withCredentials: true,
+                headers: {
+                    "Content-Type": "application/json",
+                    token: await datas.getToken()
+                },
+                data: {
+                    userId: props.user.userId,
+                    password: fixuser.password
+                }
+            })
+            console.log(response);
+        }
     })
 }
 
@@ -185,7 +256,8 @@ const confirmPassword = (e) => {
                 vertical-align: top;
             }
 
-            input[type="text"] {
+            input[type="text"],
+            input[type="password"] {
                 /* 清除原有input样式 */
                 -web-kit-appearance: none;
                 // -moz-appearance: none;
