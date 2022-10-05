@@ -279,7 +279,7 @@ async function Submit() {
     }).then((response) => {
         console.log('提交完成返回的response', response);
         if (response.data.code === 200) {
-            if (response.data.msg === '提交成功！') {
+            if (response.data.msg.includes('提交成功')) {
                 ElMessage({
                     message: '提交成功',
                     type: 'success',
