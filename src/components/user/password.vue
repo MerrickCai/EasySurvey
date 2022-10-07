@@ -36,7 +36,7 @@
                 <div class="error" v-show="errormes['confirmPassword']">{{errormes['confirmPassword']}}</div>
             </div>
             <div class="confirm">
-                <input type="submit" value="确认操作" @click="submit">
+                <input type="submit" value="确认操作" @click.prevent="submit">
             </div>
         </form>
     </div>
@@ -124,71 +124,80 @@ const confirmPassword = (e) => {
     })
 }
 //提交验证
-// function submit(e) {
-//     e.preventDefault();
-//     validator.validate(fixuser).then(async () => {
-//         let ans = datas.getToken()
-//         ans.then(res => { console.log(res); })
-//         let token = ans.then(res => { return res })
-//         console.log(token);
-//         await axios({
-//             url: `https://q.denglu1.cn/api/user/updatepass`,
-//             method: "post",
-//             withCredentials: true,
-//             headers: {
-//                 "Content-Type": "application/json",
-//                 token: token
-//             },
-//             data: {
-//                 userId: props.user.userId,
-//                 password: fixuser.password
-//             }
-//         })
-//             .then((response) => {
-//                 console.log(response);
-//             })
-//             .catch((error) => {
-//                 console.log(error);
-//             });
-
-//         // 校验通过
-//     }).catch(({ errors, fields }) => {
-//         console.log(errors);
-//         for (let key in fields) {
-//             errormes[key] = fields[key][0].message
-//         }
-//         return errors
-//     })
-
-// }
-async function submit(e) {
+function submit(e) {
     e.preventDefault();
+<<<<<<< HEAD
     validator.validate(fixuser, async (errors, fields) => {
         if (errors) {
             console.log(errors);
             for (let key in fields) {
                 errormes[key] = fields[key][0].message
+=======
+    validator.validate(fixuser).then(async () => {
+        // let ans = datas.getToken()
+        // ans.then(res => { console.log(res); })
+        // let token = ans.then(res => { return res })
+        // console.log(token);
+        let token = await datas.getToken().then(res => { return res })
+        await axios({
+            url: `https://q.denglu1.cn/api/user/updatepass`,
+            method: "post",
+            withCredentials: true,
+            headers: {
+                "Content-Type": "application/json",
+                token: token
+            },
+            data: {
+                id: props.user.userId,
+                password: fixuser.password
+>>>>>>> echart
             }
-            return errors
-        }
-        else {
-            const response = await axios({
-                url: `https://q.denglu1.cn/api/user/updatepass`,
-                method: "post",
-                withCredentials: true,
-                headers: {
-                    "Content-Type": "application/json",
-                    token: await datas.getToken()
-                },
-                data: {
-                    userId: props.user.userId,
-                    password: fixuser.password
-                }
+        })
+            .then((response) => {
+                console.log(response);
+                console.log(token);
             })
-            console.log(response);
+            .catch((error) => {
+                console.log(error);
+            });
+
+        // 校验通过
+    }).catch(({ errors, fields }) => {
+        console.log(errors);
+        for (let key in fields) {
+            errormes[key] = fields[key][0].message
         }
+        return errors
     })
+
 }
+// async function submit(e) {
+//     validator.validate(fixuser, async (errors, fields) => {
+//         if (errors) {
+//             console.log(errors);
+//             for (let key in fields) {
+//                 errormes[key] = fields[key][0].message
+//             }
+//             return errors
+//         }
+//         else {
+//             const response = await axios({
+//                 url: `https://q.denglu1.cn/api/user/updatepass`,
+//                 method: "post",
+//                 withCredentials: true,
+//                 headers: {
+//                     "Content-Type": "application/json",
+//                     token: await datas.getToken()
+//                 },
+//                 data: {
+//                     userId: props.user.userId,
+//                     password: fixuser.password
+//                 }
+//             })
+//             console.log(response);
+//         }
+//     })
+// }
 
 </script>
 <style scoped lang='less'>
