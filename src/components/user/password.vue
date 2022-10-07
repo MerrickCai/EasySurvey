@@ -126,13 +126,6 @@ const confirmPassword = (e) => {
 //提交验证
 function submit(e) {
     e.preventDefault();
-<<<<<<< HEAD
-    validator.validate(fixuser, async (errors, fields) => {
-        if (errors) {
-            console.log(errors);
-            for (let key in fields) {
-                errormes[key] = fields[key][0].message
-=======
     validator.validate(fixuser).then(async () => {
         // let ans = datas.getToken()
         // ans.then(res => { console.log(res); })
@@ -150,7 +143,6 @@ function submit(e) {
             data: {
                 id: props.user.userId,
                 password: fixuser.password
->>>>>>> echart
             }
         })
             .then((response) => {
